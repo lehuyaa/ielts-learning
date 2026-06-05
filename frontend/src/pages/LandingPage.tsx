@@ -1,3 +1,28 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BookOpen, CheckCircle2, Sparkles } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+
 const roadmapItems = [
   'Band-based roadmap',
   'Smart flashcards',
@@ -5,31 +30,46 @@ const roadmapItems = [
   'Progress tracking',
 ]
 
+const demoFormSchema = z.object({
+  email: z.string().email('Enter a valid email address.'),
+})
+
+type DemoFormValues = z.infer<typeof demoFormSchema>
+
 export function LandingPage() {
+  const form = useForm<DemoFormValues>({
+    resolver: zodResolver(demoFormSchema),
+    defaultValues: {
+      email: '',
+    },
+  })
+
+  function handleDemoSubmit() {
+    form.reset()
+  }
+
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900">
+    <main className="min-h-screen bg-background text-foreground">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8">
         <nav className="flex items-center justify-between">
           <a className="flex items-center gap-3 font-semibold" href="/">
-            <span className="grid size-10 place-items-center rounded-2xl bg-indigo-600 text-lg font-bold text-white">
-              L
+            <span className="grid size-10 place-items-center rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
+              <BookOpen className="size-5" aria-hidden="true" />
             </span>
             <span>LexPath</span>
           </a>
 
-          <a
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600"
-            href="/"
-          >
-            Start Learning
-          </a>
+          <Button asChild variant="outline">
+            <a href="/">Start Learning</a>
+          </Button>
         </nav>
 
         <div className="grid flex-1 items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="max-w-2xl">
-            <p className="mb-5 inline-flex rounded-full border border-indigo-100 bg-white px-4 py-2 text-sm font-medium text-indigo-600 shadow-sm">
+            <Badge className="mb-5" variant="outline">
+              <Sparkles className="size-3.5" aria-hidden="true" />
               IELTS vocabulary learning platform
-            </p>
+            </Badge>
 
             <h1 className="text-5xl font-bold leading-tight tracking-normal text-slate-950 md:text-6xl">
               Build vocabulary for your target IELTS band.
@@ -41,40 +81,74 @@ export function LandingPage() {
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a
-                className="rounded-xl bg-indigo-600 px-5 py-3 text-center font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700"
-                href="/"
-              >
-                Start Learning
-              </a>
-              <a
-                className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-center font-semibold text-slate-700 shadow-sm transition hover:border-indigo-200 hover:text-indigo-600"
-                href="/"
-              >
-                View Roadmap
-              </a>
+              <Button asChild size="lg">
+                <a href="/">Start Learning</a>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a href="/">View Roadmap</a>
+              </Button>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/70">
-            <div className="rounded-xl bg-indigo-600 p-6 text-white">
-              <p className="text-sm font-medium text-indigo-100">Today&apos;s word</p>
-              <h2 className="mt-8 text-4xl font-bold tracking-normal">Sustainable</h2>
-              <p className="mt-2 text-indigo-100">adjective · Band 7</p>
-            </div>
+          <Card className="shadow-xl shadow-slate-200/70">
+            <CardHeader>
+              <CardDescription>Today&apos;s word</CardDescription>
+              <CardTitle className="text-3xl">Sustainable</CardTitle>
+              <div className="flex gap-2 pt-2">
+                <Badge>Band 7</Badge>
+                <Badge variant="success">adjective</Badge>
+              </div>
+            </CardHeader>
 
-            <div className="mt-6 grid gap-3">
-              {roadmapItems.map((item) => (
-                <div
-                  className="flex items-center justify-between rounded-xl border border-slate-100 bg-slate-50 px-4 py-3"
-                  key={item}
+            <CardContent className="grid gap-6">
+              <div className="grid gap-3">
+                {roadmapItems.map((item) => (
+                  <div
+                    className="flex items-center justify-between rounded-xl border border-border bg-muted px-4 py-3"
+                    key={item}
+                  >
+                    <span className="font-medium text-slate-700">{item}</span>
+                    <CheckCircle2
+                      className="size-5 text-success"
+                      aria-hidden="true"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <Form {...form}>
+                <form
+                  className="grid gap-4 rounded-xl border border-border bg-background p-4"
+                  onSubmit={form.handleSubmit(handleDemoSubmit)}
                 >
-                  <span className="font-medium text-slate-700">{item}</span>
-                  <span className="size-2 rounded-full bg-emerald-500" />
-                </div>
-              ))}
-            </div>
-          </div>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="alex@example.com"
+                            type="email"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          A small form check for the shared UI setup.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Button type="submit" variant="secondary">
+                    Check Components
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </main>
