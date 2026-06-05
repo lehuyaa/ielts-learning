@@ -7,16 +7,16 @@ import (
 )
 
 type RegisterRequest struct {
-	Email      string   `json:"email" binding:"required,email"`
-	Password   string   `json:"password" binding:"required,min=8"`
-	Name       string   `json:"name" binding:"required,min=2,max=255"`
-	Username   *string  `json:"username" binding:"omitempty,min=3,max=80"`
-	TargetBand *float64 `json:"targetBand" binding:"omitempty,gte=0,lte=9"`
+	Email      string   `json:"email"`
+	Password   string   `json:"password"`
+	Name       string   `json:"name"`
+	Username   *string  `json:"username"`
+	TargetBand *float64 `json:"targetBand"`
 }
 
 type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type AuthResponse struct {

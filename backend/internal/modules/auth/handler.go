@@ -21,11 +21,19 @@ func NewHandler(service Service) Handler {
 func (h Handler) Register(c *gin.Context) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		response.Error(c, http.StatusBadRequest, "INVALID_INPUT", "Invalid register input")
+		response.ValidationError(c, map[string]string{
+			"request": "Invalid JSON request body",
+		})
 		return
 	}
 
-	result, err := h.service.Register(req)
+	validatedReq, err := ValidateRegisterRequest(req)
+	if err != nil {
+		writeAuthError(c, err)
+		return
+	}
+
+	result, err := h.service.Register(validatedReq)
 	if err != nil {
 		writeAuthError(c, err)
 		return
@@ -37,11 +45,19 @@ func (h Handler) Register(c *gin.Context) {
 func (h Handler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		response.Error(c, http.StatusBadRequest, "INVALID_INPUT", "Invalid login input")
+		response.ValidationError(c, map[string]string{
+			"request": "Invalid JSON request body",
+		})
 		return
 	}
 
-	result, err := h.service.Login(req)
+	validatedReq, err := ValidateLoginRequest(req)
+	if err != nil {
+		writeAuthError(c, err)
+		return
+	}
+
+	result, err := h.service.Login(validatedReq)
 	if err != nil {
 		writeAuthError(c, err)
 		return
@@ -67,7 +83,10 @@ func (h Handler) Me(c *gin.Context) {
 }
 
 func writeAuthError(c *gin.Context, err error) {
+	var validationErr ValidationError
 	switch {
+	case errors.As(err, &validationErr):
+		response.ValidationError(c, validationErr.Fields)
 	case errors.Is(err, ErrEmailAlreadyUsed):
 		response.Error(c, http.StatusConflict, "EMAIL_ALREADY_USED", "Email is already registered")
 	case errors.Is(err, ErrUsernameAlreadyUsed):

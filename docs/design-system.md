@@ -151,17 +151,34 @@ Default card radius:
 
 ---
 
-## 6. Spacing
+## 6. Spacing System
 
-Use Tailwind spacing.
+Use the shared spacing scale:
+
+```txt
+4px, 8px, 12px, 16px, 24px, 32px, 48px, 64px
+```
+
+Rules:
+
+- Use values from the spacing scale.
+- Do not use arbitrary spacing unless absolutely necessary.
+- Label to input spacing: 8px.
+- Input group to input group spacing: 24px.
+- Page title/subtitle block to first form section: 48px.
+- Card padding desktop: 32px.
+- Card padding mobile: 24px.
+- Section to section spacing: 64px.
+- Button to previous form field spacing: 32px.
 
 Common layout:
 
 ```txt
 Page padding desktop: 32px
 Page padding mobile: 16px
-Card padding: 24px
-Section gap: 32px
+Card padding desktop: 32px
+Card padding mobile: 24px
+Section gap: 64px
 Component gap: 16px
 ```
 

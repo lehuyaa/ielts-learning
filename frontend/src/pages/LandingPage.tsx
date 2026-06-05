@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BookOpen, CheckCircle2, Sparkles } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import { z } from 'zod'
 
 import { Badge } from '@/components/ui/badge'
@@ -52,15 +53,15 @@ export function LandingPage() {
     <main className="min-h-screen bg-background text-foreground">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-8">
         <nav className="flex items-center justify-between">
-          <a className="flex items-center gap-3 font-semibold" href="/">
+          <Link className="flex items-center gap-3 font-semibold" to="/">
             <span className="grid size-10 place-items-center rounded-2xl bg-primary text-lg font-bold text-primary-foreground">
               <BookOpen className="size-5" aria-hidden="true" />
             </span>
             <span>LexPath</span>
-          </a>
+          </Link>
 
           <Button asChild variant="outline">
-            <a href="/">Start Learning</a>
+            <Link to="/register">Start Learning</Link>
           </Button>
         </nav>
 
@@ -82,10 +83,10 @@ export function LandingPage() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
-                <a href="/">Start Learning</a>
+                <Link to="/register">Start Learning</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <a href="/">View Roadmap</a>
+                <Link to="/dashboard">View Roadmap</Link>
               </Button>
             </div>
           </div>

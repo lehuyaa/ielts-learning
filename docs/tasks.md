@@ -16,6 +16,19 @@ Good prompt:
 Implement Task 04 only. Follow docs/prd.md, docs/database.md, docs/api.md, docs/architecture.md, and AGENTS.md. Do not modify unrelated files.
 ```
 
+Frontend UI task rule:
+
+- Every frontend UI task must be checked against `docs/ui-review-checklist.md` before completion.
+- The final task summary should mention that the UI review checklist was considered for frontend UI work.
+
+Validation contract rule:
+
+- Every task that implements a user-facing form must check `docs/validation-contracts.md` before implementation.
+- If the form does not have a validation contract, add one before implementing the form.
+- If the form submits to the backend, implement both frontend Zod validation and backend request DTO validation from the same contract.
+- Never implement validation on only one side for backend-submitted forms.
+- Any validation change must update `docs/validation-contracts.md`, the frontend Zod schema, and backend request DTO validation.
+
 ---
 
 ## 2. Milestone 1 - Project Setup
@@ -59,12 +72,17 @@ Requirements:
 - Tailwind CSS
 - ESLint
 - react-router-dom
+- axios
 
 Acceptance criteria:
 
 - `pnpm dev` runs frontend
 - Home page loads
 - Tailwind works
+- Shared frontend folders exist:
+  - `src/api`
+  - `src/contexts`
+  - `src/types`
 
 ---
 
@@ -234,6 +252,8 @@ Requirements:
 - JWT generation
 - Auth middleware
 - Validation
+- Backend request DTO validation must match `docs/validation-contracts.md`
+- Return field-level validation errors for validation failures
 - Standard response shape
 
 Acceptance criteria:
@@ -242,6 +262,7 @@ Acceptance criteria:
 - User can login
 - Protected me endpoint works with JWT
 - Password hash is never returned
+- Register/Login backend validation matches the auth validation contracts
 
 ---
 
@@ -251,9 +272,14 @@ Create:
 
 - Register page
 - Login page
-- Auth context
+- Auth context in `frontend/src/contexts/auth`
 - ProtectedRoute
 - Logout
+- Shared axios instance in `frontend/src/api/api.ts`
+- Auth API module in `frontend/src/api/auth.ts`
+- Shared auth types in `frontend/src/types/auth.ts`
+- Check `docs/validation-contracts.md`
+- Frontend Zod schemas must match the Register/Login validation contracts
 
 Acceptance criteria:
 
@@ -262,6 +288,10 @@ Acceptance criteria:
 - Token is stored
 - Protected routes redirect if not logged in
 - Logout works
+- Frontend API calls use axios only
+- No frontend code uses `fetch`
+- No shared types are placed in feature folders
+- Register/Login frontend validation matches the auth validation contracts
 
 ---
 
@@ -608,7 +638,7 @@ Requirements:
 
 Acceptance criteria:
 
-- Pages fetch real API
+- Pages load real API data through axios modules in `src/api`
 - Empty states work
 - Responsive
 
@@ -629,12 +659,15 @@ Requirements:
 - Return stats
 - Return achievements
 - Update name and target band
+- Check `docs/validation-contracts.md` before implementing profile update validation
+- If profile update has no validation contract, add it first
 
 Acceptance criteria:
 
 - Profile loads
 - User can update profile
 - Validation works
+- Backend request DTO validation matches the profile validation contract
 
 ---
 
@@ -653,11 +686,14 @@ Requirements:
 - Achievements
 - Learning heatmap placeholder
 - Edit profile form
+- Check `docs/validation-contracts.md` before implementing the edit profile form
+- Frontend Zod validation must match the profile validation contract
 
 Acceptance criteria:
 
 - User can view profile
 - User can update name and target band
+- Frontend validation matches the profile validation contract
 
 ---
 

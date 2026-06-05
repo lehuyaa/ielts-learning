@@ -119,6 +119,29 @@ Keep v1 shape:
 }
 ```
 
+### Validation Error
+
+Use this response shape for request validation failures:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Validation failed",
+    "fields": {
+      "email": "Please enter a valid email address",
+      "password": "Password must be at least 8 characters"
+    }
+  }
+}
+```
+
+Notes:
+
+- `fields` maps request field names to user-facing validation messages.
+- Validation rules must match `docs/validation-contracts.md`.
+- Frontend validation is for user experience; backend validation is the final authority.
+
 ### Pagination
 
 ```json
@@ -142,6 +165,7 @@ Keep v1 shape:
 Keep v1 error codes and add:
 
 ```txt
+VALIDATION_ERROR
 QUIZ_SESSION_NOT_FOUND
 QUIZ_SESSION_COMPLETED
 QUESTION_ALREADY_ANSWERED
@@ -1240,9 +1264,8 @@ Response:
 Validation:
 
 ```txt
-name optional, max 255
-username optional, 3-80 chars, unique
-targetBand optional, 4.0-8.5
+Profile update validation must be defined in docs/validation-contracts.md before implementation.
+Backend DTO validation and frontend Zod validation must match that contract.
 ```
 
 ### GET /api/v1/profile/overview

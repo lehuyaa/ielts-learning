@@ -12,8 +12,9 @@ type APIResponse struct {
 }
 
 type APIError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    string            `json:"code"`
+	Message string            `json:"message"`
+	Fields  map[string]string `json:"fields,omitempty"`
 }
 
 func OK(c *gin.Context, data any) {
@@ -29,6 +30,16 @@ func Error(c *gin.Context, status int, code string, message string) {
 		Error: &APIError{
 			Code:    code,
 			Message: message,
+		},
+	})
+}
+
+func ValidationError(c *gin.Context, fields map[string]string) {
+	c.JSON(http.StatusBadRequest, APIResponse{
+		Error: &APIError{
+			Code:    "VALIDATION_ERROR",
+			Message: "Validation failed",
+			Fields:  fields,
 		},
 	})
 }

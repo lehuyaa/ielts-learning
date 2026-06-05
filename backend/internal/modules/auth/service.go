@@ -30,7 +30,8 @@ func NewService(repository Repository, jwtManager sharedjwt.Manager) Service {
 }
 
 func (s Service) Register(req RegisterRequest) (AuthResponse, error) {
-	email := normalizeEmail(req.Email)
+	req = NormalizeRegisterRequest(req)
+	email := req.Email
 	exists, err := s.repository.EmailExists(email)
 	if err != nil {
 		return AuthResponse{}, err
@@ -39,7 +40,7 @@ func (s Service) Register(req RegisterRequest) (AuthResponse, error) {
 		return AuthResponse{}, ErrEmailAlreadyUsed
 	}
 
-	username := normalizeOptional(req.Username)
+	username := req.Username
 	if username != nil {
 		exists, err := s.repository.UsernameExists(*username)
 		if err != nil {
@@ -62,7 +63,7 @@ func (s Service) Register(req RegisterRequest) (AuthResponse, error) {
 
 	user := models.User{
 		Email:        email,
-		Name:         strings.TrimSpace(req.Name),
+		Name:         req.Name,
 		Username:     username,
 		PasswordHash: string(passwordHash),
 		Role:         models.UserRoleUser,
@@ -79,7 +80,8 @@ func (s Service) Register(req RegisterRequest) (AuthResponse, error) {
 }
 
 func (s Service) Login(req LoginRequest) (AuthResponse, error) {
-	user, err := s.repository.FindByEmail(normalizeEmail(req.Email))
+	req = NormalizeLoginRequest(req)
+	user, err := s.repository.FindByEmail(req.Email)
 	if err != nil {
 		if errors.Is(err, ErrUserNotFound) {
 			return AuthResponse{}, ErrInvalidCredentials

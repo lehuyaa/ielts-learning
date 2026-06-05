@@ -9,6 +9,7 @@ Database: MySQL 8+
 ORM: GORM
 Auth: JWT
 Styling: Tailwind CSS + shadcn/ui
+Frontend HTTP client: axios
 ```
 
 ---
@@ -67,23 +68,31 @@ ielts-vocab-app/
 
 ```txt
 frontend/src/
-├── app/
-│   ├── router.tsx
-│   └── providers.tsx
-├── pages/
-│   ├── LandingPage.tsx
-│   ├── LoginPage.tsx
-│   ├── RegisterPage.tsx
-│   ├── DashboardPage.tsx
-│   ├── RoadmapPage.tsx
-│   ├── LessonDetailPage.tsx
-│   ├── FlashcardPage.tsx
-│   ├── ReviewDuePage.tsx
-│   ├── QuizPage.tsx
-│   ├── VocabularyListPage.tsx
-│   ├── VocabularyDetailPage.tsx
-│   └── ProfilePage.tsx
-│
+├── api/
+│   ├── api.ts
+│   ├── auth.ts
+│   ├── dashboard.ts
+│   ├── roadmap.ts
+│   ├── lesson.ts
+│   ├── vocabulary.ts
+│   ├── flashcard.ts
+│   ├── quiz.ts
+│   └── profile.ts
+├── contexts/
+│   └── auth/
+│       ├── AuthContext.tsx
+│       ├── AuthProvider.tsx
+│       └── useAuth.ts
+├── types/
+│   ├── api.ts
+│   ├── auth.ts
+│   ├── dashboard.ts
+│   ├── roadmap.ts
+│   ├── lesson.ts
+│   ├── vocabulary.ts
+│   ├── flashcard.ts
+│   ├── quiz.ts
+│   └── profile.ts
 ├── components/
 │   ├── ui/
 │   ├── layout/
@@ -99,17 +108,38 @@ frontend/src/
 │   ├── quiz/
 │   └── profile/
 │
+├── hooks/
+├── pages/
+│   ├── LandingPage.tsx
+│   ├── LoginPage.tsx
+│   ├── RegisterPage.tsx
+│   ├── DashboardPage.tsx
+│   ├── RoadmapPage.tsx
+│   ├── LessonDetailPage.tsx
+│   ├── FlashcardPage.tsx
+│   ├── ReviewDuePage.tsx
+│   ├── QuizPage.tsx
+│   ├── VocabularyListPage.tsx
+│   ├── VocabularyDetailPage.tsx
+│   └── ProfilePage.tsx
 ├── lib/
-│   ├── api.ts
-│   ├── auth.ts
 │   ├── utils.ts
 │   └── constants.ts
-│
-├── hooks/
-├── types/
 ├── main.tsx
 └── index.css
 ```
+
+Rules:
+
+- Use axios for all frontend API calls.
+- Do not use `fetch`.
+- The shared axios instance must live in `frontend/src/api/api.ts`.
+- Feature API modules must live in `frontend/src/api`.
+- All React contexts must live in `frontend/src/contexts`.
+- Each context must have its own folder, for example `frontend/src/contexts/auth`.
+- All shared TypeScript types must live in `frontend/src/types`.
+- Do not scatter shared types across feature folders.
+- `frontend/src/lib` is for non-API utilities only.
 
 ---
 
@@ -163,7 +193,7 @@ frontend/src/features/auth/ProtectedRoute.tsx
 Create:
 
 ```txt
-frontend/src/lib/api.ts
+frontend/src/api/api.ts
 ```
 
 Responsibilities:
@@ -172,34 +202,41 @@ Responsibilities:
 - Attach JWT token
 - Parse standard response shape
 - Handle 401 globally
+- Export configured axios instance and typed response helpers
+- Do not use `fetch`
 
 Example:
 
 ```ts
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+import axios from "axios"
 
-export async function apiFetch<T>(
-  path: string,
-  options: RequestInit = {}
-): Promise<T> {
+export const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+})
+
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken")
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers,
-    },
-  })
-
-  const body = await res.json()
-
-  if (!res.ok) {
-    throw new Error(body.error?.message ?? "Something went wrong")
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
   }
 
-  return body.data as T
+  return config
+})
+```
+
+Feature API modules should use the shared instance:
+
+```ts
+import { api } from "./api"
+
+export async function login(input: LoginRequest): Promise<AuthResponse> {
+  const response = await api.post<{ data: AuthResponse }>("/auth/login", input)
+
+  return response.data.data
 }
 ```
 
@@ -228,9 +265,66 @@ Avoid:
 - MobX
 - Complex global stores
 
+Context placement:
+
+- Put contexts in `frontend/src/contexts`.
+- Put the auth context in `frontend/src/contexts/auth`.
+- Feature folders may import context hooks, but should not define shared contexts.
+- Shared request/response/domain types belong in `frontend/src/types`.
+
 ---
 
-## 7. Backend Architecture
+## 7. Validation Architecture
+
+Validation contracts:
+
+- `docs/validation-contracts.md` is the source of truth for user-facing form validation.
+- Every user-facing form must have a validation contract before implementation.
+- Frontend and backend validation must both match the documented contract.
+- Login/Register forms must use the auth validation contracts.
+
+### Frontend Validation
+
+Use Zod schemas.
+
+Rules:
+
+- Put shared form schemas in a predictable location.
+- Recommended location:
+
+```txt
+frontend/src/features/<feature>/validation/
+```
+
+Examples:
+
+```txt
+frontend/src/features/auth/validation/authSchemas.ts
+frontend/src/features/profile/validation/profileSchemas.ts
+```
+
+- Form schemas must be derived from `docs/validation-contracts.md`.
+- Frontend validation is for user experience and fast feedback.
+- Frontend validation must not be the only validation layer.
+
+### Backend Validation
+
+Validate request DTOs.
+
+Rules:
+
+- Backend validation must enforce the same rules as `docs/validation-contracts.md`.
+- Normalize email, username, and name before use.
+- Email normalization: trim and lowercase.
+- Username normalization: trim and lowercase.
+- Name normalization: trim.
+- Return field-level validation errors using the standard `VALIDATION_ERROR` response shape from `docs/api.md`.
+- Never rely only on frontend validation.
+- Backend validation is the final authority.
+
+---
+
+## 8. Backend Architecture
 
 ### Backend Folder Structure
 
@@ -278,7 +372,7 @@ backend/
 
 ---
 
-## 8. Backend Module Pattern
+## 9. Backend Module Pattern
 
 Each module should have:
 
@@ -303,7 +397,7 @@ internal/modules/flashcard/
 
 ---
 
-## 9. Backend Layer Responsibilities
+## 10. Backend Layer Responsibilities
 
 ### Handler
 
@@ -339,7 +433,7 @@ Does:
 
 ---
 
-## 10. Main Backend Dependencies
+## 11. Main Backend Dependencies
 
 Recommended Go packages:
 
@@ -362,7 +456,7 @@ github.com/swaggo/gin-swagger
 
 ---
 
-## 11. Environment Variables
+## 12. Environment Variables
 
 ### Backend `.env`
 
@@ -390,7 +484,7 @@ VITE_API_BASE_URL=http://localhost:8080/api/v1
 
 ---
 
-## 12. Docker Compose
+## 13. Docker Compose
 
 Recommended root `docker-compose.yml`:
 
@@ -414,7 +508,7 @@ volumes:
 
 ---
 
-## 13. Backend Route Registration
+## 14. Backend Route Registration
 
 Example:
 
@@ -439,7 +533,7 @@ func RegisterRoutes(r *gin.Engine, deps Dependencies) {
 
 ---
 
-## 14. Auth Architecture
+## 15. Auth Architecture
 
 Use JWT.
 
@@ -478,7 +572,7 @@ userRole
 
 ---
 
-## 15. CORS
+## 16. CORS
 
 Backend should allow frontend origin:
 
@@ -506,7 +600,7 @@ OPTIONS
 
 ---
 
-## 16. Service Logic Placement
+## 17. Service Logic Placement
 
 ### Spaced repetition
 
@@ -534,7 +628,7 @@ backend/internal/modules/dashboard/service.go
 
 ---
 
-## 17. Development Workflow
+## 18. Development Workflow
 
 Run MySQL:
 
@@ -558,7 +652,7 @@ pnpm dev
 
 ---
 
-## 18. Testing Strategy
+## 19. Testing Strategy
 
 For MVP:
 

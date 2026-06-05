@@ -34,6 +34,7 @@ docs/prd.md
 docs/database.md
 docs/api.md
 docs/architecture.md
+docs/validation-contracts.md
 docs/user-flow.md
 docs/design-system.md
 docs/seed-data.md
@@ -52,6 +53,7 @@ Frontend must use:
 - Tailwind CSS
 - shadcn/ui
 - react-router-dom
+- axios
 - React Hook Form
 - Zod
 - Lucide React
@@ -93,13 +95,14 @@ Frontend structure:
 
 ```txt
 frontend/src/
-├── app/
-├── pages/
+├── api/
+├── contexts/
+├── types/
 ├── components/
 ├── features/
-├── lib/
 ├── hooks/
-└── types/
+├── pages/
+└── lib/
 ```
 
 Backend structure:
@@ -140,10 +143,12 @@ backend/
 
 ### API Client
 
-Use one API client:
+Use axios for all API calls. Do not use `fetch`.
+
+Use one shared axios instance:
 
 ```txt
-frontend/src/lib/api.ts
+frontend/src/api/api.ts
 ```
 
 It should:
@@ -152,10 +157,27 @@ It should:
 - Attach JWT token
 - Parse standard backend response
 - Throw meaningful errors
+- Handle 401 consistently
+
+Feature API modules must live in:
+
+```txt
+frontend/src/api/
+```
+
+Examples:
+
+```txt
+frontend/src/api/auth.ts
+frontend/src/api/dashboard.ts
+frontend/src/api/roadmap.ts
+```
+
+Do not put API modules in `features/*` or `lib/`.
 
 ### Auth
 
-Use:
+Auth UI and feature-specific components can live in:
 
 ```txt
 frontend/src/features/auth/
@@ -163,11 +185,30 @@ frontend/src/features/auth/
 
 Must include:
 
-- Auth context
 - Login form
 - Register form
 - ProtectedRoute
 - Logout
+
+All React contexts must live in:
+
+```txt
+frontend/src/contexts/
+```
+
+Each context must have its own folder:
+
+```txt
+frontend/src/contexts/auth/
+```
+
+Shared TypeScript types must live in:
+
+```txt
+frontend/src/types/
+```
+
+Do not scatter shared types across feature folders.
 
 ### Routing
 
@@ -189,6 +230,7 @@ Follow:
 
 ```txt
 docs/design-system.md
+docs/ui-review-checklist.md
 ```
 
 All pages should have:
@@ -197,6 +239,39 @@ All pages should have:
 - Empty state if relevant
 - Error state if relevant
 - Responsive design
+
+Layout quality rules:
+
+- All auth pages must follow consistent vertical rhythm.
+- Page header block must have at least 48px spacing before the form.
+- Form fields must use consistent vertical spacing.
+- Do not compress title, subtitle, and form fields.
+- Before marking a UI task complete, review spacing, typography hierarchy, card padding, and responsive layout.
+- Check frontend UI work against `docs/ui-review-checklist.md` before completion.
+
+### Validation
+
+Validation contracts are the source of truth for all user-facing forms.
+
+Follow:
+
+```txt
+docs/validation-contracts.md
+```
+
+Rules:
+
+- Before implementing any new form, check `docs/validation-contracts.md`.
+- If a validation contract does not exist, add it first.
+- Frontend validation must use Zod.
+- Backend validation must enforce the same rules.
+- Frontend validation is for user experience.
+- Backend validation is the final authority.
+- Never implement validation on only one side.
+- Any validation change must update:
+  1. `docs/validation-contracts.md`
+  2. Frontend Zod schema
+  3. Backend request DTO validation
 
 ---
 
@@ -269,6 +344,7 @@ Rules:
 4. Validate request body.
 5. Use GORM transactions for multi-step mutations.
 6. Return clear error codes.
+7. Return field-level validation errors for validation failures.
 
 ---
 
@@ -436,6 +512,13 @@ Stack:
 Constraints:
 - Implement only this task.
 - Do not modify unrelated files.
+- Use axios for frontend API calls.
+- Keep the shared axios instance in frontend/src/api/api.ts.
+- Put feature API modules in frontend/src/api.
+- Put React contexts in frontend/src/contexts, with one folder per context.
+- Put shared TypeScript types in frontend/src/types.
+- Do not put shared API clients in frontend/src/lib.
+- Do not use fetch.
 - Keep handlers thin and services clean.
 - Add loading and empty states if relevant.
 
