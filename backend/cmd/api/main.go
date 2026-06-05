@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"ielts-learning/backend/internal/config"
+	"ielts-learning/backend/internal/database"
 	"ielts-learning/backend/internal/middleware"
 )
 
@@ -14,6 +15,15 @@ func main() {
 
 	if cfg.AppEnv == "production" {
 		gin.SetMode(gin.ReleaseMode)
+	}
+
+	db, err := database.Connect(cfg)
+	if err != nil {
+		log.Fatalf("failed to connect database: %v", err)
+	}
+
+	if err := database.AutoMigrate(db); err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
 	}
 
 	router := gin.New()
