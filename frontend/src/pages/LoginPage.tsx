@@ -1,5 +1,4 @@
-import { BookOpen } from 'lucide-react'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 
 import {
   Card,
@@ -19,27 +18,16 @@ export function LoginPage() {
   }
 
   return (
-    <main className="grid min-h-screen bg-background px-4 py-8 text-foreground">
-      <div className="mx-auto grid w-full max-w-md content-center gap-8">
-        <Link className="mx-auto flex items-center gap-3 font-semibold" to="/">
-          <span className="grid size-10 place-items-center rounded-2xl bg-primary text-primary-foreground">
-            <BookOpen className="size-5" aria-hidden="true" />
-          </span>
-          <span>LexPath</span>
-        </Link>
-
-        <Card className="p-6 shadow-xl shadow-slate-200/70 md:p-8">
-          <CardHeader className="space-y-3 p-0">
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>
-              Sign in to continue your IELTS vocabulary roadmap.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="mt-12 p-0">
-            <LoginForm />
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+    <Card className="mx-auto w-full max-w-md p-6 shadow-xl shadow-slate-200/70 md:p-8">
+      <CardHeader className="space-y-3 p-0">
+        <CardTitle className="text-2xl">Welcome back</CardTitle>
+        <CardDescription>
+          Sign in to continue your IELTS vocabulary roadmap.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="mt-12 p-0">
+        <LoginForm />
+      </CardContent>
+    </Card>
   )
 }
