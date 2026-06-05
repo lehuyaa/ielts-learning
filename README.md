@@ -1,6 +1,8 @@
-# IELTS Vocabulary Platform Docs
+# IELTS Vocabulary Learning Platform
 
-This document package is designed for vibe coding an IELTS Vocabulary Learning Platform with this stack:
+Monorepo for an IELTS vocabulary learning platform focused on band-based lessons, flashcards, quizzes, spaced repetition, progress tracking, streaks, and achievements.
+
+## Stack
 
 ```txt
 Frontend: React.js + TypeScript + Vite + Tailwind CSS + shadcn/ui
@@ -10,63 +12,88 @@ ORM: GORM
 Auth: JWT
 ```
 
-Recommended monorepo structure:
+## Repository Structure
 
 ```txt
-ielts-vocab-app/
+ielts-learning/
 ├── frontend/
 ├── backend/
 ├── docs/
 ├── AGENTS.md
+├── docker-compose.yml
 └── README.md
 ```
 
-## Documents
+## Current Status
+
+Task 01 creates the base monorepo structure only. The frontend app, backend server, and MySQL service are added in later tasks from `docs/tasks.md`.
+
+## Run Frontend
+
+After Task 02 creates the Vite app:
+
+```bash
+cd frontend
+pnpm install
+pnpm dev
+```
+
+The frontend should run at:
 
 ```txt
-docs/
-├── prd.md
-├── database.md
-├── api.md
-├── architecture.md
-├── user-flow.md
-├── design-system.md
-├── seed-data.md
-├── tasks.md
+http://localhost:5173
+```
 
+## Run Backend
+
+After Task 04 creates the Go Gin app:
+
+```bash
+cd backend
+go mod tidy
+go run ./cmd/api
+```
+
+The backend should run at:
+
+```txt
+http://localhost:8080
+```
+
+## Run Database
+
+After Task 05 adds the MySQL Docker Compose service:
+
+```bash
+docker compose up -d
+```
+
+Expected local database defaults:
+
+```txt
+Host: localhost
+Port: 3306
+Database: ielts_vocab
+User: root
+Password: password
+```
+
+## Documentation
+
+Read these before implementing tasks:
+
+```txt
 AGENTS.md
+docs/prd.md
+docs/database.md
+docs/api.md
+docs/architecture.md
+docs/user-flow.md
+docs/design-system.md
+docs/seed-data.md
+docs/tasks.md
 ```
 
-## Suggested Usage With Codex / AI Coding Agent
+## Development Rule
 
-Copy the `docs/` folder and `AGENTS.md` into your project root.
-
-Then ask Codex one task at a time:
-
-```txt
-Implement Task 04 from docs/tasks.md.
-
-Read AGENTS.md first.
-Follow docs/database.md, docs/api.md, and docs/architecture.md.
-Use React.js frontend + Go Gin backend + MySQL + GORM.
-Implement only this task.
-Do not modify unrelated files.
-After implementation, summarize changed files and how to test.
-```
-
-## MVP Build Order
-
-1. Project setup
-2. Backend setup
-3. MySQL + GORM models
-4. Seed data
-5. Authentication
-6. Frontend layout
-7. Landing page
-8. Dashboard
-9. Roadmap
-10. Lesson detail
-11. Flashcards
-12. Quiz
-13. Progress tracking
-14. Profile
+Implement one task from `docs/tasks.md` at a time. Keep changes small, scoped, and aligned with the documented React + TypeScript + Vite frontend and Go Gin + MySQL + GORM backend.

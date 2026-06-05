@@ -1,0 +1,5 @@
+# Docker services will be added in Task 05.
+#
+# This placeholder keeps the expected monorepo root structure in place without
+# implementing the MySQL setup before its dedicated task.
+services: {}
