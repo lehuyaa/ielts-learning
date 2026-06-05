@@ -1,0 +1,35 @@
+package models
+
+func AutoMigrateModels() []interface{} {
+	return []interface{}{
+		&User{},
+		&Course{},
+		&BandLevel{},
+		&Topic{},
+		&Lesson{},
+		&Vocabulary{},
+		&LessonVocabulary{},
+		&QuizQuestion{},
+		&QuizOption{},
+		&UserVocabularyProgress{},
+		&UserLessonProgress{},
+		&UserQuizAttempt{},
+		&DailyActivity{},
+		&QuizSession{},
+		&QuizSessionAnswer{},
+		&Achievement{},
+		&UserAchievement{},
+		&UserXPEvent{},
+		&DailyChallenge{},
+		&UserDailyChallenge{},
+		&Notification{},
+		&PlacementTest{},
+		&PlacementQuestion{},
+		&PlacementOption{},
+		&PlacementAttempt{},
+		&PlacementAttemptAnswer{},
+		&SubscriptionPlan{},
+		&UserSubscription{},
+		&AIExampleRequest{},
+	}
+}
