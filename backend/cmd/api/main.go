@@ -8,6 +8,8 @@ import (
 	"ielts-learning/backend/internal/config"
 	"ielts-learning/backend/internal/database"
 	"ielts-learning/backend/internal/middleware"
+	authmodule "ielts-learning/backend/internal/modules/auth"
+	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
 func main() {
@@ -25,6 +27,7 @@ func main() {
 	if err := database.AutoMigrate(db); err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
+	jwtManager := sharedjwt.NewManager(cfg.JWTSecret, cfg.JWTAccessTTLMinutes)
 
 	router := gin.New()
 	if err := router.SetTrustedProxies(nil); err != nil {
@@ -36,6 +39,9 @@ func main() {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
+
+	api := router.Group("/api/v1")
+	authmodule.RegisterRoutes(api, db, jwtManager)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)
