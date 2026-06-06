@@ -5,25 +5,28 @@ import {
   GraduationCap,
   Trophy,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-import type { MockLesson } from "./mockLesson";
+import type { LessonDetailViewModel } from "@/types/lesson";
 
 type LessonHeaderProps = {
-  lesson: MockLesson;
-  lessonId: string;
+  lesson: LessonDetailViewModel;
   learnedCount: number;
   progressPercentage: number;
+  isStartDisabled: boolean;
+  isStarting: boolean;
+  onStartFlashcards: () => void;
 };
 
 export function LessonHeader({
   lesson,
-  lessonId,
   learnedCount,
   progressPercentage,
+  isStartDisabled,
+  isStarting,
+  onStartFlashcards,
 }: LessonHeaderProps) {
   const navigate = useNavigate();
 
@@ -68,11 +71,14 @@ export function LessonHeader({
             label={`~${lesson.estimatedMinutes} min`}
           />
           <LessonHeaderMeta icon={Trophy} label={`${lesson.xpReward} XP`} />
-          <Button asChild className="h-12 rounded-full px-6 text-base">
-            <Link to={`/lessons/${lessonId}/flashcards`}>
-              <GraduationCap aria-hidden="true" />
-              Start Flashcards
-            </Link>
+          <Button
+            className="h-12 rounded-full px-6 text-base"
+            disabled={isStartDisabled}
+            onClick={onStartFlashcards}
+            type="button"
+          >
+            <GraduationCap aria-hidden="true" />
+            {isStarting ? "Starting..." : "Start Flashcards"}
           </Button>
         </div>
       </div>

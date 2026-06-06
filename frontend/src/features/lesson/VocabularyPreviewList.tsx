@@ -1,35 +1,55 @@
-import { CheckCircle2, Eye, Volume2 } from 'lucide-react'
+import { CheckCircle2, Eye, Volume2 } from "lucide-react";
+import { useState } from "react";
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-
-import type { LessonVocabularyItem } from './mockLesson'
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { LessonVocabularyItem } from "@/types/lesson";
 
 type VocabularyPreviewListProps = {
-  vocabulary: LessonVocabularyItem[]
-}
+  vocabulary: LessonVocabularyItem[];
+};
 
-export function VocabularyPreviewList({ vocabulary }: VocabularyPreviewListProps) {
+export function VocabularyPreviewList({
+  vocabulary,
+}: VocabularyPreviewListProps) {
+  const [expandedVocabularyId, setExpandedVocabularyId] = useState<
+    string | null
+  >(null);
+
+  function toggleVocabulary(vocabularyId: string) {
+    setExpandedVocabularyId((currentId) =>
+      currentId === vocabularyId ? null : vocabularyId,
+    );
+  }
+
   return (
     <div className="grid gap-5">
-      {vocabulary.map((item, index) => (
-        <VocabularyCard expanded={index === 0} item={item} key={item.id} />
+      {vocabulary.map((item) => (
+        <VocabularyCard
+          expanded={expandedVocabularyId === item.id}
+          item={item}
+          key={item.id}
+          onToggle={() => toggleVocabulary(item.id)}
+        />
       ))}
     </div>
-  )
+  );
 }
 
 type VocabularyCardProps = {
-  item: LessonVocabularyItem
-  expanded: boolean
-}
+  item: LessonVocabularyItem;
+  expanded: boolean;
+  onToggle: () => void;
+};
 
-function VocabularyCard({ item, expanded }: VocabularyCardProps) {
+function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
+  const detailId = `vocabulary-detail-${item.id}`;
+
   return (
     <article
       className={cn(
-        'rounded-2xl border bg-white p-5 shadow-sm',
-        expanded ? 'border-[#c6c4ff]' : 'border-[#e6e6f3]',
+        "rounded-2xl border bg-white p-5 shadow-sm",
+        expanded ? "border-[#c6c4ff]" : "border-[#e6e6f3]",
       )}
     >
       <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
@@ -61,22 +81,30 @@ function VocabularyCard({ item, expanded }: VocabularyCardProps) {
           <span className="rounded-full bg-[#f0efff] px-3 py-1 text-base font-bold text-primary">
             {item.band}
           </span>
-          <Button aria-label={`Listen to ${item.word}`} size="icon" variant="ghost">
+          <Button
+            aria-label={`Listen to ${item.word}`}
+            size="icon"
+            variant="ghost"
+          >
             <Volume2 className="size-5 text-[#6d7088]" aria-hidden="true" />
           </Button>
           <Button
-            className="rounded-full px-4 text-base"
+            aria-controls={detailId}
+            aria-expanded={expanded}
+            className="rounded-full px-4 text-base cursor-pointer"
+            onClick={onToggle}
             size="sm"
+            type="button"
             variant="outline"
           >
             <Eye aria-hidden="true" />
-            {expanded ? 'Hide' : 'View'}
+            {expanded ? "Hide" : "View"}
           </Button>
         </div>
       </div>
 
       {expanded ? (
-        <div className="mt-6 border-t border-[#e6e6f3] pt-5">
+        <div className="mt-6 border-t border-[#e6e6f3] pt-5" id={detailId}>
           <p className="text-sm font-bold uppercase tracking-normal text-[#676982]">
             Definition
           </p>
@@ -102,23 +130,28 @@ function VocabularyCard({ item, expanded }: VocabularyCardProps) {
         </div>
       ) : null}
     </article>
-  )
+  );
 }
 
 type DifficultyBadgeProps = {
-  difficulty: LessonVocabularyItem['difficulty']
-}
+  difficulty: LessonVocabularyItem["difficulty"];
+};
 
 function DifficultyBadge({ difficulty }: DifficultyBadgeProps) {
   const styles = {
-    Beginner: 'bg-[#dcfce7] text-[#138a53]',
-    Intermediate: 'bg-[#fff3c4] text-[#c46700]',
-    Advanced: 'bg-[#fde5e7] text-[#d22f38]',
-  }
+    Beginner: "bg-[#dcfce7] text-[#138a53]",
+    Intermediate: "bg-[#fff3c4] text-[#c46700]",
+    Advanced: "bg-[#fde5e7] text-[#d22f38]",
+  };
 
   return (
-    <span className={cn('rounded-full px-3 py-1 text-base font-bold', styles[difficulty])}>
+    <span
+      className={cn(
+        "rounded-full px-3 py-1 text-base font-bold",
+        styles[difficulty],
+      )}
+    >
       {difficulty}
     </span>
-  )
+  );
 }

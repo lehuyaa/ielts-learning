@@ -7,25 +7,31 @@ import {
   Target,
   Trophy,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
-
-import type { MockLesson } from './mockLesson'
+import type { LessonDetailViewModel } from '@/types/lesson'
 
 type LessonSidebarProps = {
-  lesson: MockLesson
-  lessonId: string
+  lesson: LessonDetailViewModel
   learnedCount: number
   progressPercentage: number
+  isStartDisabled: boolean
+  isStarting: boolean
+  onStartFlashcards: () => void
+  onStartQuiz: () => void
 }
 
 export function LessonSidebar({
   lesson,
-  lessonId,
   learnedCount,
   progressPercentage,
+  isStartDisabled,
+  isStarting,
+  onStartFlashcards,
+  onStartQuiz,
 }: LessonSidebarProps) {
+  const startLabel = isStarting ? 'Starting...' : 'Start Flashcards'
+
   return (
     <aside className="grid gap-6 lg:sticky lg:top-8">
       <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm">
@@ -67,21 +73,24 @@ export function LessonSidebar({
             {learnedCount} of {lesson.vocabulary.length} words learned
           </p>
           <div className="grid w-full gap-3">
-            <Button asChild className="h-12 rounded-full text-base">
-              <Link to={`/lessons/${lessonId}/flashcards`}>
-                Start Flashcards
-                <ChevronRight aria-hidden="true" />
-              </Link>
+            <Button
+              className="h-12 rounded-full text-base"
+              disabled={isStartDisabled}
+              onClick={onStartFlashcards}
+              type="button"
+            >
+              {startLabel}
+              <ChevronRight aria-hidden="true" />
             </Button>
             <Button
-              asChild
               className="h-12 rounded-full text-base"
+              disabled={isStartDisabled}
+              onClick={onStartQuiz}
+              type="button"
               variant="outline"
             >
-              <Link to={`/lessons/${lessonId}/quiz`}>
-                <GraduationCap aria-hidden="true" />
-                Start Quiz
-              </Link>
+              <GraduationCap aria-hidden="true" />
+              {isStarting ? 'Starting...' : 'Start Quiz'}
             </Button>
           </div>
         </div>
