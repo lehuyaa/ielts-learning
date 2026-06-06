@@ -12,6 +12,7 @@ import (
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
 	roadmapmodule "ielts-learning/backend/internal/modules/roadmap"
 	topicmodule "ielts-learning/backend/internal/modules/topic"
+	vocabularymodule "ielts-learning/backend/internal/modules/vocabulary"
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
@@ -48,6 +49,7 @@ func main() {
 	roadmapmodule.RegisterRoutes(api, db, jwtManager)
 	topicmodule.RegisterRoutes(api, db, jwtManager)
 	lessonmodule.RegisterRoutes(api, db, jwtManager)
+	vocabularymodule.RegisterRoutes(api, db, jwtManager)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)
