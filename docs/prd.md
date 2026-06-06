@@ -72,6 +72,34 @@ Version 1 focuses on:
 - User progress tracking
 - Streak and basic achievements
 
+Primary learning journey:
+
+```txt
+Roadmap
+↓
+Topic Detail
+↓
+Lesson Detail
+↓
+Flashcards
+↓
+Quiz
+```
+
+Learning hierarchy:
+
+```txt
+Band
+↓
+Topic
+↓
+Lesson
+↓
+Vocabulary Learning
+↓
+Quiz
+```
+
 ---
 
 ## 4. MVP Features
@@ -192,14 +220,43 @@ Each topic contains lessons.
 
 Roadmap behavior:
 
-- Some lessons are unlocked by default.
-- Completed lessons unlock next lessons.
-- Locked lessons show lock icon.
+- A Band contains multiple Topics.
+- A Topic contains multiple Lessons.
+- Roadmap topic cards open the Topic Detail page, not Lesson Detail directly.
+- Topic progress is displayed visually at the roadmap level.
+- Completed topics and in-progress topics show distinct visual states.
 - Progress is displayed visually.
 
 ---
 
-### 4.6 Lesson Detail
+### 4.6 Topic Detail
+
+Topic Detail is the bridge between Roadmap and Lesson Detail.
+
+Users can see:
+
+- Topic title, icon, band, and description.
+- Topic progress percentage.
+- Completed lessons count.
+- Total lesson count.
+- Total XP available.
+- Lesson list.
+- Locked lessons.
+- Unlocked lessons.
+- In-progress lessons.
+- Completed lessons.
+
+Topic behavior:
+
+- Roadmap topic cards route to Topic Detail.
+- Lesson cards route to Lesson Detail.
+- Locked lessons explain unlock requirements where available.
+- In-progress lessons show progress percentage.
+- Completed lessons show completed state.
+
+---
+
+### 4.7 Lesson Detail
 
 Each lesson contains 10-20 vocabulary items.
 
@@ -222,9 +279,15 @@ Lesson actions:
 - Start Quiz
 - Mark as completed after passing quiz
 
+Clarifications:
+
+- A Lesson belongs to one Topic.
+- A Lesson contains vocabulary learning content.
+- A Lesson can launch Flashcards and Quiz activities.
+
 ---
 
-### 4.7 Flashcard Learning
+### 4.8 Flashcard Learning
 
 Flashcard flow:
 
@@ -245,7 +308,7 @@ Result:
 
 ---
 
-### 4.8 Quiz
+### 4.9 Quiz
 
 Quiz types for V1:
 
@@ -271,7 +334,7 @@ Default passing score:
 
 ---
 
-### 4.9 Vocabulary Detail
+### 4.10 Vocabulary Detail
 
 Vocabulary detail page includes:
 
@@ -289,7 +352,7 @@ Vocabulary detail page includes:
 
 ---
 
-### 4.10 Spaced Repetition
+### 4.11 Spaced Repetition
 
 Each vocabulary has review status per user.
 
@@ -306,7 +369,7 @@ Later:
 
 ---
 
-### 4.11 User Profile
+### 4.12 User Profile
 
 Profile page shows:
 
@@ -344,6 +407,7 @@ Do not build these in V1 unless MVP is complete:
 
 ### Activation
 
+- User opens a topic from the roadmap.
 - User completes first lesson.
 - User completes first quiz.
 - User reviews at least 10 words.
@@ -370,13 +434,14 @@ MVP is acceptable when:
 1. User can register/login.
 2. User can see dashboard.
 3. User can browse roadmap.
-4. User can open a lesson.
-5. User can study flashcards.
-6. User can complete quiz.
-7. User progress is saved in MySQL.
-8. Review due words appear correctly.
-9. UI is responsive on desktop and mobile.
-10. Seed data provides at least 3 bands, 5 topics, 10 lessons, and 100 vocabulary items.
+4. User can open a topic from roadmap.
+5. User can open a lesson from topic detail.
+6. User can study flashcards.
+7. User can complete quiz.
+8. User progress is saved in MySQL.
+9. Review due words appear correctly.
+10. UI is responsive on desktop and mobile.
+11. Seed data provides at least 3 bands, 5 topics, 10 lessons, and 100 vocabulary items.
 
 ---
 

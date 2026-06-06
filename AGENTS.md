@@ -261,6 +261,28 @@ docs/screenshots/
 
 are the visual source of truth.
 
+The latest approved Figma learning flow is:
+
+```txt
+Roadmap
+↓
+Topic Detail
+↓
+Lesson Detail
+↓
+Flashcards
+↓
+Quiz
+```
+
+Approved screenshot references:
+
+```txt
+Roadmap: docs/screenshots/roadmap.png, or current numbered roadmap screenshots
+Topic Detail: docs/screenshots/topic-detail.png, or current numbered topic-detail screenshots
+Lesson Detail: docs/screenshots/lesson-detail.png, or current numbered lesson-detail screenshots
+```
+
 Rules:
 
 - Do not redesign pages when a screenshot exists.
@@ -270,6 +292,8 @@ Rules:
 - Do not change spacing hierarchy.
 - Do not change typography hierarchy.
 - Do not introduce new cards or widgets that do not exist in the screenshot.
+- Roadmap topic cards open Topic Detail, not Lesson Detail directly.
+- Topic Detail lesson cards open Lesson Detail.
 
 Implementation priority:
 
@@ -494,6 +518,7 @@ Protected frontend routes:
 ```txt
 /dashboard
 /roadmap
+/topics/*
 /lessons/*
 /reviews
 /vocabulary/*
@@ -505,6 +530,7 @@ Protected backend APIs:
 ```txt
 /api/v1/dashboard/*
 /api/v1/roadmap
+/api/v1/topics/*
 /api/v1/lessons/*
 /api/v1/reviews/*
 /api/v1/flashcards/*

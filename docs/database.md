@@ -15,7 +15,11 @@ dashboard1.png
 dashboard2.png
 roadmap1.png
 roadmap2.png
-lesson.png
+topic-detail1.png
+topic-detail2.png
+topic-detail3.png
+lesson-detail1.png
+lesson-detail2.png
 flashCard1.png
 flashCard2.png
 flashCard3.png
@@ -177,6 +181,28 @@ lesson_vocabularies
 quiz_questions
 quiz_options
 ```
+
+Approved learning hierarchy:
+
+```txt
+courses
+1:N
+band_levels
+1:N
+topics
+1:N
+lessons
+1:N through lesson_vocabularies
+vocabularies
+```
+
+Current schema support:
+
+- `band_levels.id` is referenced by `topics.band_level_id`.
+- `topics.id` is referenced by `lessons.topic_id`.
+- `lessons.id` is referenced by `lesson_vocabularies.lesson_id`.
+- `vocabularies.id` is referenced by `lesson_vocabularies.vocabulary_id`.
+- No new tables are required for the approved Roadmap -> Topic Detail -> Lesson Detail flow.
 
 ### User Progress
 
@@ -393,6 +419,15 @@ Notes:
 
 ### 5.4 topics
 
+Relationship:
+
+```txt
+band_levels 1:N topics
+topics 1:N lessons
+```
+
+The Topic Detail page is backed by one topic row, its parent band level, its lessons, and authenticated user progress for those lessons.
+
 ```txt
 id uint pk
 band_level_id uint index not null
@@ -415,6 +450,15 @@ unique band_level_id + slug
 ```
 
 ### 5.5 lessons
+
+Relationship:
+
+```txt
+topics 1:N lessons
+lessons 1:N lesson_vocabularies
+```
+
+The Lesson Detail page is backed by one lesson row, its parent topic/band context, vocabulary via `lesson_vocabularies`, and authenticated user progress.
 
 ```txt
 id uint pk

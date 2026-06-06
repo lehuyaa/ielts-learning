@@ -3,6 +3,7 @@
 Use this checklist before marking any frontend UI task complete.
 
 - [ ] Screenshot analyzed
+- [ ] `docs/screenshots/README.md` checked
 - [ ] Section order matches screenshot
 - [ ] Component hierarchy matches screenshot
 - [ ] Typography hierarchy matches screenshot
@@ -10,3 +11,17 @@ Use this checklist before marking any frontend UI task complete.
 - [ ] Colors reasonably match screenshot
 - [ ] Mobile layout works
 - [ ] No unnecessary redesign
+
+Latest approved learning flow:
+
+```txt
+Roadmap
+↓
+Topic Detail
+↓
+Lesson Detail
+↓
+Flashcards
+↓
+Quiz
+```

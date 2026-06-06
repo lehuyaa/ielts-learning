@@ -21,6 +21,33 @@ Inspired by:
 
 ---
 
+## 1.1 Approved Figma References
+
+The latest approved screenshots in `docs/screenshots/` are the visual source of truth.
+
+Primary learning flow:
+
+```txt
+Roadmap
+↓
+Topic Detail
+↓
+Lesson Detail
+↓
+Flashcards
+↓
+Quiz
+```
+
+Implementation rules:
+
+- Analyze the relevant screenshot before changing UI.
+- Do not redesign when a screenshot exists.
+- Match layout, spacing hierarchy, typography hierarchy, component hierarchy, card hierarchy, and visual scale as closely as possible.
+- If this document and a screenshot conflict, follow the screenshot.
+
+---
+
 ## 2. Frontend UI Stack
 
 Use:

@@ -32,6 +32,8 @@ GET   /api/v1/public/pricing
 
 GET   /api/v1/search/vocabularies
 
+GET   /api/v1/topics/:topicId
+
 GET   /api/v1/dashboard
 GET   /api/v1/dashboard/activity
 
@@ -74,6 +76,7 @@ These existing APIs should remain, but their response should include screenshot-
 GET /api/v1/auth/me
 GET /api/v1/dashboard/summary
 GET /api/v1/roadmap
+GET /api/v1/topics/:topicId
 GET /api/v1/lessons/:lessonId
 GET /api/v1/lessons/:lessonId/flashcards
 GET /api/v1/reviews/due
@@ -690,15 +693,129 @@ Expanded response:
 }
 ```
 
+Notes:
+
+- Roadmap topic cards navigate to Topic Detail, not Lesson Detail directly.
+- Topic cards should expose topic progress and status.
+- Lesson Detail navigation starts from Topic Detail lesson cards.
+- Never expose another user's progress.
+- Topic and band status are computed from authenticated user progress.
+
 ---
 
-## 11. Lesson APIs
+## 11. Topic APIs
+
+### GET /api/v1/topics/:topicId
+
+Protected.
+
+Returns the approved Topic Detail page data. Topic Detail is the page between Roadmap and Lesson Detail.
+
+Response:
+
+```json
+{
+  "data": {
+    "topic": {
+      "id": 2,
+      "title": "Technology",
+      "slug": "technology",
+      "emoji": "💻",
+      "color": "blue",
+      "description": "Master technology-related vocabulary for IELTS Writing and Speaking tasks.",
+      "bandLevel": {
+        "id": 2,
+        "bandScore": 6.0,
+        "title": "Band 6.0"
+      }
+    },
+    "summary": {
+      "progressPercentage": 40,
+      "completedLessons": 4,
+      "totalLessons": 10,
+      "totalXP": 3400
+    },
+    "lessons": [
+      {
+        "id": 11,
+        "title": "Digital Communication",
+        "slug": "digital-communication",
+        "description": "Essential terms for discussing online communication, social media, and digital platforms.",
+        "wordCount": 12,
+        "estimatedMinutes": 25,
+        "xpReward": 300,
+        "status": "COMPLETED",
+        "progressPercentage": 100,
+        "lockedReason": null
+      },
+      {
+        "id": 16,
+        "title": "E-commerce & Digital Economy",
+        "slug": "e-commerce-digital-economy",
+        "description": "Terms related to online shopping, digital payments, and the modern economy.",
+        "wordCount": 12,
+        "estimatedMinutes": 25,
+        "xpReward": 300,
+        "status": "IN_PROGRESS",
+        "progressPercentage": 65,
+        "lockedReason": null
+      },
+      {
+        "id": 19,
+        "title": "Cloud Computing",
+        "slug": "cloud-computing",
+        "description": "Advanced vocabulary for cloud services, remote storage, and distributed systems.",
+        "wordCount": 10,
+        "estimatedMinutes": 20,
+        "xpReward": 250,
+        "status": "LOCKED",
+        "progressPercentage": 0,
+        "lockedReason": "Score 850+ to unlock"
+      }
+    ]
+  }
+}
+```
+
+Lesson status values:
+
+```txt
+LOCKED
+UNLOCKED
+IN_PROGRESS
+COMPLETED
+```
+
+Lesson card fields:
+
+```txt
+id
+title
+description
+wordCount
+estimatedMinutes
+xpReward
+status
+progressPercentage
+lockedReason
+```
+
+Notes:
+
+- Query lessons and user progress for the authenticated user only.
+- Locked lesson cards should include a user-facing `lockedReason` when available.
+- Lesson cards navigate to `/lessons/:lessonId`.
+- Do not include vocabulary item detail here; that belongs to Lesson Detail.
+
+---
+
+## 12. Lesson APIs
 
 ### GET /api/v1/lessons/:lessonId
 
 Protected.
 
-Expanded response:
+Lesson Detail response. This endpoint represents the Lesson Detail page only, after the user has selected a lesson from Topic Detail.
 
 ```json
 {
@@ -724,7 +841,12 @@ Expanded response:
     "topic": {
       "id": 1,
       "title": "Education",
-      "slug": "education"
+      "slug": "education",
+      "bandLevel": {
+        "id": 2,
+        "bandScore": 6.0,
+        "title": "Band 6.0"
+      }
     },
     "vocabularies": [
       {
@@ -777,7 +899,7 @@ Response:
 
 ---
 
-## 12. Vocabulary APIs
+## 13. Vocabulary APIs
 
 ### GET /api/v1/vocabularies
 
@@ -813,7 +935,7 @@ Each item should include:
 
 ---
 
-## 13. Flashcard APIs
+## 14. Flashcard APIs
 
 ### GET /api/v1/lessons/:lessonId/flashcards
 
@@ -910,7 +1032,7 @@ Keep v1 request and expand response:
 
 ---
 
-## 14. Quiz APIs
+## 15. Quiz APIs
 
 The v1 `GET /lessons/:lessonId/quiz` and `POST /lessons/:lessonId/quiz/submit` work for submit-at-end quizzes. The screenshots show immediate feedback after each answer, so v2 adds quiz sessions.
 
@@ -1184,7 +1306,7 @@ Important:
 
 ---
 
-## 15. Profile APIs
+## 16. Profile APIs
 
 ### GET /api/v1/profile
 
@@ -1384,7 +1506,7 @@ Notes:
 
 ---
 
-## 16. Placement Test APIs
+## 17. Placement Test APIs
 
 ### GET /api/v1/placement-test
 
@@ -1494,7 +1616,7 @@ Notes:
 
 ---
 
-## 17. Subscription APIs
+## 18. Subscription APIs
 
 ### GET /api/v1/subscription/plans
 
@@ -1529,7 +1651,7 @@ MVP note:
 
 ---
 
-## 18. AI Example APIs
+## 19. AI Example APIs
 
 ### POST /api/v1/ai/examples
 
@@ -1572,13 +1694,14 @@ RATE_LIMITED
 
 ---
 
-## 19. Backend Module Updates
+## 20. Backend Module Updates
 
 Add or expand modules:
 
 ```txt
 backend/internal/modules/public/
 backend/internal/modules/search/
+backend/internal/modules/topic/
 backend/internal/modules/notification/
 backend/internal/modules/challenge/
 backend/internal/modules/profile/
@@ -1609,7 +1732,7 @@ routes.go
 
 ---
 
-## 20. Protected Route List
+## 21. Protected Route List
 
 Protected APIs:
 
@@ -1618,6 +1741,7 @@ Protected APIs:
 /api/v1/dashboard/*
 /api/v1/search/*
 /api/v1/roadmap
+/api/v1/topics/*
 /api/v1/lessons/*
 /api/v1/reviews/*
 /api/v1/flashcards/*
@@ -1643,7 +1767,7 @@ MVP may make placement protected to simplify attaching results to users.
 
 ---
 
-## 21. Implementation Priority
+## 22. Implementation Priority
 
 1. Expand `GET /dashboard` or `GET /dashboard/summary` to match dashboard screenshots.
 2. Expand `GET /roadmap` with summary, lock state, and topic progress.
@@ -1658,7 +1782,7 @@ MVP may make placement protected to simplify attaching results to users.
 
 ---
 
-## 22. Security Rules
+## 23. Security Rules
 
 - Never trust `userId` in request body.
 - Always use authenticated user ID from JWT context.

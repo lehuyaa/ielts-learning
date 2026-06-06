@@ -20,6 +20,7 @@ Frontend UI task rule:
 
 - Every frontend UI task must be checked against `docs/ui-review-checklist.md` before completion.
 - Every frontend UI task must be checked against `docs/design-review-checklist.md` before completion.
+- Every frontend UI task must check `docs/screenshots/README.md` when it exists.
 - For every frontend UI task, analyze the reference screenshot in `docs/screenshots/` before coding when one exists.
 - The screenshot is the source of truth for layout, section order, component hierarchy, spacing hierarchy, typography hierarchy, colors, and interaction placement.
 - Do not redesign a page when a screenshot exists.
@@ -407,21 +408,21 @@ Requirements:
   - Band 7.0
   - Band 8.0
 - Show topic cards under each band.
-- Show lesson cards/nodes under topics.
-- Show locked, unlocked, in-progress, and completed states.
-- Show progress percentage.
+- Show topic locked, unlocked, in-progress, and completed states.
+- Show topic progress percentage.
+- Topic cards route to `/topics/:topicId`.
 - Use polished UI based on `docs/design-system.md`.
 - Check `docs/ui-review-checklist.md`.
 - Use mock data only in this task.
 - Do not implement backend API in this task.
-- Do not implement future lesson/quiz/flashcard functionality.
+- Do not implement Topic Detail, Lesson Detail, quiz, or flashcard functionality.
 
 Acceptance criteria:
 
 - User can open `/roadmap`.
 - Roadmap is visually clear and responsive.
-- Locked lessons are visually disabled.
-- Completed lessons show a clear completed state.
+- Locked topics are visually disabled.
+- Completed topics show a clear completed state.
 - Mock data structure is easy to replace with real API data later.
 - Layout closely matches screenshot if one exists.
 - Typography hierarchy matches screenshot if one exists.
@@ -449,8 +450,7 @@ Requirements:
 - Return course.
 - Return band levels.
 - Return topics.
-- Return lessons.
-- Return user progress for lessons.
+- Return topic progress.
 - Return locked/unlocked/completed states.
 - Return progress percentages.
 - Avoid hardcoded user ID.
@@ -461,7 +461,7 @@ Acceptance criteria:
 
 - Endpoint returns nested roadmap data.
 - Works for demo user.
-- Uses authenticated user progress.
+- Uses authenticated user topic progress.
 - Does not expose unrelated user data.
 - Frontend can consume the response directly in Task 15.
 
@@ -492,6 +492,7 @@ Requirements:
 - Show error state.
 - Show empty state if no roadmap data exists.
 - Keep existing UI from Task 13.
+- Topic cards navigate to `/topics/:topicId`.
 - Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
@@ -557,7 +558,150 @@ Acceptance criteria:
 
 ---
 
-### Task 17 - Lesson Detail API
+### Task 17 - Topic Detail / Lesson List UI
+
+Frontend page:
+
+```txt
+/topics/:topicId
+```
+
+Goal:
+
+Create the Topic Detail page using mock data first.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Use Dashboard layout.
+- Show topic title, icon, band, and description.
+- Show topic progress.
+- Show statistics:
+  - Progress percentage
+  - Completed lessons
+  - Total XP
+- Show lesson list.
+- Show locked lessons.
+- Show unlocked lessons.
+- Show in-progress lessons.
+- Show completed lessons.
+- Lesson cards route to `/lessons/:lessonId`.
+- Use mock data only in this task.
+- Do not integrate backend API.
+- Do not modify Lesson Detail UI except for route compatibility if needed.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- User can open `/topics/:topicId`.
+- Page closely matches the Topic Detail screenshot.
+- Lesson cards route to Lesson Detail.
+- Locked lessons are visually disabled and show unlock reason when available.
+- In-progress lessons show progress percentage.
+- Page is responsive.
+- No backend integration required yet.
+
+---
+
+### Task 18 - Topic Detail API
+
+Backend endpoint:
+
+```txt
+GET /api/v1/topics/:topicId
+```
+
+Goal:
+
+Return Topic Detail data from MySQL.
+
+Requirements:
+
+- Protected endpoint.
+- Use authenticated user ID from JWT context.
+- Return topic metadata.
+- Return parent band level.
+- Return topic summary:
+  - progressPercentage
+  - completedLessons
+  - totalLessons
+  - totalXP
+- Return lessons for the topic.
+- Return lesson status:
+  - LOCKED
+  - UNLOCKED
+  - IN_PROGRESS
+  - COMPLETED
+- Return lesson card fields:
+  - id
+  - title
+  - description
+  - wordCount
+  - estimatedMinutes
+  - xpReward
+  - status
+  - progressPercentage
+  - lockedReason
+- Query progress only for authenticated user.
+- Avoid hardcoded user ID.
+- Avoid N+1 query problems where reasonable.
+- Use standard API response shape.
+
+Acceptance criteria:
+
+- Endpoint returns Topic Detail data.
+- Works for demo user.
+- Uses authenticated user progress.
+- Does not expose unrelated user data.
+- Missing topic returns NOT_FOUND.
+- Frontend can consume the response directly in Task 19.
+
+---
+
+### Task 19 - Connect Topic Detail API
+
+Frontend page:
+
+```txt
+/topics/:topicId
+```
+
+Goal:
+
+Replace Topic Detail mock data with real backend data.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add topic API function in `frontend/src/api/topic.ts`.
+- Add shared topic types in `frontend/src/types/topic.ts`.
+- Add React Query hook in `frontend/src/features/topic/hooks/useTopicDetail.ts`.
+- Use axios through shared API client.
+- Do not use fetch.
+- Show loading state.
+- Show error state.
+- Show not found/empty state.
+- Keep existing UI from Task 17.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- Topic Detail page fetches real API data.
+- Loading and error states work.
+- Lesson cards route correctly to `/lessons/:lessonId`.
+- No mock topic data remains in production page logic.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 20 - Lesson Detail API
 
 Backend endpoints:
 
@@ -598,7 +742,7 @@ Acceptance criteria:
 
 ---
 
-### Task 18 - Connect Lesson Detail Page to API
+### Task 21 - Connect Lesson Detail Page to API
 
 Frontend page:
 
@@ -639,7 +783,7 @@ Acceptance criteria:
 
 ---
 
-### Task 19 - Vocabulary List and Detail UI
+### Task 22 - Vocabulary List and Detail UI
 
 Frontend pages:
 
@@ -698,7 +842,7 @@ Acceptance criteria:
 
 ---
 
-### Task 20 - Vocabulary APIs
+### Task 23 - Vocabulary APIs
 
 Backend endpoints:
 
@@ -737,7 +881,7 @@ Acceptance criteria:
 
 ---
 
-### Task 21 - Connect Vocabulary Pages to API
+### Task 24 - Connect Vocabulary Pages to API
 
 Frontend pages:
 
@@ -778,7 +922,7 @@ Acceptance criteria:
 
 ## 7. Milestone 6 - Flashcards and Review
 
-### Task 22 - Flashcard Learning UI
+### Task 25 - Flashcard Learning UI
 
 Frontend pages:
 
@@ -828,7 +972,7 @@ Acceptance criteria:
 
 ---
 
-### Task 23 - Flashcard and Review APIs
+### Task 26 - Flashcard and Review APIs
 
 Backend endpoints:
 
@@ -875,7 +1019,7 @@ Acceptance criteria:
 
 ---
 
-### Task 24 - Connect Flashcard Pages to API
+### Task 27 - Connect Flashcard Pages to API
 
 Frontend pages:
 
@@ -919,7 +1063,7 @@ Acceptance criteria:
 
 ## 8. Milestone 7 - Quiz
 
-### Task 25 - Quiz Page UI
+### Task 28 - Quiz Page UI
 
 Frontend page:
 
@@ -961,7 +1105,7 @@ Acceptance criteria:
 
 ---
 
-### Task 26 - Quiz APIs
+### Task 29 - Quiz APIs
 
 Backend endpoints:
 
@@ -1003,7 +1147,7 @@ Acceptance criteria:
 
 ---
 
-### Task 27 - Connect Quiz Page to API
+### Task 30 - Connect Quiz Page to API
 
 Frontend page:
 
@@ -1045,7 +1189,7 @@ Acceptance criteria:
 
 ## 9. Milestone 8 - Dashboard and Profile
 
-### Task 28 - Dashboard Page UI
+### Task 31 - Dashboard Page UI
 
 Frontend page:
 
@@ -1091,7 +1235,7 @@ Acceptance criteria:
 
 ---
 
-### Task 29 - Dashboard API
+### Task 32 - Dashboard API
 
 Backend endpoint:
 
@@ -1128,7 +1272,7 @@ Acceptance criteria:
 
 ---
 
-### Task 30 - Connect Dashboard Page to API
+### Task 33 - Connect Dashboard Page to API
 
 Frontend page:
 
@@ -1150,7 +1294,7 @@ Requirements:
 - Use axios through shared API client.
 - Do not use fetch.
 - Show loading, error, and empty states.
-- Keep existing UI from Task 28.
+- Keep existing UI from Task 31.
 - Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
@@ -1166,7 +1310,7 @@ Acceptance criteria:
 
 ---
 
-### Task 31 - Profile Page UI
+### Task 34 - Profile Page UI
 
 Frontend page:
 
@@ -1211,7 +1355,7 @@ Acceptance criteria:
 
 ---
 
-### Task 32 - Profile APIs
+### Task 35 - Profile APIs
 
 Backend endpoints:
 
@@ -1249,7 +1393,7 @@ Acceptance criteria:
 
 ---
 
-### Task 33 - Connect Profile Page to API
+### Task 36 - Connect Profile Page to API
 
 Frontend page:
 
@@ -1293,7 +1437,7 @@ Acceptance criteria:
 
 ## 10. Milestone 9 - Gamification and Activity
 
-### Task 34 - XP System
+### Task 37 - XP System
 
 Goal:
 
@@ -1324,7 +1468,7 @@ Acceptance criteria:
 
 ---
 
-### Task 35 - Achievement System
+### Task 38 - Achievement System
 
 Goal:
 
@@ -1349,7 +1493,7 @@ Acceptance criteria:
 
 ---
 
-### Task 36 - Daily Activity and Streak
+### Task 39 - Daily Activity and Streak
 
 Goal:
 
@@ -1380,7 +1524,7 @@ Acceptance criteria:
 
 ---
 
-### Task 37 - Notifications
+### Task 40 - Notifications
 
 Goal:
 
@@ -1409,7 +1553,7 @@ Acceptance criteria:
 
 ## 11. Milestone 10 - Polish and QA
 
-### Task 38 - Global Frontend Error Handling
+### Task 41 - Global Frontend Error Handling
 
 Requirements:
 
@@ -1427,7 +1571,7 @@ Acceptance criteria:
 
 ---
 
-### Task 39 - Loading, Empty, and Error States
+### Task 42 - Loading, Empty, and Error States
 
 Add or refine:
 
@@ -1455,7 +1599,7 @@ Acceptance criteria:
 
 ---
 
-### Task 40 - Final QA
+### Task 43 - Final QA
 
 Checklist:
 
@@ -1463,6 +1607,7 @@ Checklist:
 - Login.
 - Dashboard.
 - Roadmap.
+- Topic detail.
 - Lesson detail.
 - Vocabulary list.
 - Vocabulary detail.

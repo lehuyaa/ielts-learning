@@ -41,6 +41,7 @@ ielts-vocab-app/
 │   │   │   ├── auth/
 │   │   │   ├── dashboard/
 │   │   │   ├── roadmap/
+│   │   │   ├── topic/
 │   │   │   ├── lesson/
 │   │   │   ├── vocabulary/
 │   │   │   ├── flashcard/
@@ -74,6 +75,7 @@ frontend/src/
 │   ├── auth.ts
 │   ├── dashboard.ts
 │   ├── roadmap.ts
+│   ├── topic.ts
 │   ├── lesson.ts
 │   ├── vocabulary.ts
 │   ├── flashcard.ts
@@ -89,6 +91,7 @@ frontend/src/
 │   ├── auth.ts
 │   ├── dashboard.ts
 │   ├── roadmap.ts
+│   ├── topic.ts
 │   ├── lesson.ts
 │   ├── vocabulary.ts
 │   ├── flashcard.ts
@@ -103,6 +106,7 @@ frontend/src/
 │   ├── auth/
 │   ├── dashboard/
 │   ├── roadmap/
+│   ├── topic/
 │   ├── lesson/
 │   ├── vocabulary/
 │   ├── flashcard/
@@ -116,6 +120,7 @@ frontend/src/
 │   ├── RegisterPage.tsx
 │   ├── DashboardPage.tsx
 │   ├── RoadmapPage.tsx
+│   ├── TopicDetailPage.tsx
 │   ├── LessonDetailPage.tsx
 │   ├── FlashcardPage.tsx
 │   ├── ReviewDuePage.tsx
@@ -161,6 +166,7 @@ Routes:
  /placement-test
  /dashboard
  /roadmap
+ /topics/:topicId
  /lessons/:lessonId
  /lessons/:lessonId/flashcards
  /lessons/:lessonId/quiz
@@ -175,6 +181,7 @@ Protected routes:
 ```txt
 /dashboard
 /roadmap
+/topics/*
 /lessons/*
 /reviews
 /vocabulary/*
@@ -186,6 +193,59 @@ Create:
 ```txt
 frontend/src/features/auth/ProtectedRoute.tsx
 ```
+
+---
+
+## 4.1 Learning Page Hierarchy
+
+The approved Figma flow is:
+
+```txt
+/roadmap
+↓
+/topics/:topicId
+↓
+/lessons/:lessonId
+↓
+/lessons/:lessonId/flashcards
+↓
+/lessons/:lessonId/quiz
+```
+
+Navigation responsibilities:
+
+```txt
+Roadmap Page
+↓ topic card click
+Topic Detail Page
+↓ lesson card click
+Lesson Detail Page
+↓ learning action
+Flashcards or Quiz
+```
+
+Roadmap Page:
+
+- Shows bands.
+- Shows topic cards grouped by band.
+- Shows topic progress.
+- Does not navigate directly to Lesson Detail from topic cards.
+
+Topic Detail Page:
+
+- Shows topic metadata.
+- Shows topic progress and statistics.
+- Shows lesson list.
+- Shows lesson status.
+- Shows locked, unlocked, in-progress, and completed lessons.
+
+Lesson Detail Page:
+
+- Shows lesson metadata.
+- Shows topic and band context.
+- Shows vocabulary summary.
+- Shows learning actions.
+- Launches Flashcards and Quiz activities.
 
 ---
 
