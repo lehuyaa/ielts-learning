@@ -1,90 +1,76 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { useCallback, useMemo, useState, type ReactNode } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import {
-  getMe,
   login as loginRequest,
   register as registerRequest,
 } from '@/api/auth'
 import {
   clearAccessToken,
   getAccessToken,
-  setAccessToken,
+  setAccessToken as persistAccessToken,
 } from '@/api/api'
+import { currentUserQueryKey } from '@/features/auth/hooks/useCurrentUser'
 import type { LoginInput, RegisterInput, User } from '@/types/auth'
 
 import { AuthContext } from './authContext.ts'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const queryClient = useQueryClient()
+  const [accessToken, setAccessToken] = useState(() => getAccessToken())
 
-  useEffect(() => {
-    let isMounted = true
+  const saveSession = useCallback(
+    (token: string, user: User) => {
+      persistAccessToken(token)
+      setAccessToken(token)
+      queryClient.setQueryData(currentUserQueryKey, user)
+    },
+    [queryClient],
+  )
 
-    async function loadUser() {
-      const token = getAccessToken()
-      if (!token) {
-        setIsLoading(false)
-        return
-      }
+  const loginMutation = useMutation({
+    mutationFn: loginRequest,
+    onSuccess: (response) => {
+      saveSession(response.accessToken, response.user)
+    },
+  })
 
-      try {
-        const currentUser = await getMe()
-        if (isMounted) {
-          setUser(currentUser)
-        }
-      } catch {
-        clearAccessToken()
-        if (isMounted) {
-          setUser(null)
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false)
-        }
-      }
-    }
+  const registerMutation = useMutation({
+    mutationFn: registerRequest,
+    onSuccess: (response) => {
+      saveSession(response.accessToken, response.user)
+    },
+  })
 
-    void loadUser()
+  const login = useCallback(
+    async (input: LoginInput) => {
+      await loginMutation.mutateAsync(input)
+    },
+    [loginMutation],
+  )
 
-    return () => {
-      isMounted = false
-    }
-  }, [])
-
-  const login = useCallback(async (input: LoginInput) => {
-    const response = await loginRequest(input)
-    setAccessToken(response.accessToken)
-    setUser(response.user)
-  }, [])
-
-  const register = useCallback(async (input: RegisterInput) => {
-    const response = await registerRequest(input)
-    setAccessToken(response.accessToken)
-    setUser(response.user)
-  }, [])
+  const register = useCallback(
+    async (input: RegisterInput) => {
+      await registerMutation.mutateAsync(input)
+    },
+    [registerMutation],
+  )
 
   const logout = useCallback(() => {
     clearAccessToken()
-    setUser(null)
-  }, [])
+    setAccessToken(null)
+    queryClient.removeQueries({ queryKey: currentUserQueryKey })
+  }, [queryClient])
 
   const value = useMemo(
     () => ({
-      user,
-      isAuthenticated: Boolean(user),
-      isLoading,
+      accessToken,
+      isAuthenticated: Boolean(accessToken),
       login,
       register,
       logout,
     }),
-    [isLoading, login, logout, register, user],
+    [accessToken, login, logout, register],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

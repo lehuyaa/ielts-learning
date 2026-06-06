@@ -9,7 +9,25 @@ import {
 import type React from "react";
 import { useNavigate } from "react-router-dom";
 
-export function RoadmapHeader() {
+type RoadmapHeaderProps = {
+  title: string
+  subtitle: string
+  topicsCompleted: number
+  totalTopics: number
+  currentBand: number | null
+  wordsMastered: number
+  currentStreak: number
+}
+
+export function RoadmapHeader({
+  title,
+  subtitle,
+  topicsCompleted,
+  totalTopics,
+  currentBand,
+  wordsMastered,
+  currentStreak,
+}: RoadmapHeaderProps) {
   const navigate = useNavigate();
 
   return (
@@ -32,17 +50,17 @@ export function RoadmapHeader() {
 
             <div className="min-w-0">
               <h1 className="truncate text-xl font-bold tracking-normal text-[#10111f]">
-                Vocabulary Roadmap
+                {title}
               </h1>
               <p className="mt-1 text-base font-medium text-[#676982]">
-                Band 5.0 → 8.5
+                {subtitle}
               </p>
             </div>
           </div>
 
           <div className="hidden rounded-full border border-[#ffd75f] bg-[#fffdf5] px-5 py-2 text-base font-bold text-[#b84a00] md:flex md:items-center md:gap-2">
             <Flame className="size-4 text-[#ff6b00]" aria-hidden="true" />
-            14 Day Streak
+            {currentStreak} Day Streak
           </div>
         </div>
       </header>
@@ -57,19 +75,19 @@ export function RoadmapHeader() {
               />
             }
             label="Topics Completed"
-            value="3/19"
+            value={`${topicsCompleted}/${totalTopics}`}
           />
           <StatCard
             icon={<Star className="size-5 text-warning" aria-hidden="true" />}
             label="Current Band"
-            value="6.5"
+            value={currentBand == null ? '-' : currentBand.toFixed(1)}
           />
           <StatCard
             icon={
               <TrendingUp className="size-5 text-primary" aria-hidden="true" />
             }
             label="Words Mastered"
-            value="847"
+            value={String(wordsMastered)}
           />
         </div>
       </section>

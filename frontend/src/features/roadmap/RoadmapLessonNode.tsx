@@ -3,7 +3,7 @@ import { CheckCircle2, Clock3, Lock, PlayCircle } from 'lucide-react'
 import type {
   RoadmapLesson,
   RoadmapLessonStatus,
-} from '@/features/roadmap/mockRoadmap'
+} from '@/features/roadmap/types'
 import { cn } from '@/lib/utils'
 
 type RoadmapLessonNodeProps = {

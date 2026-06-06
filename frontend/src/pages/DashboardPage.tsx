@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useAuth } from '@/contexts/auth/useAuth'
+import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser'
 
 export function DashboardPage() {
-  const { user } = useAuth()
+  const { data: user } = useCurrentUser()
 
   return (
     <div className="space-y-12">

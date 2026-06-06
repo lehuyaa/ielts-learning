@@ -10,6 +10,7 @@ ORM: GORM
 Auth: JWT
 Styling: Tailwind CSS + shadcn/ui
 Frontend HTTP client: axios
+Server state: @tanstack/react-query
 ```
 
 ---
@@ -244,20 +245,18 @@ export async function login(input: LoginRequest): Promise<AuthResponse> {
 
 ## 6. Frontend State Management
 
-For MVP:
+Client state:
 
-- Use React state
-- Use React Context for auth
+- Use local React state for component-only state.
+- Use React Context only for auth state, theme state, and UI preferences.
 - Use URL search params for filters
-- Optional: TanStack Query for server state
 
-Recommendation:
+Server state:
 
-Use TanStack Query if you want cleaner API state handling.
-
-If keeping simple:
-
-- useEffect + useState is acceptable for MVP
+- Use `@tanstack/react-query`.
+- Do not fetch API data inside `useEffect`.
+- Do not use `useState` + `useEffect` as a replacement for React Query.
+- Do not store API resources inside Context.
 
 Avoid:
 
@@ -274,7 +273,42 @@ Context placement:
 
 ---
 
-## 7. UI Source Of Truth
+## 7. Server State
+
+Use:
+
+- `@tanstack/react-query`
+
+Pattern:
+
+```txt
+API Layer
+↓
+React Query Hook
+↓
+Page/Component
+```
+
+Example:
+
+```txt
+src/api/roadmap.ts
+↓
+src/features/roadmap/hooks/useRoadmap.ts
+↓
+RoadmapPage.tsx
+```
+
+Rules:
+
+- API modules in `frontend/src/api` perform HTTP calls through the shared axios instance.
+- React Query hooks call API modules and expose data, loading, error, mutation, cache, and refetch state.
+- Pages and components consume React Query hooks instead of calling API modules directly.
+- Loading, error, caching, mutation, invalidation, and refetch behavior should come from React Query.
+
+---
+
+## 8. UI Source Of Truth
 
 When a page screenshot exists:
 
@@ -296,7 +330,7 @@ If screenshots and design preferences conflict, follow the screenshot.
 
 ---
 
-## 8. Validation Architecture
+## 9. Validation Architecture
 
 Validation contracts:
 

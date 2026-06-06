@@ -1,14 +1,14 @@
 import { Bell, Search } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/contexts/auth/useAuth'
+import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser'
 
 type TopbarProps = {
   title: string
 }
 
 export function Topbar({ title }: TopbarProps) {
-  const { user } = useAuth()
+  const { data: user } = useCurrentUser()
   const initial = user?.name?.trim().charAt(0).toUpperCase() || 'L'
 
   return (

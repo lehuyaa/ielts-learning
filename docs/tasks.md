@@ -34,6 +34,15 @@ Validation contract rule:
 - Never implement validation on only one side for backend-submitted forms.
 - Any validation change must update `docs/validation-contracts.md`, the frontend Zod schema, and backend request DTO validation.
 
+Frontend API consumption rule:
+
+- Every frontend task that consumes backend APIs must use React Query.
+- Do not fetch API data inside `useEffect`.
+- Do not manage loading/error state manually with `useState` + `useEffect` when React Query can handle it.
+- API modules must stay in `frontend/src/api`.
+- React Query hooks should live in the relevant feature folder, for example `frontend/src/features/roadmap/hooks/useRoadmap.ts`.
+- Pages and components should consume React Query hooks instead of calling API modules directly.
+
 ---
 
 ## 2. Milestone 1 - Project Setup
@@ -78,6 +87,7 @@ Requirements:
 - ESLint
 - react-router-dom
 - axios
+- @tanstack/react-query
 
 Acceptance criteria:
 
@@ -1467,6 +1477,7 @@ Acceptance criteria:
 - Main happy path works end-to-end.
 - Frontend uses axios only.
 - No frontend code uses fetch.
+- Frontend API data is fetched through React Query.
 - Validation contracts are respected.
 - Protected routes work.
 - No hardcoded user ID.

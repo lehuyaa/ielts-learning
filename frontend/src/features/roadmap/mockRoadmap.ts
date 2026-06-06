@@ -1,38 +1,4 @@
-export type RoadmapLessonStatus =
-  | 'locked'
-  | 'unlocked'
-  | 'in-progress'
-  | 'completed'
-
-export type RoadmapLesson = {
-  id: string
-  title: string
-  duration: string
-  wordCount: number
-  status: RoadmapLessonStatus
-}
-
-export type RoadmapTopic = {
-  id: string
-  title: string
-  description: string
-  progress: number
-  icon: string
-  completedLessons: number
-  totalLessons: number
-  lessons: RoadmapLesson[]
-}
-
-export type RoadmapBand = {
-  id: string
-  band: string
-  title: string
-  description: string
-  progress: number
-  lessonCount: number
-  topicCount: number
-  topics: RoadmapTopic[]
-}
+import type { RoadmapBand } from '@/features/roadmap/types'
 
 export const roadmapBands: RoadmapBand[] = [
   {
@@ -41,6 +7,7 @@ export const roadmapBands: RoadmapBand[] = [
     title: 'Foundation Vocabulary',
     description:
       'Build reliable words for everyday IELTS topics and short academic responses.',
+    status: 'completed',
     progress: 72,
     lessonCount: 12,
     topicCount: 3,
@@ -142,6 +109,7 @@ export const roadmapBands: RoadmapBand[] = [
     title: 'Topic Fluency',
     description:
       'Strengthen vocabulary for common IELTS themes with clearer examples and collocations.',
+    status: 'in-progress',
     progress: 38,
     lessonCount: 40,
     topicCount: 4,
@@ -268,6 +236,7 @@ export const roadmapBands: RoadmapBand[] = [
     title: 'Academic Precision',
     description:
       'Learn more precise vocabulary for argument, comparison, cause, and evaluation.',
+    status: 'locked',
     progress: 8,
     lessonCount: 16,
     topicCount: 4,
@@ -330,6 +299,7 @@ export const roadmapBands: RoadmapBand[] = [
     title: 'Advanced Expression',
     description:
       'Practice flexible academic language for nuanced opinions and complex explanations.',
+    status: 'locked',
     progress: 0,
     lessonCount: 8,
     topicCount: 2,

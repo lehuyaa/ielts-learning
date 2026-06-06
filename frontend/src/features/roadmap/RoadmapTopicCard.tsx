@@ -1,7 +1,7 @@
 import { ArrowRight, CheckCircle2 } from 'lucide-react'
 
 import { RoadmapProgressBar } from '@/features/roadmap/RoadmapProgressBar'
-import type { RoadmapTopic } from '@/features/roadmap/mockRoadmap'
+import type { RoadmapTopic } from '@/features/roadmap/types'
 
 type RoadmapTopicCardProps = {
   topic: RoadmapTopic

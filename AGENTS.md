@@ -54,6 +54,7 @@ Frontend must use:
 - shadcn/ui
 - react-router-dom
 - axios
+- @tanstack/react-query
 - React Hook Form
 - Zod
 - Lucide React
@@ -289,6 +290,36 @@ For every UI task:
 If screenshots and personal design preferences conflict:
 
 Follow the screenshot.
+
+### State Management Rules
+
+Client State:
+
+- React Context
+- Local component state
+
+Server State:
+
+- React Query (TanStack Query)
+
+Rules:
+
+- Do not use `useEffect` for fetching API data.
+- Do not use `useState` + `useEffect` as a replacement for React Query.
+- All API data should be fetched through React Query.
+- API mutations should use React Query mutations.
+- Caching should be handled by React Query.
+- Loading states should come from React Query.
+- Error states should come from React Query.
+- Refetching should come from React Query.
+
+Use Context only for:
+
+- Auth state
+- Theme state
+- UI preferences
+
+Do not store API resources inside Context.
 
 ### Validation
 

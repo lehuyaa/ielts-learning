@@ -1,7 +1,7 @@
 import { CheckCircle2, Lock } from 'lucide-react'
 
 import { RoadmapTopicCard } from '@/features/roadmap/RoadmapTopicCard'
-import type { RoadmapBand } from '@/features/roadmap/mockRoadmap'
+import type { RoadmapBand, RoadmapLessonStatus } from '@/features/roadmap/types'
 import { cn } from '@/lib/utils'
 
 type RoadmapBandSectionProps = {
@@ -9,9 +9,7 @@ type RoadmapBandSectionProps = {
 }
 
 export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
-  const isComplete = band.band === '5.0'
-  const isInProgress = band.band === '6.0'
-  const isLocked = !isComplete && !isInProgress
+  const isLocked = band.status === 'locked'
   const topics = getScreenshotTopicOrder(band)
 
   if (isLocked) {
@@ -43,8 +41,8 @@ export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
     <section className="relative py-10">
       <BandNode
         band={band.band}
-        status={isComplete ? 'Complete' : 'In Progress'}
-        statusVariant={isComplete ? 'complete' : 'progress'}
+        status={bandStatusLabel(band.status)}
+        statusVariant={band.status}
         topicCount={band.topicCount}
       />
 
@@ -65,14 +63,34 @@ function getScreenshotTopicOrder(band: RoadmapBand) {
   const order = ['technology', 'environment', 'government', 'economy']
 
   return [...band.topics].sort(
-    (first, second) => order.indexOf(first.id) - order.indexOf(second.id),
+    (first, second) =>
+      topicOrderIndex(order, first.id) - topicOrderIndex(order, second.id),
   )
+}
+
+function topicOrderIndex(order: string[], topicId: string) {
+  const index = order.indexOf(topicId)
+  return index === -1 ? order.length : index
+}
+
+function bandStatusLabel(status: RoadmapLessonStatus) {
+  switch (status) {
+    case 'completed':
+      return 'Complete'
+    case 'in-progress':
+      return 'In Progress'
+    case 'unlocked':
+      return 'Unlocked'
+    case 'locked':
+    default:
+      return 'Locked'
+  }
 }
 
 type BandNodeProps = {
   band: string
   status: string
-  statusVariant: 'complete' | 'progress'
+  statusVariant: RoadmapLessonStatus
   topicCount: number
 }
 
@@ -81,13 +99,13 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
     <div
       className={cn(
         'mx-auto max-w-sm rounded-2xl border p-5',
-        statusVariant === 'complete' && 'border-[#dce2f3] bg-white',
-        statusVariant === 'progress' && 'border-[#add2ff] bg-[#eef7ff]',
+        statusVariant === 'completed' && 'border-[#dce2f3] bg-white',
+        statusVariant !== 'completed' && 'border-[#add2ff] bg-[#eef7ff]',
       )}
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          {statusVariant === 'complete' ? (
+          {statusVariant === 'completed' ? (
             <CheckCircle2 className="size-6 text-success" aria-hidden="true" />
           ) : (
             <span className="size-6 rounded-full bg-primary" aria-hidden="true" />
@@ -104,8 +122,8 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
         <span
           className={cn(
             'rounded-full px-3 py-1 text-base font-bold',
-            statusVariant === 'complete' && 'bg-[#eef2f7] text-[#40516b]',
-            statusVariant === 'progress' && 'bg-[#dbeafe] text-[#1d4ed8]',
+            statusVariant === 'completed' && 'bg-[#eef2f7] text-[#40516b]',
+            statusVariant !== 'completed' && 'bg-[#dbeafe] text-[#1d4ed8]',
           )}
         >
           {status}

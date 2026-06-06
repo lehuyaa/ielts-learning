@@ -11,6 +11,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { BrandMark } from '@/components/layout/BrandMark'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth/useAuth'
+import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser'
 import { cn } from '@/lib/utils'
 
 const navigationItems = [
@@ -51,7 +52,8 @@ function getNavLinkClass(isActive: boolean) {
 }
 
 export function Sidebar() {
-  const { logout, user } = useAuth()
+  const { logout } = useAuth()
+  const { data: user } = useCurrentUser()
   const navigate = useNavigate()
 
   function handleLogout() {
