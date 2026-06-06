@@ -933,6 +933,100 @@ Each item should include:
 }
 ```
 
+### GET /api/v1/vocabularies/:vocabularyId
+
+Protected.
+
+Future endpoint for the full Vocabulary Detail / Word Detail page at `/vocabulary/:vocabularyId`.
+
+Response:
+
+```json
+{
+  "data": {
+    "id": 1,
+    "word": "sustainable",
+    "slug": "sustainable",
+    "ipa": "/səˈsteɪnəbl/",
+    "audioUrl": "/audio/sustainable.mp3",
+    "partOfSpeech": "adjective",
+    "meanings": [
+      {
+        "language": "en",
+        "text": "Able to continue without damaging resources."
+      },
+      {
+        "language": "vi",
+        "text": "bền vững"
+      }
+    ],
+    "examples": [
+      {
+        "sentence": "Cities need sustainable transport systems.",
+        "meaningVi": "Các thành phố cần hệ thống giao thông bền vững."
+      }
+    ],
+    "synonyms": ["eco-friendly", "renewable"],
+    "antonyms": ["unsustainable"],
+    "collocations": ["sustainable development", "sustainable energy"],
+    "ieltsUsage": "Useful for IELTS Writing Task 2 and Speaking Part 3 responses about environment and development.",
+    "relatedForms": [
+      {
+        "word": "sustain",
+        "partOfSpeech": "verb"
+      },
+      {
+        "word": "sustainability",
+        "partOfSpeech": "noun"
+      }
+    ],
+    "topic": {
+      "id": 3,
+      "title": "Environment",
+      "slug": "environment"
+    },
+    "band": {
+      "score": 6.5,
+      "label": "Band 6.5"
+    },
+    "frequency": {
+      "label": "High",
+      "score": 86
+    },
+    "userProgress": {
+      "status": "REVIEW",
+      "reviewCount": 4,
+      "correctCount": 3,
+      "wrongCount": 1,
+      "learnedAt": "2026-06-05T08:00:00+07:00",
+      "lastReviewedAt": "2026-06-06T08:00:00+07:00",
+      "nextReviewAt": "2026-06-08T08:00:00+07:00"
+    },
+    "masteryScore": 72
+  }
+}
+```
+
+Response fields should include:
+
+```txt
+word
+slug
+ipa
+partOfSpeech
+meanings
+examples
+synonyms
+antonyms
+collocations
+ieltsUsage
+relatedForms
+topic
+band
+userProgress
+masteryScore
+```
+
 ---
 
 ## 14. Flashcard APIs

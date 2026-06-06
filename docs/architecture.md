@@ -244,8 +244,29 @@ Lesson Detail Page:
 - Shows lesson metadata.
 - Shows topic and band context.
 - Shows vocabulary summary.
+- Shows lesson vocabulary cards for learning within the lesson.
+- Can link from a vocabulary card "Full Detail" action to `/vocabulary/:vocabularyId`.
 - Shows learning actions.
 - Launches Flashcards and Quiz activities.
+
+Vocabulary Detail Page:
+
+- Route: `/vocabulary/:vocabularyId`.
+- Shows full dictionary-style detail for a vocabulary item.
+- Is separate from Lesson Detail vocabulary cards.
+- Displays word metadata, meanings, examples, synonyms, antonyms, collocations, IELTS usage, related forms, user progress, and mastery information.
+
+Extended vocabulary detail flow:
+
+```txt
+Roadmap
+↓
+Topic Detail
+↓
+Lesson Detail
+↓ Full Detail
+Vocabulary Detail
+```
 
 ---
 

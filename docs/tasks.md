@@ -794,13 +794,16 @@ Frontend pages:
 
 Goal:
 
-Create vocabulary browsing UI using mock data first.
+Create vocabulary browsing UI and the full Vocabulary Detail / Word Detail page using mock data first.
 
 Requirements:
 
 - Analyze the reference screenshot before coding if one exists.
 - The screenshot is the source of truth.
 - Do not redesign the page.
+- `/vocabulary/:vocabularyId` must match `docs/screenshots/vocabulary-detail.png` when that screenshot exists.
+- Keep Lesson Detail vocabulary cards; they are still used for lesson learning.
+- Lesson Detail "Full Detail" actions can route to `/vocabulary/:vocabularyId`.
 
 Vocabulary list page:
 
@@ -815,12 +818,32 @@ Vocabulary list page:
 
 Vocabulary detail page:
 
-- Word header.
+- Top navigation with back button.
+- Word hero section.
+- Topic badge.
+- Band badge.
+- Word title.
 - IPA.
 - Part of speech.
-- Meaning VI.
-- Meaning EN.
-- Example sentence.
+- Listen button placeholder.
+- Rating/frequency visual.
+- Tabs:
+  - Meaning
+  - Examples
+  - Synonyms
+  - Collocations
+  - IELTS Usage
+- Meaning cards.
+- Related forms.
+- Quick actions sidebar:
+  - Add to Flashcards
+  - Practice in Quiz
+- Word stats:
+  - IELTS Band
+  - Frequency
+  - Topic
+  - User Status
+- Mastery Score card.
 - Synonyms.
 - Antonyms.
 - Collocations.
@@ -833,6 +856,9 @@ Acceptance criteria:
 
 - `/vocabulary` page works with mock data.
 - `/vocabulary/:vocabularyId` page works with mock data.
+- Vocabulary Detail page matches `docs/screenshots/vocabulary-detail.png` when available.
+- Lesson Detail vocabulary cards are not removed.
+- Full Detail navigation path is supported from Lesson Detail to Vocabulary Detail when applicable.
 - UI is responsive.
 - Check `docs/ui-review-checklist.md`.
 - Layout closely matches screenshot if one exists.

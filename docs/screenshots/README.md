@@ -22,6 +22,7 @@ Canonical references:
 roadmap.png
 topic-detail.png
 lesson-detail.png
+vocabulary-detail.png
 ```
 
 Current approved files in this repository:
@@ -39,6 +40,9 @@ Topic Detail:
 Lesson Detail:
 - lesson-detail1.png
 - lesson-detail2.png
+
+Vocabulary Detail:
+- vocabulary-detail.png
 ```
 
 Navigation rules:
@@ -46,6 +50,8 @@ Navigation rules:
 - Roadmap topic cards open Topic Detail.
 - Topic Detail lesson cards open Lesson Detail.
 - Lesson Detail launches Flashcards and Quiz.
+- Lesson Detail "Full Detail" opens Vocabulary Detail.
+- Vocabulary Detail at `/vocabulary/:vocabularyId` uses `vocabulary-detail.png` as the visual source of truth.
 
 Implementation rules:
 
