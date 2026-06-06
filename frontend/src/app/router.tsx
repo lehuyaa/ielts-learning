@@ -5,6 +5,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { MarketingLayout } from '@/components/layout/MarketingLayout'
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { FlashcardPage } from '@/pages/FlashcardPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { LessonDetailPage } from '@/pages/LessonDetailPage'
 import { LessonPracticePlaceholderPage } from '@/pages/LessonPracticePlaceholderPage'
@@ -64,7 +65,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/lessons/:lessonId/flashcards',
-            element: <LessonPracticePlaceholderPage mode="flashcards" />,
+            element: <FlashcardPage />,
           },
           {
             path: '/lessons/:lessonId/quiz',

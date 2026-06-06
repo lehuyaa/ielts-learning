@@ -16,11 +16,10 @@ export function DashboardLayout() {
   const title = pageTitles[pathname] ?? "Dashboard";
   const isFullBleedPage =
     pathname === "/roadmap" ||
+    pathname === "/reviews" ||
     pathname.startsWith("/topics/") ||
     pathname.startsWith("/vocabulary") ||
-    (pathname.startsWith("/lessons/") &&
-      !pathname.endsWith("/flashcards") &&
-      !pathname.endsWith("/quiz"));
+    (pathname.startsWith("/lessons/") && !pathname.endsWith("/quiz"));
 
   if (isFullBleedPage) {
     return <Outlet />;
