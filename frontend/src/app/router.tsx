@@ -13,6 +13,7 @@ import { ProfilePage } from '@/pages/ProfilePage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
+import { TopicDetailPage } from '@/pages/TopicDetailPage'
 import { VocabularyPage } from '@/pages/VocabularyPage'
 
 export const router = createBrowserRouter([
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
           {
             path: '/roadmap',
             element: <RoadmapPage />,
+          },
+          {
+            path: '/topics/:topicId',
+            element: <TopicDetailPage />,
           },
           {
             path: '/lessons/:lessonId',

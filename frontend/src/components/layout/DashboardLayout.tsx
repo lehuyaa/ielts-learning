@@ -16,6 +16,7 @@ export function DashboardLayout() {
   const title = pageTitles[pathname] ?? 'Dashboard'
   const isFullBleedPage =
     pathname === '/roadmap' ||
+    pathname.startsWith('/topics/') ||
     (pathname.startsWith('/lessons/') &&
       !pathname.endsWith('/flashcards') &&
       !pathname.endsWith('/quiz'))
