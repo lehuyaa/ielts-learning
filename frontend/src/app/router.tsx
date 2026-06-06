@@ -6,6 +6,8 @@ import { MarketingLayout } from '@/components/layout/MarketingLayout'
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LandingPage } from '@/pages/LandingPage'
+import { LessonDetailPage } from '@/pages/LessonDetailPage'
+import { LessonPracticePlaceholderPage } from '@/pages/LessonPracticePlaceholderPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { RegisterPage } from '@/pages/RegisterPage'
@@ -49,6 +51,18 @@ export const router = createBrowserRouter([
           {
             path: '/roadmap',
             element: <RoadmapPage />,
+          },
+          {
+            path: '/lessons/:lessonId',
+            element: <LessonDetailPage />,
+          },
+          {
+            path: '/lessons/:lessonId/flashcards',
+            element: <LessonPracticePlaceholderPage mode="flashcards" />,
+          },
+          {
+            path: '/lessons/:lessonId/quiz',
+            element: <LessonPracticePlaceholderPage mode="quiz" />,
           },
           {
             path: '/reviews',

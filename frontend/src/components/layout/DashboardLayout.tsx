@@ -14,9 +14,13 @@ const pageTitles: Record<string, string> = {
 export function DashboardLayout() {
   const { pathname } = useLocation()
   const title = pageTitles[pathname] ?? 'Dashboard'
-  const isRoadmapPage = pathname === '/roadmap'
+  const isFullBleedPage =
+    pathname === '/roadmap' ||
+    (pathname.startsWith('/lessons/') &&
+      !pathname.endsWith('/flashcards') &&
+      !pathname.endsWith('/quiz'))
 
-  if (isRoadmapPage) {
+  if (isFullBleedPage) {
     return <Outlet />
   }
 

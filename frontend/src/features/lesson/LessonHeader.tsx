@@ -1,0 +1,100 @@
+import {
+  ArrowLeft,
+  BookOpen,
+  Clock3,
+  GraduationCap,
+  Trophy,
+} from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+import type { MockLesson } from "./mockLesson";
+
+type LessonHeaderProps = {
+  lesson: MockLesson;
+  lessonId: string;
+  learnedCount: number;
+  progressPercentage: number;
+};
+
+export function LessonHeader({
+  lesson,
+  lessonId,
+  learnedCount,
+  progressPercentage,
+}: LessonHeaderProps) {
+  const navigate = useNavigate();
+
+  return (
+    <header className="border-b border-[#e6e6f3] bg-white">
+      <div className="mx-auto grid min-h-[88px] max-w-[1500px] gap-5 px-4 py-4 md:grid-cols-[260px_1fr_auto] md:items-center md:px-8">
+        <div className="flex min-w-0 items-center gap-5">
+          <button
+            aria-label="Go back"
+            className="grid size-10 shrink-0 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+            onClick={() => navigate(-1)}
+            type="button"
+          >
+            <ArrowLeft className="size-5" aria-hidden="true" />
+          </button>
+          <div className="min-w-0">
+            <h1 className="truncate text-xl font-bold tracking-normal text-[#10111f]">
+              {lesson.title}
+            </h1>
+            <p className="mt-1 text-base font-medium text-[#676982]">
+              Band {lesson.bandRange} - {lesson.vocabulary.length} words
+            </p>
+          </div>
+        </div>
+
+        <div className="min-w-0">
+          <div className="h-3 overflow-hidden rounded-full bg-[#ebeaff]">
+            <div
+              className="h-full rounded-full bg-primary"
+              style={{ width: `${progressPercentage}%` }}
+            />
+          </div>
+          <p className="mt-2 text-base font-medium text-[#676982]">
+            {learnedCount}/{lesson.vocabulary.length} words learned
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 md:justify-end">
+          <LessonHeaderMeta icon={BookOpen} label={lesson.topic} />
+          <LessonHeaderMeta
+            icon={Clock3}
+            label={`~${lesson.estimatedMinutes} min`}
+          />
+          <LessonHeaderMeta icon={Trophy} label={`${lesson.xpReward} XP`} />
+          <Button asChild className="h-12 rounded-full px-6 text-base">
+            <Link to={`/lessons/${lessonId}/flashcards`}>
+              <GraduationCap aria-hidden="true" />
+              Start Flashcards
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+type LessonHeaderMetaProps = {
+  icon: typeof BookOpen;
+  label: string;
+};
+
+function LessonHeaderMeta({ icon: Icon, label }: LessonHeaderMetaProps) {
+  return (
+    <span
+      className={cn(
+        "hidden items-center gap-2 rounded-full border border-[#ecebff] bg-[#f8f8ff]",
+        "px-3 py-2 text-sm font-bold text-[#676982] xl:inline-flex",
+      )}
+    >
+      <Icon className="size-4" aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
