@@ -1,79 +1,97 @@
-import { BookOpen, Search, SlidersHorizontal } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-
-import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
 import {
-  mockVocabulary,
-  type MockVocabulary,
-  type VocabularyDifficulty,
-  type VocabularyStatus,
-} from '@/features/vocabulary/mockVocabulary'
-import { cn } from '@/lib/utils'
+  AlertCircle,
+  ArrowLeft,
+  BookOpen,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  Layers,
+  Search,
+  SlidersHorizontal,
+  Star,
+} from "lucide-react";
+import type React from "react";
+import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'] as const
-const bands = ['All', '5.5', '6.5', '7'] as const
-const statuses = ['All', 'New', 'Learning', 'Review', 'Mastered'] as const
+import { APIError } from "@/api/api";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useVocabularies } from "@/features/vocabulary/hooks/useVocabularies";
+import { mapVocabularyListItem } from "@/features/vocabulary/mapVocabulary";
+import { cn } from "@/lib/utils";
+import type {
+  VocabularyDifficulty,
+  VocabularyDifficultyLabel,
+  VocabularyListItemViewModel,
+  VocabularyQueryParams,
+  VocabularyStatus,
+  VocabularyStatusLabel,
+} from "@/types/vocabulary";
 
-type DifficultyFilter = (typeof difficulties)[number]
-type BandFilter = (typeof bands)[number]
-type StatusFilter = (typeof statuses)[number]
+const difficulties = ["All", "Beginner", "Intermediate", "Advanced"] as const;
+const bands = ["All", "5.0", "6.0", "7.0", "8.0"] as const;
+const statuses = ["All", "New", "Learning", "Review", "Mastered"] as const;
+
+type DifficultyFilter = (typeof difficulties)[number];
+type BandFilter = (typeof bands)[number];
+type StatusFilter = (typeof statuses)[number];
+
+const defaultPage = 1;
+const defaultLimit = 20;
 
 export function VocabularyPage() {
-  const [query, setQuery] = useState('')
-  const [difficulty, setDifficulty] = useState<DifficultyFilter>('All')
-  const [band, setBand] = useState<BandFilter>('All')
-  const [status, setStatus] = useState<StatusFilter>('All')
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const [difficulty, setDifficulty] = useState<DifficultyFilter>("All");
+  const [band, setBand] = useState<BandFilter>("All");
+  const [status, setStatus] = useState<StatusFilter>("All");
+  const [page, setPage] = useState(defaultPage);
 
-  const filteredVocabulary = useMemo(() => {
-    const normalizedQuery = query.trim().toLowerCase()
+  const apiParams = useMemo<VocabularyQueryParams>(
+    () => ({
+      q: query.trim() || undefined,
+      difficulty:
+        difficulty === "All" ? undefined : difficultyLabelToApi(difficulty),
+      targetBand: band === "All" ? undefined : Number(band),
+      status: status === "All" ? undefined : statusLabelToApi(status),
+      page,
+      limit: defaultLimit,
+    }),
+    [band, difficulty, page, query, status],
+  );
 
-    return mockVocabulary.filter((item) => {
-      const matchesQuery =
-        normalizedQuery.length === 0 ||
-        item.word.toLowerCase().includes(normalizedQuery) ||
-        item.topic.toLowerCase().includes(normalizedQuery) ||
-        item.shortDefinition.toLowerCase().includes(normalizedQuery)
-      const matchesDifficulty =
-        difficulty === 'All' || item.difficulty === difficulty
-      const matchesBand = band === 'All' || item.bandScore.toFixed(1) === band
-      const matchesStatus = status === 'All' || item.status === status
+  const vocabularyQuery = useVocabularies(apiParams);
+  const items = useMemo(
+    () => vocabularyQuery.data?.items.map(mapVocabularyListItem) ?? [],
+    [vocabularyQuery.data],
+  );
+  const pagination = vocabularyQuery.data?.pagination;
+  const errorMessage = getVocabularyErrorMessage(vocabularyQuery.error);
+  const masteredCount = items.filter((item) => item.status === "Mastered").length;
+  const isEmpty =
+    !vocabularyQuery.isLoading && !errorMessage && items.length === 0;
 
-      return matchesQuery && matchesDifficulty && matchesBand && matchesStatus
-    })
-  }, [band, difficulty, query, status])
+  function resetToFirstPage() {
+    setPage(defaultPage);
+  }
 
   return (
-    <div className="min-h-screen bg-[#f8f8ff] px-4 py-8 text-[#10111f] md:px-8">
-      <main className="mx-auto max-w-[1280px]">
-        <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm md:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-normal text-primary">
-                Vocabulary
-              </p>
-              <h1 className="mt-2 text-3xl font-bold tracking-normal text-[#10111f] md:text-4xl">
-                Vocabulary Library
-              </h1>
-              <p className="mt-3 max-w-2xl text-lg font-medium text-[#676982]">
-                Browse IELTS words, review your progress, and open full word
-                detail pages for dictionary-style study.
-              </p>
-            </div>
+    <div className="min-h-screen bg-[#f7f7fc] text-[#10111f]">
+      <VocabularyHeader
+        masteredCount={masteredCount}
+        onBack={() => navigate(-1)}
+        page={pagination?.page ?? page}
+        totalPages={pagination?.totalPages ?? 0}
+        totalWords={pagination?.total ?? 0}
+      />
 
-            <div className="flex items-center gap-3 rounded-2xl bg-[#f0efff] px-4 py-3 text-primary">
-              <BookOpen className="size-5" aria-hidden="true" />
-              <span className="text-base font-bold">
-                {mockVocabulary.length} mock words
-              </span>
-            </div>
-          </div>
-        </section>
-
+      <main className="mx-auto max-w-5xl px-4 pb-10 pt-8 lg:px-0">
         <section className="mt-8 rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm">
           <div className="grid gap-4 lg:grid-cols-[1fr_auto_auto_auto]">
-            <label className="relative block">
+            <label className="relative block lg:self-end">
               <span className="sr-only">Search vocabulary</span>
               <Search
                 className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-[#85889c]"
@@ -81,7 +99,10 @@ export function VocabularyPage() {
               />
               <Input
                 className="h-12 rounded-full pl-12 text-base"
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  resetToFirstPage();
+                }}
                 placeholder="Search word, topic, or meaning"
                 value={query}
               />
@@ -89,79 +110,213 @@ export function VocabularyPage() {
 
             <FilterSelect
               label="Difficulty"
-              onChange={(value) => setDifficulty(value as DifficultyFilter)}
+              onChange={(value) => {
+                setDifficulty(value as DifficultyFilter);
+                resetToFirstPage();
+              }}
               options={difficulties}
               value={difficulty}
             />
             <FilterSelect
               label="Band"
-              onChange={(value) => setBand(value as BandFilter)}
+              onChange={(value) => {
+                setBand(value as BandFilter);
+                resetToFirstPage();
+              }}
               options={bands}
               value={band}
             />
             <FilterSelect
               label="Status"
-              onChange={(value) => setStatus(value as StatusFilter)}
+              onChange={(value) => {
+                setStatus(value as StatusFilter);
+                resetToFirstPage();
+              }}
               options={statuses}
               value={status}
             />
           </div>
         </section>
 
-        {filteredVocabulary.length > 0 ? (
-          <section className="mt-8 grid gap-5 lg:grid-cols-2">
-            {filteredVocabulary.map((item) => (
-              <VocabularyListCard item={item} key={item.id} />
-            ))}
-          </section>
-        ) : (
-          <section className="mt-8 rounded-2xl border border-[#e6e6f3] bg-white p-8 text-center shadow-sm">
-            <SlidersHorizontal
-              className="mx-auto size-9 text-[#85889c]"
-              aria-hidden="true"
-            />
-            <h2 className="mt-4 text-2xl font-bold tracking-normal">
-              No matching words
-            </h2>
-            <p className="mx-auto mt-3 max-w-md text-base font-medium text-[#676982]">
-              Try a different search term or clear one of the mock filters.
-            </p>
-          </section>
-        )}
+        {vocabularyQuery.isLoading ? (
+          <VocabularyStateMessage
+            description="Loading words, progress, and filter results."
+            title="Loading vocabulary"
+          />
+        ) : null}
+
+        {errorMessage ? (
+          <VocabularyStateMessage
+            description={errorMessage}
+            title="Vocabulary unavailable"
+            tone="error"
+          />
+        ) : null}
+
+        {isEmpty ? (
+          <VocabularyStateMessage
+            description="Try a different search term or clear one of the filters."
+            icon="filters"
+            title="No matching words"
+          />
+        ) : null}
+
+        {!vocabularyQuery.isLoading && !errorMessage && items.length > 0 ? (
+          <>
+            <section className="mt-8 grid gap-5 lg:grid-cols-2">
+              {items.map((item) => (
+                <VocabularyListCard item={item} key={item.id} />
+              ))}
+            </section>
+
+            {pagination ? (
+              <PaginationControls
+                onPageChange={setPage}
+                pagination={pagination}
+              />
+            ) : null}
+          </>
+        ) : null}
       </main>
     </div>
-  )
+  );
+}
+
+type VocabularyHeaderProps = {
+  totalWords: number;
+  page: number;
+  totalPages: number;
+  masteredCount: number;
+  onBack: () => void;
+};
+
+function VocabularyHeader({
+  totalWords,
+  page,
+  totalPages,
+  masteredCount,
+  onBack,
+}: VocabularyHeaderProps) {
+  return (
+    <>
+      <header className="border-b border-[#e6e6f3] bg-white">
+        <div className="mx-auto flex min-h-20 max-w-5xl items-center justify-between gap-6 px-4 lg:px-0">
+          <div className="flex min-w-0 items-center gap-5">
+            <button
+              aria-label="Go back"
+              className="grid size-9 shrink-0 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+              onClick={onBack}
+              type="button"
+            >
+              <ArrowLeft className="size-5" aria-hidden="true" />
+            </button>
+
+            <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-white">
+              <BookOpen className="size-6" aria-hidden="true" />
+            </div>
+
+            <div className="min-w-0">
+              <h1 className="truncate text-xl font-bold tracking-normal text-[#10111f]">
+                Vocabulary Library
+              </h1>
+              <p className="mt-1 text-base font-medium text-[#676982]">
+                Search, filter, and review IELTS vocabulary
+              </p>
+            </div>
+          </div>
+
+          <div className="hidden rounded-full border border-[#dde3ff] bg-[#f7f7ff] px-5 py-2 text-base font-bold text-primary md:flex md:items-center md:gap-2">
+            <Layers className="size-4" aria-hidden="true" />
+            Word Bank
+          </div>
+        </div>
+      </header>
+
+      <section className="mx-auto max-w-5xl px-4 pt-10 lg:px-0">
+        <div className="grid gap-5 lg:grid-cols-3">
+          <HeaderStatCard
+            icon={<BookOpen className="size-5 text-primary" aria-hidden="true" />}
+            label="Total Words"
+            value={String(totalWords)}
+          />
+          <HeaderStatCard
+            icon={<Star className="size-5 text-warning" aria-hidden="true" />}
+            label="Current Page"
+            value={totalPages > 0 ? `${page}/${totalPages}` : "-"}
+          />
+          <HeaderStatCard
+            icon={
+              <CheckCircle2
+                className="size-5 text-success"
+                aria-hidden="true"
+              />
+            }
+            label="Mastered Here"
+            value={String(masteredCount)}
+          />
+        </div>
+      </section>
+    </>
+  );
+}
+
+type HeaderStatCardProps = {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+};
+
+function HeaderStatCard({ icon, label, value }: HeaderStatCardProps) {
+  return (
+    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-5 shadow-sm">
+      <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#ececf6]">
+        {icon}
+      </div>
+      <div>
+        <p className="text-2xl font-bold tracking-normal text-[#10111f]">
+          {value}
+        </p>
+        <p className="mt-1 text-base font-medium text-[#676982]">{label}</p>
+      </div>
+    </article>
+  );
 }
 
 type FilterSelectProps = {
-  label: string
-  options: readonly string[]
-  value: string
-  onChange: (value: string) => void
-}
+  label: string;
+  options: readonly string[];
+  value: string;
+  onChange: (value: string) => void;
+};
 
 function FilterSelect({ label, options, value, onChange }: FilterSelectProps) {
   return (
     <label className="grid gap-2">
       <span className="text-sm font-bold text-[#676982]">{label}</span>
-      <select
-        className="h-12 min-w-36 rounded-full border border-[#e6e6f3] bg-white px-4 text-base font-semibold text-[#10111f] shadow-sm outline-none transition-colors focus:border-primary"
-        onChange={(event) => onChange(event.target.value)}
-        value={value}
-      >
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+      <span className="relative block">
+        <select
+          className="h-12 min-w-36 appearance-none rounded-full border border-[#e6e6f3] bg-white py-0 pl-4 pr-4 text-base font-semibold text-[#10111f] shadow-sm outline-none transition-colors focus:border-primary"
+          onChange={(event) => onChange(event.target.value)}
+          value={value}
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-[#10111f]"
+          aria-hidden="true"
+        />
+      </span>
     </label>
-  )
+  );
 }
 
 type VocabularyListCardProps = {
-  item: MockVocabulary
-}
+  item: VocabularyListItemViewModel;
+};
 
 function VocabularyListCard({ item }: VocabularyListCardProps) {
   return (
@@ -203,34 +358,173 @@ function VocabularyListCard({ item }: VocabularyListCardProps) {
         </p>
       </article>
     </Link>
-  )
+  );
 }
 
-function DifficultyBadge({ difficulty }: { difficulty: VocabularyDifficulty }) {
+function DifficultyBadge({
+  difficulty,
+}: {
+  difficulty: VocabularyDifficultyLabel;
+}) {
   const styles = {
-    Beginner: 'bg-[#dcfce7] text-[#138a53]',
-    Intermediate: 'bg-[#fff3c4] text-[#c46700]',
-    Advanced: 'bg-[#fde5e7] text-[#d22f38]',
-  }
+    Beginner: "bg-[#dcfce7] text-[#138a53]",
+    Intermediate: "bg-[#fff3c4] text-[#c46700]",
+    Advanced: "bg-[#fde5e7] text-[#d22f38]",
+  };
 
   return (
-    <span className={cn('rounded-full px-3 py-1 text-base font-bold', styles[difficulty])}>
+    <span
+      className={cn(
+        "rounded-full px-3 py-1 text-base font-bold",
+        styles[difficulty],
+      )}
+    >
       {difficulty}
     </span>
-  )
+  );
 }
 
-function StatusBadge({ status }: { status: VocabularyStatus }) {
+function StatusBadge({ status }: { status: VocabularyStatusLabel }) {
   const styles = {
-    New: 'bg-[#f3f4f6] text-[#4b5563]',
-    Learning: 'bg-[#eff6ff] text-[#2563eb]',
-    Review: 'bg-[#fff7ed] text-[#c46600]',
-    Mastered: 'bg-[#e8fff3] text-[#138a53]',
+    New: "bg-[#f3f4f6] text-[#4b5563]",
+    Learning: "bg-[#eff6ff] text-[#2563eb]",
+    Review: "bg-[#fff7ed] text-[#c46600]",
+    Mastered: "bg-[#e8fff3] text-[#138a53]",
+  };
+
+  return (
+    <span
+      className={cn(
+        "rounded-full px-3 py-1 text-base font-bold",
+        styles[status],
+      )}
+    >
+      {status}
+    </span>
+  );
+}
+
+type PaginationControlsProps = {
+  pagination: {
+    page: number;
+    totalPages: number;
+    total: number;
+  };
+  onPageChange: (page: number) => void;
+};
+
+function PaginationControls({
+  pagination,
+  onPageChange,
+}: PaginationControlsProps) {
+  if (pagination.totalPages <= 1) {
+    return null;
   }
 
   return (
-    <span className={cn('rounded-full px-3 py-1 text-base font-bold', styles[status])}>
-      {status}
-    </span>
-  )
+    <section className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-base font-bold text-[#676982]">
+        Page {pagination.page} of {pagination.totalPages} · {pagination.total}{" "}
+        words
+      </p>
+      <div className="flex gap-3">
+        <Button
+          className="rounded-full"
+          disabled={pagination.page <= 1}
+          onClick={() => onPageChange(pagination.page - 1)}
+          type="button"
+          variant="outline"
+        >
+          <ChevronLeft aria-hidden="true" />
+          Previous
+        </Button>
+        <Button
+          className="rounded-full"
+          disabled={pagination.page >= pagination.totalPages}
+          onClick={() => onPageChange(pagination.page + 1)}
+          type="button"
+        >
+          Next
+          <ChevronRight aria-hidden="true" />
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+type VocabularyStateMessageProps = {
+  title: string;
+  description: string;
+  tone?: "default" | "error";
+  icon?: "filters";
+};
+
+function VocabularyStateMessage({
+  title,
+  description,
+  tone = "default",
+  icon,
+}: VocabularyStateMessageProps) {
+  return (
+    <section className="mt-8 rounded-2xl border border-[#e6e6f3] bg-white p-8 text-center shadow-sm">
+      {tone === "error" ? (
+        <AlertCircle
+          className="mx-auto size-9 text-destructive"
+          aria-hidden="true"
+        />
+      ) : null}
+      {icon === "filters" ? (
+        <SlidersHorizontal
+          className="mx-auto size-9 text-[#85889c]"
+          aria-hidden="true"
+        />
+      ) : null}
+      <h2 className="mt-4 text-2xl font-bold tracking-normal">{title}</h2>
+      <p className="mx-auto mt-3 max-w-md text-base font-medium text-[#676982]">
+        {description}
+      </p>
+    </section>
+  );
+}
+
+function difficultyLabelToApi(
+  difficulty: Exclude<DifficultyFilter, "All">,
+): VocabularyDifficulty {
+  switch (difficulty) {
+    case "Beginner":
+      return "BEGINNER";
+    case "Advanced":
+      return "ADVANCED";
+    case "Intermediate":
+    default:
+      return "INTERMEDIATE";
+  }
+}
+
+function statusLabelToApi(
+  status: Exclude<StatusFilter, "All">,
+): VocabularyStatus {
+  switch (status) {
+    case "Learning":
+      return "LEARNING";
+    case "Review":
+      return "REVIEW";
+    case "Mastered":
+      return "MASTERED";
+    case "New":
+    default:
+      return "NEW";
+  }
+}
+
+function getVocabularyErrorMessage(error: Error | null) {
+  if (!error) {
+    return null;
+  }
+
+  if (error instanceof APIError) {
+    return error.message;
+  }
+
+  return "Unable to load vocabulary right now.";
 }

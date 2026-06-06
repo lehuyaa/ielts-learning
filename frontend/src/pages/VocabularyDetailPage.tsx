@@ -1,4 +1,5 @@
 import {
+  AlertCircle,
   ArrowLeft,
   ArrowRight,
   Bookmark,
@@ -12,12 +13,12 @@ import type React from 'react'
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
+import { APIError } from '@/api/api'
 import { Button } from '@/components/ui/button'
-import {
-  findVocabularyById,
-  type MockVocabulary,
-} from '@/features/vocabulary/mockVocabulary'
+import { useVocabularyDetail } from '@/features/vocabulary/hooks/useVocabularyDetail'
+import { mapVocabularyDetail } from '@/features/vocabulary/mapVocabulary'
 import { cn } from '@/lib/utils'
+import type { VocabularyDetailViewModel } from '@/types/vocabulary'
 
 const tabs = [
   'Meaning',
@@ -32,13 +33,69 @@ type VocabularyTab = (typeof tabs)[number]
 export function VocabularyDetailPage() {
   const { vocabularyId } = useParams()
   const navigate = useNavigate()
-  const vocabulary = findVocabularyById(vocabularyId)
+  const vocabularyQuery = useVocabularyDetail(vocabularyId)
+  const vocabulary = vocabularyQuery.data
+    ? mapVocabularyDetail(vocabularyQuery.data)
+    : null
   const [activeTab, setActiveTab] = useState<VocabularyTab>('Meaning')
+  const errorMessage = getVocabularyDetailErrorMessage(vocabularyQuery.error)
 
-  if (!vocabulary) {
-    return <VocabularyNotFound />
+  if (vocabularyQuery.isLoading) {
+    return (
+      <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+        <VocabularyDetailState
+          description="Loading word metadata, examples, and your progress."
+          title="Loading word"
+        />
+      </VocabularyDetailShell>
+    )
   }
 
+  if (errorMessage) {
+    return (
+      <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+        <VocabularyDetailState
+          description={errorMessage}
+          title="Word unavailable"
+          tone="error"
+        />
+      </VocabularyDetailShell>
+    )
+  }
+
+  if (!vocabulary) {
+    return (
+      <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+        <VocabularyNotFound />
+      </VocabularyDetailShell>
+    )
+  }
+
+  return (
+    <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+      <WordHero vocabulary={vocabulary} />
+
+      <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
+        <div className="min-w-0">
+          <VocabularyTabs activeTab={activeTab} onChange={setActiveTab} />
+          <TabContent activeTab={activeTab} vocabulary={vocabulary} />
+        </div>
+
+        <VocabularySidebar vocabulary={vocabulary} />
+      </section>
+    </VocabularyDetailShell>
+  )
+}
+
+type VocabularyDetailShellProps = {
+  children: React.ReactNode
+  navigateBack: () => void
+}
+
+function VocabularyDetailShell({
+  children,
+  navigateBack,
+}: VocabularyDetailShellProps) {
   return (
     <div className="min-h-screen bg-[#f8f8ff] text-[#10111f]">
       <header className="border-b border-[#e6e6f3] bg-white">
@@ -47,7 +104,7 @@ export function VocabularyDetailPage() {
             <button
               aria-label="Go back"
               className="grid size-10 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
-              onClick={() => navigate(-1)}
+              onClick={navigateBack}
               type="button"
             >
               <ArrowLeft className="size-5" aria-hidden="true" />
@@ -67,22 +124,13 @@ export function VocabularyDetailPage() {
       </header>
 
       <main className="mx-auto max-w-[1280px] px-4 py-8 md:px-8">
-        <WordHero vocabulary={vocabulary} />
-
-        <section className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
-          <div className="min-w-0">
-            <VocabularyTabs activeTab={activeTab} onChange={setActiveTab} />
-            <TabContent activeTab={activeTab} vocabulary={vocabulary} />
-          </div>
-
-          <VocabularySidebar vocabulary={vocabulary} />
-        </section>
+        {children}
       </main>
     </div>
   )
 }
 
-function WordHero({ vocabulary }: { vocabulary: MockVocabulary }) {
+function WordHero({ vocabulary }: { vocabulary: VocabularyDetailViewModel }) {
   return (
     <section className="rounded-[28px] bg-gradient-to-br from-[#6258f6] to-[#8318e8] p-6 text-white shadow-sm md:p-8">
       <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
@@ -167,7 +215,7 @@ function VocabularyTabs({ activeTab, onChange }: VocabularyTabsProps) {
 
 type TabContentProps = {
   activeTab: VocabularyTab
-  vocabulary: MockVocabulary
+  vocabulary: VocabularyDetailViewModel
 }
 
 function TabContent({ activeTab, vocabulary }: TabContentProps) {
@@ -233,17 +281,23 @@ function TabContent({ activeTab, vocabulary }: TabContentProps) {
 
       <ContentCard eyebrow="Related Forms">
         <div className="flex flex-wrap gap-3">
-          {vocabulary.relatedForms.map((form) => (
-            <span
-              className="rounded-full border border-[#dde3ff] bg-[#f0efff] px-4 py-3 text-base font-bold text-primary"
-              key={`${form.word}-${form.partOfSpeech}`}
-            >
-              {form.word}
-              <span className="ml-2 font-medium text-[#676982]">
-                {form.partOfSpeech}
+          {vocabulary.relatedForms.length > 0 ? (
+            vocabulary.relatedForms.map((form) => (
+              <span
+                className="rounded-full border border-[#dde3ff] bg-[#f0efff] px-4 py-3 text-base font-bold text-primary"
+                key={`${form.word}-${form.partOfSpeech}`}
+              >
+                {form.word}
+                <span className="ml-2 font-medium text-[#676982]">
+                  {form.partOfSpeech}
+                </span>
               </span>
-            </span>
-          ))}
+            ))
+          ) : (
+            <p className="text-lg font-medium text-[#676982]">
+              No related forms have been added yet.
+            </p>
+          )}
         </div>
       </ContentCard>
     </div>
@@ -267,6 +321,16 @@ function ContentCard({ eyebrow, children }: ContentCardProps) {
 }
 
 function TokenCard({ eyebrow, tokens }: { eyebrow: string; tokens: string[] }) {
+  if (tokens.length === 0) {
+    return (
+      <ContentCard eyebrow={eyebrow}>
+        <p className="text-lg font-medium text-[#676982]">
+          No {eyebrow.toLowerCase()} have been added yet.
+        </p>
+      </ContentCard>
+    )
+  }
+
   return (
     <ContentCard eyebrow={eyebrow}>
       <div className="flex flex-wrap gap-3">
@@ -283,7 +347,11 @@ function TokenCard({ eyebrow, tokens }: { eyebrow: string; tokens: string[] }) {
   )
 }
 
-function VocabularySidebar({ vocabulary }: { vocabulary: MockVocabulary }) {
+function VocabularySidebar({
+  vocabulary,
+}: {
+  vocabulary: VocabularyDetailViewModel
+}) {
   return (
     <aside className="grid gap-6 lg:sticky lg:top-8">
       <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm">
@@ -340,16 +408,62 @@ function StatRow({ label, value }: { label: string; value: string }) {
 
 function VocabularyNotFound() {
   return (
-    <div className="grid min-h-[70vh] place-items-center bg-[#f8f8ff] px-4">
-      <section className="w-full max-w-md rounded-2xl border border-[#e6e6f3] bg-white p-8 text-center shadow-sm">
-        <h1 className="text-3xl font-bold tracking-normal">Word not found</h1>
-        <p className="mt-3 text-base font-medium text-[#676982]">
-          This mock vocabulary item does not exist yet.
-        </p>
+    <section className="mx-auto w-full max-w-md rounded-2xl border border-[#e6e6f3] bg-white p-8 text-center shadow-sm">
+      <h1 className="text-3xl font-bold tracking-normal">Word not found</h1>
+      <p className="mt-3 text-base font-medium text-[#676982]">
+        This vocabulary item does not exist yet.
+      </p>
+      <Button asChild className="mt-8 rounded-full">
+        <Link to="/vocabulary">Back to vocabulary</Link>
+      </Button>
+    </section>
+  )
+}
+
+type VocabularyDetailStateProps = {
+  title: string
+  description: string
+  tone?: 'default' | 'error'
+}
+
+function VocabularyDetailState({
+  title,
+  description,
+  tone = 'default',
+}: VocabularyDetailStateProps) {
+  return (
+    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-8 text-center shadow-sm">
+      {tone === 'error' ? (
+        <AlertCircle
+          className="mx-auto size-9 text-destructive"
+          aria-hidden="true"
+        />
+      ) : null}
+      <h2 className="mt-4 text-2xl font-bold tracking-normal">{title}</h2>
+      <p className="mx-auto mt-3 max-w-md text-base font-medium text-[#676982]">
+        {description}
+      </p>
+      {tone === 'error' ? (
         <Button asChild className="mt-8 rounded-full">
           <Link to="/vocabulary">Back to vocabulary</Link>
         </Button>
-      </section>
-    </div>
+      ) : null}
+    </section>
   )
+}
+
+function getVocabularyDetailErrorMessage(error: Error | null) {
+  if (!error) {
+    return null
+  }
+
+  if (error instanceof APIError) {
+    if (error.status === 404) {
+      return 'This vocabulary item could not be found.'
+    }
+
+    return error.message
+  }
+
+  return 'Unable to load this word right now.'
 }
