@@ -1,10 +1,10 @@
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-import type { MockTopic } from './mockTopic'
+import type { TopicDetailViewModel } from '@/types/topic'
 
 type TopicHeaderProps = {
-  topic: MockTopic
+  topic: TopicDetailViewModel
 }
 
 export function TopicHeader({ topic }: TopicHeaderProps) {

@@ -1,32 +1,32 @@
-import { AlertCircle, Trophy } from 'lucide-react'
+import { AlertCircle, Trophy } from "lucide-react";
 
-import { APIError } from '@/api/api'
-import { RoadmapBandSection } from '@/features/roadmap/RoadmapBandSection'
-import { RoadmapHeader } from '@/features/roadmap/RoadmapHeader'
-import { useRoadmap } from '@/features/roadmap/hooks/useRoadmap'
-import { mapRoadmapToViewModel } from '@/features/roadmap/mapRoadmap'
-import type { RoadmapViewModel } from '@/features/roadmap/types'
+import { APIError } from "@/api/api";
+import { RoadmapBandSection } from "@/features/roadmap/RoadmapBandSection";
+import { RoadmapHeader } from "@/features/roadmap/RoadmapHeader";
+import { useRoadmap } from "@/features/roadmap/hooks/useRoadmap";
+import { mapRoadmapToViewModel } from "@/features/roadmap/mapRoadmap";
+import type { RoadmapViewModel } from "@/features/roadmap/types";
 
 const loadingRoadmap: RoadmapViewModel = {
-  title: 'Vocabulary Roadmap',
-  subtitle: 'Band 5.0 → 8.5',
+  title: "Vocabulary Roadmap",
+  subtitle: "Band 5.0 → 8.5",
   topicsCompleted: 0,
   totalTopics: 0,
   currentBand: null,
   wordsMastered: 0,
   currentStreak: 0,
   bands: [],
-}
+};
 
 export function RoadmapPage() {
-  const roadmapQuery = useRoadmap()
+  const roadmapQuery = useRoadmap();
   const roadmap = roadmapQuery.data
     ? mapRoadmapToViewModel(roadmapQuery.data)
-    : null
-  const viewModel = roadmap ?? loadingRoadmap
-  const errorMessage = getRoadmapErrorMessage(roadmapQuery.error)
+    : null;
+  const viewModel = roadmap ?? loadingRoadmap;
+  const errorMessage = getRoadmapErrorMessage(roadmapQuery.error);
   const isEmpty =
-    !roadmapQuery.isLoading && !errorMessage && viewModel.bands.length === 0
+    !roadmapQuery.isLoading && !errorMessage && viewModel.bands.length === 0;
 
   return (
     <div className="min-h-screen bg-[#f7f7fc] text-[#10111f]">
@@ -79,34 +79,34 @@ export function RoadmapPage() {
         ) : null}
       </div>
     </div>
-  )
+  );
 }
 
 function getRoadmapErrorMessage(error: Error | null) {
   if (!error) {
-    return null
+    return null;
   }
 
   return error instanceof APIError
     ? error.message
-    : 'Unable to load the roadmap right now.'
+    : "Unable to load the roadmap right now.";
 }
 
 type RoadmapStateMessageProps = {
-  title: string
-  description: string
-  tone?: 'default' | 'error'
-}
+  title: string;
+  description: string;
+  tone?: "default" | "error";
+};
 
 function RoadmapStateMessage({
   title,
   description,
-  tone = 'default',
+  tone = "default",
 }: RoadmapStateMessageProps) {
   return (
     <section className="relative py-10">
       <div className="mx-auto max-w-sm rounded-2xl border border-[#e3e4f8] bg-white p-6 text-center">
-        {tone === 'error' ? (
+        {tone === "error" ? (
           <AlertCircle
             className="mx-auto size-8 text-destructive"
             aria-hidden="true"
@@ -120,7 +120,7 @@ function RoadmapStateMessage({
         </p>
       </div>
     </section>
-  )
+  );
 }
 
 function RoadmapMasterCard() {
@@ -136,5 +136,5 @@ function RoadmapMasterCard() {
         </p>
       </div>
     </section>
-  )
+  );
 }

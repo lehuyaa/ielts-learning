@@ -59,21 +59,7 @@ export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
 }
 
 function getScreenshotTopicOrder(band: RoadmapBand) {
-  if (band.band !== "6.0") {
-    return band.topics;
-  }
-
-  const order = ["technology", "environment", "government", "economy"];
-
-  return [...band.topics].sort(
-    (first, second) =>
-      topicOrderIndex(order, first.id) - topicOrderIndex(order, second.id),
-  );
-}
-
-function topicOrderIndex(order: string[], topicId: string) {
-  const index = order.indexOf(topicId);
-  return index === -1 ? order.length : index;
+  return band.topics;
 }
 
 function bandStatusLabel(status: RoadmapLessonStatus) {

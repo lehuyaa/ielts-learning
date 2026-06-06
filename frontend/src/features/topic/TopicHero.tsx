@@ -1,10 +1,10 @@
 import { CheckCircle2, TrendingUp, Target } from 'lucide-react'
 import type React from 'react'
 
-import type { MockTopic } from './mockTopic'
+import type { TopicDetailViewModel } from '@/types/topic'
 
 type TopicHeroProps = {
-  topic: MockTopic
+  topic: TopicDetailViewModel
 }
 
 export function TopicHero({ topic }: TopicHeroProps) {

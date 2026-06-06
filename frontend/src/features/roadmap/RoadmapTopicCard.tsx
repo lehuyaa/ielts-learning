@@ -1,15 +1,15 @@
-import { ArrowRight, CheckCircle2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
-import { RoadmapProgressBar } from '@/features/roadmap/RoadmapProgressBar'
-import type { RoadmapTopic } from '@/features/roadmap/types'
+import { RoadmapProgressBar } from "@/features/roadmap/RoadmapProgressBar";
+import type { RoadmapTopic } from "@/features/roadmap/types";
 
 type RoadmapTopicCardProps = {
-  topic: RoadmapTopic
-}
+  topic: RoadmapTopic;
+};
 
 export function RoadmapTopicCard({ topic }: RoadmapTopicCardProps) {
-  const isComplete = topic.progress === 100
+  const isComplete = topic.progress === 100;
 
   return (
     <Link aria-label={`Open ${topic.title}`} to={`/topics/${topic.id}`}>
@@ -40,7 +40,7 @@ export function RoadmapTopicCard({ topic }: RoadmapTopicCardProps) {
         <div className="mt-6">
           <RoadmapProgressBar
             value={topic.progress}
-            variant={isComplete ? 'success' : 'primary'}
+            variant={isComplete ? "success" : "primary"}
           />
         </div>
 
@@ -48,11 +48,11 @@ export function RoadmapTopicCard({ topic }: RoadmapTopicCardProps) {
           <span>
             {topic.completedLessons}/{topic.totalLessons} lessons
           </span>
-          <span className={isComplete ? 'text-[#009f73]' : undefined}>
+          <span className={isComplete ? "text-[#009f73]" : undefined}>
             {topic.progress}%
           </span>
         </div>
       </article>
     </Link>
-  )
+  );
 }

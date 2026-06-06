@@ -6,22 +6,21 @@ import {
   Lock,
   Star,
   Zap,
-} from 'lucide-react'
-import { Link } from 'react-router-dom'
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
-import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
-
-import type { MockTopic, TopicLesson } from './mockTopic'
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { TopicDetailViewModel, TopicLessonViewModel } from "@/types/topic";
 
 type LessonListProps = {
-  topic: MockTopic
-}
+  topic: TopicDetailViewModel;
+};
 
 export function LessonList({ topic }: LessonListProps) {
   const availableLessons = topic.lessons.filter(
-    (lesson) => lesson.status !== 'locked',
-  ).length
+    (lesson) => lesson.status !== "locked",
+  ).length;
 
   return (
     <section>
@@ -40,7 +39,7 @@ export function LessonList({ topic }: LessonListProps) {
         ))}
       </div>
 
-      <section className="mt-10 rounded-2xl bg-gradient-to-br from-[#5d55f1] to-[#7c2ef0] p-8 text-white shadow-sm md:flex md:items-center md:justify-between">
+      <section className="mt-10 rounded-2xl bg-linear-to-br from-[#5d55f1] to-[#7c2ef0] p-8 text-white shadow-sm md:flex md:items-center md:justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-normal">
             Ready to continue learning?
@@ -61,34 +60,42 @@ export function LessonList({ topic }: LessonListProps) {
         </Button>
       </section>
     </section>
-  )
+  );
 }
 
 type LessonCardProps = {
-  lesson: TopicLesson
-}
+  lesson: TopicLessonViewModel;
+};
 
 function LessonCard({ lesson }: LessonCardProps) {
-  const isLocked = lesson.status === 'locked'
+  const isLocked = lesson.status === "locked";
   const content = (
     <article
       className={cn(
-        'relative overflow-hidden rounded-2xl border border-[#e6e6f3] bg-white p-7 shadow-sm',
-        'transition-colors',
-        !isLocked && 'hover:border-[#cbc9ff]',
-        isLocked && 'pointer-events-none bg-white/55 text-[#cfd0d8]',
+        "relative overflow-hidden rounded-2xl border border-[#e6e6f3] bg-white p-7 shadow-sm",
+        "transition-colors",
+        !isLocked && "hover:border-[#cbc9ff]",
+        isLocked && "pointer-events-none bg-white/55 text-[#cfd0d8]",
       )}
     >
-      <div className={cn('flex items-start justify-between gap-6', isLocked && 'opacity-35')}>
+      <div
+        className={cn(
+          "flex items-start justify-between gap-6",
+          isLocked && "opacity-35",
+        )}
+      >
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-3">
             <h3 className="text-2xl font-bold tracking-normal text-[#10111f]">
               {lesson.title}
             </h3>
-            {lesson.status === 'completed' ? (
-              <CheckCircle2 className="size-5 text-success" aria-hidden="true" />
+            {lesson.status === "completed" ? (
+              <CheckCircle2
+                className="size-5 text-success"
+                aria-hidden="true"
+              />
             ) : null}
-            {lesson.status === 'in-progress' ? (
+            {lesson.status === "in-progress" ? (
               <span className="rounded-full bg-[#eceaff] px-3 py-1 text-base font-bold text-primary">
                 In Progress
               </span>
@@ -99,7 +106,7 @@ function LessonCard({ lesson }: LessonCardProps) {
             {lesson.description}
           </p>
 
-          {lesson.status === 'in-progress' ? (
+          {lesson.status === "in-progress" ? (
             <div className="mt-5">
               <div className="h-2 overflow-hidden rounded-full bg-[#ebeaff]">
                 <div
@@ -115,7 +122,10 @@ function LessonCard({ lesson }: LessonCardProps) {
 
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-base font-bold text-[#77798e]">
             <LessonMeta icon={BookOpen} label={`${lesson.wordCount} words`} />
-            <LessonMeta icon={Clock3} label={`~${lesson.estimatedMinutes} min`} />
+            <LessonMeta
+              icon={Clock3}
+              label={`~${lesson.estimatedMinutes} min`}
+            />
             <LessonMeta
               className="text-[#c46600]"
               icon={Star}
@@ -124,13 +134,19 @@ function LessonCard({ lesson }: LessonCardProps) {
           </div>
         </div>
 
-        <ArrowRight className="mt-2 size-6 shrink-0 text-[#77798e]" aria-hidden="true" />
+        <ArrowRight
+          className="mt-2 size-6 shrink-0 text-[#77798e]"
+          aria-hidden="true"
+        />
       </div>
 
       {isLocked ? (
         <div className="absolute inset-0 grid place-items-center bg-white/55">
           <div className="text-center">
-            <Lock className="mx-auto size-7 text-[#6f7184]" aria-hidden="true" />
+            <Lock
+              className="mx-auto size-7 text-[#6f7184]"
+              aria-hidden="true"
+            />
             <p className="mt-2 text-base font-bold text-[#6f7184]">
               {lesson.lockedReason}
             </p>
@@ -138,38 +154,38 @@ function LessonCard({ lesson }: LessonCardProps) {
         </div>
       ) : null}
     </article>
-  )
+  );
 
   if (isLocked) {
-    return content
+    return content;
   }
 
   return (
     <Link aria-label={`Open ${lesson.title}`} to={`/lessons/${lesson.id}`}>
       {content}
     </Link>
-  )
+  );
 }
 
 type LessonMetaProps = {
-  icon: typeof BookOpen
-  label: string
-  className?: string
-}
+  icon: typeof BookOpen;
+  label: string;
+  className?: string;
+};
 
 function LessonMeta({ icon: Icon, label, className }: LessonMetaProps) {
   return (
-    <span className={cn('inline-flex items-center gap-2', className)}>
+    <span className={cn("inline-flex items-center gap-2", className)}>
       <Icon className="size-5" aria-hidden="true" />
       {label}
     </span>
-  )
+  );
 }
 
-function getContinueLessonId(lessons: TopicLesson[]) {
+function getContinueLessonId(lessons: TopicLessonViewModel[]) {
   return (
-    lessons.find((lesson) => lesson.status === 'in-progress') ??
-    lessons.find((lesson) => lesson.status === 'unlocked') ??
+    lessons.find((lesson) => lesson.status === "in-progress") ??
+    lessons.find((lesson) => lesson.status === "unlocked") ??
     lessons[0]
-  ).id
+  ).id;
 }

@@ -39,6 +39,7 @@ export type RoadmapTopic = {
   id: number
   title: string
   slug: string
+  icon?: string
   emoji: string
   color: string
   status: RoadmapStatus

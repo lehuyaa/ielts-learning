@@ -3,29 +3,19 @@ import type {
   RoadmapResponse,
   RoadmapStatus,
   RoadmapTopic,
-} from '@/types/roadmap'
+} from "@/types/roadmap";
 import type {
   RoadmapBand,
   RoadmapLessonStatus,
   RoadmapViewModel,
-} from '@/features/roadmap/types'
-
-const topicIconBySlug: Record<string, string> = {
-  education: '🎓',
-  health: '🏥',
-  society: '👥',
-  technology: '💻',
-  environment: '🌿',
-  government: '🏛️',
-  economy: '📈',
-  work: '💼',
-}
+} from "@/features/roadmap/types";
+import { getTopicDisplayIcon } from "@/lib/topicIcons";
 
 export function mapRoadmapToViewModel(
   roadmap: RoadmapResponse,
 ): RoadmapViewModel {
   return {
-    title: roadmap.course.title || 'Vocabulary Roadmap',
+    title: roadmap.course.title || "Vocabulary Roadmap",
     subtitle: `Band ${roadmap.course.bandMin.toFixed(1)} → ${roadmap.course.bandMax.toFixed(1)}`,
     topicsCompleted: roadmap.summary.topicsCompleted,
     totalTopics: roadmap.summary.totalTopics,
@@ -33,7 +23,7 @@ export function mapRoadmapToViewModel(
     wordsMastered: roadmap.summary.wordsMastered,
     currentStreak: roadmap.summary.currentStreak,
     bands: roadmap.bandLevels.map(mapBand),
-  }
+  };
 }
 
 function mapBand(band: RoadmapBandLevel): RoadmapBand {
@@ -50,16 +40,16 @@ function mapBand(band: RoadmapBandLevel): RoadmapBand {
     ),
     topicCount: band.totalTopics,
     topics: band.topics.map(mapTopic),
-  }
+  };
 }
 
 function mapTopic(topic: RoadmapTopic) {
   return {
-    id: topic.slug,
+    id: topic.id,
     title: topic.title,
-    description: '',
+    description: "",
     progress: topic.progressPercentage,
-    icon: topic.emoji || topicIconBySlug[topic.slug] || '📚',
+    icon: getTopicDisplayIcon(topic),
     completedLessons: topic.lessonsCompleted,
     totalLessons: topic.totalLessons,
     lessons: topic.lessons.map((lesson) => ({
@@ -69,19 +59,19 @@ function mapTopic(topic: RoadmapTopic) {
       wordCount: lesson.xpReward,
       status: mapStatus(lesson.status),
     })),
-  }
+  };
 }
 
 function mapStatus(status: RoadmapStatus): RoadmapLessonStatus {
   switch (status) {
-    case 'COMPLETED':
-      return 'completed'
-    case 'IN_PROGRESS':
-      return 'in-progress'
-    case 'UNLOCKED':
-      return 'unlocked'
-    case 'LOCKED':
+    case "COMPLETED":
+      return "completed";
+    case "IN_PROGRESS":
+      return "in-progress";
+    case "UNLOCKED":
+      return "unlocked";
+    case "LOCKED":
     default:
-      return 'locked'
+      return "locked";
   }
 }
