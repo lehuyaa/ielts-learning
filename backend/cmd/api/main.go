@@ -9,6 +9,7 @@ import (
 	"ielts-learning/backend/internal/database"
 	"ielts-learning/backend/internal/middleware"
 	authmodule "ielts-learning/backend/internal/modules/auth"
+	roadmapmodule "ielts-learning/backend/internal/modules/roadmap"
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
@@ -42,6 +43,7 @@ func main() {
 
 	api := router.Group("/api/v1")
 	authmodule.RegisterRoutes(api, db, jwtManager)
+	roadmapmodule.RegisterRoutes(api, db, jwtManager)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)
