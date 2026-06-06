@@ -1,28 +1,29 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from "react-router-dom";
 
-import { DashboardMobileNav, Sidebar } from '@/components/layout/Sidebar'
-import { Topbar } from '@/components/layout/Topbar'
+import { DashboardMobileNav, Sidebar } from "@/components/layout/Sidebar";
+import { Topbar } from "@/components/layout/Topbar";
 
 const pageTitles: Record<string, string> = {
-  '/dashboard': 'Dashboard',
-  '/roadmap': 'Roadmap',
-  '/reviews': 'Reviews',
-  '/vocabulary': 'Vocabulary',
-  '/profile': 'Profile',
-}
+  "/dashboard": "Dashboard",
+  "/roadmap": "Roadmap",
+  "/reviews": "Reviews",
+  "/vocabulary": "Vocabulary",
+  "/profile": "Profile",
+};
 
 export function DashboardLayout() {
-  const { pathname } = useLocation()
-  const title = pageTitles[pathname] ?? 'Dashboard'
+  const { pathname } = useLocation();
+  const title = pageTitles[pathname] ?? "Dashboard";
   const isFullBleedPage =
-    pathname === '/roadmap' ||
-    pathname.startsWith('/topics/') ||
-    (pathname.startsWith('/lessons/') &&
-      !pathname.endsWith('/flashcards') &&
-      !pathname.endsWith('/quiz'))
+    pathname === "/roadmap" ||
+    pathname.startsWith("/topics/") ||
+    pathname.startsWith("/vocabulary") ||
+    (pathname.startsWith("/lessons/") &&
+      !pathname.endsWith("/flashcards") &&
+      !pathname.endsWith("/quiz"));
 
   if (isFullBleedPage) {
-    return <Outlet />
+    return <Outlet />;
   }
 
   return (
@@ -40,5 +41,5 @@ export function DashboardLayout() {
         </main>
       </div>
     </div>
-  )
+  );
 }

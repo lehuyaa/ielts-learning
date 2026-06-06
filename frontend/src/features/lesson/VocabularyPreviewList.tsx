@@ -1,5 +1,6 @@
 import { CheckCircle2, Eye, Volume2 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -120,8 +121,15 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
           </blockquote>
 
           <div className="mt-4 flex flex-wrap gap-3">
-            <Button className="rounded-full px-5" size="sm">
-              Full Detail
+            <Button
+              asChild
+              className="rounded-full px-5 text-white hover:text-white"
+              size="sm"
+              style={{
+                color: "white",
+              }}
+            >
+              <Link to={`/vocabulary/${item.id}`}>Full Detail</Link>
             </Button>
             <Button className="rounded-full px-5" size="sm" variant="outline">
               Practice Card

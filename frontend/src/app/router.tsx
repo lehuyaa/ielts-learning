@@ -14,6 +14,7 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
 import { TopicDetailPage } from '@/pages/TopicDetailPage'
+import { VocabularyDetailPage } from '@/pages/VocabularyDetailPage'
 import { VocabularyPage } from '@/pages/VocabularyPage'
 
 export const router = createBrowserRouter([
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
           {
             path: '/vocabulary',
             element: <VocabularyPage />,
+          },
+          {
+            path: '/vocabulary/:vocabularyId',
+            element: <VocabularyDetailPage />,
           },
           {
             path: '/profile',
