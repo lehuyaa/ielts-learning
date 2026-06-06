@@ -231,6 +231,7 @@ Follow:
 ```txt
 docs/design-system.md
 docs/ui-review-checklist.md
+docs/design-review-checklist.md
 ```
 
 All pages should have:
@@ -248,6 +249,46 @@ Layout quality rules:
 - Do not compress title, subtitle, and form fields.
 - Before marking a UI task complete, review spacing, typography hierarchy, card padding, and responsive layout.
 - Check frontend UI work against `docs/ui-review-checklist.md` before completion.
+
+### Design Fidelity Rules
+
+The files inside:
+
+```txt
+docs/screenshots/
+```
+
+are the visual source of truth.
+
+Rules:
+
+- Do not redesign pages when a screenshot exists.
+- Do not invent new layouts.
+- Do not change section order.
+- Do not change component hierarchy.
+- Do not change spacing hierarchy.
+- Do not change typography hierarchy.
+- Do not introduce new cards or widgets that do not exist in the screenshot.
+
+Implementation priority:
+
+1. Match layout.
+2. Match spacing.
+3. Match typography.
+4. Match colors.
+5. Match interactions.
+
+For every UI task:
+
+1. Analyze the screenshot first.
+2. Describe the page structure.
+3. Implement the screenshot.
+4. Compare implementation against screenshot.
+5. Report visual differences before marking task complete.
+
+If screenshots and personal design preferences conflict:
+
+Follow the screenshot.
 
 ### Validation
 

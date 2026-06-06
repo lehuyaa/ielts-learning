@@ -274,7 +274,29 @@ Context placement:
 
 ---
 
-## 7. Validation Architecture
+## 7. UI Source Of Truth
+
+When a page screenshot exists:
+
+```txt
+docs/screenshots/<page>.png
+```
+
+The screenshot is the authoritative design reference.
+
+The implementation should reproduce as closely as possible:
+
+- Layout
+- Section order
+- Spacing
+- Typography hierarchy
+- Component structure
+
+If screenshots and design preferences conflict, follow the screenshot.
+
+---
+
+## 8. Validation Architecture
 
 Validation contracts:
 

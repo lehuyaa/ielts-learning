@@ -19,7 +19,12 @@ Implement Task 04 only. Follow docs/prd.md, docs/database.md, docs/api.md, docs/
 Frontend UI task rule:
 
 - Every frontend UI task must be checked against `docs/ui-review-checklist.md` before completion.
+- Every frontend UI task must be checked against `docs/design-review-checklist.md` before completion.
+- For every frontend UI task, analyze the reference screenshot in `docs/screenshots/` before coding when one exists.
+- The screenshot is the source of truth for layout, section order, component hierarchy, spacing hierarchy, typography hierarchy, colors, and interaction placement.
+- Do not redesign a page when a screenshot exists.
 - The final task summary should mention that the UI review checklist was considered for frontend UI work.
+- The final task summary should mention screenshot/design review and report visual differences before marking frontend UI work complete.
 
 Validation contract rule:
 
@@ -281,6 +286,12 @@ Create:
 - Check `docs/validation-contracts.md`
 - Frontend Zod schemas must match the Register/Login validation contracts
 
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+
 Acceptance criteria:
 
 - User can register from frontend
@@ -292,6 +303,10 @@ Acceptance criteria:
 - No frontend code uses `fetch`
 - No shared types are placed in feature folders
 - Register/Login frontend validation matches the auth validation contracts
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
@@ -307,12 +322,22 @@ Create:
 - Sidebar
 - Topbar
 
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+
 Acceptance criteria:
 
 - `/` uses marketing layout
 - `/login` and `/register` use auth layout
 - `/dashboard` uses dashboard layout
 - Responsive navigation works
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
@@ -330,93 +355,25 @@ Sections:
 - Pricing placeholder
 - Footer
 
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+
 Acceptance criteria:
 
 - Looks polished
 - CTA buttons work
 - Responsive
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
-### Task 13 - Dashboard API
-
-Backend endpoint:
-
-```txt
-GET /api/v1/dashboard/summary
-```
-
-Requirements:
-
-- Protected
-- Return user stats
-- Return review due count
-- Return lesson progress
-- Return recent activity placeholder
-
-Acceptance criteria:
-
-- Endpoint returns dashboard data
-- Works for demo user
-- No hardcoded user ID
-
----
-
-### Task 14 - Dashboard Page
-
-Frontend page:
-
-```txt
-/dashboard
-```
-
-Components:
-
-- Welcome card
-- Today's progress
-- Review due card
-- Current streak card
-- Target band progress
-- Quick actions
-- Recent activity
-- Vocabulary statistics
-
-Acceptance criteria:
-
-- Fetches real API
-- Shows loading state
-- Shows empty state where needed
-- Responsive
-
----
-
-## 6. Milestone 5 - Roadmap and Lessons
-
-### Task 15 - Roadmap API
-
-Backend endpoint:
-
-```txt
-GET /api/v1/roadmap
-```
-
-Requirements:
-
-- Return course
-- Return band levels
-- Return topics
-- Return progress
-- Return locked/unlocked states
-
-Acceptance criteria:
-
-- Endpoint returns nested roadmap
-- Uses authenticated user progress
-- No N+1 query issue if possible
-
----
-
-### Task 16 - Roadmap Page
+### Task 13 - Roadmap Page UI
 
 Frontend page:
 
@@ -424,47 +381,125 @@ Frontend page:
 /roadmap
 ```
 
+Goal:
+
+Create the main learning roadmap page using mock data first.
+
 Requirements:
 
-- Show band levels
-- Show topics
-- Show lessons
-- Locked/unlocked/completed states
-- Progress percentage
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Use the existing Dashboard layout.
+- Show band levels:
+  - Band 5.0
+  - Band 6.0
+  - Band 7.0
+  - Band 8.0
+- Show topic cards under each band.
+- Show lesson cards/nodes under topics.
+- Show locked, unlocked, in-progress, and completed states.
+- Show progress percentage.
+- Use polished UI based on `docs/design-system.md`.
+- Check `docs/ui-review-checklist.md`.
+- Use mock data only in this task.
+- Do not implement backend API in this task.
+- Do not implement future lesson/quiz/flashcard functionality.
 
 Acceptance criteria:
 
-- User can click unlocked lesson
-- Locked lessons visually disabled
-- Completed lessons show check mark
+- User can open `/roadmap`.
+- Roadmap is visually clear and responsive.
+- Locked lessons are visually disabled.
+- Completed lessons show a clear completed state.
+- Mock data structure is easy to replace with real API data later.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
-### Task 17 - Lesson Detail API
+### Task 14 - Roadmap API
 
 Backend endpoint:
 
 ```txt
-GET  /api/v1/lessons/:lessonId
-POST /api/v1/lessons/:lessonId/start
+GET /api/v1/roadmap
 ```
+
+Goal:
+
+Return real roadmap data from MySQL.
 
 Requirements:
 
-- Return lesson detail
-- Return vocabulary list
-- Return user progress
-- Start endpoint creates/updates progress
+- Protected endpoint.
+- Use authenticated user ID from JWT context.
+- Return course.
+- Return band levels.
+- Return topics.
+- Return lessons.
+- Return user progress for lessons.
+- Return locked/unlocked/completed states.
+- Return progress percentages.
+- Avoid hardcoded user ID.
+- Avoid N+1 query problems where reasonable.
+- Use standard API response shape.
 
 Acceptance criteria:
 
-- Lesson loads from database
-- Start endpoint updates status
-- Locked lessons are handled
+- Endpoint returns nested roadmap data.
+- Works for demo user.
+- Uses authenticated user progress.
+- Does not expose unrelated user data.
+- Frontend can consume the response directly in Task 15.
 
 ---
 
-### Task 18 - Lesson Detail Page
+### Task 15 - Connect Roadmap Page to API
+
+Frontend page:
+
+```txt
+/roadmap
+```
+
+Goal:
+
+Replace roadmap mock data with real backend data.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add roadmap API function in `frontend/src/api/roadmap.ts`.
+- Add shared roadmap types in `frontend/src/types/roadmap.ts`.
+- Use axios through the shared API client.
+- Do not use fetch.
+- Show loading state.
+- Show error state.
+- Show empty state if no roadmap data exists.
+- Keep existing UI from Task 13.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- Roadmap page fetches real API data.
+- Loading and error states work.
+- The page remains responsive.
+- No mock roadmap data remains in production page logic.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+## 6. Milestone 5 - Lesson and Vocabulary
+
+### Task 16 - Lesson Detail Page UI
 
 Frontend page:
 
@@ -472,26 +507,318 @@ Frontend page:
 /lessons/:lessonId
 ```
 
+Goal:
+
+Create the lesson detail page using mock data first.
+
 Requirements:
 
-- Lesson header
-- Vocabulary list
-- Progress
-- Start flashcards button
-- Start quiz button
-- Right sidebar
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Use Dashboard layout.
+- Show lesson title.
+- Show topic/band information.
+- Show lesson description.
+- Show estimated minutes.
+- Show required score.
+- Show XP reward if available.
+- Show vocabulary preview list.
+- Show progress card.
+- Show CTA buttons:
+  - Start Flashcards
+  - Start Quiz
+- Show right sidebar summary.
+- Use mock data only in this task.
+- Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
 
-- Loads lesson from API
-- Shows vocabulary items
-- Buttons route correctly
+- User can open `/lessons/:lessonId`.
+- Page looks polished and responsive.
+- CTA buttons route to expected pages:
+  - `/lessons/:lessonId/flashcards`
+  - `/lessons/:lessonId/quiz`
+- No backend integration required yet.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 17 - Lesson Detail API
+
+Backend endpoints:
+
+```txt
+GET  /api/v1/lessons/:lessonId
+POST /api/v1/lessons/:lessonId/start
+```
+
+Goal:
+
+Return lesson detail and allow starting a lesson.
+
+Requirements:
+
+- Protected endpoints.
+- Use authenticated user ID from JWT context.
+- `GET /lessons/:lessonId` returns:
+  - lesson detail
+  - topic
+  - band level
+  - vocabulary list
+  - user lesson progress
+  - user vocabulary progress where available
+- `POST /lessons/:lessonId/start`:
+  - creates or updates user_lesson_progresses
+  - sets status to IN_PROGRESS when appropriate
+  - sets started_at if not already set
+  - sets last_studied_at
+- Handle locked lessons if lock logic already exists.
+- Use standard API response shape.
+
+Acceptance criteria:
+
+- Lesson loads from database.
+- Start endpoint updates progress.
+- No hardcoded user ID.
+- Missing lesson returns NOT_FOUND.
+
+---
+
+### Task 18 - Connect Lesson Detail Page to API
+
+Frontend page:
+
+```txt
+/lessons/:lessonId
+```
+
+Goal:
+
+Replace mock lesson data with real API data.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add lesson API functions in `frontend/src/api/lesson.ts`.
+- Add shared lesson types in `frontend/src/types/lesson.ts`.
+- Use axios through shared API client.
+- Do not use fetch.
+- Show loading state.
+- Show error state.
+- Show not found/empty state.
+- Start button should call `POST /lessons/:lessonId/start` if needed.
+- Keep existing UI from Task 16.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- Lesson detail page fetches real API data.
+- Start lesson action works.
+- CTA buttons route correctly.
+- No mock lesson data remains in production page logic.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 19 - Vocabulary List and Detail UI
+
+Frontend pages:
+
+```txt
+/vocabulary
+/vocabulary/:vocabularyId
+```
+
+Goal:
+
+Create vocabulary browsing UI using mock data first.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+
+Vocabulary list page:
+
+- Search input.
+- Difficulty filter.
+- Band filter if useful.
+- Vocabulary cards or table.
+- Difficulty badges.
+- Progress/status badges.
+- Empty state.
+- Responsive layout.
+
+Vocabulary detail page:
+
+- Word header.
+- IPA.
+- Part of speech.
+- Meaning VI.
+- Meaning EN.
+- Example sentence.
+- Synonyms.
+- Antonyms.
+- Collocations.
+- IELTS usage.
+- User progress status placeholder.
+
+Use mock data only in this task.
+
+Acceptance criteria:
+
+- `/vocabulary` page works with mock data.
+- `/vocabulary/:vocabularyId` page works with mock data.
+- UI is responsive.
+- Check `docs/ui-review-checklist.md`.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 20 - Vocabulary APIs
+
+Backend endpoints:
+
+```txt
+GET /api/v1/vocabularies
+GET /api/v1/vocabularies/:vocabularyId
+```
+
+Goal:
+
+Return vocabulary list and vocabulary detail from database.
+
+Requirements:
+
+- Protected endpoints.
+- Use authenticated user ID from JWT context.
+- Support query params:
+  - q
+  - difficulty
+  - targetBand
+  - status
+  - page
+  - limit
+- Return pagination metadata.
+- Include user progress status where available.
+- Detail endpoint returns full vocabulary data.
+- Never expose unrelated user data.
+
+Acceptance criteria:
+
+- Search works.
+- Filters work.
+- Pagination works.
+- Detail endpoint works.
+- Works for demo user.
+
+---
+
+### Task 21 - Connect Vocabulary Pages to API
+
+Frontend pages:
+
+```txt
+/vocabulary
+/vocabulary/:vocabularyId
+```
+
+Goal:
+
+Replace mock vocabulary data with real backend data.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add vocabulary API functions in `frontend/src/api/vocabulary.ts`.
+- Add shared vocabulary types in `frontend/src/types/vocabulary.ts`.
+- Use axios through shared API client.
+- Do not use fetch.
+- Search and filters update API query params.
+- Show loading, error, and empty states.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- Vocabulary pages load real API data.
+- Search and filters work.
+- Pagination works if implemented.
+- No mock vocabulary data remains in production page logic.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
 ## 7. Milestone 6 - Flashcards and Review
 
-### Task 19 - Flashcard APIs
+### Task 22 - Flashcard Learning UI
+
+Frontend pages:
+
+```txt
+/lessons/:lessonId/flashcards
+/reviews
+```
+
+Goal:
+
+Create flashcard learning and review UI using mock data first.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Show one card at a time.
+- Front side:
+  - word
+  - IPA
+  - part of speech if available
+- Back side:
+  - meaning
+  - example
+  - synonyms/collocations if available
+- Show flip/show meaning behavior.
+- Show session progress bar.
+- Rating buttons:
+  - Again
+  - Hard
+  - Good
+  - Easy
+- Show completion summary.
+- Use mock data only in this task.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- User can complete a mock flashcard session.
+- UI is focused and responsive.
+- No backend integration required yet.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 23 - Flashcard and Review APIs
 
 Backend endpoints:
 
@@ -501,22 +828,44 @@ GET  /api/v1/reviews/due
 POST /api/v1/flashcards/review
 ```
 
+Goal:
+
+Return flashcards and save review progress.
+
 Requirements:
 
-- Return flashcards for lesson
-- Return due review cards
-- Save flashcard rating
-- Calculate nextReviewAt
+- Protected endpoints.
+- Use authenticated user ID from JWT context.
+- `GET /lessons/:lessonId/flashcards` returns lesson vocabulary.
+- `GET /reviews/due` returns vocabulary where next_review_at <= now.
+- `POST /flashcards/review` saves rating:
+  - AGAIN
+  - HARD
+  - GOOD
+  - EASY
+- Update:
+  - status
+  - review_count
+  - correct_count
+  - wrong_count
+  - last_rating
+  - last_reviewed_at
+  - next_review_at
+  - learned_at/mastered_at when appropriate
+- Update daily activity if implemented.
+- Add XP event if XP system already exists.
+- Use GORM transaction where appropriate.
 
 Acceptance criteria:
 
-- UserVocabularyProgress is updated
-- Review due endpoint works
-- Spaced repetition logic follows docs/database.md
+- Review due endpoint works.
+- Flashcard review updates user_vocabulary_progresses.
+- Spaced repetition follows `docs/database.md`.
+- No hardcoded user ID.
 
 ---
 
-### Task 20 - Flashcard Page
+### Task 24 - Connect Flashcard Pages to API
 
 Frontend pages:
 
@@ -525,25 +874,84 @@ Frontend pages:
 /reviews
 ```
 
+Goal:
+
+Replace mock flashcard data with real backend data.
+
 Requirements:
 
-- Show one card at a time
-- Flip/show meaning
-- Rating buttons: Again, Hard, Good, Easy
-- Update progress after rating
-- Show session progress
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add flashcard API functions in `frontend/src/api/flashcard.ts`.
+- Add shared flashcard/progress types in:
+  - `frontend/src/types/flashcard.ts`
+  - `frontend/src/types/progress.ts`
+- Use axios through shared API client.
+- Do not use fetch.
+- Submit rating after each card.
+- Show loading, error, and empty states.
+- If no reviews are due, show a positive empty state.
+- Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
 
-- User can finish a flashcard session
-- API is called after each rating
-- UI is focused and responsive
+- Lesson flashcards load from API.
+- Review due cards load from API.
+- Ratings are saved.
+- Session summary works with real data.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
 ## 8. Milestone 7 - Quiz
 
-### Task 21 - Quiz APIs
+### Task 25 - Quiz Page UI
+
+Frontend page:
+
+```txt
+/lessons/:lessonId/quiz
+```
+
+Goal:
+
+Create quiz UI using mock data first.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Multiple choice question card.
+- Question progress indicator.
+- Options A/B/C/D.
+- Selected answer state.
+- Next button.
+- Submit button.
+- Score/result screen.
+- Passed/failed state.
+- Timer placeholder if designed.
+- Use mock data only in this task.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- User can complete a mock quiz.
+- Result screen shows score.
+- UI is responsive.
+- No backend integration required yet.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 26 - Quiz APIs
 
 Backend endpoints:
 
@@ -552,23 +960,40 @@ GET  /api/v1/lessons/:lessonId/quiz
 POST /api/v1/lessons/:lessonId/quiz/submit
 ```
 
+Goal:
+
+Return quiz questions and grade quiz submission.
+
 Requirements:
 
-- Do not expose `isCorrect` before submit
-- Score quiz on backend
-- Save quiz attempt
-- Complete lesson if passed
-- Unlock next lesson if passed
+- Protected endpoints.
+- Use authenticated user ID from JWT context.
+- GET endpoint:
+  - returns questions and options
+  - must not expose `is_correct`
+- Submit endpoint:
+  - accepts selected answers
+  - calculates score on backend
+  - returns result details
+  - saves user_quiz_attempts
+  - completes lesson if score >= required_score
+  - updates user_lesson_progresses
+  - unlocks next lesson if implemented
+  - updates daily activity if implemented
+  - creates XP events if XP system already exists
+- Use GORM transaction for submit flow.
 
 Acceptance criteria:
 
-- Correct answers hidden before submit
-- Score is calculated correctly
-- Lesson completion works
+- Correct answers are hidden before submit.
+- Score is calculated correctly.
+- Quiz attempt is saved.
+- Lesson completion works.
+- No hardcoded user ID.
 
 ---
 
-### Task 22 - Quiz Page
+### Task 27 - Connect Quiz Page to API
 
 Frontend page:
 
@@ -576,75 +1001,207 @@ Frontend page:
 /lessons/:lessonId/quiz
 ```
 
+Goal:
+
+Replace mock quiz data with real backend data.
+
 Requirements:
 
-- Multiple choice questions
-- Progress indicator
-- Submit answers
-- Show result
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add quiz API functions in `frontend/src/api/quiz.ts`.
+- Add shared quiz types in `frontend/src/types/quiz.ts`.
+- Use axios through shared API client.
+- Do not use fetch.
+- Submit answers to backend.
+- Show loading, error, and empty states.
+- Show result from backend response.
+- Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
 
-- User can answer and submit quiz
-- Result page shows score
-- Passed/failed state works
+- Quiz page loads real questions.
+- Correct answers are not visible before submit.
+- Submit returns real score.
+- Passed/failed state works.
+- Lesson completion can be verified after passing.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
-## 9. Milestone 8 - Vocabulary and Profile
+## 9. Milestone 8 - Dashboard and Profile
 
-### Task 23 - Vocabulary APIs
+### Task 28 - Dashboard Page UI
 
-Backend endpoints:
+Frontend page:
 
 ```txt
-GET /api/v1/vocabularies
-GET /api/v1/vocabularies/:vocabularyId
+/dashboard
 ```
+
+Goal:
+
+Create dashboard UI using mock data first.
+
+Components:
+
+- Welcome card.
+- Continue learning card.
+- Today's progress card.
+- Review due card.
+- Current streak card.
+- Target band progress.
+- XP/level summary.
+- Quick actions.
+- Recent activity.
+- Vocabulary statistics.
 
 Requirements:
 
-- Search
-- Filter by difficulty
-- Filter by status
-- Pagination
-- Detail page data
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Use Dashboard layout.
+- Use mock data only in this task.
+- Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
 
-- Search works
-- Filters work
-- Pagination works
-- Detail endpoint works
+- Dashboard looks polished and responsive.
+- User has clear next action.
+- No backend integration required yet.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
-### Task 24 - Vocabulary Pages
+### Task 29 - Dashboard API
 
-Frontend pages:
+Backend endpoint:
 
 ```txt
-/vocabulary
-/vocabulary/:vocabularyId
+GET /api/v1/dashboard/summary
 ```
+
+Goal:
+
+Return dashboard summary from real user data.
 
 Requirements:
 
-- Vocabulary list
-- Search
-- Filters
-- Detail tabs
-- Progress display
+- Protected endpoint.
+- Use authenticated user ID from JWT context.
+- Return:
+  - user summary
+  - words learned today
+  - review due count
+  - current streak
+  - total words learned
+  - lessons completed
+  - mastery percentage
+  - target band progress
+  - XP/level
+  - recent activity placeholder or real data if available
+- No hardcoded user ID.
 
 Acceptance criteria:
 
-- Pages load real API data through axios modules in `src/api`
-- Empty states work
-- Responsive
+- Endpoint returns dashboard data.
+- Works for demo user.
+- Response is directly usable by frontend.
 
 ---
 
-### Task 25 - Profile APIs
+### Task 30 - Connect Dashboard Page to API
+
+Frontend page:
+
+```txt
+/dashboard
+```
+
+Goal:
+
+Replace dashboard mock data with real backend data.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add dashboard API functions in `frontend/src/api/dashboard.ts`.
+- Add shared dashboard types in `frontend/src/types/dashboard.ts`.
+- Use axios through shared API client.
+- Do not use fetch.
+- Show loading, error, and empty states.
+- Keep existing UI from Task 28.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- Dashboard fetches real data.
+- Review due card reflects backend data.
+- Progress numbers reflect backend data.
+- No mock dashboard data remains in production page logic.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 31 - Profile Page UI
+
+Frontend page:
+
+```txt
+/profile
+```
+
+Goal:
+
+Create profile page UI using mock data first.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Profile card.
+- Avatar.
+- Name/email/username.
+- Target band.
+- Current level.
+- Total XP.
+- Current streak.
+- Longest streak.
+- Lessons completed.
+- Words mastered.
+- Achievements grid.
+- Learning heatmap placeholder.
+- Edit profile form if designed.
+- If edit form is implemented, check `docs/validation-contracts.md` first.
+- Check `docs/ui-review-checklist.md`.
+
+Acceptance criteria:
+
+- Profile page looks polished and responsive.
+- Edit profile form follows validation contract if present.
+- No backend integration required yet.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 32 - Profile APIs
 
 Backend endpoints:
 
@@ -653,25 +1210,36 @@ GET   /api/v1/me/profile
 PATCH /api/v1/me/profile
 ```
 
+Goal:
+
+Return and update user profile.
+
 Requirements:
 
-- Return user profile
-- Return stats
-- Return achievements
-- Update name and target band
-- Check `docs/validation-contracts.md` before implementing profile update validation
-- If profile update has no validation contract, add it first
+- Protected endpoints.
+- Use authenticated user ID from JWT context.
+- Return:
+  - user profile
+  - stats
+  - achievements
+  - activity summary if available
+- For update:
+  - Check `docs/validation-contracts.md`.
+  - If profile update contract does not exist, add it before implementing.
+  - Backend request DTO validation must match the profile validation contract.
+  - Allow updating name, username, target_band, timezone, locale if supported.
+- Return field-level validation errors for validation failures.
 
 Acceptance criteria:
 
-- Profile loads
-- User can update profile
-- Validation works
-- Backend request DTO validation matches the profile validation contract
+- Profile loads real data.
+- Profile update works.
+- Validation matches contract.
+- No hardcoded user ID.
 
 ---
 
-### Task 26 - Profile Page
+### Task 33 - Connect Profile Page to API
 
 Frontend page:
 
@@ -679,96 +1247,228 @@ Frontend page:
 /profile
 ```
 
-Requirements:
+Goal:
 
-- Profile card
-- Stats
-- Achievements
-- Learning heatmap placeholder
-- Edit profile form
-- Check `docs/validation-contracts.md` before implementing the edit profile form
-- Frontend Zod validation must match the profile validation contract
-
-Acceptance criteria:
-
-- User can view profile
-- User can update name and target band
-- Frontend validation matches the profile validation contract
-
----
-
-## 10. Milestone 9 - Polish
-
-### Task 27 - Streak and Daily Activity
+Replace profile mock data with real backend data.
 
 Requirements:
 
-- Track daily activity
-- Update streak
-- Show daily activity stats
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+- Add profile API functions in `frontend/src/api/profile.ts`.
+- Add shared profile/user types in:
+  - `frontend/src/types/profile.ts`
+  - `frontend/src/types/user.ts`
+- Use axios through shared API client.
+- Do not use fetch.
+- If edit form exists:
+  - use Zod schema matching `docs/validation-contracts.md`
+  - show field-level errors
+- Show loading, error, and empty states.
+- Check `docs/ui-review-checklist.md`.
 
 Acceptance criteria:
 
-- Studying today updates activity
-- Current streak updates correctly
-- Dashboard shows streak
+- Profile page loads real API data.
+- Profile update works if implemented.
+- Validation matches contract.
+- No mock profile data remains in production page logic.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
 
 ---
 
-### Task 28 - Achievements
+## 10. Milestone 9 - Gamification and Activity
+
+### Task 34 - XP System
+
+Goal:
+
+Implement XP event tracking.
 
 Requirements:
 
-- Unlock achievements based on rules
-- Show achievements on profile
+- Use `user_xp_events`.
+- Award XP for:
+  - flashcard review if defined
+  - quiz correct answer if defined
+  - lesson completed
+  - achievement unlocked
+- Update `users.total_xp`.
+- Recalculate `users.level`.
+- Use simple MVP formula:
 
-Initial achievements:
-
-- First Lesson
-- 7 Day Streak
-- 100 Words Learned
-- Education Master
-
-Acceptance criteria:
-
-- Achievement unlocks once
-- Profile displays unlocked achievements
-
----
-
-### Task 29 - Loading, Empty, and Error States
-
-Add:
-
-- Skeletons
-- Empty states
-- Error states
-- Toasts
+```txt
+level = floor(total_xp / 200) + 1
+```
 
 Acceptance criteria:
 
-- No page feels broken while loading
-- Empty data has clear CTA
-- API errors show useful messages
+- XP events are recorded.
+- User total XP updates.
+- Level updates correctly.
+- No duplicate XP for the same one-time event.
 
 ---
 
-### Task 30 - Final QA
+### Task 35 - Achievement System
+
+Goal:
+
+Unlock achievements based on user actions.
+
+Requirements:
+
+- Use achievements and user_achievements.
+- Initial achievements:
+  - First Lesson
+  - 7 Day Streak
+  - 100 Words Learned
+  - Education Master
+- Achievement unlock should be idempotent.
+- Achievement unlock may create notification and XP event if supported.
+
+Acceptance criteria:
+
+- Achievement unlocks once.
+- Profile can display unlocked achievements.
+- No duplicate user_achievements records.
+
+---
+
+### Task 36 - Daily Activity and Streak
+
+Goal:
+
+Track daily learning activity and streak.
+
+Requirements:
+
+- Use daily_activities.
+- Use user timezone when calculating activity date.
+- Track:
+  - words learned
+  - words reviewed
+  - quizzes taken
+  - lessons done
+  - active minutes if available
+  - XP earned
+- Update:
+  - users.current_streak
+  - users.longest_streak
+  - users.last_active_at
+
+Acceptance criteria:
+
+- Studying today creates/updates daily activity.
+- Current streak updates correctly.
+- Longest streak updates correctly.
+- Dashboard can read streak and daily stats.
+
+---
+
+### Task 37 - Notifications
+
+Goal:
+
+Implement basic notifications.
+
+Requirements:
+
+- Use notifications table.
+- Create notifications for:
+  - achievement unlocked
+  - review due reminder if implemented
+  - streak milestone if implemented
+- Add endpoints if needed:
+  - GET /api/v1/notifications
+  - PATCH /api/v1/notifications/:id/read
+- Frontend topbar notification button can show unread count if API exists.
+
+Acceptance criteria:
+
+- Notifications can be created.
+- User can fetch notifications.
+- User can mark notification as read.
+- No unrelated user notifications are exposed.
+
+---
+
+## 11. Milestone 10 - Polish and QA
+
+### Task 38 - Global Frontend Error Handling
+
+Requirements:
+
+- Improve axios interceptor behavior.
+- Handle 401 globally.
+- Show user-friendly errors.
+- Avoid duplicate error handling.
+- Keep auth logout behavior safe.
+
+Acceptance criteria:
+
+- Expired token redirects or logs out consistently.
+- API errors show useful messages.
+- No app crash on API failure.
+
+---
+
+### Task 39 - Loading, Empty, and Error States
+
+Add or refine:
+
+- Skeletons.
+- Empty states.
+- Error states.
+- Toasts.
+
+Requirements:
+
+- Analyze the reference screenshot before coding if one exists.
+- The screenshot is the source of truth.
+- Do not redesign the page.
+
+Acceptance criteria:
+
+- No page feels broken while loading.
+- Empty data has clear CTA.
+- API errors show useful messages.
+- All main pages follow `docs/ui-review-checklist.md`.
+- Layout closely matches screenshot if one exists.
+- Typography hierarchy matches screenshot if one exists.
+- Spacing hierarchy matches screenshot if one exists.
+- Responsive behavior remains correct.
+
+---
+
+### Task 40 - Final QA
 
 Checklist:
 
-- Register
-- Login
-- Dashboard
-- Roadmap
-- Lesson
-- Flashcards
-- Quiz
-- Review due
-- Vocabulary search
-- Profile
-- Logout
+- Register.
+- Login.
+- Dashboard.
+- Roadmap.
+- Lesson detail.
+- Vocabulary list.
+- Vocabulary detail.
+- Flashcards.
+- Review due.
+- Quiz.
+- Profile.
+- Logout.
 
 Acceptance criteria:
 
-- Main happy path works end-to-end
+- Main happy path works end-to-end.
+- Frontend uses axios only.
+- No frontend code uses fetch.
+- Validation contracts are respected.
+- Protected routes work.
+- No hardcoded user ID.
+- Backend does not expose password hash.
+- Quiz correct answers are not exposed before submit.

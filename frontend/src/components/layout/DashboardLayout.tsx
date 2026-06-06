@@ -14,6 +14,11 @@ const pageTitles: Record<string, string> = {
 export function DashboardLayout() {
   const { pathname } = useLocation()
   const title = pageTitles[pathname] ?? 'Dashboard'
+  const isRoadmapPage = pathname === '/roadmap'
+
+  if (isRoadmapPage) {
+    return <Outlet />
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[280px_1fr]">
