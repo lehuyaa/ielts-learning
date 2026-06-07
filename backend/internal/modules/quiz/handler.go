@@ -56,6 +56,53 @@ func (h Handler) Get(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// CheckAnswer godoc
+// @Summary Check quiz answer
+// @Description Validate one selected answer and return immediate feedback without completing the quiz or updating progress.
+// @Tags Quiz
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param lessonId path int true "Lesson ID"
+// @Param request body CheckAnswerRequest true "Selected answer to check"
+// @Success 200 {object} response.SuccessResponse{data=CheckAnswerResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /lessons/{lessonId}/quiz/check-answer [post]
+func (h Handler) CheckAnswer(c *gin.Context) {
+	lessonID, err := parseLessonID(c.Param("lessonId"))
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "INVALID_INPUT", "Invalid lesson ID")
+		return
+	}
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+		return
+	}
+
+	var request CheckAnswerRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.ValidationError(c, map[string]string{
+			"questionId": "Question ID is required.",
+			"optionId":   "Option ID is required.",
+		})
+		return
+	}
+
+	result, err := h.service.CheckAnswer(userID, lessonID, request)
+	if err != nil {
+		writeQuizError(c, err)
+		return
+	}
+
+	response.OK(c, result)
+}
+
 // Submit godoc
 // @Summary Submit lesson quiz
 // @Description Grade selected answers on the backend, save quiz attempt records, and update authenticated user lesson progress.

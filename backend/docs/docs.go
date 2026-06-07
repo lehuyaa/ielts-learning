@@ -513,6 +513,94 @@ const docTemplate = `{
                 }
             }
         },
+        "/lessons/{lessonId}/quiz/check-answer": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Validate one selected answer and return immediate feedback without completing the quiz or updating progress.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Check quiz answer",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Selected answer to check",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/quiz.CheckAnswerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/quiz.CheckAnswerResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/lessons/{lessonId}/quiz/submit": {
             "post": {
                 "security": [
@@ -1655,6 +1743,44 @@ const docTemplate = `{
                 "VocabularyStatusReview",
                 "VocabularyStatusMastered"
             ]
+        },
+        "quiz.CheckAnswerRequest": {
+            "type": "object",
+            "required": [
+                "optionId",
+                "questionId"
+            ],
+            "properties": {
+                "optionId": {
+                    "type": "integer"
+                },
+                "questionId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "quiz.CheckAnswerResponse": {
+            "type": "object",
+            "properties": {
+                "correctOptionId": {
+                    "type": "integer"
+                },
+                "earnedPoints": {
+                    "type": "integer"
+                },
+                "explanation": {
+                    "type": "string"
+                },
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "questionId": {
+                    "type": "integer"
+                },
+                "selectedOptionId": {
+                    "type": "integer"
+                }
+            }
         },
         "quiz.GetResponse": {
             "type": "object",

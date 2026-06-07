@@ -41,6 +41,20 @@ type SubmitAnswerRequest struct {
 	OptionID   uint `json:"optionId" binding:"required"`
 }
 
+type CheckAnswerRequest struct {
+	QuestionID uint `json:"questionId" binding:"required"`
+	OptionID   uint `json:"optionId" binding:"required"`
+}
+
+type CheckAnswerResponse struct {
+	QuestionID       uint   `json:"questionId"`
+	SelectedOptionID uint   `json:"selectedOptionId"`
+	CorrectOptionID  uint   `json:"correctOptionId"`
+	IsCorrect        bool   `json:"isCorrect"`
+	Explanation      string `json:"explanation"`
+	EarnedPoints     int    `json:"earnedPoints"`
+}
+
 type SubmitResultResponse struct {
 	QuestionID       uint   `json:"questionId"`
 	SelectedOptionID *uint  `json:"selectedOptionId"`

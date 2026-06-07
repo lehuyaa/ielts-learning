@@ -3,35 +3,59 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-
-import type { MockQuiz, MockQuizOption, MockQuizQuestion } from "./mockQuiz";
+import type {
+  CheckQuizAnswerRequest,
+  CheckQuizAnswerResponse,
+  QuizOption,
+  QuizQuestion,
+  QuizResultItem,
+  QuizSessionViewModel,
+  SubmitQuizRequest,
+  SubmitQuizResponse,
+} from "@/types/quiz";
 
 type QuizSessionProps = {
-  quiz: MockQuiz;
+  quiz: QuizSessionViewModel;
   lessonId: string;
+  isSubmitting?: boolean;
+  isCheckingAnswer?: boolean;
+  submitError?: string | null;
+  checkError?: string | null;
+  onCheckAnswer: (
+    payload: CheckQuizAnswerRequest,
+  ) => Promise<CheckQuizAnswerResponse>;
+  onSubmit: (payload: SubmitQuizRequest) => Promise<SubmitQuizResponse>;
 };
 
-type SelectedAnswers = Record<string, string>;
+type SelectedAnswers = Record<number, number>;
+type CheckedAnswers = Record<number, CheckQuizAnswerResponse>;
 
-export function QuizSession({ quiz, lessonId }: QuizSessionProps) {
+export function QuizSession({
+  quiz,
+  lessonId,
+  isSubmitting = false,
+  isCheckingAnswer = false,
+  submitError,
+  checkError,
+  onCheckAnswer,
+  onSubmit,
+}: QuizSessionProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<SelectedAnswers>({});
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [checkedAnswers, setCheckedAnswers] = useState<CheckedAnswers>({});
+  const [result, setResult] = useState<SubmitQuizResponse | null>(null);
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const selectedOptionId = selectedAnswers[currentQuestion.id];
+  const checkedAnswer = checkedAnswers[currentQuestion.id];
   const isFinalQuestion = currentQuestionIndex === quiz.questions.length - 1;
-  const earnedPoints = useMemo(
-    () => calculateEarnedPoints(quiz.questions, selectedAnswers),
-    [quiz.questions, selectedAnswers],
-  );
-  const result = useMemo(
-    () => calculateResult(quiz, selectedAnswers),
-    [quiz, selectedAnswers],
+  const answeredPoints = useMemo(
+    () => calculateEarnedCheckedPoints(checkedAnswers),
+    [checkedAnswers],
   );
 
-  function selectOption(optionId: string) {
-    if (isSubmitted || selectedAnswers[currentQuestion.id]) {
+  async function selectOption(optionId: number) {
+    if (result || isSubmitting || selectedAnswers[currentQuestion.id]) {
       return;
     }
 
@@ -39,15 +63,40 @@ export function QuizSession({ quiz, lessonId }: QuizSessionProps) {
       ...answers,
       [currentQuestion.id]: optionId,
     }));
+
+    try {
+      const response = await onCheckAnswer({
+        questionId: currentQuestion.id,
+        optionId,
+      });
+      setCheckedAnswers((answers) => ({
+        ...answers,
+        [currentQuestion.id]: response,
+      }));
+    } catch {
+      // The mutation exposes a user-facing error through checkError.
+    }
   }
 
-  function goNext() {
+  async function goNext() {
     if (!selectedOptionId) {
       return;
     }
 
     if (isFinalQuestion) {
-      setIsSubmitted(true);
+      try {
+        const response = await onSubmit({
+          answers: Object.entries(selectedAnswers).map(
+            ([questionId, optionId]) => ({
+              questionId: Number(questionId),
+              optionId,
+            }),
+          ),
+        });
+        setResult(response);
+      } catch {
+        // The mutation exposes a user-facing error through submitError.
+      }
       return;
     }
 
@@ -57,10 +106,11 @@ export function QuizSession({ quiz, lessonId }: QuizSessionProps) {
   function retryQuiz() {
     setCurrentQuestionIndex(0);
     setSelectedAnswers({});
-    setIsSubmitted(false);
+    setCheckedAnswers({});
+    setResult(null);
   }
 
-  if (isSubmitted) {
+  if (result) {
     return (
       <QuizResultShell quiz={quiz}>
         <QuizResult
@@ -68,7 +118,6 @@ export function QuizSession({ quiz, lessonId }: QuizSessionProps) {
           onRetry={retryQuiz}
           quiz={quiz}
           result={result}
-          selectedAnswers={selectedAnswers}
         />
       </QuizResultShell>
     );
@@ -77,8 +126,9 @@ export function QuizSession({ quiz, lessonId }: QuizSessionProps) {
   return (
     <QuizShell
       currentQuestionIndex={currentQuestionIndex}
-      earnedPoints={earnedPoints}
+      earnedPoints={answeredPoints}
       quiz={quiz}
+      checkedAnswers={checkedAnswers}
       selectedAnswers={selectedAnswers}
     >
       <section className="mx-auto w-full max-w-[780px] px-4 py-10 sm:px-6 lg:py-12">
@@ -106,31 +156,40 @@ export function QuizSession({ quiz, lessonId }: QuizSessionProps) {
         <div className="mt-10 grid gap-4">
           {currentQuestion.options.map((option) => (
             <QuizOptionCard
-              isCorrect={option.id === currentQuestion.correctOptionId}
+              checkedAnswer={checkedAnswer}
               isSelected={selectedOptionId === option.id}
               isLocked={Boolean(selectedOptionId)}
               key={option.id}
               onSelect={() => selectOption(option.id)}
               option={option}
-              showFeedback={Boolean(selectedOptionId)}
             />
           ))}
         </div>
 
         {selectedOptionId ? (
-          <QuestionFeedback
-            question={currentQuestion}
-            selectedOptionId={selectedOptionId}
+          <QuestionAnsweredMessage
+            checkedAnswer={checkedAnswer}
+            errorMessage={checkError}
+            isChecking={isCheckingAnswer}
           />
+        ) : null}
+        {submitError ? (
+          <p className="mt-4 rounded-2xl border border-[#ffc9c5] bg-[#fff3f2] p-4 text-base font-semibold text-[#c8332d]">
+            {submitError}
+          </p>
         ) : null}
 
         <Button
           className="mt-6 h-14 w-full rounded-2xl bg-[#5147e8] text-base font-bold text-white hover:bg-[#453bd4]"
-          disabled={!selectedOptionId}
+          disabled={!selectedOptionId || isSubmitting || isCheckingAnswer}
           onClick={goNext}
           type="button"
         >
-          {isFinalQuestion ? "Submit Quiz" : "Next Question"}
+          {isFinalQuestion
+            ? isSubmitting
+              ? "Submitting..."
+              : "Submit Quiz"
+            : "Next Question"}
           <ArrowRight className="size-6" aria-hidden="true" />
         </Button>
       </section>
@@ -142,7 +201,8 @@ type QuizShellProps = {
   children: React.ReactNode;
   currentQuestionIndex: number;
   earnedPoints: number;
-  quiz: MockQuiz;
+  quiz: QuizSessionViewModel;
+  checkedAnswers: CheckedAnswers;
   selectedAnswers: SelectedAnswers;
 };
 
@@ -151,6 +211,7 @@ function QuizShell({
   currentQuestionIndex,
   earnedPoints,
   quiz,
+  checkedAnswers,
   selectedAnswers,
 }: QuizShellProps) {
   const progressPercentage =
@@ -198,7 +259,7 @@ function QuizShell({
           >
             {quiz.questions.map((question, index) => (
               <span
-                className={`size-2.5 rounded-full ${questionDotClass(question, selectedAnswers, index === currentQuestionIndex)}`}
+                className={`size-2.5 rounded-full ${questionDotClass(question, selectedAnswers, checkedAnswers, index === currentQuestionIndex)}`}
                 key={question.id}
               />
             ))}
@@ -213,7 +274,7 @@ function QuizShell({
 
 type QuizResultShellProps = {
   children: React.ReactNode;
-  quiz: MockQuiz;
+  quiz: QuizSessionViewModel;
 };
 
 function QuizResultShell({ children, quiz }: QuizResultShellProps) {
@@ -243,52 +304,55 @@ function QuizResultShell({ children, quiz }: QuizResultShellProps) {
 }
 
 function questionDotClass(
-  question: MockQuizQuestion,
+  question: QuizQuestion,
   selectedAnswers: SelectedAnswers,
+  checkedAnswers: CheckedAnswers,
   isCurrent: boolean,
 ) {
+  const checkedAnswer = checkedAnswers[question.id];
+  if (checkedAnswer) {
+    return checkedAnswer.isCorrect ? "bg-[#49c389]" : "bg-[#ef6a67]";
+  }
+
   const selectedOptionId = selectedAnswers[question.id];
   if (!selectedOptionId) {
     return isCurrent ? "bg-[#c9c8f8]" : "bg-[#e2e3ee]";
   }
 
-  if (selectedOptionId === question.correctOptionId) {
-    return "bg-[#49c389]";
-  }
-
-  return "bg-[#ef6a67]";
+  return "bg-[#5147e8]";
 }
 
 type QuizOptionCardProps = {
-  option: MockQuizOption;
+  option: QuizOption;
+  checkedAnswer: CheckQuizAnswerResponse | undefined;
   isSelected: boolean;
-  isCorrect: boolean;
   isLocked: boolean;
-  showFeedback: boolean;
   onSelect: () => void;
 };
 
 function QuizOptionCard({
   option,
+  checkedAnswer,
   isSelected,
-  isCorrect,
   isLocked,
-  showFeedback,
   onSelect,
 }: QuizOptionCardProps) {
-  const isWrongSelection = showFeedback && isSelected && !isCorrect;
-  const shouldShowCorrect = showFeedback && isCorrect;
+  const isCorrectOption = checkedAnswer?.correctOptionId === option.id;
+  const isWrongSelection =
+    checkedAnswer &&
+    checkedAnswer.selectedOptionId === option.id &&
+    !checkedAnswer.isCorrect;
 
   return (
     <button
       className={`flex min-h-[72px] w-full items-center gap-4 rounded-2xl border-2 px-5 py-3.5 text-left transition ${
-        shouldShowCorrect
+        isCorrectOption
           ? "border-[#49c389] bg-[#effcf6] text-[#236b55]"
           : isWrongSelection
             ? "border-[#fb6a68] bg-[#fff3f2] text-[#a93633]"
             : isSelected
-              ? "border-[#5147e8] bg-[#f0efff] text-[#28204d]"
-              : "border-[#e6e6f3] bg-white text-[#2a2b38] hover:border-[#cfcef8]"
+          ? "border-[#5147e8] bg-[#f0efff] text-[#28204d]"
+          : "border-[#e6e6f3] bg-white text-[#2a2b38] hover:border-[#cfcef8]"
       } ${isLocked ? "cursor-not-allowed" : "cursor-pointer"}`}
       aria-disabled={isLocked}
       onClick={onSelect}
@@ -296,14 +360,16 @@ function QuizOptionCard({
     >
       <span
         className={`grid size-11 shrink-0 place-items-center rounded-full text-base font-bold ${
-          shouldShowCorrect
+          isCorrectOption
             ? "bg-[#49c389] text-white"
             : isWrongSelection
               ? "bg-[#ef4444] text-white"
-              : "bg-[#eeeef8] text-[#74768a]"
+              : isSelected
+            ? "bg-[#5147e8] text-white"
+            : "bg-[#eeeef8] text-[#74768a]"
         }`}
       >
-        {shouldShowCorrect ? (
+        {isCorrectOption ? (
           <Check className="size-5" aria-hidden="true" />
         ) : isWrongSelection ? (
           <X className="size-5" aria-hidden="true" />
@@ -316,41 +382,66 @@ function QuizOptionCard({
   );
 }
 
-type QuestionFeedbackProps = {
-  question: MockQuizQuestion;
-  selectedOptionId: string;
+type QuestionAnsweredMessageProps = {
+  checkedAnswer: CheckQuizAnswerResponse | undefined;
+  errorMessage?: string | null;
+  isChecking: boolean;
 };
 
-function QuestionFeedback({
-  question,
-  selectedOptionId,
-}: QuestionFeedbackProps) {
-  const isCorrect = selectedOptionId === question.correctOptionId;
+function QuestionAnsweredMessage({
+  checkedAnswer,
+  errorMessage,
+  isChecking,
+}: QuestionAnsweredMessageProps) {
+  if (errorMessage) {
+    return (
+      <section className="mt-5 rounded-2xl border border-[#ffc9c5] bg-[#fff3f2] p-4">
+        <div className="flex items-center gap-3 text-base font-bold text-[#c8332d]">
+          <X className="size-5" aria-hidden="true" />
+          Could not check answer
+        </div>
+        <p className="mt-2 text-base font-medium text-[#676982]">
+          {errorMessage}
+        </p>
+      </section>
+    );
+  }
+
+  if (isChecking || !checkedAnswer) {
+    return (
+      <section className="mt-5 rounded-2xl border border-[#e6e6f3] bg-white p-4">
+        <div className="flex items-center gap-3 text-base font-bold text-[#5147e8]">
+          <Check className="size-5" aria-hidden="true" />
+          Checking answer...
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
       className={`mt-5 rounded-2xl border p-4 ${
-        isCorrect
+        checkedAnswer.isCorrect
           ? "border-[#a8efd1] bg-[#effcf6]"
           : "border-[#ffc9c5] bg-[#fff3f2]"
       }`}
     >
       <div
         className={`flex items-center gap-3 text-base font-bold ${
-          isCorrect ? "text-[#168653]" : "text-[#c8332d]"
+          checkedAnswer.isCorrect ? "text-[#168653]" : "text-[#c8332d]"
         }`}
       >
-        {isCorrect ? (
+        {checkedAnswer.isCorrect ? (
           <Check className="size-5" aria-hidden="true" />
         ) : (
           <X className="size-5" aria-hidden="true" />
         )}
-        {isCorrect
-          ? `Correct! +${question.points} points`
-          : `Incorrect - The answer is option ${correctOptionLabel(question)}`}
+        {checkedAnswer.isCorrect
+          ? `Correct! +${checkedAnswer.earnedPoints} points`
+          : "Incorrect - review the correct answer above"}
       </div>
       <p className="mt-2 text-base font-medium text-[#676982]">
-        {question.explanation}
+        {checkedAnswer.explanation}
       </p>
     </section>
   );
@@ -413,9 +504,8 @@ function ResultOutcomeDot({ isCorrect }: ResultOutcomeDotProps) {
 }
 
 type QuizResultProps = {
-  result: QuizResult;
-  quiz: MockQuiz;
-  selectedAnswers: SelectedAnswers;
+  result: SubmitQuizResponse;
+  quiz: QuizSessionViewModel;
   lessonId: string;
   onRetry: () => void;
 };
@@ -423,11 +513,11 @@ type QuizResultProps = {
 function QuizResult({
   result,
   quiz,
-  selectedAnswers,
   lessonId,
   onRetry,
 }: QuizResultProps) {
   const incorrectCount = result.totalQuestions - result.correctCount;
+  const resultByQuestion = mapResultByQuestion(result.results);
 
   return (
     <main className="mx-auto grid min-h-[calc(100vh-80px)] w-full max-w-[460px] place-items-center px-4 py-10 sm:px-6">
@@ -446,7 +536,7 @@ function QuizResult({
           {result.passed ? "Passed" : "Needs review"}
         </p>
 
-        <ScoreRing scorePercentage={result.scorePercentage} />
+        <ScoreRing scorePercentage={result.score} />
 
         <div className="mt-8 grid grid-cols-2 gap-4">
           <ResultStat
@@ -464,9 +554,7 @@ function QuizResult({
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           {quiz.questions.map((question) => (
             <ResultOutcomeDot
-              isCorrect={
-                selectedAnswers[question.id] === question.correctOptionId
-              }
+              isCorrect={resultByQuestion[question.id]?.isCorrect ?? false}
               key={question.id}
             />
           ))}
@@ -515,52 +603,16 @@ function ResultStat({ label, value, tone }: ResultStatProps) {
   );
 }
 
-type QuizResult = {
-  scorePercentage: number;
-  correctCount: number;
-  totalQuestions: number;
-  earnedPoints: number;
-  requiredScore: number;
-  passed: boolean;
-};
-
-function calculateResult(
-  quiz: MockQuiz,
-  selectedAnswers: SelectedAnswers,
-): QuizResult {
-  const correctCount = quiz.questions.filter(
-    (question) => selectedAnswers[question.id] === question.correctOptionId,
-  ).length;
-  const scorePercentage = Math.round(
-    (correctCount / quiz.questions.length) * 100,
+function calculateEarnedCheckedPoints(checkedAnswers: CheckedAnswers) {
+  return Object.values(checkedAnswers).reduce(
+    (total, answer) => total + answer.earnedPoints,
+    0,
   );
-
-  return {
-    scorePercentage,
-    correctCount,
-    totalQuestions: quiz.questions.length,
-    earnedPoints: calculateEarnedPoints(quiz.questions, selectedAnswers),
-    requiredScore: quiz.requiredScore,
-    passed: scorePercentage >= quiz.requiredScore,
-  };
 }
 
-function calculateEarnedPoints(
-  questions: MockQuizQuestion[],
-  selectedAnswers: SelectedAnswers,
-) {
-  return questions.reduce((total, question) => {
-    if (selectedAnswers[question.id] === question.correctOptionId) {
-      return total + question.points;
-    }
-
-    return total;
-  }, 0);
-}
-
-function correctOptionLabel(question: MockQuizQuestion) {
-  return (
-    question.options.find((option) => option.id === question.correctOptionId)
-      ?.label ?? ""
-  );
+function mapResultByQuestion(results: QuizResultItem[]) {
+  return results.reduce<Record<number, QuizResultItem>>((lookup, result) => {
+    lookup[result.questionId] = result;
+    return lookup;
+  }, {});
 }

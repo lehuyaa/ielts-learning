@@ -79,6 +79,9 @@ export function LessonDetailPage() {
         isStartDisabled={isStartDisabled}
         isStarting={startLessonMutation.isPending}
         lesson={lesson}
+        onBack={() => {
+          void navigate(lesson.topicId ? `/topics/${lesson.topicId}` : '/roadmap')
+        }}
         onStartFlashcards={() => {
           void handleStart('flashcards')
         }}

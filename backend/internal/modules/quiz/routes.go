@@ -15,5 +15,6 @@ func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.M
 
 	group := router.Group("/lessons", middleware.Auth(jwtManager))
 	group.GET("/:lessonId/quiz", handler.Get)
+	group.POST("/:lessonId/quiz/check-answer", handler.CheckAnswer)
 	group.POST("/:lessonId/quiz/submit", handler.Submit)
 }

@@ -398,6 +398,31 @@ definitions:
     - VocabularyStatusLearning
     - VocabularyStatusReview
     - VocabularyStatusMastered
+  quiz.CheckAnswerRequest:
+    properties:
+      optionId:
+        type: integer
+      questionId:
+        type: integer
+    required:
+    - optionId
+    - questionId
+    type: object
+  quiz.CheckAnswerResponse:
+    properties:
+      correctOptionId:
+        type: integer
+      earnedPoints:
+        type: integer
+      explanation:
+        type: string
+      isCorrect:
+        type: boolean
+      questionId:
+        type: integer
+      selectedOptionId:
+        type: integer
+    type: object
   quiz.GetResponse:
     properties:
       lesson:
@@ -1192,6 +1217,61 @@ paths:
       security:
       - BearerAuth: []
       summary: Get lesson quiz
+      tags:
+      - Quiz
+  /lessons/{lessonId}/quiz/check-answer:
+    post:
+      consumes:
+      - application/json
+      description: Validate one selected answer and return immediate feedback without
+        completing the quiz or updating progress.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      - description: Selected answer to check
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/quiz.CheckAnswerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/quiz.CheckAnswerResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Check quiz answer
       tags:
       - Quiz
   /lessons/{lessonId}/quiz/submit:

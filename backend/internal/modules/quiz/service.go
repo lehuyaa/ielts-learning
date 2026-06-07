@@ -67,6 +67,51 @@ func (s Service) Submit(userID uint, lessonID uint, request SubmitRequest) (Subm
 	return s.repository.SubmitQuiz(user, context.lesson, context.questions, s.now().UTC(), graded)
 }
 
+func (s Service) CheckAnswer(userID uint, lessonID uint, request CheckAnswerRequest) (CheckAnswerResponse, error) {
+	if _, err := s.repository.FindUser(userID); err != nil {
+		return CheckAnswerResponse{}, err
+	}
+	if request.QuestionID == 0 || request.OptionID == 0 {
+		return CheckAnswerResponse{}, ErrInvalidQuizAnswers
+	}
+
+	context, err := s.loadContext(userID, lessonID)
+	if err != nil {
+		return CheckAnswerResponse{}, err
+	}
+	if context.status == models.LessonStatusLocked {
+		return CheckAnswerResponse{}, ErrLessonLocked
+	}
+
+	question, ok := findQuestion(context.questions, request.QuestionID)
+	if !ok {
+		return CheckAnswerResponse{}, ErrInvalidQuizAnswers
+	}
+	if !optionBelongsToQuestion(question, request.OptionID) {
+		return CheckAnswerResponse{}, ErrInvalidQuizAnswers
+	}
+
+	correct, err := correctOption(question)
+	if err != nil {
+		return CheckAnswerResponse{}, err
+	}
+
+	isCorrect := request.OptionID == correct.ID
+	earnedPoints := 0
+	if isCorrect {
+		earnedPoints = question.Points
+	}
+
+	return CheckAnswerResponse{
+		QuestionID:       question.ID,
+		SelectedOptionID: request.OptionID,
+		CorrectOptionID:  correct.ID,
+		IsCorrect:        isCorrect,
+		Explanation:      question.Explanation,
+		EarnedPoints:     earnedPoints,
+	}, nil
+}
+
 type quizContext struct {
 	lesson    models.Lesson
 	questions []models.QuizQuestion
@@ -261,6 +306,16 @@ func correctOption(question models.QuizQuestion) (models.QuizOption, error) {
 	}
 
 	return models.QuizOption{}, ErrInvalidQuizAnswers
+}
+
+func findQuestion(questions []models.QuizQuestion, questionID uint) (models.QuizQuestion, bool) {
+	for _, question := range questions {
+		if question.ID == questionID {
+			return question, true
+		}
+	}
+
+	return models.QuizQuestion{}, false
 }
 
 func optionBelongsToQuestion(question models.QuizQuestion, optionID uint) bool {

@@ -5,7 +5,6 @@ import {
   GraduationCap,
   Trophy,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -18,6 +17,7 @@ type LessonHeaderProps = {
   isStartDisabled: boolean;
   isStarting: boolean;
   onStartFlashcards: () => void;
+  onBack: () => void;
 };
 
 export function LessonHeader({
@@ -27,9 +27,8 @@ export function LessonHeader({
   isStartDisabled,
   isStarting,
   onStartFlashcards,
+  onBack,
 }: LessonHeaderProps) {
-  const navigate = useNavigate();
-
   return (
     <header className="border-b border-[#e6e6f3] bg-white">
       <div className="mx-auto grid min-h-[72px] max-w-[1320px] gap-4 px-4 py-3 md:grid-cols-[240px_1fr_auto] md:items-center md:px-6">
@@ -37,7 +36,7 @@ export function LessonHeader({
           <button
             aria-label="Go back"
             className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
-            onClick={() => navigate(-1)}
+            onClick={onBack}
             type="button"
           >
             <ArrowLeft className="size-5" aria-hidden="true" />

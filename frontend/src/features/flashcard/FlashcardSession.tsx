@@ -22,6 +22,7 @@ type FlashcardSessionProps = {
   emptyDescription?: string;
   emptyActionHref?: string;
   emptyActionLabel?: string;
+  backHref?: string;
   onRateCard?: (
     card: FlashcardSessionCard,
     rating: FlashcardRating,
@@ -77,6 +78,7 @@ export function FlashcardSession({
   emptyDescription = "You are all caught up. Come back later for more review cards.",
   emptyActionHref = "/roadmap",
   emptyActionLabel = "Back to roadmap",
+  backHref = completionPrimaryHref,
   onRateCard,
 }: FlashcardSessionProps) {
   const navigate = useNavigate();
@@ -178,7 +180,7 @@ export function FlashcardSession({
     return (
       <FlashcardShell
         doneCount={0}
-        onBack={() => navigate(-1)}
+        onBack={() => navigate(backHref)}
         onReset={resetSession}
         progressPercentage={0}
         remainingCount={0}
@@ -197,7 +199,7 @@ export function FlashcardSession({
     return (
       <FlashcardShell
         doneCount={doneCount}
-        onBack={() => navigate(-1)}
+        onBack={() => navigate(backHref)}
         onReset={resetSession}
         progressPercentage={100}
         remainingCount={0}
@@ -216,7 +218,7 @@ export function FlashcardSession({
   return (
     <FlashcardShell
       doneCount={doneCount}
-      onBack={() => navigate(-1)}
+      onBack={() => navigate(backHref)}
       onReset={resetSession}
       progressPercentage={progressPercentage}
       remainingCount={remainingCount}

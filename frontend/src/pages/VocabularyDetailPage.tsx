@@ -42,7 +42,7 @@ export function VocabularyDetailPage() {
 
   if (vocabularyQuery.isLoading) {
     return (
-      <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+      <VocabularyDetailShell navigateBack={() => navigate('/vocabulary')}>
         <VocabularyDetailState
           description="Loading word metadata, examples, and your progress."
           title="Loading word"
@@ -53,7 +53,7 @@ export function VocabularyDetailPage() {
 
   if (errorMessage) {
     return (
-      <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+      <VocabularyDetailShell navigateBack={() => navigate('/vocabulary')}>
         <VocabularyDetailState
           description={errorMessage}
           title="Word unavailable"
@@ -65,14 +65,14 @@ export function VocabularyDetailPage() {
 
   if (!vocabulary) {
     return (
-      <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+      <VocabularyDetailShell navigateBack={() => navigate('/vocabulary')}>
         <VocabularyNotFound />
       </VocabularyDetailShell>
     )
   }
 
   return (
-    <VocabularyDetailShell navigateBack={() => navigate(-1)}>
+    <VocabularyDetailShell navigateBack={() => navigate('/vocabulary')}>
       <WordHero vocabulary={vocabulary} />
 
       <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
