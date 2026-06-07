@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (token: string, user: User) => {
       persistAccessToken(token)
       setAccessToken(token)
+      queryClient.clear()
       queryClient.setQueryData(currentUserQueryKey, user)
     },
     [queryClient],
@@ -59,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(() => {
     clearAccessToken()
     setAccessToken(null)
-    queryClient.removeQueries({ queryKey: currentUserQueryKey })
+    queryClient.clear()
   }, [queryClient])
 
   const value = useMemo(

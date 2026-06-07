@@ -20,8 +20,8 @@ export type MockLesson = {
   estimatedMinutes: number
   requiredScore: number
   xpReward: number
-  lessonScore: number
-  personalBest: number
+  score: number | null
+  bestScore: number | null
   vocabulary: LessonVocabularyItem[]
 }
 
@@ -35,8 +35,8 @@ export const mockLesson: MockLesson = {
   estimatedMinutes: 25,
   requiredScore: 80,
   xpReward: 350,
-  lessonScore: 920,
-  personalBest: 850,
+  score: null,
+  bestScore: null,
   vocabulary: [
     {
       id: 'accommodate',

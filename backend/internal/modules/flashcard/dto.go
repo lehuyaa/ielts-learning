@@ -56,6 +56,7 @@ type FlashcardResponse struct {
 
 type ReviewRequest struct {
 	VocabularyID uint                   `json:"vocabularyId"`
+	LessonID     *uint                  `json:"lessonId,omitempty"`
 	Rating       models.FlashcardRating `json:"rating"`
 }
 

@@ -119,7 +119,7 @@ func (s Service) Review(userID uint, request ReviewRequest) (ReviewResponse, err
 	}
 
 	now := s.now().UTC()
-	progress, updatedUser, xpAwarded, err := s.repository.SaveReview(user, request.VocabularyID, now, func(progress models.UserVocabularyProgress, _ bool) ReviewUpdate {
+	progress, updatedUser, xpAwarded, err := s.repository.SaveReview(user, request.VocabularyID, request.LessonID, now, func(progress models.UserVocabularyProgress, _ bool) ReviewUpdate {
 		return ReviewUpdate{
 			Progress:  applyRating(progress, request.Rating, now),
 			XPAwarded: flashcardReviewXP,

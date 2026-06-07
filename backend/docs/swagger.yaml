@@ -148,6 +148,8 @@ definitions:
     type: object
   flashcard.ReviewRequest:
     properties:
+      lessonId:
+        type: integer
       rating:
         $ref: '#/definitions/models.FlashcardRating'
       vocabularyId:

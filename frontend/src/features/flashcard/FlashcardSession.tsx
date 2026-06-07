@@ -5,26 +5,34 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-
-import type { FlashcardRating, MockFlashcard } from "./mockFlashcards";
+import type {
+  FlashcardRating,
+  FlashcardSessionCard,
+} from "@/types/flashcard";
 
 type RatingCounts = Record<FlashcardRating, number>;
 
 type FlashcardSessionProps = {
-  cards: MockFlashcard[];
+  cards: FlashcardSessionCard[];
   title: string;
   subtitle: string;
   completionPrimaryHref: string;
   completionPrimaryLabel: string;
   emptyTitle?: string;
   emptyDescription?: string;
+  emptyActionHref?: string;
+  emptyActionLabel?: string;
+  onRateCard?: (
+    card: FlashcardSessionCard,
+    rating: FlashcardRating,
+  ) => Promise<void> | void;
 };
 
 const emptyRatings: RatingCounts = {
-  again: 0,
-  hard: 0,
-  good: 0,
-  easy: 0,
+  AGAIN: 0,
+  HARD: 0,
+  GOOD: 0,
+  EASY: 0,
 };
 
 const ratingOptions: Array<{
@@ -34,25 +42,25 @@ const ratingOptions: Array<{
   className: string;
 }> = [
   {
-    value: "again",
+    value: "AGAIN",
     label: "Again",
     interval: "<10 min",
     className: "border-[#ffc8c8] bg-[#fff8f8] text-[#dc2626]",
   },
   {
-    value: "hard",
+    value: "HARD",
     label: "Hard",
     interval: "1 day",
     className: "border-[#ffd89b] bg-[#fffaf0] text-[#ea580c]",
   },
   {
-    value: "good",
+    value: "GOOD",
     label: "Good",
     interval: "3 days",
     className: "border-[#bfd8ff] bg-[#f4f9ff] text-[#2563eb]",
   },
   {
-    value: "easy",
+    value: "EASY",
     label: "Easy",
     interval: "7 days",
     className: "border-[#bff0d5] bg-[#f2fff8] text-[#15803d]",
@@ -67,12 +75,19 @@ export function FlashcardSession({
   completionPrimaryLabel,
   emptyTitle = "No reviews due",
   emptyDescription = "You are all caught up. Come back later for more review cards.",
+  emptyActionHref = "/roadmap",
+  emptyActionLabel = "Back to roadmap",
+  onRateCard,
 }: FlashcardSessionProps) {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isRatingVisible, setIsRatingVisible] = useState(false);
   const [ratingCounts, setRatingCounts] = useState<RatingCounts>(emptyRatings);
+  const [pendingRating, setPendingRating] = useState<FlashcardRating | null>(
+    null,
+  );
+  const [ratingError, setRatingError] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
   const ratingTimerRef = useRef<number | null>(null);
 
@@ -89,12 +104,19 @@ export function FlashcardSession({
     setIsFlipped(false);
     setIsRatingVisible(false);
     setRatingCounts(emptyRatings);
+    setPendingRating(null);
+    setRatingError("");
     setIsCompleted(false);
   }
 
   function flipCard() {
+    if (pendingRating) {
+      return;
+    }
+
     clearRatingTimer();
     setIsRatingVisible(false);
+    setRatingError("");
 
     if (isFlipped) {
       setIsFlipped(false);
@@ -118,23 +140,38 @@ export function FlashcardSession({
     ratingTimerRef.current = null;
   }
 
-  function rateCard(rating: FlashcardRating) {
-    clearRatingTimer();
-    setRatingCounts((current) => ({
-      ...current,
-      [rating]: current[rating] + 1,
-    }));
-
-    if (currentIndex >= totalCards - 1) {
-      setIsCompleted(true);
-      setIsFlipped(false);
-      setIsRatingVisible(false);
+  async function rateCard(rating: FlashcardRating) {
+    if (pendingRating) {
       return;
     }
 
-    setCurrentIndex((index) => index + 1);
-    setIsFlipped(false);
-    setIsRatingVisible(false);
+    clearRatingTimer();
+    setPendingRating(rating);
+    setRatingError("");
+
+    try {
+      await onRateCard?.(currentCard, rating);
+
+      setRatingCounts((current) => ({
+        ...current,
+        [rating]: current[rating] + 1,
+      }));
+
+      if (currentIndex >= totalCards - 1) {
+        setIsCompleted(true);
+        setIsFlipped(false);
+        setIsRatingVisible(false);
+        return;
+      }
+
+      setCurrentIndex((index) => index + 1);
+      setIsFlipped(false);
+      setIsRatingVisible(false);
+    } catch {
+      setRatingError("Could not save your rating. Please try again.");
+    } finally {
+      setPendingRating(null);
+    }
   }
 
   if (totalCards === 0) {
@@ -147,6 +184,8 @@ export function FlashcardSession({
         remainingCount={0}
       >
         <EmptyFlashcardState
+          actionHref={emptyActionHref}
+          actionLabel={emptyActionLabel}
           description={emptyDescription}
           title={emptyTitle}
         />
@@ -198,7 +237,11 @@ export function FlashcardSession({
         <FlipCard card={currentCard} isFlipped={isFlipped} onFlip={flipCard} />
 
         {isRatingVisible ? (
-          <RatingControls onRate={rateCard} />
+          <RatingControls
+            errorMessage={ratingError}
+            onRate={rateCard}
+            pendingRating={pendingRating}
+          />
         ) : (
           <div className="mt-5 h-10" aria-hidden="true" />
         )}
@@ -277,7 +320,7 @@ function FlipCard({
   isFlipped,
   onFlip,
 }: {
-  card: MockFlashcard;
+  card: FlashcardSessionCard;
   isFlipped: boolean;
   onFlip: () => void;
 }) {
@@ -319,7 +362,7 @@ function FlashcardFront({
   card,
   onFlip,
 }: {
-  card: MockFlashcard;
+  card: FlashcardSessionCard;
   onFlip: () => void;
 }) {
   return (
@@ -351,7 +394,7 @@ function FlashcardBack({
   card,
   onFlip,
 }: {
-  card: MockFlashcard;
+  card: FlashcardSessionCard;
   onFlip: () => void;
 }) {
   return (
@@ -434,22 +477,33 @@ function TokenSection({ label, tokens }: { label: string; tokens: string[] }) {
 }
 
 function RatingControls({
+  errorMessage,
   onRate,
+  pendingRating,
 }: {
+  errorMessage: string;
   onRate: (rating: FlashcardRating) => void;
+  pendingRating: FlashcardRating | null;
 }) {
   return (
     <section className="mt-6 w-full">
       <p className="text-center text-sm font-semibold text-[#676982]">
         How well did you know this word?
       </p>
+      {errorMessage ? (
+        <p className="mt-2 text-center text-sm font-semibold text-destructive">
+          {errorMessage}
+        </p>
+      ) : null}
       <div className="mt-4 grid gap-3 sm:grid-cols-4">
         {ratingOptions.map((option) => (
           <button
             className={cn(
               "rounded-2xl border px-4 py-3 text-center shadow-sm transition-transform hover:-translate-y-0.5",
+              "disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0",
               option.className,
             )}
+            disabled={Boolean(pendingRating)}
             key={option.value}
             onClick={(event) => {
               event.stopPropagation();
@@ -457,7 +511,9 @@ function RatingControls({
             }}
             type="button"
           >
-            <span className="block text-lg font-bold">{option.label}</span>
+            <span className="block text-lg font-bold">
+              {pendingRating === option.value ? "Saving..." : option.label}
+            </span>
             <span className="mt-1 block text-sm font-medium">
               {option.interval}
             </span>
@@ -548,9 +604,13 @@ function CompletionSummary({
 }
 
 function EmptyFlashcardState({
+  actionHref,
+  actionLabel,
   title,
   description,
 }: {
+  actionHref: string;
+  actionLabel: string;
   title: string;
   description: string;
 }) {
@@ -565,7 +625,7 @@ function EmptyFlashcardState({
           {description}
         </p>
         <Button asChild className="mt-6 h-10 rounded-full px-5 text-sm">
-          <Link to="/roadmap">Back to roadmap</Link>
+          <Link to={actionHref}>{actionLabel}</Link>
         </Button>
       </section>
     </main>

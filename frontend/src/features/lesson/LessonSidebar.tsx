@@ -31,6 +31,9 @@ export function LessonSidebar({
   onStartQuiz,
 }: LessonSidebarProps) {
   const startLabel = isStarting ? 'Starting...' : 'Start Flashcards'
+  const hasQuizScore = lesson.score !== null || lesson.bestScore !== null
+  const primaryScore = lesson.score ?? lesson.bestScore
+  const bestScore = lesson.bestScore ?? lesson.score
 
   return (
     <aside className="grid gap-6 lg:sticky lg:top-8">
@@ -97,15 +100,26 @@ export function LessonSidebar({
       </section>
 
       <section className="rounded-2xl bg-gradient-to-br from-[#5b53f0] to-[#7a32f0] p-6 text-white shadow-sm">
-        <p className="text-base font-bold text-white/75">Lesson Score</p>
+        <p className="text-base font-bold text-white/75">
+          {hasQuizScore ? 'Quiz Score' : 'Learning Progress'}
+        </p>
         <p className="mt-2 text-5xl font-bold tracking-normal">
-          {lesson.lessonScore}
+          {hasQuizScore ? primaryScore : `${Math.round(progressPercentage)}%`}
         </p>
-        <p className="mt-3 text-base font-medium text-white/75">
-          Personal best: {lesson.personalBest}
-        </p>
+        {hasQuizScore ? (
+          <p className="mt-3 text-base font-medium text-white/75">
+            Personal best: {bestScore}
+          </p>
+        ) : (
+          <p className="mt-3 text-base font-medium text-white/75">
+            Quiz score appears after completing a quiz.
+          </p>
+        )}
         <div className="mt-6 h-2 overflow-hidden rounded-full bg-white/20">
-          <div className="h-full w-4/5 rounded-full bg-white" />
+          <div
+            className="h-full rounded-full bg-white"
+            style={{ width: `${hasQuizScore ? bestScore ?? 0 : progressPercentage}%` }}
+          />
         </div>
       </section>
     </aside>

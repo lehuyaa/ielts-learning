@@ -187,6 +187,7 @@ type ReviewUpdate struct {
 func (r Repository) SaveReview(
 	user models.User,
 	vocabularyID uint,
+	lessonID *uint,
 	now time.Time,
 	update func(models.UserVocabularyProgress, bool) ReviewUpdate,
 ) (models.UserVocabularyProgress, models.User, int, error) {
@@ -259,8 +260,14 @@ func (r Repository) SaveReview(
 			}
 		}
 
-		if err := upsertDailyActivity(tx, user.ID, activityDate(now, user.Timezone), xpAwarded); err != nil {
+		if err := upsertDailyActivity(tx, user.ID, activityDate(now, user.Timezone), xpAwarded, now); err != nil {
 			return err
+		}
+
+		if lessonID != nil {
+			if err := updateLessonProgressAfterVocabularyReview(tx, user.ID, *lessonID, vocabularyID, now); err != nil {
+				return err
+			}
 		}
 
 		return nil
@@ -272,32 +279,111 @@ func (r Repository) SaveReview(
 	return progress, updatedUser, xpAwarded, nil
 }
 
-func upsertDailyActivity(tx *gorm.DB, userID uint, date time.Time, xpAwarded int) error {
-	var activity models.DailyActivity
-	err := tx.
-		Where("user_id = ? AND date = ?", userID, date).
-		First(&activity).Error
+func upsertDailyActivity(tx *gorm.DB, userID uint, date time.Time, xpAwarded int, now time.Time) error {
+	activity := models.DailyActivity{
+		UserID:        userID,
+		Date:          date,
+		WordsReviewed: 1,
+		XPEarned:      xpAwarded,
+		CreatedAt:     now,
+		UpdatedAt:     now,
+	}
+
+	err := tx.Clauses(clause.OnConflict{
+		Columns: []clause.Column{
+			{Name: "user_id"},
+			{Name: "date"},
+		},
+		DoUpdates: clause.Assignments(map[string]interface{}{
+			"words_reviewed": gorm.Expr("words_reviewed + ?", 1),
+			"xp_earned":      gorm.Expr("xp_earned + ?", xpAwarded),
+			"updated_at":     now,
+		}),
+	}).Create(&activity).Error
+	if err != nil {
+		return fmt.Errorf("upsert daily activity: %w", err)
+	}
+
+	return nil
+}
+
+func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonID uint, vocabularyID uint, now time.Time) error {
+	var totalWords int64
+	if err := tx.Model(&models.LessonVocabulary{}).
+		Where("lesson_id = ? AND is_required = ?", lessonID, true).
+		Count(&totalWords).Error; err != nil {
+		return fmt.Errorf("count lesson words: %w", err)
+	}
+	if totalWords == 0 {
+		return nil
+	}
+
+	var includesVocabulary int64
+	if err := tx.Model(&models.LessonVocabulary{}).
+		Where("lesson_id = ? AND vocabulary_id = ? AND is_required = ?", lessonID, vocabularyID, true).
+		Count(&includesVocabulary).Error; err != nil {
+		return fmt.Errorf("check lesson vocabulary: %w", err)
+	}
+	if includesVocabulary == 0 {
+		return nil
+	}
+
+	var reviewedWords int64
+	if err := tx.Model(&models.LessonVocabulary{}).
+		Joins("JOIN user_vocabulary_progresses ON user_vocabulary_progresses.vocabulary_id = lesson_vocabularies.vocabulary_id").
+		Where("lesson_vocabularies.lesson_id = ? AND lesson_vocabularies.is_required = ?", lessonID, true).
+		Where("user_vocabulary_progresses.user_id = ? AND user_vocabulary_progresses.review_count > ?", userID, 0).
+		Count(&reviewedWords).Error; err != nil {
+		return fmt.Errorf("count reviewed lesson words: %w", err)
+	}
+
+	status := models.LessonStatusInProgress
+	var completedAt *time.Time
+	if reviewedWords >= totalWords {
+		status = models.LessonStatusCompleted
+		completedAt = &now
+	}
+
+	var progress models.UserLessonProgress
+	err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+		Where("user_id = ? AND lesson_id = ?", userID, lessonID).
+		First(&progress).Error
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return fmt.Errorf("find daily activity: %w", err)
+			return fmt.Errorf("find lesson progress after review: %w", err)
 		}
 
-		activity = models.DailyActivity{
+		progress = models.UserLessonProgress{
 			UserID:        userID,
-			Date:          date,
-			WordsReviewed: 1,
-			XPEarned:      xpAwarded,
+			LessonID:      lessonID,
+			Status:        status,
+			WordsLearned:  int(reviewedWords),
+			TotalWords:    int(totalWords),
+			StartedAt:     &now,
+			CompletedAt:   completedAt,
+			LastStudiedAt: &now,
 		}
-		if err := tx.Create(&activity).Error; err != nil {
-			return fmt.Errorf("create daily activity: %w", err)
+		if err := tx.Create(&progress).Error; err != nil {
+			return fmt.Errorf("create lesson progress after review: %w", err)
 		}
 		return nil
 	}
 
-	activity.WordsReviewed++
-	activity.XPEarned += xpAwarded
-	if err := tx.Save(&activity).Error; err != nil {
-		return fmt.Errorf("update daily activity: %w", err)
+	if progress.Status != models.LessonStatusCompleted {
+		progress.Status = status
+	}
+	if progress.StartedAt == nil {
+		progress.StartedAt = &now
+	}
+	if status == models.LessonStatusCompleted && progress.CompletedAt == nil {
+		progress.CompletedAt = completedAt
+	}
+	progress.WordsLearned = int(reviewedWords)
+	progress.TotalWords = int(totalWords)
+	progress.LastStudiedAt = &now
+
+	if err := tx.Save(&progress).Error; err != nil {
+		return fmt.Errorf("update lesson progress after review: %w", err)
 	}
 
 	return nil

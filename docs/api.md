@@ -830,33 +830,44 @@ Lesson Detail response. This endpoint represents the Lesson Detail page only, af
 ```json
 {
   "data": {
-    "id": 1,
-    "title": "Education Vocabulary",
-    "description": "Core education vocabulary for IELTS.",
-    "requiredScore": 80,
-    "estimatedMinutes": 25,
-    "bandMin": 5.5,
-    "bandMax": 7.0,
-    "xpReward": 350,
+    "lesson": {
+      "id": 1,
+      "title": "Education Vocabulary",
+      "slug": "education-vocabulary",
+      "description": "Core education vocabulary for IELTS.",
+      "requiredScore": 80,
+      "estimatedMinutes": 25,
+      "xpReward": 350,
+      "wordCount": 7,
+      "orderIndex": 1,
+      "status": "COMPLETED",
+      "progressPercentage": 100,
+      "lockedReason": null
+    },
     "progress": {
       "status": "COMPLETED",
       "wordsLearned": 7,
       "totalWords": 7,
       "progressPercentage": 100,
-      "score": 920,
-      "bestScore": 920,
-      "personalBest": 850,
-      "completedAt": "2026-06-05T08:00:00+07:00"
+      "score": null,
+      "bestScore": null,
+      "bestXp": 0,
+      "startedAt": "2026-06-05T08:00:00+07:00",
+      "completedAt": "2026-06-05T08:00:00+07:00",
+      "lastStudiedAt": "2026-06-05T08:00:00+07:00"
     },
     "topic": {
       "id": 1,
       "title": "Education",
       "slug": "education",
-      "bandLevel": {
-        "id": 2,
-        "bandScore": 6.0,
-        "title": "Band 6.0"
-      }
+      "icon": "🎓",
+      "emoji": "🎓",
+      "color": "green"
+    },
+    "bandLevel": {
+      "id": 2,
+      "bandScore": 6.0,
+      "title": "Band 6.0"
     },
     "vocabularies": [
       {
@@ -877,6 +888,10 @@ Lesson Detail response. This endpoint represents the Lesson Detail page only, af
   }
 }
 ```
+
+`progress.score` is the latest quiz score for the lesson when quiz scoring exists.
+`progress.bestScore` is the highest quiz score for the lesson. Both fields are nullable.
+Flashcard learning progress should use `progress.progressPercentage`, `wordsLearned`, and `totalWords`; the API does not return a separate `personalBest` field.
 
 ### POST /api/v1/lessons/:lessonId/vocabularies/:vocabularyId/learned
 

@@ -1124,6 +1124,9 @@ const docTemplate = `{
         "flashcard.ReviewRequest": {
             "type": "object",
             "properties": {
+                "lessonId": {
+                    "type": "integer"
+                },
                 "rating": {
                     "$ref": "#/definitions/models.FlashcardRating"
                 },

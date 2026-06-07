@@ -116,8 +116,8 @@ export type LessonDetailViewModel = {
   estimatedMinutes: number
   requiredScore: number
   xpReward: number
-  lessonScore: number
-  personalBest: number
+  score: number | null
+  bestScore: number | null
   status: LessonStatus
   lockedReason: string | null
   progressPercentage: number
