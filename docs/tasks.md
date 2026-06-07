@@ -44,6 +44,26 @@ Frontend API consumption rule:
 - React Query hooks should live in the relevant feature folder, for example `frontend/src/features/roadmap/hooks/useRoadmap.ts`.
 - Pages and components should consume React Query hooks instead of calling API modules directly.
 
+Backend Swagger/OpenAPI rule:
+
+- Every backend API task must add Swagger annotations above each Gin handler.
+- Protected endpoints must include `@Security BearerAuth`.
+- Annotations must document summary, description, tags, path params, query params, request body, success response, and error responses as applicable.
+- Request and response DTO changes must be reflected in Swagger annotations.
+- After adding or changing endpoints, Swagger docs must be regeneratable with:
+
+```bash
+cd backend
+swag init -g cmd/api/main.go
+```
+
+- Backend API task acceptance criteria must include:
+  - Swagger annotations are added.
+  - Protected endpoints include BearerAuth.
+  - `swagger.json` and `swagger.yaml` can be regenerated.
+  - Endpoint appears in Swagger UI.
+  - Endpoint can be imported into Postman through `swagger.json`.
+
 ---
 
 ## 2. Milestone 1 - Project Setup
@@ -279,6 +299,11 @@ Acceptance criteria:
 - Protected me endpoint works with JWT
 - Password hash is never returned
 - Register/Login backend validation matches the auth validation contracts
+- Swagger annotations are added.
+- Protected endpoints include BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoints appear in Swagger UI.
+- Endpoints can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -464,6 +489,11 @@ Acceptance criteria:
 - Uses authenticated user topic progress.
 - Does not expose unrelated user data.
 - Frontend can consume the response directly in Task 15.
+- Swagger annotations are added.
+- Protected endpoint includes BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoint appears in Swagger UI.
+- Endpoint can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -657,6 +687,11 @@ Acceptance criteria:
 - Does not expose unrelated user data.
 - Missing topic returns NOT_FOUND.
 - Frontend can consume the response directly in Task 19.
+- Swagger annotations are added.
+- Protected endpoint includes BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoint appears in Swagger UI.
+- Endpoint can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -739,6 +774,11 @@ Acceptance criteria:
 - Start endpoint updates progress.
 - No hardcoded user ID.
 - Missing lesson returns NOT_FOUND.
+- Swagger annotations are added.
+- Protected endpoints include BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoints appear in Swagger UI.
+- Endpoints can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -904,6 +944,11 @@ Acceptance criteria:
 - Pagination works.
 - Detail endpoint works.
 - Works for demo user.
+- Swagger annotations are added.
+- Protected endpoints include BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoints appear in Swagger UI.
+- Endpoints can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -1042,6 +1087,11 @@ Acceptance criteria:
 - Flashcard review updates user_vocabulary_progresses.
 - Spaced repetition follows `docs/database.md`.
 - No hardcoded user ID.
+- Swagger annotations are added.
+- Protected endpoints include BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoints appear in Swagger UI.
+- Endpoints can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -1170,6 +1220,11 @@ Acceptance criteria:
 - Quiz attempt is saved.
 - Lesson completion works.
 - No hardcoded user ID.
+- Swagger annotations are added.
+- Protected endpoints include BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoints appear in Swagger UI.
+- Endpoints can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -1295,6 +1350,11 @@ Acceptance criteria:
 - Endpoint returns dashboard data.
 - Works for demo user.
 - Response is directly usable by frontend.
+- Swagger annotations are added.
+- Protected endpoint includes BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoint appears in Swagger UI.
+- Endpoint can be imported into Postman through `swagger.json`.
 
 ---
 
@@ -1416,6 +1476,11 @@ Acceptance criteria:
 - Profile update works.
 - Validation matches contract.
 - No hardcoded user ID.
+- Swagger annotations are added.
+- Protected endpoints include BearerAuth.
+- `swagger.json` and `swagger.yaml` can be regenerated.
+- Endpoints appear in Swagger UI.
+- Endpoints can be imported into Postman through `swagger.json`.
 
 ---
 

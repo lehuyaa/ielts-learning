@@ -2,6 +2,16 @@
 
 This document extends `docs/api.md` after reviewing all screenshots in `docs/screenshots` and comparing them with `docs/database.md` and `docs/architecture.md`.
 
+All API endpoints in this document must have matching Swagger annotations in backend code.
+
+When adding a new endpoint to `docs/api.md`, also add:
+
+- Handler annotation.
+- Request DTO.
+- Response DTO.
+- Error responses.
+- BearerAuth if protected.
+
 Use the same backend stack and module pattern from `docs/architecture.md`:
 
 ```txt

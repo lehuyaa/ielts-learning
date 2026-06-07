@@ -18,6 +18,18 @@ func NewHandler(service Service) Handler {
 	return Handler{service: service}
 }
 
+// Register godoc
+// @Summary Register user
+// @Description Create a new user account and return an access token with the user profile.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body RegisterRequest true "Register request"
+// @Success 201 {object} response.SuccessResponse{data=AuthResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 409 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /auth/register [post]
 func (h Handler) Register(c *gin.Context) {
 	var req RegisterRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -42,6 +54,18 @@ func (h Handler) Register(c *gin.Context) {
 	response.Created(c, result)
 }
 
+// Login godoc
+// @Summary Login user
+// @Description Authenticate a user with email and password and return an access token.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param request body LoginRequest true "Login request"
+// @Success 200 {object} response.SuccessResponse{data=AuthResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /auth/login [post]
 func (h Handler) Login(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -66,6 +90,18 @@ func (h Handler) Login(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// Me godoc
+// @Summary Get current user
+// @Description Return the authenticated user's profile.
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.SuccessResponse{data=UserResponse}
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /auth/me [get]
 func (h Handler) Me(c *gin.Context) {
 	userID, ok := middleware.GetUserID(c)
 	if !ok {

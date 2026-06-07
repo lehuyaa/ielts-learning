@@ -4,7 +4,10 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
+	_ "ielts-learning/backend/docs"
 	"ielts-learning/backend/internal/config"
 	"ielts-learning/backend/internal/database"
 	"ielts-learning/backend/internal/middleware"
@@ -17,6 +20,15 @@ import (
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
+// @title IELTS Learning API
+// @version v1
+// @description Backend API for IELTS Vocabulary Learning Platform
+// @BasePath /api/v1
+// @schemes http https
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer " followed by a JWT access token.
 func main() {
 	cfg := config.Load()
 
@@ -44,6 +56,7 @@ func main() {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	api := router.Group("/api/v1")
 	authmodule.RegisterRoutes(api, db, jwtManager)

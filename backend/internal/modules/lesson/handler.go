@@ -19,6 +19,21 @@ func NewHandler(service Service) Handler {
 	return Handler{service: service}
 }
 
+// Get godoc
+// @Summary Get lesson detail
+// @Description Return lesson metadata, topic and band context, vocabulary list, and authenticated user progress.
+// @Tags Lessons
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param lessonId path int true "Lesson ID"
+// @Success 200 {object} response.SuccessResponse{data=DetailResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /lessons/{lessonId} [get]
 func (h Handler) Get(c *gin.Context) {
 	lessonID, err := parseLessonID(c.Param("lessonId"))
 	if err != nil {
@@ -41,6 +56,21 @@ func (h Handler) Get(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// Start godoc
+// @Summary Start lesson
+// @Description Create or update authenticated user lesson progress and mark the lesson as in progress when allowed.
+// @Tags Lessons
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param lessonId path int true "Lesson ID"
+// @Success 200 {object} response.SuccessResponse{data=StartResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /lessons/{lessonId}/start [post]
 func (h Handler) Start(c *gin.Context) {
 	lessonID, err := parseLessonID(c.Param("lessonId"))
 	if err != nil {

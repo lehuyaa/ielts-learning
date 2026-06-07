@@ -11,6 +11,14 @@ type APIResponse struct {
 	Error *APIError `json:"error,omitempty"`
 }
 
+type SuccessResponse struct {
+	Data any `json:"data,omitempty"`
+}
+
+type ErrorResponse struct {
+	Error *APIError `json:"error,omitempty"`
+}
+
 type APIError struct {
 	Code    string            `json:"code"`
 	Message string            `json:"message"`

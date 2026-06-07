@@ -444,7 +444,39 @@ Rules:
 
 ---
 
-## 8. Database Rules
+## 8. Swagger / OpenAPI Rules
+
+For every backend API endpoint:
+
+- Add Swagger annotations above the Gin handler function.
+- Document summary.
+- Document description.
+- Document tags.
+- Document path params.
+- Document query params.
+- Document request body if applicable.
+- Document success response.
+- Document error responses.
+- Add BearerAuth security annotation for protected endpoints.
+- Keep annotations updated when request/response DTOs change.
+- After adding or changing endpoints, regenerate Swagger docs with:
+
+```bash
+cd backend
+swag init -g cmd/api/main.go
+```
+
+- Do not mark backend API tasks complete if Swagger annotations are missing.
+
+Protected endpoints must include:
+
+```txt
+@Security BearerAuth
+```
+
+---
+
+## 9. Database Rules
 
 Use GORM models from:
 
@@ -464,7 +496,7 @@ Rules:
 
 ---
 
-## 9. Spaced Repetition Rules
+## 10. Spaced Repetition Rules
 
 For MVP:
 
@@ -498,7 +530,7 @@ backend/internal/modules/progress/service.go
 
 ---
 
-## 10. Quiz Rules
+## 11. Quiz Rules
 
 Important:
 
@@ -511,7 +543,7 @@ Important:
 
 ---
 
-## 11. Auth Rules
+## 12. Auth Rules
 
 Protected frontend routes:
 
@@ -545,7 +577,7 @@ If unauthenticated:
 
 ---
 
-## 12. Task Execution Rules
+## 13. Task Execution Rules
 
 When given a task:
 
@@ -567,7 +599,7 @@ Bad behavior:
 
 ---
 
-## 13. Quality Checklist
+## 14. Quality Checklist
 
 Before finishing a task, check:
 
@@ -586,7 +618,7 @@ Before finishing a task, check:
 
 ---
 
-## 14. Prompt Template for Codex
+## 15. Prompt Template for Codex
 
 Use this style when asking the AI to code:
 

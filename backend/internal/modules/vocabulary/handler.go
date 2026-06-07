@@ -21,6 +21,24 @@ func NewHandler(service Service) Handler {
 	return Handler{service: service}
 }
 
+// List godoc
+// @Summary List vocabularies
+// @Description Return paginated vocabulary items with optional search, filters, and authenticated user progress.
+// @Tags Vocabularies
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param q query string false "Search text"
+// @Param difficulty query string false "Difficulty" Enums(BEGINNER, INTERMEDIATE, ADVANCED)
+// @Param targetBand query number false "Target IELTS band"
+// @Param status query string false "User vocabulary status" Enums(NEW, LEARNING, REVIEW, MASTERED)
+// @Param page query int false "Page number"
+// @Param limit query int false "Page size, max 100"
+// @Success 200 {object} response.SuccessResponse{data=ListResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /vocabularies [get]
 func (h Handler) List(c *gin.Context) {
 	query, fields := parseListQuery(c)
 	if len(fields) > 0 {
@@ -43,6 +61,20 @@ func (h Handler) List(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// Get godoc
+// @Summary Get vocabulary detail
+// @Description Return full dictionary-style vocabulary detail and authenticated user progress.
+// @Tags Vocabularies
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param vocabularyId path int true "Vocabulary ID"
+// @Success 200 {object} response.SuccessResponse{data=DetailResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /vocabularies/{vocabularyId} [get]
 func (h Handler) Get(c *gin.Context) {
 	vocabularyID, err := parseVocabularyID(c.Param("vocabularyId"))
 	if err != nil {

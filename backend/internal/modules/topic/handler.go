@@ -19,6 +19,20 @@ func NewHandler(service Service) Handler {
 	return Handler{service: service}
 }
 
+// Get godoc
+// @Summary Get topic detail
+// @Description Return topic metadata, parent band level, lesson list, and authenticated user progress.
+// @Tags Topics
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param topicId path int true "Topic ID"
+// @Success 200 {object} response.SuccessResponse{data=Response}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /topics/{topicId} [get]
 func (h Handler) Get(c *gin.Context) {
 	topicID, err := parseTopicID(c.Param("topicId"))
 	if err != nil {

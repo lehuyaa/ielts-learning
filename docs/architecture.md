@@ -589,11 +589,75 @@ Optional:
 ```txt
 github.com/rs/zerolog
 github.com/swaggo/gin-swagger
+github.com/swaggo/swag
 ```
 
 ---
 
-## 12. Environment Variables
+## 12. API Documentation
+
+Backend API documentation is generated with `swaggo/swag` and served with `gin-swagger`.
+
+Swagger UI:
+
+```txt
+/swagger/index.html
+```
+
+Generated files:
+
+```txt
+backend/docs/docs.go
+backend/docs/swagger.json
+backend/docs/swagger.yaml
+```
+
+Rules:
+
+- Handler annotations are the source for Swagger docs.
+- Every API endpoint must be documented.
+- Every protected endpoint must include BearerAuth.
+- DTO structs should be reusable in Swagger annotations.
+- Error responses should use the standard error response type.
+- Success responses should use the standard success response type or endpoint-specific response DTO.
+- Keep Swagger annotations updated whenever request or response DTOs change.
+- Do not mark backend API tasks complete if Swagger annotations are missing.
+
+Regenerate Swagger docs after adding or changing endpoints:
+
+```bash
+cd backend
+swag init -g cmd/api/main.go
+```
+
+If the project adds a Makefile later, add a convenience target:
+
+```bash
+make swagger
+```
+
+Recommended handler annotation example:
+
+```go
+// GetTopicDetail godoc
+// @Summary Get topic detail
+// @Description Return topic metadata, lesson list, and user progress for the authenticated user.
+// @Tags Topics
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param topicId path int true "Topic ID"
+// @Success 200 {object} response.SuccessResponse{data=topic.TopicDetailResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /topics/{topicId} [get]
+```
+
+---
+
+## 13. Environment Variables
 
 ### Backend `.env`
 
@@ -621,7 +685,7 @@ VITE_API_BASE_URL=http://localhost:8080/api/v1
 
 ---
 
-## 13. Docker Compose
+## 14. Docker Compose
 
 Recommended root `docker-compose.yml`:
 
@@ -645,7 +709,7 @@ volumes:
 
 ---
 
-## 14. Backend Route Registration
+## 15. Backend Route Registration
 
 Example:
 
@@ -670,7 +734,7 @@ func RegisterRoutes(r *gin.Engine, deps Dependencies) {
 
 ---
 
-## 15. Auth Architecture
+## 16. Auth Architecture
 
 Use JWT.
 
@@ -709,7 +773,7 @@ userRole
 
 ---
 
-## 16. CORS
+## 17. CORS
 
 Backend should allow frontend origin:
 
@@ -737,7 +801,7 @@ OPTIONS
 
 ---
 
-## 17. Service Logic Placement
+## 18. Service Logic Placement
 
 ### Spaced repetition
 
@@ -765,7 +829,7 @@ backend/internal/modules/dashboard/service.go
 
 ---
 
-## 18. Development Workflow
+## 19. Development Workflow
 
 Run MySQL:
 
@@ -789,7 +853,7 @@ pnpm dev
 
 ---
 
-## 19. Testing Strategy
+## 20. Testing Strategy
 
 For MVP:
 

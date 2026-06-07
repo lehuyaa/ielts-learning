@@ -1,0 +1,1327 @@
+basePath: /api/v1
+definitions:
+  auth.AuthResponse:
+    properties:
+      accessToken:
+        type: string
+      tokenType:
+        type: string
+      user:
+        $ref: '#/definitions/auth.UserResponse'
+    type: object
+  auth.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      targetBand:
+        type: number
+      username:
+        type: string
+    type: object
+  auth.UserResponse:
+    properties:
+      avatarUrl:
+        type: string
+      createdAt:
+        type: string
+      currentBand:
+        type: number
+      currentStreak:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      level:
+        type: integer
+      levelTitle:
+        type: string
+      longestStreak:
+        type: integer
+      name:
+        type: string
+      placementCompletedAt:
+        type: string
+      recommendedBand:
+        type: number
+      role:
+        $ref: '#/definitions/models.UserRole'
+      startingBand:
+        type: number
+      targetBand:
+        type: number
+      totalXp:
+        type: integer
+      username:
+        type: string
+    type: object
+  flashcard.DueReviewsResponse:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/flashcard.FlashcardResponse'
+        type: array
+      count:
+        type: integer
+    type: object
+  flashcard.FlashcardResponse:
+    properties:
+      audioUrl:
+        type: string
+      band:
+        type: number
+      collocations:
+        items:
+          type: string
+        type: array
+      difficulty:
+        $ref: '#/definitions/models.DifficultyLevel'
+      exampleSentence:
+        type: string
+      id:
+        type: integer
+      ieltsUsage:
+        type: string
+      ipa:
+        type: string
+      meaningEn:
+        type: string
+      meaningVi:
+        type: string
+      nextReviewAt:
+        type: string
+      partOfSpeech:
+        type: string
+      reviewCount:
+        type: integer
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.VocabularyStatus'
+      synonyms:
+        items:
+          type: string
+        type: array
+      targetBand:
+        type: number
+      topicTitle:
+        type: string
+      vocabularyId:
+        type: integer
+      word:
+        type: string
+    type: object
+  flashcard.LessonFlashcardsResponse:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/flashcard.FlashcardResponse'
+        type: array
+      lesson:
+        $ref: '#/definitions/flashcard.LessonResponse'
+      progress:
+        $ref: '#/definitions/flashcard.SessionProgress'
+    type: object
+  flashcard.LessonResponse:
+    properties:
+      bandLabel:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      topicId:
+        type: integer
+      topicTitle:
+        type: string
+    type: object
+  flashcard.ReviewRequest:
+    properties:
+      rating:
+        $ref: '#/definitions/models.FlashcardRating'
+      vocabularyId:
+        type: integer
+    type: object
+  flashcard.ReviewResponse:
+    properties:
+      correctCount:
+        type: integer
+      lastRating:
+        $ref: '#/definitions/models.FlashcardRating'
+      lastReviewedAt:
+        type: string
+      masteryScore:
+        type: integer
+      nextReviewAt:
+        type: string
+      reviewCount:
+        type: integer
+      status:
+        $ref: '#/definitions/models.VocabularyStatus'
+      totalXp:
+        type: integer
+      vocabularyId:
+        type: integer
+      wrongCount:
+        type: integer
+      xpAwarded:
+        type: integer
+    type: object
+  flashcard.SessionProgress:
+    properties:
+      done:
+        type: integer
+      remaining:
+        type: integer
+      total:
+        type: integer
+    type: object
+  lesson.BandLevelResponse:
+    properties:
+      bandScore:
+        type: number
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  lesson.DetailResponse:
+    properties:
+      bandLevel:
+        $ref: '#/definitions/lesson.BandLevelResponse'
+      lesson:
+        $ref: '#/definitions/lesson.LessonResponse'
+      progress:
+        $ref: '#/definitions/lesson.ProgressResponse'
+      topic:
+        $ref: '#/definitions/lesson.TopicResponse'
+      vocabularies:
+        items:
+          $ref: '#/definitions/lesson.VocabularyResponse'
+        type: array
+    type: object
+  lesson.LessonResponse:
+    properties:
+      description:
+        type: string
+      estimatedMinutes:
+        type: integer
+      id:
+        type: integer
+      lockedReason:
+        type: string
+      orderIndex:
+        type: integer
+      progressPercentage:
+        type: integer
+      requiredScore:
+        type: integer
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      title:
+        type: string
+      wordCount:
+        type: integer
+      xpReward:
+        type: integer
+    type: object
+  lesson.ProgressResponse:
+    properties:
+      bestScore:
+        type: integer
+      bestXp:
+        type: integer
+      completedAt:
+        type: string
+      lastStudiedAt:
+        type: string
+      progressPercentage:
+        type: integer
+      score:
+        type: integer
+      startedAt:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      totalWords:
+        type: integer
+      wordsLearned:
+        type: integer
+    type: object
+  lesson.StartResponse:
+    properties:
+      lastStudiedAt:
+        type: string
+      lessonId:
+        type: integer
+      startedAt:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+    type: object
+  lesson.TopicResponse:
+    properties:
+      color:
+        type: string
+      emoji:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
+  lesson.VocabularyResponse:
+    properties:
+      audioUrl:
+        type: string
+      correctCount:
+        type: integer
+      difficulty:
+        $ref: '#/definitions/models.DifficultyLevel'
+      exampleSentence:
+        type: string
+      id:
+        type: integer
+      ipa:
+        type: string
+      lastReviewedAt:
+        type: string
+      learned:
+        type: boolean
+      learnedAt:
+        type: string
+      meaningEn:
+        type: string
+      meaningVi:
+        type: string
+      nextReviewAt:
+        type: string
+      partOfSpeech:
+        type: string
+      reviewCount:
+        type: integer
+      shortDefinition:
+        type: string
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.VocabularyStatus'
+      targetBand:
+        type: number
+      word:
+        type: string
+      wrongCount:
+        type: integer
+    type: object
+  models.DifficultyLevel:
+    enum:
+    - BEGINNER
+    - INTERMEDIATE
+    - ADVANCED
+    type: string
+    x-enum-varnames:
+    - DifficultyBeginner
+    - DifficultyIntermediate
+    - DifficultyAdvanced
+  models.FlashcardRating:
+    enum:
+    - AGAIN
+    - HARD
+    - GOOD
+    - EASY
+    type: string
+    x-enum-varnames:
+    - FlashcardRatingAgain
+    - FlashcardRatingHard
+    - FlashcardRatingGood
+    - FlashcardRatingEasy
+  models.LessonStatus:
+    enum:
+    - LOCKED
+    - UNLOCKED
+    - IN_PROGRESS
+    - COMPLETED
+    type: string
+    x-enum-varnames:
+    - LessonStatusLocked
+    - LessonStatusUnlocked
+    - LessonStatusInProgress
+    - LessonStatusCompleted
+  models.UserRole:
+    enum:
+    - USER
+    - ADMIN
+    type: string
+    x-enum-varnames:
+    - UserRoleUser
+    - UserRoleAdmin
+  models.VocabularyStatus:
+    enum:
+    - NEW
+    - LEARNING
+    - REVIEW
+    - MASTERED
+    type: string
+    x-enum-varnames:
+    - VocabularyStatusNew
+    - VocabularyStatusLearning
+    - VocabularyStatusReview
+    - VocabularyStatusMastered
+  response.APIError:
+    properties:
+      code:
+        type: string
+      fields:
+        additionalProperties:
+          type: string
+        type: object
+      message:
+        type: string
+    type: object
+  response.ErrorResponse:
+    properties:
+      error:
+        $ref: '#/definitions/response.APIError'
+    type: object
+  response.SuccessResponse:
+    properties:
+      data: {}
+    type: object
+  roadmap.BandLevelResponse:
+    properties:
+      bandScore:
+        type: number
+      description:
+        type: string
+      id:
+        type: integer
+      progressPercentage:
+        type: integer
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      title:
+        type: string
+      topics:
+        items:
+          $ref: '#/definitions/roadmap.TopicResponse'
+        type: array
+      topicsCompleted:
+        type: integer
+      totalTopics:
+        type: integer
+    type: object
+  roadmap.CourseResponse:
+    properties:
+      bandMax:
+        type: number
+      bandMin:
+        type: number
+      id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+      totalLessons:
+        type: integer
+      totalTopics:
+        type: integer
+      totalWords:
+        type: integer
+    type: object
+  roadmap.LessonResponse:
+    properties:
+      bestScore:
+        type: integer
+      estimatedMinutes:
+        type: integer
+      id:
+        type: integer
+      requiredScore:
+        type: integer
+      score:
+        type: integer
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      title:
+        type: string
+      xpReward:
+        type: integer
+    type: object
+  roadmap.Response:
+    properties:
+      bandLevels:
+        items:
+          $ref: '#/definitions/roadmap.BandLevelResponse'
+        type: array
+      course:
+        $ref: '#/definitions/roadmap.CourseResponse'
+      summary:
+        $ref: '#/definitions/roadmap.SummaryResponse'
+    type: object
+  roadmap.SummaryResponse:
+    properties:
+      currentBand:
+        type: number
+      currentStreak:
+        type: integer
+      topicsCompleted:
+        type: integer
+      totalTopics:
+        type: integer
+      wordsMastered:
+        type: integer
+    type: object
+  roadmap.TopicResponse:
+    properties:
+      color:
+        type: string
+      emoji:
+        type: string
+      id:
+        type: integer
+      lessons:
+        items:
+          $ref: '#/definitions/roadmap.LessonResponse'
+        type: array
+      lessonsCompleted:
+        type: integer
+      progressPercentage:
+        type: integer
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      title:
+        type: string
+      totalLessons:
+        type: integer
+    type: object
+  topic.BandLevelResponse:
+    properties:
+      bandScore:
+        type: number
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  topic.LessonResponse:
+    properties:
+      description:
+        type: string
+      estimatedMinutes:
+        type: integer
+      id:
+        type: integer
+      lockedReason:
+        type: string
+      progressPercentage:
+        type: integer
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      title:
+        type: string
+      wordCount:
+        type: integer
+      xpReward:
+        type: integer
+    type: object
+  topic.Response:
+    properties:
+      bandLevel:
+        $ref: '#/definitions/topic.BandLevelResponse'
+      lessons:
+        items:
+          $ref: '#/definitions/topic.LessonResponse'
+        type: array
+      summary:
+        $ref: '#/definitions/topic.SummaryResponse'
+      topic:
+        $ref: '#/definitions/topic.TopicResponse'
+    type: object
+  topic.SummaryResponse:
+    properties:
+      completedLessons:
+        type: integer
+      progressPercentage:
+        type: integer
+      totalLessons:
+        type: integer
+      totalXP:
+        type: integer
+    type: object
+  topic.TopicResponse:
+    properties:
+      color:
+        type: string
+      description:
+        type: string
+      emoji:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
+  vocabulary.BandLevelResponse:
+    properties:
+      bandScore:
+        type: number
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  vocabulary.DetailResponse:
+    properties:
+      antonyms:
+        items:
+          type: string
+        type: array
+      audioUrl:
+        type: string
+      bandLevel:
+        $ref: '#/definitions/vocabulary.BandLevelResponse'
+      collocations:
+        items:
+          type: string
+        type: array
+      difficulty:
+        $ref: '#/definitions/models.DifficultyLevel'
+      exampleSentences:
+        items:
+          type: string
+        type: array
+      frequency:
+        type: string
+      id:
+        type: integer
+      ieltsUsage:
+        type: string
+      ipa:
+        type: string
+      masteryScore:
+        type: integer
+      meaningEn:
+        type: string
+      meaningVi:
+        type: string
+      partOfSpeech:
+        type: string
+      primaryMeaning:
+        type: string
+      progress:
+        $ref: '#/definitions/vocabulary.ProgressDetailResponse'
+      rating:
+        type: integer
+      relatedForms:
+        items:
+          $ref: '#/definitions/vocabulary.RelatedFormResponse'
+        type: array
+      secondaryMeaning:
+        type: string
+      slug:
+        type: string
+      synonyms:
+        items:
+          type: string
+        type: array
+      targetBand:
+        type: number
+      topic:
+        $ref: '#/definitions/vocabulary.TopicResponse'
+      userProgress:
+        $ref: '#/definitions/vocabulary.ProgressDetailResponse'
+      word:
+        type: string
+    type: object
+  vocabulary.ListItemResponse:
+    properties:
+      difficulty:
+        $ref: '#/definitions/models.DifficultyLevel'
+      id:
+        type: integer
+      ipa:
+        type: string
+      masteryScore:
+        type: integer
+      meaningEn:
+        type: string
+      meaningVi:
+        type: string
+      partOfSpeech:
+        type: string
+      progress:
+        $ref: '#/definitions/vocabulary.ProgressSummaryResponse'
+      shortDefinition:
+        type: string
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.VocabularyStatus'
+      targetBand:
+        type: number
+      topic:
+        $ref: '#/definitions/vocabulary.TopicResponse'
+      word:
+        type: string
+    type: object
+  vocabulary.ListResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/vocabulary.ListItemResponse'
+        type: array
+      pagination:
+        $ref: '#/definitions/vocabulary.PaginationResponse'
+    type: object
+  vocabulary.PaginationResponse:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+      totalPages:
+        type: integer
+    type: object
+  vocabulary.ProgressDetailResponse:
+    properties:
+      correctCount:
+        type: integer
+      lastReviewedAt:
+        type: string
+      learnedAt:
+        type: string
+      masteryScore:
+        type: integer
+      nextReviewAt:
+        type: string
+      reviewCount:
+        type: integer
+      status:
+        $ref: '#/definitions/models.VocabularyStatus'
+      wrongCount:
+        type: integer
+    type: object
+  vocabulary.ProgressSummaryResponse:
+    properties:
+      masteryScore:
+        type: integer
+      nextReviewAt:
+        type: string
+      reviewCount:
+        type: integer
+      status:
+        $ref: '#/definitions/models.VocabularyStatus'
+    type: object
+  vocabulary.RelatedFormResponse:
+    properties:
+      partOfSpeech:
+        type: string
+      word:
+        type: string
+    type: object
+  vocabulary.TopicResponse:
+    properties:
+      color:
+        type: string
+      emoji:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Backend API for IELTS Vocabulary Learning Platform
+  title: IELTS Learning API
+  version: v1
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user with email and password and return an access
+        token.
+      parameters:
+      - description: Login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.AuthResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Login user
+      tags:
+      - Auth
+  /auth/me:
+    get:
+      consumes:
+      - application/json
+      description: Return the authenticated user's profile.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.UserResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user account and return an access token with the user
+        profile.
+      parameters:
+      - description: Register request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/auth.AuthResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Register user
+      tags:
+      - Auth
+  /flashcards/review:
+    post:
+      consumes:
+      - application/json
+      description: Save a flashcard rating and update authenticated user vocabulary
+        progress using MVP spaced repetition rules.
+      parameters:
+      - description: Flashcard review request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/flashcard.ReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/flashcard.ReviewResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Save flashcard review
+      tags:
+      - Flashcards
+  /lessons/{lessonId}:
+    get:
+      consumes:
+      - application/json
+      description: Return lesson metadata, topic and band context, vocabulary list,
+        and authenticated user progress.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/lesson.DetailResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get lesson detail
+      tags:
+      - Lessons
+  /lessons/{lessonId}/flashcards:
+    get:
+      consumes:
+      - application/json
+      description: Return flashcards for a lesson with vocabulary content and authenticated
+        user vocabulary progress.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/flashcard.LessonFlashcardsResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get lesson flashcards
+      tags:
+      - Flashcards
+  /lessons/{lessonId}/start:
+    post:
+      consumes:
+      - application/json
+      description: Create or update authenticated user lesson progress and mark the
+        lesson as in progress when allowed.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/lesson.StartResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Start lesson
+      tags:
+      - Lessons
+  /reviews/due:
+    get:
+      consumes:
+      - application/json
+      description: Return due review flashcards for the authenticated user where next
+        review time is due.
+      parameters:
+      - description: Maximum number of due cards, max 100
+        in: query
+        name: limit
+        type: integer
+      - description: Filter by topic ID
+        in: query
+        name: topicId
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/flashcard.DueReviewsResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get due reviews
+      tags:
+      - Reviews
+  /roadmap:
+    get:
+      consumes:
+      - application/json
+      description: Return the IELTS vocabulary roadmap with course, band levels, topics,
+        lessons, and authenticated user progress.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/roadmap.Response'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get roadmap
+      tags:
+      - Roadmap
+  /topics/{topicId}:
+    get:
+      consumes:
+      - application/json
+      description: Return topic metadata, parent band level, lesson list, and authenticated
+        user progress.
+      parameters:
+      - description: Topic ID
+        in: path
+        name: topicId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/topic.Response'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get topic detail
+      tags:
+      - Topics
+  /vocabularies:
+    get:
+      consumes:
+      - application/json
+      description: Return paginated vocabulary items with optional search, filters,
+        and authenticated user progress.
+      parameters:
+      - description: Search text
+        in: query
+        name: q
+        type: string
+      - description: Difficulty
+        enum:
+        - BEGINNER
+        - INTERMEDIATE
+        - ADVANCED
+        in: query
+        name: difficulty
+        type: string
+      - description: Target IELTS band
+        in: query
+        name: targetBand
+        type: number
+      - description: User vocabulary status
+        enum:
+        - NEW
+        - LEARNING
+        - REVIEW
+        - MASTERED
+        in: query
+        name: status
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size, max 100
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/vocabulary.ListResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List vocabularies
+      tags:
+      - Vocabularies
+  /vocabularies/{vocabularyId}:
+    get:
+      consumes:
+      - application/json
+      description: Return full dictionary-style vocabulary detail and authenticated
+        user progress.
+      parameters:
+      - description: Vocabulary ID
+        in: path
+        name: vocabularyId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/vocabulary.DetailResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get vocabulary detail
+      tags:
+      - Vocabularies
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer " followed by a JWT access token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

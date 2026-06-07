@@ -18,6 +18,18 @@ func NewHandler(service Service) Handler {
 	return Handler{service: service}
 }
 
+// Get godoc
+// @Summary Get roadmap
+// @Description Return the IELTS vocabulary roadmap with course, band levels, topics, lessons, and authenticated user progress.
+// @Tags Roadmap
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Success 200 {object} response.SuccessResponse{data=Response}
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /roadmap [get]
 func (h Handler) Get(c *gin.Context) {
 	userID, ok := middleware.GetUserID(c)
 	if !ok {

@@ -19,6 +19,21 @@ func NewHandler(service Service) Handler {
 	return Handler{service: service}
 }
 
+// GetLessonFlashcards godoc
+// @Summary Get lesson flashcards
+// @Description Return flashcards for a lesson with vocabulary content and authenticated user vocabulary progress.
+// @Tags Flashcards
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param lessonId path int true "Lesson ID"
+// @Success 200 {object} response.SuccessResponse{data=LessonFlashcardsResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /lessons/{lessonId}/flashcards [get]
 func (h Handler) GetLessonFlashcards(c *gin.Context) {
 	lessonID, err := parseUintParam(c.Param("lessonId"))
 	if err != nil {
@@ -41,6 +56,20 @@ func (h Handler) GetLessonFlashcards(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// GetDueReviews godoc
+// @Summary Get due reviews
+// @Description Return due review flashcards for the authenticated user where next review time is due.
+// @Tags Reviews
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param limit query int false "Maximum number of due cards, max 100"
+// @Param topicId query int false "Filter by topic ID"
+// @Success 200 {object} response.SuccessResponse{data=DueReviewsResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /reviews/due [get]
 func (h Handler) GetDueReviews(c *gin.Context) {
 	userID, ok := middleware.GetUserID(c)
 	if !ok {
@@ -63,6 +92,20 @@ func (h Handler) GetDueReviews(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// Review godoc
+// @Summary Save flashcard review
+// @Description Save a flashcard rating and update authenticated user vocabulary progress using MVP spaced repetition rules.
+// @Tags Flashcards
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body ReviewRequest true "Flashcard review request"
+// @Success 200 {object} response.SuccessResponse{data=ReviewResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /flashcards/review [post]
 func (h Handler) Review(c *gin.Context) {
 	userID, ok := middleware.GetUserID(c)
 	if !ok {
