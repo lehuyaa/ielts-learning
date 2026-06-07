@@ -44,7 +44,7 @@ export function TopicDetailPage() {
     <div className="min-h-screen bg-[#f8f8ff] text-[#10111f]">
       <TopicHeader topic={topic} />
 
-      <main className="mx-auto grid max-w-[1280px] gap-8 px-4 py-11 md:px-8">
+      <main className="mx-auto grid max-w-[1200px] gap-6 px-4 py-8 md:px-6">
         {topicQuery.isLoading ? (
           <TopicStateMessage
             title="Loading topic"
@@ -150,17 +150,17 @@ function TopicStateMessage({
   tone = "default",
 }: TopicStateMessageProps) {
   return (
-    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-7 text-center shadow-sm">
+    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm">
       {tone === "error" ? (
         <AlertCircle
           className="mx-auto size-8 text-destructive"
           aria-hidden="true"
         />
       ) : null}
-      <h2 className="text-2xl font-bold tracking-normal text-[#10111f]">
+      <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
         {title}
       </h2>
-      <p className="mt-3 text-lg font-medium text-[#676982]">{description}</p>
+      <p className="mt-3 text-base font-medium text-[#676982]">{description}</p>
     </section>
   );
 }

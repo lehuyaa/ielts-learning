@@ -221,8 +221,8 @@ export function FlashcardSession({
       progressPercentage={progressPercentage}
       remainingCount={remainingCount}
     >
-      <main className="mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-xl flex-col items-center justify-center px-4 py-8">
-        <div className="mb-6 flex items-center justify-center gap-3 text-sm font-semibold text-[#6d7088]">
+      <main className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-lg flex-col items-center justify-center px-4 py-6">
+        <div className="mb-5 flex items-center justify-center gap-3 text-sm font-semibold text-[#6d7088]">
           <span className="rounded-full bg-[#eff1ff] px-3 py-1.5 text-primary">
             {currentCard.topicTitle}
           </span>
@@ -243,7 +243,7 @@ export function FlashcardSession({
             pendingRating={pendingRating}
           />
         ) : (
-          <div className="mt-5 h-10" aria-hidden="true" />
+          <div className="mt-4 h-9" aria-hidden="true" />
         )}
 
         <StepDots currentIndex={currentIndex} totalCards={totalCards} />
@@ -279,7 +279,7 @@ function FlashcardShell({
         <div className="mx-auto grid min-h-[60px] max-w-3xl grid-cols-[36px_1fr_36px] items-center gap-4 px-4">
           <button
             aria-label="Go back"
-            className="grid size-9 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+            className="grid size-9 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
             onClick={onBack}
             type="button"
           >
@@ -301,7 +301,7 @@ function FlashcardShell({
 
           <button
             aria-label="Restart session"
-            className="grid size-9 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+            className="grid size-9 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
             onClick={onReset}
             type="button"
           >
@@ -327,8 +327,8 @@ function FlipCard({
   return (
     <div
       className={cn(
-        "w-full max-w-xl [perspective:1400px]",
-        isFlipped ? "min-h-[300px]" : "h-[300px]",
+        "w-full max-w-lg [perspective:1400px]",
+        isFlipped ? "min-h-[280px]" : "h-[280px]",
       )}
     >
       <div
@@ -367,7 +367,7 @@ function FlashcardFront({
 }) {
   return (
     <div
-      className="flex h-full w-full flex-col items-center cursor-pointer justify-center rounded-[24px] bg-gradient-to-br from-[#6258f6] to-[#8318e8] px-6 py-10 text-center text-white shadow-[0_22px_60px_rgba(79,70,229,0.18)] md:px-8"
+      className="flex h-full w-full flex-col items-center cursor-pointer justify-center rounded-[24px] bg-gradient-to-br from-[#6258f6] to-[#8318e8] px-6 py-8 text-center text-white shadow-[0_22px_60px_rgba(79,70,229,0.18)] md:px-7"
       onClick={onFlip}
       onKeyDown={(event) => handleFlipKeyDown(event, onFlip)}
       role="button"
@@ -376,13 +376,13 @@ function FlashcardFront({
       <p className="font-mono text-base font-semibold text-white/75">
         {card.ipa}
       </p>
-      <h1 className="mt-4 text-4xl font-bold leading-tight tracking-normal md:text-5xl">
+      <h1 className="mt-4 text-3xl font-bold leading-tight tracking-normal md:text-4xl">
         {card.word}
       </h1>
       <p className="mt-4 text-base font-medium text-white/85">
         {card.partOfSpeech}
       </p>
-      <p className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white/80">
+      <p className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white/80">
         <Volume2 className="size-3.5" aria-hidden="true" />
         Tap to reveal meaning
       </p>
@@ -401,12 +401,12 @@ function FlashcardBack({
     <div
       onClick={onFlip}
       onKeyDown={(event) => handleFlipKeyDown(event, onFlip)}
-      className="min-h-[300px] w-full cursor-pointer rounded-[24px] border border-[#e6e6f3] bg-white p-5 shadow-[0_22px_60px_rgba(16,17,31,0.10)] md:p-7"
+      className="min-h-[280px] w-full cursor-pointer rounded-[24px] border border-[#e6e6f3] bg-white p-5 shadow-[0_22px_60px_rgba(16,17,31,0.10)] md:p-6"
       role="button"
       tabIndex={0}
     >
       <div className="text-center">
-        <h1 className="text-2xl font-bold tracking-normal text-[#10111f] md:text-3xl">
+        <h1 className="text-xl font-bold tracking-normal text-[#10111f] md:text-2xl">
           {card.word}
         </h1>
         <p className="mt-2 font-mono text-base font-semibold text-[#85889c]">
@@ -414,11 +414,11 @@ function FlashcardBack({
         </p>
       </div>
 
-      <section className="mt-6 text-left">
+      <section className="mt-5 text-left">
         <p className="text-sm font-bold uppercase tracking-normal text-[#676982]">
           Meaning
         </p>
-        <p className="mt-2 text-lg font-medium leading-relaxed text-[#10111f]">
+        <p className="mt-2 text-base font-medium leading-relaxed text-[#10111f]">
           {card.meaningEn}
         </p>
         <p className="mt-1.5 text-sm font-medium text-[#676982]">
@@ -426,7 +426,7 @@ function FlashcardBack({
         </p>
       </section>
 
-      <section className="mt-5 text-left">
+      <section className="mt-4 text-left">
         <p className="text-sm font-bold uppercase tracking-normal text-[#676982]">
           Example
         </p>
@@ -458,7 +458,7 @@ function TokenSection({ label, tokens }: { label: string; tokens: string[] }) {
   }
 
   return (
-    <section className="mt-5">
+    <section className="mt-4">
       <p className="text-sm text-left font-bold uppercase tracking-normal text-[#676982]">
         {label}
       </p>
@@ -486,7 +486,7 @@ function RatingControls({
   pendingRating: FlashcardRating | null;
 }) {
   return (
-    <section className="mt-6 w-full">
+    <section className="mt-5 w-full">
       <p className="text-center text-sm font-semibold text-[#676982]">
         How well did you know this word?
       </p>
@@ -499,7 +499,7 @@ function RatingControls({
         {ratingOptions.map((option) => (
           <button
             className={cn(
-              "rounded-2xl border px-4 py-3 text-center shadow-sm transition-transform hover:-translate-y-0.5",
+              "cursor-pointer rounded-2xl border px-4 py-2.5 text-center shadow-sm transition-transform hover:-translate-y-0.5",
               "disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0",
               option.className,
             )}
@@ -511,7 +511,7 @@ function RatingControls({
             }}
             type="button"
           >
-            <span className="block text-lg font-bold">
+            <span className="block text-base font-bold">
               {pendingRating === option.value ? "Saving..." : option.label}
             </span>
             <span className="mt-1 block text-sm font-medium">

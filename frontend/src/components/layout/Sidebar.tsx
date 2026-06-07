@@ -44,7 +44,7 @@ const navigationItems = [
 
 function getNavLinkClass(isActive: boolean) {
   return cn(
-    'flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors',
+    'flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-colors',
     'hover:bg-accent hover:text-accent-foreground',
     isActive &&
       'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
@@ -100,7 +100,7 @@ export function DashboardMobileNav() {
           <NavLink
             className={({ isActive }) =>
               cn(
-                'flex shrink-0 items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground',
+                'flex shrink-0 cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground',
                 'hover:bg-accent hover:text-accent-foreground',
                 isActive &&
                   'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',

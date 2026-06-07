@@ -121,7 +121,7 @@ export function LoginForm() {
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           New here?{' '}
-          <Link className="font-semibold text-primary hover:underline" to="/register">
+          <Link className="cursor-pointer font-semibold text-primary hover:underline" to="/register">
             Create an account
           </Link>
         </p>

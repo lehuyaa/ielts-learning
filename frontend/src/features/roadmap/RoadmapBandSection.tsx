@@ -17,21 +17,21 @@ export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
 
   if (isLocked) {
     return (
-      <section className="relative py-10">
-        <div className="mx-auto max-w-sm rounded-2xl border border-[#e3e4f8] bg-[#f8f8ff] p-5">
+      <section className="relative py-8">
+        <div className="mx-auto max-w-xs rounded-2xl border border-[#e3e4f8] bg-[#f8f8ff] p-4">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Lock className="size-6 text-[#6d7088]" aria-hidden="true" />
               <div>
-                <h2 className="text-xl font-bold tracking-normal text-[#676982]">
+                <h2 className="text-lg font-bold tracking-normal text-[#676982]">
                   Band {band.band}
                 </h2>
-                <p className="mt-1 text-base font-medium text-[#676982]">
+                <p className="mt-1 text-sm font-medium text-[#676982]">
                   Complete previous band
                 </p>
               </div>
             </div>
-            <span className="rounded-full bg-[#e9e8ff] px-3 py-1 text-base font-bold text-[#3f35e8]">
+            <span className="rounded-full bg-[#e9e8ff] px-3 py-1 text-sm font-bold text-[#3f35e8]">
               Locked
             </span>
           </div>
@@ -41,7 +41,7 @@ export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
   }
 
   return (
-    <section className="relative py-10">
+    <section className="relative py-8">
       <BandNode
         band={band.band}
         status={bandStatusLabel(band.status)}
@@ -49,7 +49,7 @@ export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
         topicCount={band.topicCount}
       />
 
-      <div className="mx-auto mt-6 grid max-w-180 gap-5 lg:grid-cols-2">
+      <div className="mx-auto mt-5 grid max-w-180 gap-4 lg:grid-cols-2">
         {topics.map((topic) => (
           <RoadmapTopicCard key={topic.id} topic={topic} />
         ))}
@@ -87,7 +87,7 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
   return (
     <div
       className={cn(
-        "mx-auto max-w-sm rounded-2xl border p-5",
+        "mx-auto max-w-xs rounded-2xl border p-4",
         statusVariant === "completed" && "border-[#dce2f3] bg-white",
         statusVariant !== "completed" && "border-[#add2ff] bg-[#eef7ff]",
       )}
@@ -103,17 +103,17 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
             />
           )}
           <div>
-            <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
+            <h2 className="text-lg font-bold tracking-normal text-[#10111f]">
               Band {band}
             </h2>
-            <p className="mt-1 text-base font-medium text-[#676982]">
+            <p className="mt-1 text-sm font-medium text-[#676982]">
               {topicCount} topics
             </p>
           </div>
         </div>
         <span
           className={cn(
-            "rounded-full px-3 py-1 text-base font-bold",
+            "rounded-full px-3 py-1 text-sm font-bold",
             statusVariant === "completed" && "bg-[#eef2f7] text-[#40516b]",
             statusVariant !== "completed" && "bg-[#dbeafe] text-[#1d4ed8]",
           )}

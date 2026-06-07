@@ -70,7 +70,9 @@ export function VocabularyPage() {
   );
   const pagination = vocabularyQuery.data?.pagination;
   const errorMessage = getVocabularyErrorMessage(vocabularyQuery.error);
-  const masteredCount = items.filter((item) => item.status === "Mastered").length;
+  const masteredCount = items.filter(
+    (item) => item.status === "Mastered",
+  ).length;
   const isEmpty =
     !vocabularyQuery.isLoading && !errorMessage && items.length === 0;
 
@@ -82,14 +84,14 @@ export function VocabularyPage() {
     <div className="min-h-screen bg-[#f7f7fc] text-[#10111f]">
       <VocabularyHeader
         masteredCount={masteredCount}
-        onBack={() => navigate(-1)}
+        onBack={() => navigate("/dashboard")}
         page={pagination?.page ?? page}
         totalPages={pagination?.totalPages ?? 0}
         totalWords={pagination?.total ?? 0}
       />
 
-      <main className="mx-auto max-w-5xl px-4 pb-10 pt-8 lg:px-0">
-        <section className="mt-8 rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm">
+      <main className="mx-auto max-w-5xl px-4 pb-8 pt-6 lg:px-0">
+        <section className="mt-6 rounded-2xl border border-[#e6e6f3] bg-white p-4 shadow-sm">
           <div className="grid gap-4 lg:grid-cols-[1fr_auto_auto_auto]">
             <label className="relative block lg:self-end">
               <span className="sr-only">Search vocabulary</span>
@@ -163,7 +165,7 @@ export function VocabularyPage() {
 
         {!vocabularyQuery.isLoading && !errorMessage && items.length > 0 ? (
           <>
-            <section className="mt-8 grid gap-5 lg:grid-cols-2">
+            <section className="mt-6 grid gap-4 lg:grid-cols-2">
               {items.map((item) => (
                 <VocabularyListCard item={item} key={item.id} />
               ))}
@@ -200,19 +202,19 @@ function VocabularyHeader({
   return (
     <>
       <header className="border-b border-[#e6e6f3] bg-white">
-        <div className="mx-auto flex min-h-20 max-w-5xl items-center justify-between gap-6 px-4 lg:px-0">
-          <div className="flex min-w-0 items-center gap-5">
+        <div className="mx-auto flex min-h-[72px] max-w-5xl items-center justify-between gap-5 px-4 lg:px-0">
+          <div className="flex min-w-0 items-center gap-4">
             <button
               aria-label="Go back"
-              className="grid size-9 shrink-0 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+              className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
               onClick={onBack}
               type="button"
             >
               <ArrowLeft className="size-5" aria-hidden="true" />
             </button>
 
-            <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-white">
-              <BookOpen className="size-6" aria-hidden="true" />
+            <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-white">
+              <BookOpen className="size-5" aria-hidden="true" />
             </div>
 
             <div className="min-w-0">
@@ -225,17 +227,19 @@ function VocabularyHeader({
             </div>
           </div>
 
-          <div className="hidden rounded-full border border-[#dde3ff] bg-[#f7f7ff] px-5 py-2 text-base font-bold text-primary md:flex md:items-center md:gap-2">
+          <div className="hidden rounded-full border border-[#dde3ff] bg-[#f7f7ff] px-4 py-2 text-sm font-bold text-primary md:flex md:items-center md:gap-2">
             <Layers className="size-4" aria-hidden="true" />
             Word Bank
           </div>
         </div>
       </header>
 
-      <section className="mx-auto max-w-5xl px-4 pt-10 lg:px-0">
-        <div className="grid gap-5 lg:grid-cols-3">
+      <section className="mx-auto max-w-5xl px-4 pt-8 lg:px-0">
+        <div className="grid gap-4 lg:grid-cols-3">
           <HeaderStatCard
-            icon={<BookOpen className="size-5 text-primary" aria-hidden="true" />}
+            icon={
+              <BookOpen className="size-5 text-primary" aria-hidden="true" />
+            }
             label="Total Words"
             value={String(totalWords)}
           />
@@ -268,15 +272,15 @@ type HeaderStatCardProps = {
 
 function HeaderStatCard({ icon, label, value }: HeaderStatCardProps) {
   return (
-    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-5 shadow-sm">
-      <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#ececf6]">
+    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-4 shadow-sm">
+      <div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#ececf6]">
         {icon}
       </div>
       <div>
-        <p className="text-2xl font-bold tracking-normal text-[#10111f]">
+        <p className="text-xl font-bold tracking-normal text-[#10111f]">
           {value}
         </p>
-        <p className="mt-1 text-base font-medium text-[#676982]">{label}</p>
+        <p className="mt-1 text-sm font-medium text-[#676982]">{label}</p>
       </div>
     </article>
   );
@@ -295,7 +299,7 @@ function FilterSelect({ label, options, value, onChange }: FilterSelectProps) {
       <span className="text-sm font-bold text-[#676982]">{label}</span>
       <span className="relative block">
         <select
-          className="h-12 min-w-36 appearance-none rounded-full border border-[#e6e6f3] bg-white py-0 pl-4 pr-4 text-base font-semibold text-[#10111f] shadow-sm outline-none transition-colors focus:border-primary"
+          className="h-11 min-w-32 cursor-pointer appearance-none rounded-full border border-[#e6e6f3] bg-white py-0 pl-4 pr-9 text-sm font-semibold text-[#10111f] shadow-sm outline-none transition-colors focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
           onChange={(event) => onChange(event.target.value)}
           value={value}
         >
@@ -306,7 +310,7 @@ function FilterSelect({ label, options, value, onChange }: FilterSelectProps) {
           ))}
         </select>
         <ChevronDown
-          className="pointer-events-none absolute right-2 top-1/2 size-4 -translate-y-1/2 text-[#10111f]"
+          className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-[#10111f]"
           aria-hidden="true"
         />
       </span>
@@ -321,11 +325,11 @@ type VocabularyListCardProps = {
 function VocabularyListCard({ item }: VocabularyListCardProps) {
   return (
     <Link aria-label={`Open ${item.word}`} to={`/vocabulary/${item.id}`}>
-      <article className="h-full rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm transition-colors hover:border-[#c6c4ff]">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+      <article className="h-full cursor-pointer rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm transition-colors hover:border-[#c6c4ff]">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-2xl font-bold tracking-normal text-[#10111f]">
+              <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
                 {item.word}
               </h2>
               <DifficultyBadge difficulty={item.difficulty} />
@@ -333,7 +337,7 @@ function VocabularyListCard({ item }: VocabularyListCardProps) {
             <p className="mt-2 font-mono text-base font-semibold text-[#85889c]">
               {item.ipa} · {item.partOfSpeech}
             </p>
-            <p className="mt-3 line-clamp-2 text-lg font-medium text-[#676982]">
+            <p className="mt-3 line-clamp-2 text-base font-medium text-[#676982]">
               {item.shortDefinition}
             </p>
           </div>
@@ -341,7 +345,7 @@ function VocabularyListCard({ item }: VocabularyListCardProps) {
           <StatusBadge status={item.status} />
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3 text-base font-bold">
+        <div className="mt-5 flex flex-wrap items-center gap-3 text-sm font-bold">
           <Badge className="bg-[#f0efff] text-primary">{item.band}</Badge>
           <Badge className="bg-[#eff6ff] text-[#2563eb]">{item.topic}</Badge>
           <span className="text-[#676982]">{item.frequency} frequency</span>
@@ -353,7 +357,7 @@ function VocabularyListCard({ item }: VocabularyListCardProps) {
             style={{ width: `${item.masteryScore}%` }}
           />
         </div>
-        <p className="mt-2 text-base font-bold text-[#676982]">
+        <p className="mt-2 text-sm font-bold text-[#676982]">
           {item.masteryScore}% mastery
         </p>
       </article>
@@ -375,7 +379,7 @@ function DifficultyBadge({
   return (
     <span
       className={cn(
-        "rounded-full px-3 py-1 text-base font-bold",
+        "rounded-full px-3 py-1 text-sm font-bold",
         styles[difficulty],
       )}
     >
@@ -394,10 +398,7 @@ function StatusBadge({ status }: { status: VocabularyStatusLabel }) {
 
   return (
     <span
-      className={cn(
-        "rounded-full px-3 py-1 text-base font-bold",
-        styles[status],
-      )}
+      className={cn("rounded-full px-3 py-1 text-sm font-bold", styles[status])}
     >
       {status}
     </span>
@@ -422,8 +423,8 @@ function PaginationControls({
   }
 
   return (
-    <section className="mt-8 flex flex-col gap-4 rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-base font-bold text-[#676982]">
+    <section className="mt-6 flex flex-col gap-4 rounded-2xl border border-[#e6e6f3] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm font-bold text-[#676982]">
         Page {pagination.page} of {pagination.totalPages} · {pagination.total}{" "}
         words
       </p>
@@ -466,7 +467,7 @@ function VocabularyStateMessage({
   icon,
 }: VocabularyStateMessageProps) {
   return (
-    <section className="mt-8 rounded-2xl border border-[#e6e6f3] bg-white p-8 text-center shadow-sm">
+    <section className="mt-6 rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm">
       {tone === "error" ? (
         <AlertCircle
           className="mx-auto size-9 text-destructive"
@@ -479,7 +480,7 @@ function VocabularyStateMessage({
           aria-hidden="true"
         />
       ) : null}
-      <h2 className="mt-4 text-2xl font-bold tracking-normal">{title}</h2>
+      <h2 className="mt-4 text-xl font-bold tracking-normal">{title}</h2>
       <p className="mx-auto mt-3 max-w-md text-base font-medium text-[#676982]">
         {description}
       </p>

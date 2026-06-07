@@ -43,7 +43,7 @@ export function LandingFooter() {
             <p className="text-sm font-semibold text-slate-950">Navigation</p>
             {footerLinks.map((link) => (
               <Link
-                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-primary"
                 key={link.to}
                 to={link.to}
               >

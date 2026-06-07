@@ -8,9 +8,9 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { FlashcardPage } from '@/pages/FlashcardPage'
 import { LandingPage } from '@/pages/LandingPage'
 import { LessonDetailPage } from '@/pages/LessonDetailPage'
-import { LessonPracticePlaceholderPage } from '@/pages/LessonPracticePlaceholderPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { ProfilePage } from '@/pages/ProfilePage'
+import { QuizPage } from '@/pages/QuizPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
           },
           {
             path: '/lessons/:lessonId/quiz',
-            element: <LessonPracticePlaceholderPage mode="quiz" />,
+            element: <QuizPage />,
           },
           {
             path: '/reviews',

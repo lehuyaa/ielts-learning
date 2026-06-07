@@ -32,11 +32,11 @@ export function LessonHeader({
 
   return (
     <header className="border-b border-[#e6e6f3] bg-white">
-      <div className="mx-auto grid min-h-[88px] max-w-[1500px] gap-5 px-4 py-4 md:grid-cols-[260px_1fr_auto] md:items-center md:px-8">
-        <div className="flex min-w-0 items-center gap-5">
+      <div className="mx-auto grid min-h-[72px] max-w-[1320px] gap-4 px-4 py-3 md:grid-cols-[240px_1fr_auto] md:items-center md:px-6">
+        <div className="flex min-w-0 items-center gap-4">
           <button
             aria-label="Go back"
-            className="grid size-10 shrink-0 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+            className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
             onClick={() => navigate(-1)}
             type="button"
           >
@@ -59,7 +59,7 @@ export function LessonHeader({
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <p className="mt-2 text-base font-medium text-[#676982]">
+          <p className="mt-2 text-sm font-medium text-[#676982]">
             {learnedCount}/{lesson.vocabulary.length} words learned
           </p>
         </div>
@@ -72,7 +72,7 @@ export function LessonHeader({
           />
           <LessonHeaderMeta icon={Trophy} label={`${lesson.xpReward} XP`} />
           <Button
-            className="h-12 rounded-full px-6 text-base"
+            className="h-10 rounded-full px-5 text-sm"
             disabled={isStartDisabled}
             onClick={onStartFlashcards}
             type="button"
@@ -96,7 +96,7 @@ function LessonHeaderMeta({ icon: Icon, label }: LessonHeaderMetaProps) {
     <span
       className={cn(
         "hidden items-center gap-2 rounded-full border border-[#ecebff] bg-[#f8f8ff]",
-        "px-3 py-2 text-sm font-bold text-[#676982] xl:inline-flex",
+        "px-3 py-1.5 text-sm font-bold text-[#676982] xl:inline-flex",
       )}
     >
       <Icon className="size-4" aria-hidden="true" />

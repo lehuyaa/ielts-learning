@@ -19,7 +19,7 @@ export function DashboardLayout() {
     pathname === "/reviews" ||
     pathname.startsWith("/topics/") ||
     pathname.startsWith("/vocabulary") ||
-    (pathname.startsWith("/lessons/") && !pathname.endsWith("/quiz"));
+    pathname.startsWith("/lessons/");
 
   if (isFullBleedPage) {
     return <Outlet />;

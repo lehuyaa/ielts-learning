@@ -13,13 +13,13 @@ export function RoadmapTopicCard({ topic }: RoadmapTopicCardProps) {
 
   return (
     <Link aria-label={`Open ${topic.title}`} to={`/topics/${topic.id}`}>
-      <article className="rounded-2xl border border-[#e3e4f8] bg-white p-5 shadow-sm">
+      <article className="cursor-pointer rounded-2xl border border-[#e3e4f8] bg-white p-4 shadow-sm">
         <div className="flex items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="text-2xl" aria-hidden="true">
+            <span className="text-xl" aria-hidden="true">
               {topic.icon}
             </span>
-            <h3 className="truncate text-xl font-bold tracking-normal text-[#10111f]">
+            <h3 className="truncate text-lg font-bold tracking-normal text-[#10111f]">
               {topic.title}
             </h3>
           </div>
@@ -37,14 +37,14 @@ export function RoadmapTopicCard({ topic }: RoadmapTopicCardProps) {
           )}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-4">
           <RoadmapProgressBar
             value={topic.progress}
             variant={isComplete ? "success" : "primary"}
           />
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-4 text-lg font-medium text-[#676982]">
+        <div className="mt-3 flex items-center justify-between gap-4 text-base font-medium text-[#676982]">
           <span>
             {topic.completedLessons}/{topic.totalLessons} lessons
           </span>

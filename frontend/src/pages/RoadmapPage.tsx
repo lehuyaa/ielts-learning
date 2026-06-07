@@ -40,7 +40,7 @@ export function RoadmapPage() {
         currentStreak={viewModel.currentStreak}
       />
 
-      <div className="relative mx-auto max-w-5xl px-4 pb-10 pt-6 lg:px-0">
+      <div className="relative mx-auto max-w-5xl px-4 pb-8 pt-5 lg:px-0">
         <div
           className="absolute bottom-10 left-1/2 top-6 hidden w-0.5 -translate-x-1/2 bg-[#e6e6ff] lg:block"
           aria-hidden="true"

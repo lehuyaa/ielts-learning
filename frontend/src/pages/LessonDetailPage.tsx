@@ -85,7 +85,7 @@ export function LessonDetailPage() {
         progressPercentage={progressPercentage}
       />
 
-      <main className="mx-auto grid max-w-[1500px] gap-8 px-4 py-8 lg:grid-cols-[1fr_360px] lg:px-8">
+      <main className="mx-auto grid max-w-[1320px] gap-6 px-4 py-6 lg:grid-cols-[1fr_320px] lg:px-6">
         {lessonQuery.isLoading ? (
           <LessonStateMessage
             description="Preparing vocabulary, progress, and lesson metadata."
@@ -150,14 +150,14 @@ type LessonMainContentProps = {
 function LessonMainContent({ lesson }: LessonMainContentProps) {
   return (
     <section className="min-w-0">
-      <div className="mb-6 rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm">
+      <div className="mb-5 rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm">
         <p className="text-sm font-bold uppercase tracking-normal text-[#676982]">
           {lesson.topic} - Band {lesson.bandRange}
         </p>
-        <h2 className="mt-3 text-3xl font-bold tracking-normal text-[#10111f]">
+        <h2 className="mt-3 text-2xl font-bold tracking-normal text-[#10111f]">
           {lesson.title}
         </h2>
-        <p className="mt-3 max-w-3xl text-lg font-medium text-[#676982]">
+        <p className="mt-3 max-w-3xl text-base font-medium text-[#676982]">
           {lesson.description}
         </p>
       </div>
@@ -252,17 +252,17 @@ function LessonStateMessage({
   tone = 'default',
 }: LessonStateMessageProps) {
   return (
-    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-7 text-center shadow-sm lg:col-span-2">
+    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm lg:col-span-2">
       {tone === 'error' ? (
         <AlertCircle
           className="mx-auto size-8 text-destructive"
           aria-hidden="true"
         />
       ) : null}
-      <h2 className="text-2xl font-bold tracking-normal text-[#10111f]">
+      <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
         {title}
       </h2>
-      <p className="mt-3 text-lg font-medium text-[#676982]">{description}</p>
+      <p className="mt-3 text-base font-medium text-[#676982]">{description}</p>
     </section>
   )
 }

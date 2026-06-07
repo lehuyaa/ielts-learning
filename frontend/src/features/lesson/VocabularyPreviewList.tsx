@@ -24,7 +24,7 @@ export function VocabularyPreviewList({
   }
 
   return (
-    <div className="grid gap-5">
+    <div className="grid gap-4">
       {vocabulary.map((item) => (
         <VocabularyCard
           expanded={expandedVocabularyId === item.id}
@@ -49,29 +49,29 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
   return (
     <article
       className={cn(
-        "rounded-2xl border bg-white p-5 shadow-sm",
+        "rounded-2xl border bg-white p-4 shadow-sm",
         expanded ? "border-[#c6c4ff]" : "border-[#e6e6f3]",
       )}
     >
-      <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
-        <div className="flex min-w-0 flex-1 items-start gap-5">
-          <span className="mt-1 grid size-11 shrink-0 place-items-center rounded-full bg-[#45c486] text-white">
-            <CheckCircle2 className="size-5" aria-hidden="true" />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-1 items-start gap-4">
+          <span className="mt-1 grid size-10 shrink-0 place-items-center rounded-full bg-[#45c486] text-white">
+            <CheckCircle2 className="size-4" aria-hidden="true" />
           </span>
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h2 className="text-2xl font-bold tracking-normal text-[#10111f]">
+              <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
                 {item.word}
               </h2>
-              <span className="font-mono text-base font-semibold text-[#85889c]">
+              <span className="font-mono text-sm font-semibold text-[#85889c]">
                 {item.ipa}
               </span>
-              <span className="text-base font-semibold text-[#85889c]">
+              <span className="text-sm font-semibold text-[#85889c]">
                 {item.partOfSpeech}
               </span>
             </div>
-            <p className="mt-2 line-clamp-1 text-lg font-medium text-[#676982]">
+            <p className="mt-2 line-clamp-1 text-base font-medium text-[#676982]">
               {item.shortDefinition}
             </p>
           </div>
@@ -79,7 +79,7 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
 
         <div className="flex shrink-0 flex-wrap items-center gap-3 sm:justify-end">
           <DifficultyBadge difficulty={item.difficulty} />
-          <span className="rounded-full bg-[#f0efff] px-3 py-1 text-base font-bold text-primary">
+          <span className="rounded-full bg-[#f0efff] px-3 py-1 text-sm font-bold text-primary">
             {item.band}
           </span>
           <Button
@@ -92,7 +92,7 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
           <Button
             aria-controls={detailId}
             aria-expanded={expanded}
-            className="rounded-full px-4 text-base cursor-pointer"
+            className="rounded-full px-4 text-sm cursor-pointer"
             onClick={onToggle}
             size="sm"
             type="button"
@@ -109,14 +109,14 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
           <p className="text-sm font-bold uppercase tracking-normal text-[#676982]">
             Definition
           </p>
-          <p className="mt-2 text-lg font-medium text-[#232431]">
+          <p className="mt-2 text-base font-medium text-[#232431]">
             {item.definition}
           </p>
 
           <p className="mt-5 text-sm font-bold uppercase tracking-normal text-[#676982]">
             IELTS Example
           </p>
-          <blockquote className="mt-2 rounded-2xl border-l-4 border-primary bg-[#eff1ff] px-5 py-4 text-lg font-medium text-[#30348e]">
+          <blockquote className="mt-2 rounded-2xl border-l-4 border-primary bg-[#eff1ff] px-4 py-3 text-base font-medium text-[#30348e]">
             "{item.example}"
           </blockquote>
 
@@ -155,7 +155,7 @@ function DifficultyBadge({ difficulty }: DifficultyBadgeProps) {
   return (
     <span
       className={cn(
-        "rounded-full px-3 py-1 text-base font-bold",
+        "rounded-full px-3 py-1 text-sm font-bold",
         styles[difficulty],
       )}
     >

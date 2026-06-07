@@ -36,12 +36,12 @@ export function LessonSidebar({
   const bestScore = lesson.bestScore ?? lesson.score
 
   return (
-    <aside className="grid gap-6 lg:sticky lg:top-8">
-      <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
+    <aside className="grid gap-5 lg:sticky lg:top-6">
+      <section className="rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-bold tracking-normal text-[#10111f]">
           Lesson Info
         </h2>
-        <div className="mt-6 grid gap-6">
+        <div className="mt-5 grid gap-5">
           <LessonInfoRow
             icon={BookOpen}
             label="Words in Lesson"
@@ -66,18 +66,18 @@ export function LessonSidebar({
         </div>
       </section>
 
-      <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
+      <section className="rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-bold tracking-normal text-[#10111f]">
           Your Progress
         </h2>
-        <div className="mt-6 grid justify-items-center gap-5 text-center">
+        <div className="mt-5 grid justify-items-center gap-4 text-center">
           <ProgressRing progressPercentage={progressPercentage} />
           <p className="text-base font-medium text-[#676982]">
             {learnedCount} of {lesson.vocabulary.length} words learned
           </p>
           <div className="grid w-full gap-3">
             <Button
-              className="h-12 rounded-full text-base"
+              className="h-10 rounded-full text-sm"
               disabled={isStartDisabled}
               onClick={onStartFlashcards}
               type="button"
@@ -86,7 +86,7 @@ export function LessonSidebar({
               <ChevronRight aria-hidden="true" />
             </Button>
             <Button
-              className="h-12 rounded-full text-base"
+              className="h-10 rounded-full text-sm"
               disabled={isStartDisabled}
               onClick={onStartQuiz}
               type="button"
@@ -99,19 +99,19 @@ export function LessonSidebar({
         </div>
       </section>
 
-      <section className="rounded-2xl bg-gradient-to-br from-[#5b53f0] to-[#7a32f0] p-6 text-white shadow-sm">
-        <p className="text-base font-bold text-white/75">
+      <section className="rounded-2xl bg-gradient-to-br from-[#5b53f0] to-[#7a32f0] p-5 text-white shadow-sm">
+        <p className="text-sm font-bold text-white/75">
           {hasQuizScore ? 'Quiz Score' : 'Learning Progress'}
         </p>
-        <p className="mt-2 text-5xl font-bold tracking-normal">
+        <p className="mt-2 text-4xl font-bold tracking-normal">
           {hasQuizScore ? primaryScore : `${Math.round(progressPercentage)}%`}
         </p>
         {hasQuizScore ? (
-          <p className="mt-3 text-base font-medium text-white/75">
+          <p className="mt-3 text-sm font-medium text-white/75">
             Personal best: {bestScore}
           </p>
         ) : (
-          <p className="mt-3 text-base font-medium text-white/75">
+          <p className="mt-3 text-sm font-medium text-white/75">
             Quiz score appears after completing a quiz.
           </p>
         )}
@@ -135,12 +135,12 @@ type LessonInfoRowProps = {
 function LessonInfoRow({ icon: Icon, label, value }: LessonInfoRowProps) {
   return (
     <div className="flex items-center gap-4">
-      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-[#eeeef8] text-[#7b7e92]">
-        <Icon className="size-5" aria-hidden="true" />
+      <span className="grid size-9 shrink-0 place-items-center rounded-full bg-[#eeeef8] text-[#7b7e92]">
+        <Icon className="size-4" aria-hidden="true" />
       </span>
       <div>
-        <p className="text-base font-medium text-[#676982]">{label}</p>
-        <p className="mt-1 text-xl font-bold tracking-normal text-[#10111f]">
+        <p className="text-sm font-medium text-[#676982]">{label}</p>
+        <p className="mt-1 text-lg font-bold tracking-normal text-[#10111f]">
           {value}
         </p>
       </div>
@@ -155,17 +155,17 @@ type ProgressRingProps = {
 function ProgressRing({ progressPercentage }: ProgressRingProps) {
   return (
     <div
-      className="grid size-32 place-items-center rounded-full"
+      className="grid size-28 place-items-center rounded-full"
       style={{
         background: `conic-gradient(#5147e8 ${progressPercentage}%, #ecebff 0)`,
       }}
     >
-      <div className="grid size-24 place-items-center rounded-full bg-white">
+      <div className="grid size-20 place-items-center rounded-full bg-white">
         <div>
-          <p className="text-3xl font-bold tracking-normal text-[#10111f]">
+          <p className="text-2xl font-bold tracking-normal text-[#10111f]">
             {Math.round(progressPercentage)}%
           </p>
-          <p className="text-base font-medium text-[#676982]">done</p>
+          <p className="text-sm font-medium text-[#676982]">done</p>
         </div>
       </div>
     </div>

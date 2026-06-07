@@ -10,14 +10,14 @@ import type React from "react";
 import { useNavigate } from "react-router-dom";
 
 type RoadmapHeaderProps = {
-  title: string
-  subtitle: string
-  topicsCompleted: number
-  totalTopics: number
-  currentBand: number | null
-  wordsMastered: number
-  currentStreak: number
-}
+  title: string;
+  subtitle: string;
+  topicsCompleted: number;
+  totalTopics: number;
+  currentBand: number | null;
+  wordsMastered: number;
+  currentStreak: number;
+};
 
 export function RoadmapHeader({
   title,
@@ -33,19 +33,19 @@ export function RoadmapHeader({
   return (
     <>
       <header className="border-b border-[#e6e6f3] bg-white">
-        <div className="mx-auto flex min-h-20 max-w-5xl items-center justify-between gap-6 px-4 lg:px-0">
-          <div className="flex min-w-0 items-center gap-5">
+        <div className="mx-auto flex min-h-18 max-w-5xl items-center justify-between gap-5 px-4 lg:px-0">
+          <div className="flex min-w-0 items-center gap-4">
             <button
               aria-label="Go back"
-              className="grid size-9 shrink-0 place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
-              onClick={() => navigate(-1)}
+              className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
+              onClick={() => navigate("/dashboard")}
               type="button"
             >
               <ArrowLeft className="size-5" aria-hidden="true" />
             </button>
 
-            <div className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-white">
-              <Target className="size-6" aria-hidden="true" />
+            <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-white">
+              <Target className="size-5" aria-hidden="true" />
             </div>
 
             <div className="min-w-0">
@@ -58,15 +58,15 @@ export function RoadmapHeader({
             </div>
           </div>
 
-          <div className="hidden rounded-full border border-[#ffd75f] bg-[#fffdf5] px-5 py-2 text-base font-bold text-[#b84a00] md:flex md:items-center md:gap-2">
+          <div className="hidden rounded-full border border-[#ffd75f] bg-[#fffdf5] px-4 py-2 text-sm font-bold text-[#b84a00] md:flex md:items-center md:gap-2">
             <Flame className="size-4 text-[#ff6b00]" aria-hidden="true" />
             {currentStreak} Day Streak
           </div>
         </div>
       </header>
 
-      <section className="mx-auto max-w-5xl px-4 pt-10 lg:px-0">
-        <div className="grid gap-5 lg:grid-cols-3">
+      <section className="mx-auto max-w-5xl px-4 pt-8 lg:px-0">
+        <div className="grid gap-4 lg:grid-cols-3">
           <StatCard
             icon={
               <CheckCircle2
@@ -80,7 +80,7 @@ export function RoadmapHeader({
           <StatCard
             icon={<Star className="size-5 text-warning" aria-hidden="true" />}
             label="Current Band"
-            value={currentBand == null ? '-' : currentBand.toFixed(1)}
+            value={currentBand == null ? "-" : currentBand.toFixed(1)}
           />
           <StatCard
             icon={
@@ -103,15 +103,15 @@ type StatCardProps = {
 
 function StatCard({ icon, label, value }: StatCardProps) {
   return (
-    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-5 shadow-sm">
-      <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#ececf6]">
+    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-4 shadow-sm">
+      <div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#ececf6]">
         {icon}
       </div>
       <div>
-        <p className="text-2xl font-bold tracking-normal text-[#10111f]">
+        <p className="text-xl font-bold tracking-normal text-[#10111f]">
           {value}
         </p>
-        <p className="mt-1 text-base font-medium text-[#676982]">{label}</p>
+        <p className="mt-1 text-sm font-medium text-[#676982]">{label}</p>
       </div>
     </article>
   );
