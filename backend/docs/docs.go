@@ -434,6 +434,173 @@ const docTemplate = `{
                 }
             }
         },
+        "/lessons/{lessonId}/quiz": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return quiz questions and answer options for a lesson without exposing correct answers.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Get lesson quiz",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/quiz.GetResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/lessons/{lessonId}/quiz/submit": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Grade selected answers on the backend, save quiz attempt records, and update authenticated user lesson progress.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Quiz"
+                ],
+                "summary": "Submit lesson quiz",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Selected quiz answers",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/quiz.SubmitRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/quiz.SubmitResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/lessons/{lessonId}/start": {
             "post": {
                 "security": [
@@ -1448,6 +1615,21 @@ const docTemplate = `{
                 "LessonStatusCompleted"
             ]
         },
+        "models.QuizQuestionType": {
+            "type": "string",
+            "enum": [
+                "MEANING_CHOICE",
+                "WORD_CHOICE",
+                "USAGE_CHOICE",
+                "SENTENCE_CHOICE"
+            ],
+            "x-enum-varnames": [
+                "QuizQuestionMeaningChoice",
+                "QuizQuestionWordChoice",
+                "QuizQuestionUsageChoice",
+                "QuizQuestionSentenceChoice"
+            ]
+        },
         "models.UserRole": {
             "type": "string",
             "enum": [
@@ -1473,6 +1655,164 @@ const docTemplate = `{
                 "VocabularyStatusReview",
                 "VocabularyStatusMastered"
             ]
+        },
+        "quiz.GetResponse": {
+            "type": "object",
+            "properties": {
+                "lesson": {
+                    "$ref": "#/definitions/quiz.LessonResponse"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/quiz.QuestionResponse"
+                    }
+                }
+            }
+        },
+        "quiz.LessonResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "requiredScore": {
+                    "type": "integer"
+                },
+                "timeLimitSeconds": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "quiz.OptionResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "quiz.QuestionResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/quiz.OptionResponse"
+                    }
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "prompt": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.QuizQuestionType"
+                }
+            }
+        },
+        "quiz.SubmitAnswerRequest": {
+            "type": "object",
+            "required": [
+                "optionId",
+                "questionId"
+            ],
+            "properties": {
+                "optionId": {
+                    "type": "integer"
+                },
+                "questionId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "quiz.SubmitRequest": {
+            "type": "object",
+            "required": [
+                "answers"
+            ],
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/quiz.SubmitAnswerRequest"
+                    }
+                }
+            }
+        },
+        "quiz.SubmitResponse": {
+            "type": "object",
+            "properties": {
+                "attemptId": {
+                    "type": "integer"
+                },
+                "completedAt": {
+                    "type": "string"
+                },
+                "correctCount": {
+                    "type": "integer"
+                },
+                "earnedXp": {
+                    "type": "integer"
+                },
+                "lessonId": {
+                    "type": "integer"
+                },
+                "passed": {
+                    "type": "boolean"
+                },
+                "requiredScore": {
+                    "type": "integer"
+                },
+                "results": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/quiz.SubmitResultResponse"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "totalQuestions": {
+                    "type": "integer"
+                }
+            }
+        },
+        "quiz.SubmitResultResponse": {
+            "type": "object",
+            "properties": {
+                "correctOptionId": {
+                    "type": "integer"
+                },
+                "explanation": {
+                    "type": "string"
+                },
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "pointsAwarded": {
+                    "type": "integer"
+                },
+                "questionId": {
+                    "type": "integer"
+                },
+                "selectedOptionId": {
+                    "type": "integer"
+                }
+            }
         },
         "response.APIError": {
             "type": "object",

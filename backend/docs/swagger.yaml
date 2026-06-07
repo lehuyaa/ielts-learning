@@ -366,6 +366,18 @@ definitions:
     - LessonStatusUnlocked
     - LessonStatusInProgress
     - LessonStatusCompleted
+  models.QuizQuestionType:
+    enum:
+    - MEANING_CHOICE
+    - WORD_CHOICE
+    - USAGE_CHOICE
+    - SENTENCE_CHOICE
+    type: string
+    x-enum-varnames:
+    - QuizQuestionMeaningChoice
+    - QuizQuestionWordChoice
+    - QuizQuestionUsageChoice
+    - QuizQuestionSentenceChoice
   models.UserRole:
     enum:
     - USER
@@ -386,6 +398,109 @@ definitions:
     - VocabularyStatusLearning
     - VocabularyStatusReview
     - VocabularyStatusMastered
+  quiz.GetResponse:
+    properties:
+      lesson:
+        $ref: '#/definitions/quiz.LessonResponse'
+      questions:
+        items:
+          $ref: '#/definitions/quiz.QuestionResponse'
+        type: array
+    type: object
+  quiz.LessonResponse:
+    properties:
+      id:
+        type: integer
+      requiredScore:
+        type: integer
+      timeLimitSeconds:
+        type: integer
+      title:
+        type: string
+    type: object
+  quiz.OptionResponse:
+    properties:
+      id:
+        type: integer
+      label:
+        type: string
+      text:
+        type: string
+    type: object
+  quiz.QuestionResponse:
+    properties:
+      id:
+        type: integer
+      options:
+        items:
+          $ref: '#/definitions/quiz.OptionResponse'
+        type: array
+      points:
+        type: integer
+      prompt:
+        type: string
+      type:
+        $ref: '#/definitions/models.QuizQuestionType'
+    type: object
+  quiz.SubmitAnswerRequest:
+    properties:
+      optionId:
+        type: integer
+      questionId:
+        type: integer
+    required:
+    - optionId
+    - questionId
+    type: object
+  quiz.SubmitRequest:
+    properties:
+      answers:
+        items:
+          $ref: '#/definitions/quiz.SubmitAnswerRequest'
+        type: array
+    required:
+    - answers
+    type: object
+  quiz.SubmitResponse:
+    properties:
+      attemptId:
+        type: integer
+      completedAt:
+        type: string
+      correctCount:
+        type: integer
+      earnedXp:
+        type: integer
+      lessonId:
+        type: integer
+      passed:
+        type: boolean
+      requiredScore:
+        type: integer
+      results:
+        items:
+          $ref: '#/definitions/quiz.SubmitResultResponse'
+        type: array
+      score:
+        type: integer
+      totalQuestions:
+        type: integer
+    type: object
+  quiz.SubmitResultResponse:
+    properties:
+      correctOptionId:
+        type: integer
+      explanation:
+        type: string
+      isCorrect:
+        type: boolean
+      pointsAwarded:
+        type: integer
+      questionId:
+        type: integer
+      selectedOptionId:
+        type: integer
+    type: object
   response.APIError:
     properties:
       code:
@@ -1030,6 +1145,110 @@ paths:
       summary: Get lesson flashcards
       tags:
       - Flashcards
+  /lessons/{lessonId}/quiz:
+    get:
+      consumes:
+      - application/json
+      description: Return quiz questions and answer options for a lesson without exposing
+        correct answers.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/quiz.GetResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get lesson quiz
+      tags:
+      - Quiz
+  /lessons/{lessonId}/quiz/submit:
+    post:
+      consumes:
+      - application/json
+      description: Grade selected answers on the backend, save quiz attempt records,
+        and update authenticated user lesson progress.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      - description: Selected quiz answers
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/quiz.SubmitRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/quiz.SubmitResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Submit lesson quiz
+      tags:
+      - Quiz
   /lessons/{lessonId}/start:
     post:
       consumes:
