@@ -1,10 +1,10 @@
 import {
-  ArrowLeft,
+  CheckCircle2,
+  ChevronLeft,
   Flame,
   Star,
   Target,
   TrendingUp,
-  CheckCircle2,
 } from "lucide-react";
 import type React from "react";
 import { useNavigate } from "react-router-dom";
@@ -32,45 +32,43 @@ export function RoadmapHeader({
 
   return (
     <>
-      <header className="border-b border-[#e6e6f3] bg-white">
-        <div className="mx-auto flex min-h-18 max-w-5xl items-center justify-between gap-5 px-4 lg:px-0">
-          <div className="flex min-w-0 items-center gap-4">
-            <button
-              aria-label="Go back"
-              className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-[#6d7088] transition-colors hover:bg-[#f0f1fb]"
-              onClick={() => navigate("/dashboard")}
-              type="button"
-            >
-              <ArrowLeft className="size-5" aria-hidden="true" />
-            </button>
+      <header className="sticky top-0 z-20 border-b border-border bg-white">
+        <div className="mx-auto flex h-16 max-w-5xl items-center gap-4 px-6">
+          <button
+            aria-label="Go back"
+            className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-xl text-muted-foreground transition-colors hover:bg-muted/60"
+            onClick={() => navigate("/dashboard")}
+            type="button"
+          >
+            <ChevronLeft className="size-5" aria-hidden="true" />
+          </button>
 
-            <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-white">
-              <Target className="size-5" aria-hidden="true" />
-            </div>
-
-            <div className="min-w-0">
-              <h1 className="truncate text-xl font-bold tracking-normal text-[#10111f]">
-                {title}
-              </h1>
-              <p className="mt-1 text-base font-medium text-[#676982]">
-                {subtitle}
-              </p>
-            </div>
+          <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary text-white">
+            <Target className="size-4" aria-hidden="true" />
           </div>
 
-          <div className="hidden rounded-full border border-[#ffd75f] bg-[#fffdf5] px-4 py-2 text-sm font-bold text-[#b84a00] md:flex md:items-center md:gap-2">
-            <Flame className="size-4 text-[#ff6b00]" aria-hidden="true" />
+          <div className="min-w-0">
+            <h1 className="truncate text-sm font-semibold tracking-normal text-foreground">
+              {title}
+            </h1>
+            <p className="text-xs text-muted-foreground">{subtitle}</p>
+          </div>
+
+          <div className="flex-1" />
+
+          <div className="hidden items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700 md:flex">
+            <Flame className="size-3.5 text-orange-500" aria-hidden="true" />
             {currentStreak} Day Streak
           </div>
         </div>
       </header>
 
-      <section className="mx-auto max-w-5xl px-4 pt-8 lg:px-0">
-        <div className="grid gap-4 lg:grid-cols-3">
+      <section className="mx-auto max-w-5xl px-6 pt-8">
+        <div className="grid gap-4 sm:grid-cols-3">
           <StatCard
             icon={
               <CheckCircle2
-                className="size-5 text-success"
+                className="size-4 text-emerald-500"
                 aria-hidden="true"
               />
             }
@@ -78,13 +76,13 @@ export function RoadmapHeader({
             value={`${topicsCompleted}/${totalTopics}`}
           />
           <StatCard
-            icon={<Star className="size-5 text-warning" aria-hidden="true" />}
+            icon={<Star className="size-4 text-amber-500" aria-hidden="true" />}
             label="Current Band"
             value={currentBand == null ? "-" : currentBand.toFixed(1)}
           />
           <StatCard
             icon={
-              <TrendingUp className="size-5 text-primary" aria-hidden="true" />
+              <TrendingUp className="size-4 text-primary" aria-hidden="true" />
             }
             label="Words Mastered"
             value={String(wordsMastered)}
@@ -103,16 +101,15 @@ type StatCardProps = {
 
 function StatCard({ icon, label, value }: StatCardProps) {
   return (
-    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-4 shadow-sm">
-      <div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#ececf6]">
+    <article className="flex items-center gap-3 rounded-2xl border border-border bg-white p-4">
+      <div className="grid size-8 shrink-0 place-items-center rounded-xl bg-muted">
         {icon}
       </div>
       <div>
-        <p className="text-xl font-bold tracking-normal text-[#10111f]">
-          {value}
-        </p>
-        <p className="mt-1 text-sm font-medium text-[#676982]">{label}</p>
+        <p className="font-bold tracking-normal text-foreground">{value}</p>
+        <p className="text-xs text-muted-foreground">{label}</p>
       </div>
     </article>
   );
 }
+

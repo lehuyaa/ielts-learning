@@ -9,39 +9,14 @@ import { cn } from "@/lib/utils";
 
 type RoadmapBandSectionProps = {
   band: RoadmapBand;
+  isLast: boolean;
 };
 
-export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
+export function RoadmapBandSection({ band, isLast }: RoadmapBandSectionProps) {
   const isLocked = band.status === "locked";
-  const topics = getScreenshotTopicOrder(band);
-
-  if (isLocked) {
-    return (
-      <section className="relative py-8">
-        <div className="mx-auto max-w-xs rounded-2xl border border-[#e3e4f8] bg-[#f8f8ff] p-4">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <Lock className="size-6 text-[#6d7088]" aria-hidden="true" />
-              <div>
-                <h2 className="text-lg font-bold tracking-normal text-[#676982]">
-                  Band {band.band}
-                </h2>
-                <p className="mt-1 text-sm font-medium text-[#676982]">
-                  Complete previous band
-                </p>
-              </div>
-            </div>
-            <span className="rounded-full bg-[#e9e8ff] px-3 py-1 text-sm font-bold text-[#3f35e8]">
-              Locked
-            </span>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
-    <section className="relative py-8">
+    <section className="relative z-10 py-2">
       <BandNode
         band={band.band}
         status={bandStatusLabel(band.status)}
@@ -49,17 +24,15 @@ export function RoadmapBandSection({ band }: RoadmapBandSectionProps) {
         topicCount={band.topicCount}
       />
 
-      <div className="mx-auto mt-5 grid max-w-180 gap-4 lg:grid-cols-2">
-        {topics.map((topic) => (
-          <RoadmapTopicCard key={topic.id} topic={topic} />
+      <div className="mx-auto mb-2 mt-4 grid max-w-2xl gap-3 md:grid-cols-2">
+        {band.topics.map((topic) => (
+          <RoadmapTopicCard isLocked={isLocked} key={topic.id} topic={topic} />
         ))}
       </div>
+
+      {!isLast ? <ConnectorDots isActive={!isLocked} /> : null}
     </section>
   );
-}
-
-function getScreenshotTopicOrder(band: RoadmapBand) {
-  return band.topics;
 }
 
 function bandStatusLabel(status: RoadmapLessonStatus) {
@@ -67,9 +40,8 @@ function bandStatusLabel(status: RoadmapLessonStatus) {
     case "completed":
       return "Complete";
     case "in-progress":
-      return "In Progress";
     case "unlocked":
-      return "Unlocked";
+      return "In Progress";
     case "locked":
     default:
       return "Locked";
@@ -84,38 +56,49 @@ type BandNodeProps = {
 };
 
 function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
+  const isLocked = statusVariant === "locked";
+  const isComplete = statusVariant === "completed";
+  const color = getBandColor(band);
+
   return (
-    <div
-      className={cn(
-        "mx-auto max-w-xs rounded-2xl border p-4",
-        statusVariant === "completed" && "border-[#dce2f3] bg-white",
-        statusVariant !== "completed" && "border-[#add2ff] bg-[#eef7ff]",
-      )}
-    >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          {statusVariant === "completed" ? (
-            <CheckCircle2 className="size-6 text-success" aria-hidden="true" />
-          ) : (
-            <span
-              className="size-6 rounded-full bg-primary"
-              aria-hidden="true"
-            />
-          )}
-          <div>
-            <h2 className="text-lg font-bold tracking-normal text-[#10111f]">
-              Band {band}
-            </h2>
-            <p className="mt-1 text-sm font-medium text-[#676982]">
-              {topicCount} topics
-            </p>
-          </div>
+    <div className="flex justify-center">
+      <div
+        className={cn(
+          "flex items-center gap-3 rounded-2xl border px-6 py-3",
+          isLocked
+            ? "border-border bg-muted/30"
+            : `${color.border} ${color.bg} transition-shadow hover:shadow-md`,
+        )}
+      >
+        {isLocked ? (
+          <Lock className="size-5 text-muted-foreground" aria-hidden="true" />
+        ) : isComplete ? (
+          <CheckCircle2 className="size-5 text-emerald-500" aria-hidden="true" />
+        ) : (
+          <span
+            className={cn("size-5 rounded-full bg-gradient-to-br", color.dot)}
+            aria-hidden="true"
+          />
+        )}
+
+        <div className="text-left">
+          <h2
+            className={cn(
+              "text-sm font-bold tracking-normal",
+              isLocked ? "text-muted-foreground" : "text-foreground",
+            )}
+          >
+            Band {band}
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            {isLocked ? "Complete previous band" : `${topicCount} topics`}
+          </p>
         </div>
+
         <span
           className={cn(
-            "rounded-full px-3 py-1 text-sm font-bold",
-            statusVariant === "completed" && "bg-[#eef2f7] text-[#40516b]",
-            statusVariant !== "completed" && "bg-[#dbeafe] text-[#1d4ed8]",
+            "rounded-full px-2 py-0.5 text-xs font-semibold",
+            isLocked ? "bg-muted text-muted-foreground" : color.badge,
           )}
         >
           {status}
@@ -124,3 +107,60 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
     </div>
   );
 }
+
+function ConnectorDots({ isActive }: { isActive: boolean }) {
+  return (
+    <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-1 py-2">
+        {[0, 1, 2].map((dot) => (
+          <span
+            className={cn(
+              "size-1.5 rounded-full",
+              isActive ? "bg-primary/40" : "bg-muted",
+            )}
+            key={dot}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function getBandColor(band: string) {
+  const numericBand = Number.parseFloat(band);
+
+  if (numericBand < 6) {
+    return {
+      bg: "bg-slate-50",
+      border: "border-slate-200",
+      dot: "from-slate-400 to-slate-500",
+      badge: "bg-slate-100 text-slate-600",
+    };
+  }
+
+  if (numericBand < 7) {
+    return {
+      bg: "bg-blue-50",
+      border: "border-blue-200",
+      dot: "from-blue-400 to-indigo-500",
+      badge: "bg-blue-100 text-blue-700",
+    };
+  }
+
+  if (numericBand < 8) {
+    return {
+      bg: "bg-indigo-50",
+      border: "border-indigo-200",
+      dot: "from-indigo-500 to-violet-600",
+      badge: "bg-indigo-100 text-indigo-700",
+    };
+  }
+
+  return {
+    bg: "bg-purple-50",
+    border: "border-purple-200",
+    dot: "from-violet-500 to-purple-700",
+    badge: "bg-purple-100 text-purple-700",
+  };
+}
+

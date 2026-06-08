@@ -10,13 +10,13 @@ export function RoadmapProgressBar({
   variant = 'primary',
 }: RoadmapProgressBarProps) {
   return (
-    <div className="h-2 overflow-hidden rounded-full bg-[#e8e8f2]">
+    <div className="h-1.5 overflow-hidden rounded-full bg-muted">
       <div
         className={cn(
           'h-full rounded-full',
-          variant === 'primary' && 'bg-primary',
+          variant === 'primary' && 'bg-gradient-to-r from-primary to-violet-600',
           variant === 'success' && 'bg-success',
-          variant === 'muted' && 'bg-[#e8e8f2]',
+          variant === 'muted' && 'bg-muted',
         )}
         style={{ width: `${value}%` }}
       />

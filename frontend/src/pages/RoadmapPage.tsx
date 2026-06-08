@@ -29,7 +29,7 @@ export function RoadmapPage() {
     !roadmapQuery.isLoading && !errorMessage && viewModel.bands.length === 0;
 
   return (
-    <div className="min-h-screen bg-[#f7f7fc] text-[#10111f]">
+    <div className="min-h-screen bg-background text-foreground">
       <RoadmapHeader
         title={viewModel.title}
         subtitle={viewModel.subtitle}
@@ -40,9 +40,9 @@ export function RoadmapPage() {
         currentStreak={viewModel.currentStreak}
       />
 
-      <div className="relative mx-auto max-w-5xl px-4 pb-8 pt-5 lg:px-0">
+      <div className="relative mx-auto max-w-5xl px-6 py-8">
         <div
-          className="absolute bottom-10 left-1/2 top-6 hidden w-0.5 -translate-x-1/2 bg-[#e6e6ff] lg:block"
+          className="absolute bottom-28 left-1/2 top-8 hidden w-0.5 -translate-x-1/2 bg-border md:block"
           aria-hidden="true"
         />
 
@@ -69,8 +69,12 @@ export function RoadmapPage() {
         ) : null}
 
         {!roadmapQuery.isLoading && !errorMessage
-          ? viewModel.bands.map((band) => (
-              <RoadmapBandSection band={band} key={band.id} />
+          ? viewModel.bands.map((band, index) => (
+              <RoadmapBandSection
+                band={band}
+                isLast={index === viewModel.bands.length - 1}
+                key={band.id}
+              />
             ))
           : null}
 
@@ -125,13 +129,13 @@ function RoadmapStateMessage({
 
 function RoadmapMasterCard() {
   return (
-    <section className="relative py-10">
-      <div className="mx-auto max-w-sm rounded-2xl border border-[#f5d675] bg-[#fffdf7] p-6 text-center">
-        <Trophy className="mx-auto size-9 text-[#ffc15a]" aria-hidden="true" />
-        <h2 className="mt-5 text-xl font-bold tracking-normal text-[#676982]">
+    <section className="relative z-10 flex justify-center py-8">
+      <div className="flex flex-col items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-8 py-5 text-center opacity-50">
+        <Trophy className="size-7 text-amber-500" aria-hidden="true" />
+        <h2 className="text-base font-bold tracking-normal text-foreground">
           Band 8.5+ Master
         </h2>
-        <p className="mt-5 text-base font-medium text-[#a6a8bb]">
+        <p className="text-xs text-muted-foreground">
           Complete all bands to unlock
         </p>
       </div>
