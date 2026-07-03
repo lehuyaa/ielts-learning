@@ -1,0 +1,126 @@
+export const profileTabs = ['Overview', 'Achievements', 'Calendar'] as const
+
+export type ProfileTab = (typeof profileTabs)[number]
+
+export const mockProfile = {
+  avatarInitial: 'A',
+  name: 'Alex Johnson',
+  username: '@alexj',
+  memberSince: 'Member since Oct 2024',
+  currentBand: 'Band 6.5 Current',
+  targetBand: 'Band 7.0 Target',
+  level: 18,
+  levelTitle: 'Expert',
+  currentXp: 2840,
+  nextLevelXp: 3500,
+  xpRemaining: 660,
+  streakDays: 14,
+  stats: [
+    {
+      label: 'Words Learned',
+      value: '847',
+      tone: 'primary',
+    },
+    {
+      label: 'Current Streak',
+      value: '14d',
+      tone: 'orange',
+    },
+    {
+      label: 'Longest Streak',
+      value: '21d',
+      tone: 'amber',
+    },
+    {
+      label: 'Lessons Done',
+      value: '32',
+      tone: 'emerald',
+    },
+  ],
+  masteryPercentage: 68,
+  masteryBreakdown: [
+    { label: 'Mastered', value: '574', tone: 'text-emerald-600' },
+    { label: 'Learning', value: '183', tone: 'text-amber-600' },
+    { label: 'New', value: '90', tone: 'text-blue-500' },
+  ],
+  topicProgress: [
+    { topic: 'Education', progress: 85, color: 'bg-indigo-500' },
+    { topic: 'Environment', progress: 60, color: 'bg-emerald-500' },
+    { topic: 'Technology', progress: 48, color: 'bg-blue-500' },
+    { topic: 'Health', progress: 72, color: 'bg-red-400' },
+    { topic: 'Government', progress: 30, color: 'bg-amber-500' },
+    { topic: 'Culture', progress: 15, color: 'bg-purple-500' },
+  ],
+  achievements: [
+    {
+      icon: '🔥',
+      label: '7 Day Streak',
+      description: 'Studied 7 days in a row',
+      earned: true,
+      date: 'Dec 1',
+    },
+    {
+      icon: '📚',
+      label: '100 Words',
+      description: 'Learned 100 IELTS words',
+      earned: true,
+      date: 'Nov 28',
+    },
+    {
+      icon: '⚡',
+      label: 'First Quiz',
+      description: 'Completed your first quiz',
+      earned: true,
+      date: 'Nov 20',
+    },
+    {
+      icon: '🎯',
+      label: 'Band 6.0',
+      description: 'Reached Band 6.0 level',
+      earned: true,
+      date: 'Nov 15',
+    },
+    {
+      icon: '🎓',
+      label: 'Education Master',
+      description: 'Complete all Education lessons',
+      earned: true,
+      date: 'Nov 10',
+    },
+    {
+      icon: '🏆',
+      label: '30 Day Streak',
+      description: 'Study for 30 consecutive days',
+      earned: false,
+      date: '',
+    },
+    {
+      icon: '🌟',
+      label: '500 Words',
+      description: 'Learn 500 IELTS words',
+      earned: false,
+      date: '',
+    },
+    {
+      icon: '💎',
+      label: 'Vocabulary Champion',
+      description: 'Master all 5000 words',
+      earned: false,
+      date: '',
+    },
+    {
+      icon: '🚀',
+      label: 'Band 8.0',
+      description: 'Reach Band 8.0 level',
+      earned: false,
+      date: '',
+    },
+  ],
+  weekLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+  heatmap: [
+    18, 22, 0, 14, 0, 27, 10, 8, 0, 11, 16, 24, 0, 19, 6, 5, 0, 9, 20, 28, 14,
+    0, 17, 12, 4, 0, 8, 26, 21, 15, 0, 10, 7, 13, 18, 0, 25, 29, 11, 6, 0, 9,
+    14, 22, 17, 0, 12, 30, 20, 5, 0, 16, 24, 9, 0, 8, 13, 19, 27, 0, 21, 10, 6,
+    0, 18, 26, 15, 3, 0, 11, 23, 20, 0, 7, 16, 28, 12, 0, 14, 22, 9, 0, 19, 25,
+  ],
+}
