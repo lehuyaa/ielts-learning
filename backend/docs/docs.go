@@ -201,6 +201,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/dashboard/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return dashboard summary data from authenticated user progress, streak, XP, and review state.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Get dashboard summary",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dashboard.SummaryResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/flashcards/review": {
             "post": {
                 "security": [
@@ -1251,6 +1303,166 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "dashboard.LearningStatsResponse": {
+            "type": "object",
+            "properties": {
+                "lessonsCompleted": {
+                    "type": "integer"
+                },
+                "masteryPercentage": {
+                    "type": "integer"
+                },
+                "totalWordsLearned": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dashboard.RecentActivityResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dashboard.ReviewDueResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dashboard.SummaryResponse": {
+            "type": "object",
+            "properties": {
+                "learningStats": {
+                    "$ref": "#/definitions/dashboard.LearningStatsResponse"
+                },
+                "recentActivity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dashboard.RecentActivityResponse"
+                    }
+                },
+                "reviewDue": {
+                    "$ref": "#/definitions/dashboard.ReviewDueResponse"
+                },
+                "targetBand": {
+                    "$ref": "#/definitions/dashboard.TargetBandResponse"
+                },
+                "todayProgress": {
+                    "$ref": "#/definitions/dashboard.TodayProgressResponse"
+                },
+                "user": {
+                    "$ref": "#/definitions/dashboard.UserSummaryResponse"
+                },
+                "xp": {
+                    "$ref": "#/definitions/dashboard.XPResponse"
+                }
+            }
+        },
+        "dashboard.TargetBandResponse": {
+            "type": "object",
+            "properties": {
+                "currentBand": {
+                    "type": "number"
+                },
+                "progressPercentage": {
+                    "type": "integer"
+                },
+                "startingBand": {
+                    "type": "number"
+                },
+                "targetBand": {
+                    "type": "number"
+                }
+            }
+        },
+        "dashboard.TodayProgressResponse": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "lessonsDone": {
+                    "type": "integer"
+                },
+                "quizzesTaken": {
+                    "type": "integer"
+                },
+                "wordsLearned": {
+                    "type": "integer"
+                },
+                "wordsReviewed": {
+                    "type": "integer"
+                },
+                "xpEarned": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dashboard.UserSummaryResponse": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "currentBand": {
+                    "type": "number"
+                },
+                "currentStreak": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "targetBand": {
+                    "type": "number"
+                }
+            }
+        },
+        "dashboard.XPResponse": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "type": "integer"
+                },
+                "levelTitle": {
+                    "type": "string"
+                },
+                "progressPercentage": {
+                    "type": "integer"
+                },
+                "totalXp": {
+                    "type": "integer"
+                },
+                "xpToNextLevel": {
+                    "type": "integer"
                 }
             }
         },

@@ -12,6 +12,7 @@ import (
 	"ielts-learning/backend/internal/database"
 	"ielts-learning/backend/internal/middleware"
 	authmodule "ielts-learning/backend/internal/modules/auth"
+	dashboardmodule "ielts-learning/backend/internal/modules/dashboard"
 	flashcardmodule "ielts-learning/backend/internal/modules/flashcard"
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
 	quizmodule "ielts-learning/backend/internal/modules/quiz"
@@ -61,6 +62,7 @@ func main() {
 
 	api := router.Group("/api/v1")
 	authmodule.RegisterRoutes(api, db, jwtManager)
+	dashboardmodule.RegisterRoutes(api, db, jwtManager)
 	roadmapmodule.RegisterRoutes(api, db, jwtManager)
 	topicmodule.RegisterRoutes(api, db, jwtManager)
 	lessonmodule.RegisterRoutes(api, db, jwtManager)

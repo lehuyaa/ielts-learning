@@ -66,6 +66,110 @@ definitions:
       username:
         type: string
     type: object
+  dashboard.LearningStatsResponse:
+    properties:
+      lessonsCompleted:
+        type: integer
+      masteryPercentage:
+        type: integer
+      totalWordsLearned:
+        type: integer
+    type: object
+  dashboard.RecentActivityResponse:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      type:
+        type: string
+      xp:
+        type: integer
+    type: object
+  dashboard.ReviewDueResponse:
+    properties:
+      count:
+        type: integer
+    type: object
+  dashboard.SummaryResponse:
+    properties:
+      learningStats:
+        $ref: '#/definitions/dashboard.LearningStatsResponse'
+      recentActivity:
+        items:
+          $ref: '#/definitions/dashboard.RecentActivityResponse'
+        type: array
+      reviewDue:
+        $ref: '#/definitions/dashboard.ReviewDueResponse'
+      targetBand:
+        $ref: '#/definitions/dashboard.TargetBandResponse'
+      todayProgress:
+        $ref: '#/definitions/dashboard.TodayProgressResponse'
+      user:
+        $ref: '#/definitions/dashboard.UserSummaryResponse'
+      xp:
+        $ref: '#/definitions/dashboard.XPResponse'
+    type: object
+  dashboard.TargetBandResponse:
+    properties:
+      currentBand:
+        type: number
+      progressPercentage:
+        type: integer
+      startingBand:
+        type: number
+      targetBand:
+        type: number
+    type: object
+  dashboard.TodayProgressResponse:
+    properties:
+      date:
+        type: string
+      lessonsDone:
+        type: integer
+      quizzesTaken:
+        type: integer
+      wordsLearned:
+        type: integer
+      wordsReviewed:
+        type: integer
+      xpEarned:
+        type: integer
+    type: object
+  dashboard.UserSummaryResponse:
+    properties:
+      avatarUrl:
+        type: string
+      currentBand:
+        type: number
+      currentStreak:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      targetBand:
+        type: number
+    type: object
+  dashboard.XPResponse:
+    properties:
+      level:
+        type: integer
+      levelTitle:
+        type: string
+      progressPercentage:
+        type: integer
+      totalXp:
+        type: integer
+      xpToNextLevel:
+        type: integer
+    type: object
   flashcard.DueReviewsResponse:
     properties:
       cards:
@@ -1026,6 +1130,37 @@ paths:
       summary: Register user
       tags:
       - Auth
+  /dashboard/summary:
+    get:
+      consumes:
+      - application/json
+      description: Return dashboard summary data from authenticated user progress,
+        streak, XP, and review state.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/dashboard.SummaryResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get dashboard summary
+      tags:
+      - Dashboard
   /flashcards/review:
     post:
       consumes:
