@@ -817,6 +817,131 @@
                 }
             }
         },
+        "/me/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return the authenticated user's profile, stats, achievements, and activity summary.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Get current profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/profile.GetProfileResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update the authenticated user's supported profile fields: name, username, target band, timezone, and locale.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update current profile",
+                "parameters": [
+                    {
+                        "description": "Profile update request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/profile.UpdateProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/profile.UpdateProfileResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/reviews/due": {
             "get": {
                 "security": [
@@ -1952,6 +2077,268 @@
                 "VocabularyStatusReview",
                 "VocabularyStatusMastered"
             ]
+        },
+        "profile.ActivitySummaryResponse": {
+            "type": "object",
+            "properties": {
+                "activeDays": {
+                    "type": "integer"
+                },
+                "averageWordsPerDay": {
+                    "type": "number"
+                },
+                "recentActivity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/profile.ProfileRecentActivityItem"
+                    }
+                },
+                "wordsLearnedLast84Days": {
+                    "type": "integer"
+                }
+            }
+        },
+        "profile.GetProfileResponse": {
+            "type": "object",
+            "properties": {
+                "achievements": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/profile.ProfileAchievementItem"
+                    }
+                },
+                "activitySummary": {
+                    "$ref": "#/definitions/profile.ActivitySummaryResponse"
+                },
+                "stats": {
+                    "$ref": "#/definitions/profile.ProfileStatsResponse"
+                },
+                "user": {
+                    "$ref": "#/definitions/profile.UserProfileResponse"
+                }
+            }
+        },
+        "profile.ProfileAchievementItem": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "icon": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "progressValue": {
+                    "type": "integer"
+                },
+                "requirementValue": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "unlocked": {
+                    "type": "boolean"
+                },
+                "unlockedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "profile.ProfileRecentActivityItem": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "xp": {
+                    "type": "integer"
+                }
+            }
+        },
+        "profile.ProfileStatsResponse": {
+            "type": "object",
+            "properties": {
+                "learningWords": {
+                    "type": "integer"
+                },
+                "lessonsDone": {
+                    "type": "integer"
+                },
+                "masteredWords": {
+                    "type": "integer"
+                },
+                "newWords": {
+                    "type": "integer"
+                },
+                "vocabularyMasteryPercentage": {
+                    "type": "integer"
+                },
+                "wordsLearned": {
+                    "type": "integer"
+                }
+            }
+        },
+        "profile.UpdateProfileRequest": {
+            "type": "object",
+            "properties": {
+                "locale": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "targetBand": {
+                    "type": "number"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "profile.UpdateProfileResponse": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "currentBand": {
+                    "type": "number"
+                },
+                "currentLevelXp": {
+                    "type": "integer"
+                },
+                "currentStreak": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "initials": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "levelTitle": {
+                    "type": "string"
+                },
+                "locale": {
+                    "type": "string"
+                },
+                "longestStreak": {
+                    "type": "integer"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nextLevelXp": {
+                    "type": "integer"
+                },
+                "targetBand": {
+                    "type": "number"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "totalXp": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "xpUntilNextLevel": {
+                    "type": "integer"
+                }
+            }
+        },
+        "profile.UserProfileResponse": {
+            "type": "object",
+            "properties": {
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "currentBand": {
+                    "type": "number"
+                },
+                "currentLevelXp": {
+                    "type": "integer"
+                },
+                "currentStreak": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "initials": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "levelTitle": {
+                    "type": "string"
+                },
+                "locale": {
+                    "type": "string"
+                },
+                "longestStreak": {
+                    "type": "integer"
+                },
+                "memberSince": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "nextLevelXp": {
+                    "type": "integer"
+                },
+                "targetBand": {
+                    "type": "number"
+                },
+                "timezone": {
+                    "type": "string"
+                },
+                "totalXp": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "xpUntilNextLevel": {
+                    "type": "integer"
+                }
+            }
         },
         "quiz.CheckAnswerRequest": {
             "type": "object",

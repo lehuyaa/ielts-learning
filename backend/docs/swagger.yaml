@@ -502,6 +502,178 @@ definitions:
     - VocabularyStatusLearning
     - VocabularyStatusReview
     - VocabularyStatusMastered
+  profile.ActivitySummaryResponse:
+    properties:
+      activeDays:
+        type: integer
+      averageWordsPerDay:
+        type: number
+      recentActivity:
+        items:
+          $ref: '#/definitions/profile.ProfileRecentActivityItem'
+        type: array
+      wordsLearnedLast84Days:
+        type: integer
+    type: object
+  profile.GetProfileResponse:
+    properties:
+      achievements:
+        items:
+          $ref: '#/definitions/profile.ProfileAchievementItem'
+        type: array
+      activitySummary:
+        $ref: '#/definitions/profile.ActivitySummaryResponse'
+      stats:
+        $ref: '#/definitions/profile.ProfileStatsResponse'
+      user:
+        $ref: '#/definitions/profile.UserProfileResponse'
+    type: object
+  profile.ProfileAchievementItem:
+    properties:
+      code:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: integer
+      progressValue:
+        type: integer
+      requirementValue:
+        type: integer
+      title:
+        type: string
+      unlocked:
+        type: boolean
+      unlockedAt:
+        type: string
+    type: object
+  profile.ProfileRecentActivityItem:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      type:
+        type: string
+      xp:
+        type: integer
+    type: object
+  profile.ProfileStatsResponse:
+    properties:
+      learningWords:
+        type: integer
+      lessonsDone:
+        type: integer
+      masteredWords:
+        type: integer
+      newWords:
+        type: integer
+      vocabularyMasteryPercentage:
+        type: integer
+      wordsLearned:
+        type: integer
+    type: object
+  profile.UpdateProfileRequest:
+    properties:
+      locale:
+        type: string
+      name:
+        type: string
+      targetBand:
+        type: number
+      timezone:
+        type: string
+      username:
+        type: string
+    type: object
+  profile.UpdateProfileResponse:
+    properties:
+      avatarUrl:
+        type: string
+      currentBand:
+        type: number
+      currentLevelXp:
+        type: integer
+      currentStreak:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      initials:
+        type: string
+      level:
+        type: integer
+      levelTitle:
+        type: string
+      locale:
+        type: string
+      longestStreak:
+        type: integer
+      memberSince:
+        type: string
+      name:
+        type: string
+      nextLevelXp:
+        type: integer
+      targetBand:
+        type: number
+      timezone:
+        type: string
+      totalXp:
+        type: integer
+      username:
+        type: string
+      xpUntilNextLevel:
+        type: integer
+    type: object
+  profile.UserProfileResponse:
+    properties:
+      avatarUrl:
+        type: string
+      currentBand:
+        type: number
+      currentLevelXp:
+        type: integer
+      currentStreak:
+        type: integer
+      email:
+        type: string
+      id:
+        type: integer
+      initials:
+        type: string
+      level:
+        type: integer
+      levelTitle:
+        type: string
+      locale:
+        type: string
+      longestStreak:
+        type: integer
+      memberSince:
+        type: string
+      name:
+        type: string
+      nextLevelXp:
+        type: integer
+      targetBand:
+        type: number
+      timezone:
+        type: string
+      totalXp:
+        type: integer
+      username:
+        type: string
+      xpUntilNextLevel:
+        type: integer
+    type: object
   quiz.CheckAnswerRequest:
     properties:
       optionId:
@@ -1513,6 +1685,82 @@ paths:
       summary: Start lesson
       tags:
       - Lessons
+  /me/profile:
+    get:
+      consumes:
+      - application/json
+      description: Return the authenticated user's profile, stats, achievements, and
+        activity summary.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/profile.GetProfileResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current profile
+      tags:
+      - Profile
+    patch:
+      consumes:
+      - application/json
+      description: 'Update the authenticated user''s supported profile fields: name,
+        username, target band, timezone, and locale.'
+      parameters:
+      - description: Profile update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/profile.UpdateProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/profile.UpdateProfileResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Update current profile
+      tags:
+      - Profile
   /reviews/due:
     get:
       consumes:

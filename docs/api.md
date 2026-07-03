@@ -54,8 +54,8 @@ PATCH /api/v1/notifications/read-all
 GET   /api/v1/challenges/daily
 POST  /api/v1/challenges/daily/claim
 
-GET   /api/v1/profile
-PATCH /api/v1/profile
+GET   /api/v1/me/profile
+PATCH /api/v1/me/profile
 GET   /api/v1/profile/overview
 GET   /api/v1/profile/achievements
 GET   /api/v1/profile/calendar
@@ -1427,7 +1427,7 @@ Important:
 
 ## 16. Profile APIs
 
-### GET /api/v1/profile
+### GET /api/v1/me/profile
 
 Protected.
 
@@ -1469,7 +1469,7 @@ Response:
 }
 ```
 
-### PATCH /api/v1/profile
+### PATCH /api/v1/me/profile
 
 Protected.
 
@@ -1479,7 +1479,6 @@ Request:
 {
   "name": "Alex Johnson",
   "username": "alexj",
-  "avatarUrl": "https://example.com/avatar.png",
   "targetBand": 7.5,
   "timezone": "Asia/Pontianak",
   "locale": "en"
