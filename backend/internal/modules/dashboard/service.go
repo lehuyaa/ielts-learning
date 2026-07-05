@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"ielts-learning/backend/internal/models"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 var ErrUserNotFound = errors.New("user not found")
@@ -118,8 +119,8 @@ func toTargetBand(user models.User) TargetBandResponse {
 
 func toXP(user models.User) XPResponse {
 	level := maxInt(user.Level, 1)
-	currentLevelFloor := (level - 1) * 500
-	nextLevelTotalXP := level * 500
+	currentLevelFloor := xpmodule.CurrentLevelFloor(level)
+	nextLevelTotalXP := xpmodule.NextLevelTotalXP(level)
 	xpToNextLevel := nextLevelTotalXP - user.TotalXP
 	if xpToNextLevel < 0 {
 		xpToNextLevel = 0
@@ -164,14 +165,16 @@ func summarizeXPEvent(event models.UserXPEvent) (string, string) {
 
 func titleFromSourceType(sourceType string) string {
 	switch sourceType {
-	case "LESSON_COMPLETION":
+	case string(xpmodule.EventLessonCompleted), "LESSON_COMPLETION":
 		return "Lesson Completion"
-	case "FLASHCARD_REVIEW":
+	case string(xpmodule.EventFlashcardReview):
 		return "Flashcard Review"
-	case "QUIZ_SUCCESS":
+	case string(xpmodule.EventQuizCorrect):
+		return "Quiz Correct"
+	case "QUIZ_SUCCESS", "QUIZ_COMPLETION":
 		return "Quiz Success"
-	case "QUIZ_COMPLETION":
-		return "Quiz Completion"
+	case string(xpmodule.EventAchievementUnlocked):
+		return "Achievement Unlocked"
 	default:
 		return humanizeSourceType(sourceType)
 	}

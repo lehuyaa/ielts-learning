@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"ielts-learning/backend/internal/models"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 var (
@@ -23,11 +24,15 @@ type VocabularyTopicContext struct {
 }
 
 type Repository struct {
-	db *gorm.DB
+	db        *gorm.DB
+	xpService xpmodule.Service
 }
 
 func NewRepository(db *gorm.DB) Repository {
-	return Repository{db: db}
+	return Repository{
+		db:        db,
+		xpService: xpmodule.NewService(xpmodule.NewRepository(db)),
+	}
 }
 
 func (r Repository) FindUser(userID uint) (models.User, error) {
@@ -237,27 +242,22 @@ func (r Repository) SaveReview(
 
 		if xpAwarded > 0 {
 			sourceID := vocabularyID
-			xpEvent := models.UserXPEvent{
-				UserID:      user.ID,
-				SourceType:  "FLASHCARD_REVIEW",
-				SourceID:    &sourceID,
-				XP:          xpAwarded,
-				Description: "Flashcard review",
-				CreatedAt:   now,
+			xpResult, err := r.xpService.AwardXP(tx, xpmodule.AwardInput{
+				UserID:           user.ID,
+				SourceType:       xpmodule.EventFlashcardReview,
+				SourceID:         &sourceID,
+				XP:               xpAwarded,
+				Description:      "Flashcard review",
+				AwardedAt:        now,
+				PreventDuplicate: false,
+				TouchLastActive:  true,
+			})
+			if err != nil {
+				return fmt.Errorf("award flashcard xp: %w", err)
 			}
-			if err := tx.Create(&xpEvent).Error; err != nil {
-				return fmt.Errorf("create xp event: %w", err)
-			}
-
-			if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&updatedUser, user.ID).Error; err != nil {
-				return fmt.Errorf("find xp user: %w", err)
-			}
-			updatedUser.TotalXP += xpAwarded
-			updatedUser.Level = updatedUser.TotalXP/200 + 1
-			updatedUser.LastActiveAt = &now
-			if err := tx.Save(&updatedUser).Error; err != nil {
-				return fmt.Errorf("update xp user: %w", err)
-			}
+			updatedUser = xpResult.User
+		} else {
+			updatedUser = user
 		}
 
 		if err := upsertDailyActivity(tx, user.ID, activityDate(now, user.Timezone), xpAwarded, now); err != nil {

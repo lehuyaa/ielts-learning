@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"ielts-learning/backend/internal/models"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 var (
@@ -19,11 +20,15 @@ var (
 )
 
 type Repository struct {
-	db *gorm.DB
+	db        *gorm.DB
+	xpService xpmodule.Service
 }
 
 func NewRepository(db *gorm.DB) Repository {
-	return Repository{db: db}
+	return Repository{
+		db:        db,
+		xpService: xpmodule.NewService(xpmodule.NewRepository(db)),
+	}
 }
 
 func (r Repository) FindUser(userID uint) (models.User, error) {
@@ -229,27 +234,17 @@ func (r Repository) SubmitQuiz(user models.User, lesson models.Lesson, questions
 
 		if xpAwarded > 0 {
 			sourceID := lesson.ID
-			xpEvent := models.UserXPEvent{
-				UserID:      user.ID,
-				SourceType:  "QUIZ_SUCCESS",
-				SourceID:    &sourceID,
-				XP:          xpAwarded,
-				Description: fmt.Sprintf("Passed quiz for %s", lesson.Title),
-				CreatedAt:   now,
-			}
-			if err := tx.Create(&xpEvent).Error; err != nil {
-				return fmt.Errorf("create quiz xp event: %w", err)
-			}
-
-			var updatedUser models.User
-			if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).First(&updatedUser, user.ID).Error; err != nil {
-				return fmt.Errorf("find quiz xp user: %w", err)
-			}
-			updatedUser.TotalXP += xpAwarded
-			updatedUser.Level = updatedUser.TotalXP/200 + 1
-			updatedUser.LastActiveAt = &now
-			if err := tx.Save(&updatedUser).Error; err != nil {
-				return fmt.Errorf("update quiz xp user: %w", err)
+			if _, err := r.xpService.AwardXP(tx, xpmodule.AwardInput{
+				UserID:           user.ID,
+				SourceType:       xpmodule.EventLessonCompleted,
+				SourceID:         &sourceID,
+				XP:               xpAwarded,
+				Description:      fmt.Sprintf("Passed quiz for %s", lesson.Title),
+				AwardedAt:        now,
+				PreventDuplicate: true,
+				TouchLastActive:  true,
+			}); err != nil {
+				return fmt.Errorf("award quiz completion xp: %w", err)
 			}
 		}
 

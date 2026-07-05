@@ -11,6 +11,7 @@ import (
 	"gorm.io/gorm"
 
 	"ielts-learning/backend/internal/models"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 const vocabularyPerLesson = 10
@@ -383,7 +384,7 @@ func seedDemoUser(db *gorm.DB) (models.User, error) {
 		StartingBand:    &startingBand,
 		RecommendedBand: &recommendedBand,
 		TotalXP:         3650,
-		Level:           8,
+		Level:           xpmodule.LevelForTotalXP(3650),
 		CurrentStreak:   14,
 		LongestStreak:   21,
 		LastActiveAt:    &now,
@@ -429,6 +430,9 @@ func seedDemoProgress(db *gorm.DB, user models.User) error {
 		return err
 	}
 	if err := seedUserAchievements(db, user.ID, now); err != nil {
+		return err
+	}
+	if err := recalculateUserXP(db, user.ID); err != nil {
 		return err
 	}
 
@@ -704,8 +708,8 @@ func seedXPEvents(db *gorm.DB, userID uint, record lessonRecord, status models.L
 	}
 	if status == models.LessonStatusCompleted {
 		events = append(events,
-			models.UserXPEvent{UserID: userID, SourceType: "LESSON_COMPLETION", SourceID: &record.Lesson.ID, XP: record.Lesson.XPReward, Description: fmt.Sprintf("Completed %s", record.Lesson.Title), CreatedAt: now.AddDate(0, 0, -record.Lesson.OrderIndex)},
-			models.UserXPEvent{UserID: userID, SourceType: "QUIZ_SUCCESS", SourceID: &record.Lesson.ID, XP: 25, Description: fmt.Sprintf("Passed quiz for %s", record.Lesson.Title), CreatedAt: now.AddDate(0, 0, -record.Lesson.OrderIndex)},
+			models.UserXPEvent{UserID: userID, SourceType: string(xpmodule.EventLessonCompleted), SourceID: &record.Lesson.ID, XP: record.Lesson.XPReward, Description: fmt.Sprintf("Completed %s", record.Lesson.Title), CreatedAt: now.AddDate(0, 0, -record.Lesson.OrderIndex)},
+			models.UserXPEvent{UserID: userID, SourceType: string(xpmodule.EventQuizCorrect), SourceID: &record.Lesson.ID, XP: 25, Description: fmt.Sprintf("Passed quiz for %s", record.Lesson.Title), CreatedAt: now.AddDate(0, 0, -record.Lesson.OrderIndex)},
 		)
 	}
 
@@ -713,6 +717,15 @@ func seedXPEvents(db *gorm.DB, userID uint, record lessonRecord, status models.L
 		if err := db.Where("user_id = ? AND source_type = ? AND source_id = ? AND description = ?", userID, event.SourceType, record.Lesson.ID, event.Description).Assign(event).FirstOrCreate(&event).Error; err != nil {
 			return fmt.Errorf("seed xp event %s: %w", record.Lesson.Slug, err)
 		}
+	}
+
+	return nil
+}
+
+func recalculateUserXP(db *gorm.DB, userID uint) error {
+	service := xpmodule.NewService(xpmodule.NewRepository(db))
+	if _, err := service.RecalculateLevel(db, userID); err != nil {
+		return fmt.Errorf("recalculate user xp: %w", err)
 	}
 
 	return nil

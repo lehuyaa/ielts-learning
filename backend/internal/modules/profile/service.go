@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"ielts-learning/backend/internal/models"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 var ErrUsernameAlreadyUsed = errors.New("username already used")
@@ -155,8 +156,8 @@ type achievementProgress struct {
 
 func toUserProfileResponse(user models.User) UserProfileResponse {
 	level := maxInt(user.Level, 1)
-	currentLevelFloor := (level - 1) * 500
-	nextLevelXP := 500
+	currentLevelFloor := xpmodule.CurrentLevelFloor(level)
+	nextLevelXP := xpmodule.XPPerLevel
 	currentLevelXP := user.TotalXP - currentLevelFloor
 	if currentLevelXP < 0 {
 		currentLevelXP = 0
@@ -164,7 +165,7 @@ func toUserProfileResponse(user models.User) UserProfileResponse {
 	if currentLevelXP > nextLevelXP {
 		currentLevelXP = nextLevelXP
 	}
-	xpUntilNextLevel := (level * 500) - user.TotalXP
+	xpUntilNextLevel := xpmodule.NextLevelTotalXP(level) - user.TotalXP
 	if xpUntilNextLevel < 0 {
 		xpUntilNextLevel = 0
 	}
@@ -290,14 +291,16 @@ func summarizeXPEvent(event models.UserXPEvent) (string, string) {
 
 func titleFromSourceType(sourceType string) string {
 	switch sourceType {
-	case "LESSON_COMPLETION":
+	case string(xpmodule.EventLessonCompleted), "LESSON_COMPLETION":
 		return "Lesson Completion"
-	case "FLASHCARD_REVIEW":
+	case string(xpmodule.EventFlashcardReview):
 		return "Flashcard Review"
-	case "QUIZ_SUCCESS":
+	case string(xpmodule.EventQuizCorrect):
+		return "Quiz Correct"
+	case "QUIZ_SUCCESS", "QUIZ_COMPLETION":
 		return "Quiz Success"
-	case "QUIZ_COMPLETION":
-		return "Quiz Completion"
+	case string(xpmodule.EventAchievementUnlocked):
+		return "Achievement Unlocked"
 	default:
 		return humanizeSourceType(sourceType)
 	}
