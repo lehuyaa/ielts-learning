@@ -470,6 +470,18 @@ definitions:
     - LessonStatusUnlocked
     - LessonStatusInProgress
     - LessonStatusCompleted
+  models.NotificationType:
+    enum:
+    - ACHIEVEMENT
+    - REVIEW_DUE
+    - STREAK
+    - SYSTEM
+    type: string
+    x-enum-varnames:
+    - NotificationAchievement
+    - NotificationReviewDue
+    - NotificationStreak
+    - NotificationSystem
   models.QuizQuestionType:
     enum:
     - MEANING_CHOICE
@@ -502,6 +514,43 @@ definitions:
     - VocabularyStatusLearning
     - VocabularyStatusReview
     - VocabularyStatusMastered
+  notification.ListNotificationsResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/notification.NotificationItem'
+        type: array
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+      unreadCount:
+        type: integer
+    type: object
+  notification.MarkAsReadResponse:
+    properties:
+      notification:
+        $ref: '#/definitions/notification.NotificationItem'
+    type: object
+  notification.NotificationItem:
+    properties:
+      actionUrl:
+        type: string
+      body:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      readAt:
+        type: string
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/models.NotificationType'
+    type: object
   profile.ActivitySummaryResponse:
     properties:
       activeDays:
@@ -1761,6 +1810,86 @@ paths:
       summary: Update current profile
       tags:
       - Profile
+  /notifications:
+    get:
+      consumes:
+      - application/json
+      description: Return the authenticated user's notifications ordered by newest
+        first.
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/notification.ListNotificationsResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List notifications
+      tags:
+      - Notifications
+  /notifications/{id}/read:
+    patch:
+      consumes:
+      - application/json
+      description: Mark one of the authenticated user's notifications as read.
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/notification.MarkAsReadResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Mark notification as read
+      tags:
+      - Notifications
   /reviews/due:
     get:
       consumes:

@@ -11,6 +11,7 @@ import (
 	"ielts-learning/backend/internal/models"
 	achievementmodule "ielts-learning/backend/internal/modules/achievement"
 	activitymodule "ielts-learning/backend/internal/modules/activity"
+	notificationmodule "ielts-learning/backend/internal/modules/notification"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
@@ -35,10 +36,11 @@ type Repository struct {
 func NewRepository(db *gorm.DB) Repository {
 	xpRepository := xpmodule.NewRepository(db)
 	xpService := xpmodule.NewService(xpRepository)
+	notificationService := notificationmodule.NewService(notificationmodule.NewRepository(db))
 	return Repository{
 		db:                 db,
 		xpService:          xpService,
-		achievementService: achievementmodule.NewService(achievementmodule.NewRepository(db), xpService),
+		achievementService: achievementmodule.NewService(achievementmodule.NewRepository(db), xpService, notificationService),
 		activityService:    activitymodule.NewService(activitymodule.NewRepository(db)),
 	}
 }

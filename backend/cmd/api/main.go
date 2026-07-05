@@ -15,6 +15,7 @@ import (
 	dashboardmodule "ielts-learning/backend/internal/modules/dashboard"
 	flashcardmodule "ielts-learning/backend/internal/modules/flashcard"
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
+	notificationmodule "ielts-learning/backend/internal/modules/notification"
 	profilemodule "ielts-learning/backend/internal/modules/profile"
 	quizmodule "ielts-learning/backend/internal/modules/quiz"
 	roadmapmodule "ielts-learning/backend/internal/modules/roadmap"
@@ -68,6 +69,7 @@ func main() {
 	topicmodule.RegisterRoutes(api, db, jwtManager)
 	lessonmodule.RegisterRoutes(api, db, jwtManager)
 	profilemodule.RegisterRoutes(api, db, jwtManager)
+	notificationmodule.RegisterRoutes(api, db, jwtManager)
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)

@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"ielts-learning/backend/internal/models"
+	notificationmodule "ielts-learning/backend/internal/modules/notification"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
@@ -27,14 +28,16 @@ type UnlockResult struct {
 }
 
 type Service struct {
-	repository Repository
-	xpService  xpmodule.Service
+	repository          Repository
+	xpService           xpmodule.Service
+	notificationService notificationmodule.Service
 }
 
-func NewService(repository Repository, xpService xpmodule.Service) Service {
+func NewService(repository Repository, xpService xpmodule.Service, notificationService notificationmodule.Service) Service {
 	return Service{
-		repository: repository,
-		xpService:  xpService,
+		repository:          repository,
+		xpService:           xpService,
+		notificationService: notificationService,
 	}
 }
 
@@ -190,13 +193,14 @@ func (s Service) unlockAchievementTx(tx *gorm.DB, userID uint, achievement model
 		}
 	}
 
-	if err := s.repository.CreateNotification(tx, models.Notification{
-		UserID:    userID,
-		Type:      models.NotificationAchievement,
-		Title:     achievement.Title,
-		Body:      achievement.Description,
-		ActionURL: "/profile",
-		CreatedAt: unlockedAt,
+	if err := s.notificationService.CreateNotificationTx(tx, notificationmodule.CreateInput{
+		UserID:  userID,
+		Type:    models.NotificationAchievement,
+		Title:   achievement.Title,
+		Message: achievement.Description,
+		Metadata: map[string]string{
+			"actionUrl": "/profile",
+		},
 	}); err != nil {
 		return false, time.Time{}, err
 	}

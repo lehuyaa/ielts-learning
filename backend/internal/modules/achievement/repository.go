@@ -65,14 +65,6 @@ func (r Repository) CreateUserAchievement(tx *gorm.DB, userAchievement models.Us
 	return result.RowsAffected > 0, nil
 }
 
-func (r Repository) CreateNotification(tx *gorm.DB, notification models.Notification) error {
-	if err := tx.Create(&notification).Error; err != nil {
-		return fmt.Errorf("create achievement notification: %w", err)
-	}
-
-	return nil
-}
-
 func (r Repository) FindUser(tx *gorm.DB, userID uint) (models.User, error) {
 	var user models.User
 	if err := tx.First(&user, userID).Error; err != nil {
