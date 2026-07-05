@@ -350,7 +350,8 @@ func seedAchievements(db *gorm.DB) error {
 		{Code: "WORD_COLLECTOR_100", Title: "100 Words Learned", Description: "Learn 100 IELTS vocabulary items.", Icon: "layers", Category: "vocabulary", RequirementType: "learned_words", RequirementValue: 100, XPReward: 150, SortOrder: 2, IsActive: true},
 		{Code: "QUIZ_STARTER", Title: "Quiz Starter", Description: "Pass your first lesson quiz.", Icon: "circle-check", Category: "quiz", RequirementType: "passed_quizzes", RequirementValue: 1, XPReward: 75, SortOrder: 3, IsActive: true},
 		{Code: "STREAK_7", Title: "Seven Day Streak", Description: "Study for seven days in a row.", Icon: "flame", Category: "streak", RequirementType: "current_streak", RequirementValue: 7, XPReward: 120, SortOrder: 4, IsActive: true},
-		{Code: "BAND_7_READY", Title: "Band 7 Ready", Description: "Master your first Band 7 vocabulary lesson.", Icon: "trophy", Category: "roadmap", RequirementType: "band_7_lessons", RequirementValue: 1, XPReward: 150, SortOrder: 5, IsActive: true},
+		{Code: "EDUCATION_MASTER", Title: "Education Master", Description: "Complete every lesson in the Education topic.", Icon: "graduation-cap", Category: "topic", RequirementType: "topic_lessons_completed", RequirementValue: 8, XPReward: 180, SortOrder: 5, IsActive: true},
+		{Code: "BAND_7_READY", Title: "Band 7 Ready", Description: "Master your first Band 7 vocabulary lesson.", Icon: "trophy", Category: "roadmap", RequirementType: "band_7_lessons", RequirementValue: 1, XPReward: 150, SortOrder: 6, IsActive: true},
 	}
 
 	for _, achievement := range achievements {
@@ -764,6 +765,7 @@ func seedUserAchievements(db *gorm.DB, userID uint, now time.Time) error {
 		"WORD_COLLECTOR_100": 100,
 		"QUIZ_STARTER":       1,
 		"STREAK_7":           14,
+		"EDUCATION_MASTER":   8,
 	}
 
 	for code, progressValue := range unlocked {

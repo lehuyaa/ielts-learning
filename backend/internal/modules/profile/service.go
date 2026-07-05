@@ -67,6 +67,10 @@ func (s Service) GetProfile(userID uint) (GetProfileResponse, error) {
 	if err != nil {
 		return GetProfileResponse{}, err
 	}
+	educationLessons, err := s.repository.CountCompletedLessonsByTopicSlug(userID, "education")
+	if err != nil {
+		return GetProfileResponse{}, err
+	}
 	achievements, userAchievements, err := s.repository.FindAchievements(userID)
 	if err != nil {
 		return GetProfileResponse{}, err
@@ -95,6 +99,7 @@ func (s Service) GetProfile(userID uint) (GetProfileResponse, error) {
 		passedQuizzes:    passedQuizzes,
 		currentStreak:    user.CurrentStreak,
 		band7Lessons:     band7Lessons,
+		educationLessons: educationLessons,
 	}
 
 	return GetProfileResponse{
@@ -152,6 +157,7 @@ type achievementProgress struct {
 	passedQuizzes    int
 	currentStreak    int
 	band7Lessons     int
+	educationLessons int
 }
 
 func toUserProfileResponse(user models.User) UserProfileResponse {
@@ -240,6 +246,8 @@ func calculateAchievementProgress(requirementType string, progress achievementPr
 		return progress.currentStreak
 	case "band_7_lessons":
 		return progress.band7Lessons
+	case "topic_lessons_completed":
+		return progress.educationLessons
 	default:
 		return 0
 	}

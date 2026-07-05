@@ -111,6 +111,21 @@ func (r Repository) CountCompletedLessonsByMinimumBand(userID uint, minBand floa
 	return int(count), nil
 }
 
+func (r Repository) CountCompletedLessonsByTopicSlug(userID uint, topicSlug string) (int, error) {
+	var count int64
+	err := r.db.Model(&models.UserLessonProgress{}).
+		Joins("JOIN lessons ON lessons.id = user_lesson_progresses.lesson_id").
+		Joins("JOIN topics ON topics.id = lessons.topic_id").
+		Where("user_lesson_progresses.user_id = ? AND user_lesson_progresses.status = ? AND topics.slug = ?",
+			userID, models.LessonStatusCompleted, topicSlug).
+		Count(&count).Error
+	if err != nil {
+		return 0, fmt.Errorf("count completed lessons by topic slug: %w", err)
+	}
+
+	return int(count), nil
+}
+
 func (r Repository) FindAchievements(userID uint) ([]models.Achievement, []models.UserAchievement, error) {
 	var achievements []models.Achievement
 	if err := r.db.

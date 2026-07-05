@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"ielts-learning/backend/internal/models"
+	achievementmodule "ielts-learning/backend/internal/modules/achievement"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
@@ -24,14 +25,18 @@ type VocabularyTopicContext struct {
 }
 
 type Repository struct {
-	db        *gorm.DB
-	xpService xpmodule.Service
+	db                 *gorm.DB
+	xpService          xpmodule.Service
+	achievementService achievementmodule.Service
 }
 
 func NewRepository(db *gorm.DB) Repository {
+	xpRepository := xpmodule.NewRepository(db)
+	xpService := xpmodule.NewService(xpRepository)
 	return Repository{
-		db:        db,
-		xpService: xpmodule.NewService(xpmodule.NewRepository(db)),
+		db:                 db,
+		xpService:          xpService,
+		achievementService: achievementmodule.NewService(achievementmodule.NewRepository(db), xpService),
 	}
 }
 
@@ -268,6 +273,10 @@ func (r Repository) SaveReview(
 			if err := updateLessonProgressAfterVocabularyReview(tx, user.ID, *lessonID, vocabularyID, now); err != nil {
 				return err
 			}
+		}
+
+		if _, err := r.achievementService.CheckAndUnlockAchievementsTx(tx, user.ID); err != nil {
+			return fmt.Errorf("check achievements after flashcard review: %w", err)
 		}
 
 		return nil
