@@ -4,8 +4,8 @@ import type {
   AuthResponse,
   LoginInput,
   RegisterInput,
-  User,
 } from '@/types/auth'
+import type { User } from '@/types/user'
 
 export async function login(input: LoginInput) {
   const response = await api.post<APIResponse<AuthResponse>>(

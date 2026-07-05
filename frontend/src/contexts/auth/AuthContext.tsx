@@ -11,7 +11,8 @@ import {
   setAccessToken as persistAccessToken,
 } from '@/api/api'
 import { currentUserQueryKey } from '@/features/auth/hooks/useCurrentUser'
-import type { LoginInput, RegisterInput, User } from '@/types/auth'
+import type { LoginInput, RegisterInput } from '@/types/auth'
+import type { User } from '@/types/user'
 
 import { AuthContext } from './authContext.ts'
 
