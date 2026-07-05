@@ -10,6 +10,7 @@ import (
 
 	"ielts-learning/backend/internal/models"
 	achievementmodule "ielts-learning/backend/internal/modules/achievement"
+	activitymodule "ielts-learning/backend/internal/modules/activity"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
@@ -28,6 +29,7 @@ type Repository struct {
 	db                 *gorm.DB
 	xpService          xpmodule.Service
 	achievementService achievementmodule.Service
+	activityService    activitymodule.Service
 }
 
 func NewRepository(db *gorm.DB) Repository {
@@ -37,6 +39,7 @@ func NewRepository(db *gorm.DB) Repository {
 		db:                 db,
 		xpService:          xpService,
 		achievementService: achievementmodule.NewService(achievementmodule.NewRepository(db), xpService),
+		activityService:    activitymodule.NewService(activitymodule.NewRepository(db)),
 	}
 }
 
@@ -190,8 +193,9 @@ func (r Repository) FindTopicContext(vocabularyIDs []uint) (map[uint]VocabularyT
 }
 
 type ReviewUpdate struct {
-	Progress  models.UserVocabularyProgress
-	XPAwarded int
+	Progress          models.UserVocabularyProgress
+	XPAwarded         int
+	WordsLearnedDelta int
 }
 
 func (r Repository) SaveReview(
@@ -204,6 +208,7 @@ func (r Repository) SaveReview(
 	var progress models.UserVocabularyProgress
 	updatedUser := user
 	xpAwarded := 0
+	wordsLearnedDelta := 0
 
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		var vocabulary models.Vocabulary
@@ -234,6 +239,7 @@ func (r Repository) SaveReview(
 		result := update(progress, exists)
 		progress = result.Progress
 		xpAwarded = result.XPAwarded
+		wordsLearnedDelta = result.WordsLearnedDelta
 
 		if exists {
 			if err := tx.Save(&progress).Error; err != nil {
@@ -255,7 +261,7 @@ func (r Repository) SaveReview(
 				Description:      "Flashcard review",
 				AwardedAt:        now,
 				PreventDuplicate: false,
-				TouchLastActive:  true,
+				TouchLastActive:  false,
 			})
 			if err != nil {
 				return fmt.Errorf("award flashcard xp: %w", err)
@@ -265,14 +271,26 @@ func (r Repository) SaveReview(
 			updatedUser = user
 		}
 
-		if err := upsertDailyActivity(tx, user.ID, activityDate(now, user.Timezone), xpAwarded, now); err != nil {
-			return err
-		}
+		lessonCompletedDelta := 0
 
 		if lessonID != nil {
-			if err := updateLessonProgressAfterVocabularyReview(tx, user.ID, *lessonID, vocabularyID, now); err != nil {
+			lessonUpdate, err := updateLessonProgressAfterVocabularyReview(tx, user.ID, *lessonID, vocabularyID, now)
+			if err != nil {
 				return err
 			}
+			if lessonUpdate.NewlyCompleted {
+				lessonCompletedDelta = 1
+			}
+		}
+
+		if err := r.activityService.RecordActivityTx(tx, user.ID, activitymodule.Event{
+			WordsLearnedDelta:  wordsLearnedDelta,
+			WordsReviewedDelta: 1,
+			LessonsDoneDelta:   lessonCompletedDelta,
+			XPEarnedDelta:      xpAwarded,
+			OccurredAt:         now,
+		}); err != nil {
+			return fmt.Errorf("record flashcard activity: %w", err)
 		}
 
 		if _, err := r.achievementService.CheckAndUnlockAchievementsTx(tx, user.ID); err != nil {
@@ -288,53 +306,29 @@ func (r Repository) SaveReview(
 	return progress, updatedUser, xpAwarded, nil
 }
 
-func upsertDailyActivity(tx *gorm.DB, userID uint, date time.Time, xpAwarded int, now time.Time) error {
-	activity := models.DailyActivity{
-		UserID:        userID,
-		Date:          date,
-		WordsReviewed: 1,
-		XPEarned:      xpAwarded,
-		CreatedAt:     now,
-		UpdatedAt:     now,
-	}
-
-	err := tx.Clauses(clause.OnConflict{
-		Columns: []clause.Column{
-			{Name: "user_id"},
-			{Name: "date"},
-		},
-		DoUpdates: clause.Assignments(map[string]interface{}{
-			"words_reviewed": gorm.Expr("words_reviewed + ?", 1),
-			"xp_earned":      gorm.Expr("xp_earned + ?", xpAwarded),
-			"updated_at":     now,
-		}),
-	}).Create(&activity).Error
-	if err != nil {
-		return fmt.Errorf("upsert daily activity: %w", err)
-	}
-
-	return nil
+type lessonProgressUpdateResult struct {
+	NewlyCompleted bool
 }
 
-func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonID uint, vocabularyID uint, now time.Time) error {
+func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonID uint, vocabularyID uint, now time.Time) (lessonProgressUpdateResult, error) {
 	var totalWords int64
 	if err := tx.Model(&models.LessonVocabulary{}).
 		Where("lesson_id = ? AND is_required = ?", lessonID, true).
 		Count(&totalWords).Error; err != nil {
-		return fmt.Errorf("count lesson words: %w", err)
+		return lessonProgressUpdateResult{}, fmt.Errorf("count lesson words: %w", err)
 	}
 	if totalWords == 0 {
-		return nil
+		return lessonProgressUpdateResult{}, nil
 	}
 
 	var includesVocabulary int64
 	if err := tx.Model(&models.LessonVocabulary{}).
 		Where("lesson_id = ? AND vocabulary_id = ? AND is_required = ?", lessonID, vocabularyID, true).
 		Count(&includesVocabulary).Error; err != nil {
-		return fmt.Errorf("check lesson vocabulary: %w", err)
+		return lessonProgressUpdateResult{}, fmt.Errorf("check lesson vocabulary: %w", err)
 	}
 	if includesVocabulary == 0 {
-		return nil
+		return lessonProgressUpdateResult{}, nil
 	}
 
 	var reviewedWords int64
@@ -343,7 +337,7 @@ func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonI
 		Where("lesson_vocabularies.lesson_id = ? AND lesson_vocabularies.is_required = ?", lessonID, true).
 		Where("user_vocabulary_progresses.user_id = ? AND user_vocabulary_progresses.review_count > ?", userID, 0).
 		Count(&reviewedWords).Error; err != nil {
-		return fmt.Errorf("count reviewed lesson words: %w", err)
+		return lessonProgressUpdateResult{}, fmt.Errorf("count reviewed lesson words: %w", err)
 	}
 
 	status := models.LessonStatusInProgress
@@ -359,7 +353,7 @@ func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonI
 		First(&progress).Error
 	if err != nil {
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return fmt.Errorf("find lesson progress after review: %w", err)
+			return lessonProgressUpdateResult{}, fmt.Errorf("find lesson progress after review: %w", err)
 		}
 
 		progress = models.UserLessonProgress{
@@ -373,11 +367,12 @@ func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonI
 			LastStudiedAt: &now,
 		}
 		if err := tx.Create(&progress).Error; err != nil {
-			return fmt.Errorf("create lesson progress after review: %w", err)
+			return lessonProgressUpdateResult{}, fmt.Errorf("create lesson progress after review: %w", err)
 		}
-		return nil
+		return lessonProgressUpdateResult{NewlyCompleted: status == models.LessonStatusCompleted}, nil
 	}
 
+	wasCompleted := progress.Status == models.LessonStatusCompleted
 	if progress.Status != models.LessonStatusCompleted {
 		progress.Status = status
 	}
@@ -392,20 +387,8 @@ func updateLessonProgressAfterVocabularyReview(tx *gorm.DB, userID uint, lessonI
 	progress.LastStudiedAt = &now
 
 	if err := tx.Save(&progress).Error; err != nil {
-		return fmt.Errorf("update lesson progress after review: %w", err)
+		return lessonProgressUpdateResult{}, fmt.Errorf("update lesson progress after review: %w", err)
 	}
 
-	return nil
-}
-
-func activityDate(now time.Time, timezone string) time.Time {
-	location := time.UTC
-	if timezone != "" {
-		if loadedLocation, err := time.LoadLocation(timezone); err == nil {
-			location = loadedLocation
-		}
-	}
-
-	local := now.In(location)
-	return time.Date(local.Year(), local.Month(), local.Day(), 0, 0, 0, 0, location)
+	return lessonProgressUpdateResult{NewlyCompleted: status == models.LessonStatusCompleted && !wasCompleted}, nil
 }

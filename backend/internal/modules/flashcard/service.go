@@ -120,9 +120,14 @@ func (s Service) Review(userID uint, request ReviewRequest) (ReviewResponse, err
 
 	now := s.now().UTC()
 	progress, updatedUser, xpAwarded, err := s.repository.SaveReview(user, request.VocabularyID, request.LessonID, now, func(progress models.UserVocabularyProgress, _ bool) ReviewUpdate {
+		wordsLearnedDelta := 0
+		if progress.Status == models.VocabularyStatusNew {
+			wordsLearnedDelta = 1
+		}
 		return ReviewUpdate{
-			Progress:  applyRating(progress, request.Rating, now),
-			XPAwarded: flashcardReviewXP,
+			Progress:          applyRating(progress, request.Rating, now),
+			XPAwarded:         flashcardReviewXP,
+			WordsLearnedDelta: wordsLearnedDelta,
 		}
 	})
 	if err != nil {

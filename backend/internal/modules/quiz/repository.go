@@ -10,6 +10,7 @@ import (
 
 	"ielts-learning/backend/internal/models"
 	achievementmodule "ielts-learning/backend/internal/modules/achievement"
+	activitymodule "ielts-learning/backend/internal/modules/activity"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
@@ -24,6 +25,7 @@ type Repository struct {
 	db                 *gorm.DB
 	xpService          xpmodule.Service
 	achievementService achievementmodule.Service
+	activityService    activitymodule.Service
 }
 
 func NewRepository(db *gorm.DB) Repository {
@@ -33,6 +35,7 @@ func NewRepository(db *gorm.DB) Repository {
 		db:                 db,
 		xpService:          xpService,
 		achievementService: achievementmodule.NewService(achievementmodule.NewRepository(db), xpService),
+		activityService:    activitymodule.NewService(activitymodule.NewRepository(db)),
 	}
 }
 
@@ -247,14 +250,19 @@ func (r Repository) SubmitQuiz(user models.User, lesson models.Lesson, questions
 				Description:      fmt.Sprintf("Passed quiz for %s", lesson.Title),
 				AwardedAt:        now,
 				PreventDuplicate: true,
-				TouchLastActive:  true,
+				TouchLastActive:  false,
 			}); err != nil {
 				return fmt.Errorf("award quiz completion xp: %w", err)
 			}
 		}
 
-		if err := upsertDailyActivity(tx, user.ID, activityDate(now, user.Timezone), newlyCompleted, xpAwarded, now); err != nil {
-			return err
+		if err := r.activityService.RecordActivityTx(tx, user.ID, activitymodule.Event{
+			QuizzesTakenDelta: 1,
+			LessonsDoneDelta:  boolToInt(newlyCompleted),
+			XPEarnedDelta:     xpAwarded,
+			OccurredAt:        now,
+		}); err != nil {
+			return fmt.Errorf("record quiz activity: %w", err)
 		}
 
 		if _, err := r.achievementService.CheckAndUnlockAchievementsTx(tx, user.ID); err != nil {
@@ -330,49 +338,10 @@ func unlockNextLesson(tx *gorm.DB, userID uint, lesson models.Lesson, now time.T
 	return nil
 }
 
-func upsertDailyActivity(tx *gorm.DB, userID uint, date time.Time, lessonNewlyCompleted bool, xpAwarded int, now time.Time) error {
-	lessonsDone := 0
-	if lessonNewlyCompleted {
-		lessonsDone = 1
+func boolToInt(value bool) int {
+	if value {
+		return 1
 	}
 
-	activity := models.DailyActivity{
-		UserID:       userID,
-		Date:         date,
-		QuizzesTaken: 1,
-		LessonsDone:  lessonsDone,
-		XPEarned:     xpAwarded,
-		CreatedAt:    now,
-		UpdatedAt:    now,
-	}
-
-	err := tx.Clauses(clause.OnConflict{
-		Columns: []clause.Column{
-			{Name: "user_id"},
-			{Name: "date"},
-		},
-		DoUpdates: clause.Assignments(map[string]interface{}{
-			"quizzes_taken": gorm.Expr("quizzes_taken + ?", 1),
-			"lessons_done":  gorm.Expr("lessons_done + ?", lessonsDone),
-			"xp_earned":     gorm.Expr("xp_earned + ?", xpAwarded),
-			"updated_at":    now,
-		}),
-	}).Create(&activity).Error
-	if err != nil {
-		return fmt.Errorf("upsert quiz daily activity: %w", err)
-	}
-
-	return nil
-}
-
-func activityDate(now time.Time, timezone string) time.Time {
-	location := time.UTC
-	if timezone != "" {
-		if loadedLocation, err := time.LoadLocation(timezone); err == nil {
-			location = loadedLocation
-		}
-	}
-
-	local := now.In(location)
-	return time.Date(local.Year(), local.Month(), local.Day(), 0, 0, 0, 0, location)
+	return 0
 }
