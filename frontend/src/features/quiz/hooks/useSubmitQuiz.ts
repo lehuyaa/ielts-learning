@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { submitLessonQuiz } from "@/api/quiz";
+import { useToast } from "@/contexts/toast/useToast";
 import { lessonDetailQueryKey } from "@/features/lesson/hooks/useLessonDetail";
 import { roadmapQueryKey } from "@/features/roadmap/hooks/useRoadmap";
 import { topicDetailQueryKey } from "@/features/topic/hooks/useTopicDetail";
@@ -15,6 +16,7 @@ type UseSubmitQuizOptions = {
 
 export function useSubmitQuiz({ lessonId, topicId }: UseSubmitQuizOptions) {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
 
   return useMutation({
     mutationFn: (payload: SubmitQuizRequest) =>
@@ -40,6 +42,16 @@ export function useSubmitQuiz({ lessonId, topicId }: UseSubmitQuizOptions) {
       });
       void queryClient.invalidateQueries({
         queryKey: ["dashboard"],
+      });
+    },
+    onError: (error) => {
+      showToast({
+        title: "Quiz submission failed",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Please try submitting the quiz again.",
+        tone: "error",
       });
     },
   });

@@ -1,7 +1,10 @@
 import { useParams } from "react-router-dom";
 
 import { APIError } from "@/api/api";
-import { FlashcardSession } from "@/features/flashcard/FlashcardSession";
+import {
+  FlashcardSession,
+  FlashcardSessionSkeleton,
+} from "@/features/flashcard/FlashcardSession";
 import { useLessonFlashcards } from "@/features/flashcard/hooks/useLessonFlashcards";
 import { useReviewFlashcard } from "@/features/flashcard/hooks/useReviewFlashcard";
 import { mapFlashcardCardToSessionCard } from "@/features/flashcard/mapFlashcard";
@@ -30,19 +33,7 @@ export function FlashcardPage() {
   }
 
   if (flashcardsQuery.isLoading) {
-    return (
-      <FlashcardSession
-        cards={[]}
-        completionPrimaryHref={completionHref}
-        completionPrimaryLabel="Back to lesson"
-        emptyActionHref={completionHref}
-        emptyActionLabel="Back to lesson"
-        emptyDescription="Preparing this lesson's vocabulary cards."
-        emptyTitle="Loading flashcards"
-        subtitle="Lesson flashcards"
-        title="Flashcard Learning"
-      />
-    );
+    return <FlashcardSessionSkeleton backHref={completionHref} />;
   }
 
   if (errorMessage) {
@@ -52,7 +43,10 @@ export function FlashcardPage() {
         completionPrimaryHref={completionHref}
         completionPrimaryLabel="Back to lesson"
         emptyActionHref={completionHref}
-        emptyActionLabel="Back to lesson"
+        emptyActionLabel="Try again"
+        emptyActionOnClick={() => {
+          void flashcardsQuery.refetch();
+        }}
         emptyDescription={errorMessage}
         emptyTitle="Flashcards unavailable"
         subtitle="Lesson flashcards"

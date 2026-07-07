@@ -15,6 +15,10 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 
 import { APIError } from '@/api/api'
+import { CardSkeleton } from '@/components/state/CardSkeleton'
+import { EmptyState } from '@/components/state/EmptyState'
+import { ErrorState } from '@/components/state/ErrorState'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -65,7 +69,6 @@ export function ProfilePage() {
   const updateProfileMutation = useUpdateProfile()
   const [activeTab, setActiveTab] = useState<ProfileTab>('Overview')
   const [isEditing, setIsEditing] = useState(false)
-  const [editError, setEditError] = useState('')
 
   const form = useForm<ProfileUpdateFormValues>({
     resolver: zodResolver(profileUpdateSchema),
@@ -114,8 +117,6 @@ export function ProfilePage() {
   const profileStats = profile ? buildStatCards(profile) : []
   const overviewItems = profile ? buildOverviewItems(profile) : []
   async function onSubmit(values: ProfileUpdateFormValues) {
-    setEditError('')
-
     try {
       await updateProfileMutation.mutateAsync(normalizeProfileUpdateValues(values))
       setIsEditing(false)
@@ -123,10 +124,6 @@ export function ProfilePage() {
       if (error instanceof APIError && error.fields) {
         applyFieldErrors(error.fields)
       }
-
-      setEditError(
-        error instanceof Error ? error.message : 'Could not update profile',
-      )
     }
   }
 
@@ -165,7 +162,6 @@ export function ProfilePage() {
             className="flex cursor-pointer items-center gap-2 rounded-xl border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted/50"
             onClick={() => {
               setIsEditing((current) => !current)
-              setEditError('')
             }}
             type="button"
           >
@@ -177,24 +173,27 @@ export function ProfilePage() {
 
       <div className="mx-auto max-w-4xl space-y-6">
         {profileQuery.isLoading ? (
-          <ProfileStateMessage
-            title="Loading profile"
-            description="Preparing your profile, achievements, and activity summary."
-          />
+          <ProfileLoadingSkeleton />
         ) : null}
 
         {errorMessage ? (
-          <ProfileStateMessage
-            title="Profile unavailable"
+          <ErrorState
+            actionHref="/dashboard"
+            actionLabel="Back to dashboard"
             description={errorMessage}
-            tone="error"
+            onRetry={() => {
+              void profileQuery.refetch()
+            }}
+            title="Profile unavailable"
           />
         ) : null}
 
         {isEmpty ? (
-          <ProfileStateMessage
-            title="No profile data yet"
+          <EmptyState
+            actionHref="/dashboard"
+            actionLabel="Back to dashboard"
             description="We could not find profile information for this account yet."
+            title="No profile data yet"
           />
         ) : null}
 
@@ -271,12 +270,6 @@ export function ProfilePage() {
 
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)}>
-                    {editError ? (
-                      <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-medium text-destructive">
-                        {editError}
-                      </div>
-                    ) : null}
-
                     <div className="space-y-6">
                       <div className="grid gap-6 sm:grid-cols-2">
                         <FormField
@@ -376,7 +369,6 @@ export function ProfilePage() {
                         disabled={updateProfileMutation.isPending}
                         onClick={() => {
                           setIsEditing(false)
-                          setEditError('')
                           form.reset({
                             name: profile.user.name,
                             username: profile.user.username ?? '',
@@ -778,6 +770,46 @@ function ProfileStateMessage({
       </h2>
       <p className="mt-2 text-sm text-muted-foreground">{description}</p>
     </section>
+  )
+}
+
+function ProfileLoadingSkeleton() {
+  return (
+    <>
+      <section className="overflow-hidden rounded-[28px] border border-border bg-white">
+        <div className="h-28 bg-muted/70" />
+        <div className="px-6 pb-6">
+          <div className="-mt-10 mb-4 flex items-end justify-between gap-4">
+            <Skeleton className="size-20 rounded-2xl border-4 border-white" />
+            <Skeleton className="h-9 w-32 rounded-full" />
+          </div>
+
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="space-y-3">
+              <Skeleton className="h-7 w-40" />
+              <Skeleton className="h-4 w-48" />
+              <div className="flex gap-3">
+                <Skeleton className="h-6 w-28 rounded-full" />
+                <Skeleton className="h-6 w-28 rounded-full" />
+              </div>
+            </div>
+            <Skeleton className="h-16 w-28 rounded-2xl" />
+          </div>
+        </div>
+      </section>
+
+      <CardSkeleton lines={3} />
+
+      <section className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <CardSkeleton className="p-4" key={index} lines={2} showIcon />
+        ))}
+      </section>
+
+      <CardSkeleton lines={4} />
+      <CardSkeleton lines={2} />
+      <CardSkeleton lines={6} />
+    </>
   )
 }
 

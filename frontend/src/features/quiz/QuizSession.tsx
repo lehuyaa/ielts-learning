@@ -19,7 +19,6 @@ type QuizSessionProps = {
   lessonId: string;
   isSubmitting?: boolean;
   isCheckingAnswer?: boolean;
-  submitError?: string | null;
   checkError?: string | null;
   onCheckAnswer: (
     payload: CheckQuizAnswerRequest,
@@ -35,7 +34,6 @@ export function QuizSession({
   lessonId,
   isSubmitting = false,
   isCheckingAnswer = false,
-  submitError,
   checkError,
   onCheckAnswer,
   onSubmit,
@@ -173,12 +171,6 @@ export function QuizSession({
             isChecking={isCheckingAnswer}
           />
         ) : null}
-        {submitError ? (
-          <p className="mt-4 rounded-2xl border border-[#ffc9c5] bg-[#fff3f2] p-4 text-base font-semibold text-[#c8332d]">
-            {submitError}
-          </p>
-        ) : null}
-
         <Button
           className="mt-6 h-14 w-full rounded-2xl bg-[#5147e8] text-base font-bold text-white hover:bg-[#453bd4]"
           disabled={!selectedOptionId || isSubmitting || isCheckingAnswer}

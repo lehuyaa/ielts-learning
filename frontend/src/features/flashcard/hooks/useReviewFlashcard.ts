@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { reviewFlashcard } from "@/api/flashcard";
+import { useToast } from "@/contexts/toast/useToast";
 import { lessonDetailQueryKey } from "@/features/lesson/hooks/useLessonDetail";
 import { roadmapQueryKey } from "@/features/roadmap/hooks/useRoadmap";
 import { topicDetailQueryKey } from "@/features/topic/hooks/useTopicDetail";
@@ -14,6 +15,7 @@ type UseReviewFlashcardOptions = {
 
 export function useReviewFlashcard(options: UseReviewFlashcardOptions = {}) {
   const queryClient = useQueryClient();
+  const { showToast } = useToast();
 
   return useMutation({
     mutationFn: reviewFlashcard,
@@ -45,6 +47,16 @@ export function useReviewFlashcard(options: UseReviewFlashcardOptions = {}) {
       });
       void queryClient.invalidateQueries({
         queryKey: ["vocabularies"],
+      });
+    },
+    onError: (error) => {
+      showToast({
+        title: "Could not save rating",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Please try rating this flashcard again.",
+        tone: "error",
       });
     },
   });

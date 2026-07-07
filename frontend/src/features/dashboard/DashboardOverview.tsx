@@ -1,5 +1,4 @@
 import {
-  AlertCircle,
   ArrowUpRight,
   BookOpen,
   Brain,
@@ -18,6 +17,11 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
+import { CardSkeleton } from '@/components/state/CardSkeleton'
+import { EmptyState } from '@/components/state/EmptyState'
+import { ErrorState } from '@/components/state/ErrorState'
+import { ListSkeleton } from '@/components/state/ListSkeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { DashboardViewModel } from '@/features/dashboard/mapDashboardSummary'
 import { cn } from '@/lib/utils'
 
@@ -62,6 +66,7 @@ type DashboardOverviewProps = {
   isLoading: boolean
   errorMessage: string | null
   isEmpty: boolean
+  onRetry?: () => void
 }
 
 export function DashboardOverview({
@@ -69,7 +74,35 @@ export function DashboardOverview({
   isLoading,
   errorMessage,
   isEmpty,
+  onRetry,
 }: DashboardOverviewProps) {
+  if (isLoading) {
+    return <DashboardLoadingSkeleton />
+  }
+
+  if (errorMessage) {
+    return (
+      <ErrorState
+        actionHref="/roadmap"
+        actionLabel="Go to roadmap"
+        description={errorMessage}
+        onRetry={onRetry}
+        title="Dashboard unavailable"
+      />
+    )
+  }
+
+  if (isEmpty) {
+    return (
+      <EmptyState
+        actionHref="/roadmap"
+        actionLabel="Go to roadmap"
+        description="We could not find any dashboard summary yet, but you can keep learning from your roadmap."
+        title="No dashboard data yet"
+      />
+    )
+  }
+
   return (
     <div className="space-y-6">
       <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
@@ -91,28 +124,6 @@ export function DashboardOverview({
           </div>
         </div>
       </section>
-
-      {isLoading ? (
-        <DashboardStateMessage
-          description="Pulling your latest words learned, review queue, streak, and activity."
-          title="Loading dashboard"
-        />
-      ) : null}
-
-      {errorMessage ? (
-        <DashboardStateMessage
-          description={errorMessage}
-          title="Dashboard unavailable"
-          tone="error"
-        />
-      ) : null}
-
-      {isEmpty ? (
-        <DashboardStateMessage
-          description="We could not find any dashboard summary yet. Your quick actions are still ready when the backend data arrives."
-          title="No dashboard data yet"
-        />
-      ) : null}
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {dashboard.progressCards.map((card) => (
@@ -172,30 +183,47 @@ export function DashboardOverview({
   )
 }
 
-type DashboardStateMessageProps = {
-  title: string
-  description: string
-  tone?: 'default' | 'error'
-}
-
-function DashboardStateMessage({
-  title,
-  description,
-  tone = 'default',
-}: DashboardStateMessageProps) {
+function DashboardLoadingSkeleton() {
   return (
-    <section className="rounded-2xl border border-border bg-white p-5 text-center shadow-sm">
-      {tone === 'error' ? (
-        <AlertCircle
-          className="mx-auto size-8 text-destructive"
-          aria-hidden="true"
-        />
-      ) : null}
-      <h2 className="text-lg font-bold tracking-normal text-foreground">
-        {title}
-      </h2>
-      <p className="mt-2 text-sm text-muted-foreground">{description}</p>
-    </section>
+    <div className="space-y-6">
+      <section className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-72 max-w-full" />
+        </div>
+        <div className="rounded-2xl border border-border bg-white px-4 py-2.5 shadow-sm">
+          <Skeleton className="h-10 w-24" />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <CardSkeleton className="p-4" key={index} lines={2} showIcon />
+        ))}
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-3">
+        <CardSkeleton className="min-h-[320px]" lines={5} />
+        <ListSkeleton className="lg:col-span-2" count={1} itemClassName="min-h-[320px]" />
+      </section>
+
+      <section>
+        <Skeleton className="mb-3 h-4 w-28" />
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton className="h-14 rounded-xl" key={index} />
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-2">
+        <ListSkeleton count={2} itemClassName="min-h-[220px]" />
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+        <ListSkeleton count={2} itemClassName="min-h-[220px]" />
+      </section>
+    </div>
   )
 }
 

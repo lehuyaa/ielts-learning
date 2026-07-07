@@ -1,5 +1,8 @@
 import { APIError } from "@/api/api";
-import { FlashcardSession } from "@/features/flashcard/FlashcardSession";
+import {
+  FlashcardSession,
+  FlashcardSessionSkeleton,
+} from "@/features/flashcard/FlashcardSession";
 import { useDueReviews } from "@/features/flashcard/hooks/useDueReviews";
 import { useReviewFlashcard } from "@/features/flashcard/hooks/useReviewFlashcard";
 import { mapFlashcardCardToSessionCard } from "@/features/flashcard/mapFlashcard";
@@ -23,19 +26,7 @@ export function ReviewsPage() {
   }
 
   if (dueReviewsQuery.isLoading) {
-    return (
-      <FlashcardSession
-        cards={[]}
-        completionPrimaryHref="/dashboard"
-        completionPrimaryLabel="Back to dashboard"
-        emptyActionHref="/dashboard"
-        emptyActionLabel="Back to dashboard"
-        emptyDescription="Checking your spaced repetition queue."
-        emptyTitle="Loading reviews"
-        subtitle="Due review queue"
-        title="Review Session"
-      />
-    );
+    return <FlashcardSessionSkeleton backHref="/dashboard" />;
   }
 
   if (errorMessage) {
@@ -45,7 +36,10 @@ export function ReviewsPage() {
         completionPrimaryHref="/dashboard"
         completionPrimaryLabel="Back to dashboard"
         emptyActionHref="/dashboard"
-        emptyActionLabel="Back to dashboard"
+        emptyActionLabel="Try again"
+        emptyActionOnClick={() => {
+          void dueReviewsQuery.refetch();
+        }}
         emptyDescription={errorMessage}
         emptyTitle="Reviews unavailable"
         subtitle="Due review queue"
@@ -59,8 +53,8 @@ export function ReviewsPage() {
       cards={cards}
       completionPrimaryHref="/dashboard"
       completionPrimaryLabel="Back to dashboard"
-      emptyActionHref="/dashboard"
-      emptyActionLabel="Back to dashboard"
+      emptyActionHref="/roadmap"
+      emptyActionLabel="Go to roadmap"
       emptyDescription="You have no due vocabulary cards right now. Your review queue is clear."
       emptyTitle="No reviews due"
       onRateCard={rateCard}

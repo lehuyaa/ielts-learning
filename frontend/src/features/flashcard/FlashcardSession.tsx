@@ -3,6 +3,8 @@ import type React from "react";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { CardSkeleton } from "@/components/state/CardSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type {
@@ -22,6 +24,7 @@ type FlashcardSessionProps = {
   emptyDescription?: string;
   emptyActionHref?: string;
   emptyActionLabel?: string;
+  emptyActionOnClick?: () => void;
   backHref?: string;
   onRateCard?: (
     card: FlashcardSessionCard,
@@ -78,6 +81,7 @@ export function FlashcardSession({
   emptyDescription = "You are all caught up. Come back later for more review cards.",
   emptyActionHref = "/roadmap",
   emptyActionLabel = "Back to roadmap",
+  emptyActionOnClick,
   backHref = completionPrimaryHref,
   onRateCard,
 }: FlashcardSessionProps) {
@@ -89,7 +93,6 @@ export function FlashcardSession({
   const [pendingRating, setPendingRating] = useState<FlashcardRating | null>(
     null,
   );
-  const [ratingError, setRatingError] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
   const ratingTimerRef = useRef<number | null>(null);
 
@@ -107,7 +110,6 @@ export function FlashcardSession({
     setIsRatingVisible(false);
     setRatingCounts(emptyRatings);
     setPendingRating(null);
-    setRatingError("");
     setIsCompleted(false);
   }
 
@@ -118,7 +120,6 @@ export function FlashcardSession({
 
     clearRatingTimer();
     setIsRatingVisible(false);
-    setRatingError("");
 
     if (isFlipped) {
       setIsFlipped(false);
@@ -149,7 +150,6 @@ export function FlashcardSession({
 
     clearRatingTimer();
     setPendingRating(rating);
-    setRatingError("");
 
     try {
       await onRateCard?.(currentCard, rating);
@@ -170,7 +170,7 @@ export function FlashcardSession({
       setIsFlipped(false);
       setIsRatingVisible(false);
     } catch {
-      setRatingError("Could not save your rating. Please try again.");
+      // Mutation error feedback is handled by the shared toast layer.
     } finally {
       setPendingRating(null);
     }
@@ -188,6 +188,7 @@ export function FlashcardSession({
         <EmptyFlashcardState
           actionHref={emptyActionHref}
           actionLabel={emptyActionLabel}
+          onAction={emptyActionOnClick}
           description={emptyDescription}
           title={emptyTitle}
         />
@@ -240,7 +241,6 @@ export function FlashcardSession({
 
         {isRatingVisible ? (
           <RatingControls
-            errorMessage={ratingError}
             onRate={rateCard}
             pendingRating={pendingRating}
           />
@@ -479,11 +479,9 @@ function TokenSection({ label, tokens }: { label: string; tokens: string[] }) {
 }
 
 function RatingControls({
-  errorMessage,
   onRate,
   pendingRating,
 }: {
-  errorMessage: string;
   onRate: (rating: FlashcardRating) => void;
   pendingRating: FlashcardRating | null;
 }) {
@@ -492,11 +490,6 @@ function RatingControls({
       <p className="text-center text-sm font-semibold text-[#676982]">
         How well did you know this word?
       </p>
-      {errorMessage ? (
-        <p className="mt-2 text-center text-sm font-semibold text-destructive">
-          {errorMessage}
-        </p>
-      ) : null}
       <div className="mt-4 grid gap-3 sm:grid-cols-4">
         {ratingOptions.map((option) => (
           <button
@@ -523,6 +516,54 @@ function RatingControls({
         ))}
       </div>
     </section>
+  );
+}
+
+export function FlashcardSessionSkeleton({
+  backHref,
+}: {
+  backHref: string;
+}) {
+  const navigate = useNavigate();
+
+  return (
+    <FlashcardShell
+      doneCount={0}
+      onBack={() => navigate(backHref)}
+      onReset={() => {}}
+      progressPercentage={0}
+      remainingCount={0}
+    >
+      <main className="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-lg flex-col items-center justify-center px-4 py-6">
+        <div className="mb-5 flex items-center justify-center gap-3">
+          <Skeleton className="h-8 w-32 rounded-full" />
+          <Skeleton className="h-6 w-10 rounded-full" />
+          <Skeleton className="h-8 w-24 rounded-full" />
+        </div>
+
+        <div className="w-full max-w-lg">
+          <CardSkeleton className="min-h-[280px] rounded-[24px] border-[#e6e6f3]" lines={5} />
+        </div>
+
+        <div className="mt-5 w-full">
+          <Skeleton className="mx-auto h-4 w-48" />
+          <div className="mt-4 grid gap-3 sm:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <Skeleton className="h-[84px] rounded-2xl" key={index} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-center gap-2">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton
+              className={cn("h-1.5 rounded-full", index === 0 ? "w-7" : "w-3.5")}
+              key={index}
+            />
+          ))}
+        </div>
+      </main>
+    </FlashcardShell>
   );
 }
 
@@ -608,11 +649,13 @@ function CompletionSummary({
 function EmptyFlashcardState({
   actionHref,
   actionLabel,
+  onAction,
   title,
   description,
 }: {
   actionHref: string;
   actionLabel: string;
+  onAction?: () => void;
   title: string;
   description: string;
 }) {
@@ -626,9 +669,19 @@ function EmptyFlashcardState({
         <p className="mt-3 text-base font-medium text-[#676982]">
           {description}
         </p>
-        <Button asChild className="mt-6 h-10 rounded-full px-5 text-sm">
-          <Link to={actionHref}>{actionLabel}</Link>
-        </Button>
+        {onAction ? (
+          <Button
+            className="mt-6 h-10 rounded-full px-5 text-sm"
+            onClick={onAction}
+            type="button"
+          >
+            {actionLabel}
+          </Button>
+        ) : (
+          <Button asChild className="mt-6 h-10 rounded-full px-5 text-sm">
+            <Link to={actionHref}>{actionLabel}</Link>
+          </Button>
+        )}
       </section>
     </main>
   );

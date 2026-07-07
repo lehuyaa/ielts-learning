@@ -1,7 +1,10 @@
-import { AlertCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { APIError } from "@/api/api";
+import { CardSkeleton } from "@/components/state/CardSkeleton";
+import { EmptyState } from "@/components/state/EmptyState";
+import { ErrorState } from "@/components/state/ErrorState";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LessonList } from "@/features/topic/LessonList";
 import { TopicHeader } from "@/features/topic/TopicHeader";
 import { TopicHero } from "@/features/topic/TopicHero";
@@ -46,26 +49,29 @@ export function TopicDetailPage() {
 
       <main className="mx-auto grid max-w-[1200px] gap-6 px-4 py-8 md:px-6">
         {topicQuery.isLoading ? (
-          <TopicStateMessage
-            title="Loading topic"
-            description="Preparing the lesson list and your current progress."
-          />
+          <TopicLoadingSkeleton />
         ) : null}
 
         {errorMessage ? (
-          <TopicStateMessage
-            title="Topic unavailable"
+          <ErrorState
+            actionHref="/roadmap"
+            actionLabel="Back to roadmap"
             description={errorMessage}
-            tone="error"
+            onRetry={() => {
+              void topicQuery.refetch();
+            }}
+            title="Topic unavailable"
           />
         ) : null}
 
         {isEmpty ? (
           <>
             <TopicHero topic={topic} />
-            <TopicStateMessage
-              title="No lessons yet"
+            <EmptyState
+              actionHref="/roadmap"
+              actionLabel="Back to roadmap"
               description="This topic exists, but no lessons have been published for it."
+              title="No lessons yet"
             />
           </>
         ) : null}
@@ -138,29 +144,32 @@ function getTopicErrorMessage(error: Error | null) {
   return "Unable to load this topic right now.";
 }
 
-type TopicStateMessageProps = {
-  title: string;
-  description: string;
-  tone?: "default" | "error";
-};
-
-function TopicStateMessage({
-  title,
-  description,
-  tone = "default",
-}: TopicStateMessageProps) {
+function TopicLoadingSkeleton() {
   return (
-    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm">
-      {tone === "error" ? (
-        <AlertCircle
-          className="mx-auto size-8 text-destructive"
-          aria-hidden="true"
-        />
-      ) : null}
-      <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
-        {title}
-      </h2>
-      <p className="mt-3 text-base font-medium text-[#676982]">{description}</p>
-    </section>
+    <>
+      <section className="rounded-[28px] border border-[#e6e6f3] bg-white p-6 shadow-sm">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <Skeleton className="size-12 rounded-2xl" />
+              <Skeleton className="h-7 w-40" />
+            </div>
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-[28rem] max-w-full" />
+            <Skeleton className="h-4 w-[24rem] max-w-full" />
+          </div>
+          <div className="grid w-full max-w-xs gap-3">
+            <Skeleton className="h-20 rounded-2xl" />
+            <Skeleton className="h-20 rounded-2xl" />
+          </div>
+        </div>
+      </section>
+
+      <div className="grid gap-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <CardSkeleton className="border-[#e6e6f3]" key={index} lines={3} />
+        ))}
+      </div>
+    </>
   );
 }

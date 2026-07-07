@@ -1,7 +1,11 @@
-import { AlertCircle } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { APIError } from '@/api/api'
+import { CardSkeleton } from '@/components/state/CardSkeleton'
+import { EmptyState } from '@/components/state/EmptyState'
+import { ErrorState } from '@/components/state/ErrorState'
+import { ListSkeleton } from '@/components/state/ListSkeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import { LessonHeader } from '@/features/lesson/LessonHeader'
 import { LessonSidebar } from '@/features/lesson/LessonSidebar'
 import { VocabularyPreviewList } from '@/features/lesson/VocabularyPreviewList'
@@ -90,24 +94,28 @@ export function LessonDetailPage() {
 
       <main className="mx-auto grid max-w-[1320px] gap-6 px-4 py-6 lg:grid-cols-[1fr_320px] lg:px-6">
         {lessonQuery.isLoading ? (
-          <LessonStateMessage
-            description="Preparing vocabulary, progress, and lesson metadata."
-            title="Loading lesson"
-          />
+          <LessonLoadingSkeleton />
         ) : null}
 
         {errorMessage ? (
-          <LessonStateMessage
+          <ErrorState
+            actionHref={lesson.topicId ? `/topics/${lesson.topicId}` : '/roadmap'}
+            actionLabel="Back to topic"
             description={errorMessage}
+            onRetry={() => {
+              void lessonQuery.refetch()
+            }}
             title="Lesson unavailable"
-            tone="error"
+            className="lg:col-span-2"
           />
         ) : null}
 
         {isEmpty ? (
           <>
             <LessonMainContent lesson={lesson} />
-            <LessonStateMessage
+            <EmptyState
+              actionHref={lesson.topicId ? `/topics/${lesson.topicId}` : '/roadmap'}
+              actionLabel="Back to topic"
               description="This lesson exists, but no vocabulary has been added yet."
               title="No vocabulary yet"
             />
@@ -135,10 +143,10 @@ export function LessonDetailPage() {
         ) : null}
 
         {startErrorMessage ? (
-          <LessonStateMessage
+          <ErrorState
             description={startErrorMessage}
             title="Could not start lesson"
-            tone="error"
+            className="lg:col-span-2"
           />
         ) : null}
       </main>
@@ -243,29 +251,26 @@ function getLessonErrorMessage(error: Error | null) {
   return 'Unable to load this lesson right now.'
 }
 
-type LessonStateMessageProps = {
-  title: string
-  description: string
-  tone?: 'default' | 'error'
-}
-
-function LessonStateMessage({
-  title,
-  description,
-  tone = 'default',
-}: LessonStateMessageProps) {
+function LessonLoadingSkeleton() {
   return (
-    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm lg:col-span-2">
-      {tone === 'error' ? (
-        <AlertCircle
-          className="mx-auto size-8 text-destructive"
-          aria-hidden="true"
-        />
-      ) : null}
-      <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
-        {title}
-      </h2>
-      <p className="mt-3 text-base font-medium text-[#676982]">{description}</p>
-    </section>
+    <>
+      <section className="min-w-0">
+        <div className="mb-5 rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm">
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="mt-4 h-8 w-56 max-w-full" />
+          <div className="mt-4 space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+        </div>
+        <ListSkeleton count={4} itemClassName="border-[#e6e6f3]" />
+      </section>
+
+      <aside className="grid gap-5 self-start">
+        <CardSkeleton className="border-[#e6e6f3]" lines={4} />
+        <CardSkeleton className="border-[#e6e6f3]" lines={5} />
+        <CardSkeleton className="border-[#e6e6f3]" lines={3} />
+      </aside>
+    </>
   )
 }

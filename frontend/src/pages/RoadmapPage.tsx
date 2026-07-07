@@ -1,6 +1,10 @@
-import { AlertCircle, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 
 import { APIError } from "@/api/api";
+import { CardSkeleton } from "@/components/state/CardSkeleton";
+import { EmptyState } from "@/components/state/EmptyState";
+import { ErrorState } from "@/components/state/ErrorState";
+import { Skeleton } from "@/components/ui/skeleton";
 import { RoadmapBandSection } from "@/features/roadmap/RoadmapBandSection";
 import { RoadmapHeader } from "@/features/roadmap/RoadmapHeader";
 import { useRoadmap } from "@/features/roadmap/hooks/useRoadmap";
@@ -47,24 +51,27 @@ export function RoadmapPage() {
         />
 
         {roadmapQuery.isLoading ? (
-          <RoadmapStateMessage
-            title="Loading roadmap"
-            description="Preparing your band levels, topics, and lesson progress."
-          />
+          <RoadmapLoadingSkeleton />
         ) : null}
 
         {errorMessage ? (
-          <RoadmapStateMessage
-            title="Roadmap unavailable"
+          <ErrorState
+            actionHref="/dashboard"
+            actionLabel="Go to dashboard"
             description={errorMessage}
-            tone="error"
+            onRetry={() => {
+              void roadmapQuery.refetch();
+            }}
+            title="Roadmap unavailable"
           />
         ) : null}
 
         {isEmpty ? (
-          <RoadmapStateMessage
-            title="No roadmap data yet"
+          <EmptyState
+            actionHref="/dashboard"
+            actionLabel="Go to dashboard"
             description="Seed or publish a course to show band levels, topics, and lessons here."
+            title="No roadmap data yet"
           />
         ) : null}
 
@@ -96,33 +103,30 @@ function getRoadmapErrorMessage(error: Error | null) {
     : "Unable to load the roadmap right now.";
 }
 
-type RoadmapStateMessageProps = {
-  title: string;
-  description: string;
-  tone?: "default" | "error";
-};
-
-function RoadmapStateMessage({
-  title,
-  description,
-  tone = "default",
-}: RoadmapStateMessageProps) {
+function RoadmapLoadingSkeleton() {
   return (
-    <section className="relative py-10">
-      <div className="mx-auto max-w-sm rounded-2xl border border-[#e3e4f8] bg-white p-6 text-center">
-        {tone === "error" ? (
-          <AlertCircle
-            className="mx-auto size-8 text-destructive"
-            aria-hidden="true"
-          />
-        ) : null}
-        <h2 className="text-xl font-bold tracking-normal text-[#676982]">
-          {title}
-        </h2>
-        <p className="mt-3 text-base font-medium text-[#a6a8bb]">
-          {description}
-        </p>
-      </div>
+    <section className="relative space-y-8 py-2">
+      {Array.from({ length: 3 }).map((_, index) => (
+        <div className="relative z-10" key={index}>
+          <div className="mx-auto mb-6 flex w-full max-w-[320px] justify-center">
+            <div className="w-full rounded-2xl border border-[#e3e4f8] bg-white p-4 shadow-sm">
+              <div className="flex items-center gap-3">
+                <Skeleton className="size-10 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-5 w-28" />
+                  <Skeleton className="h-4 w-20" />
+                </div>
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <CardSkeleton className="border-[#e3e4f8]" lines={3} showIcon />
+            <CardSkeleton className="border-[#e3e4f8]" lines={3} showIcon />
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

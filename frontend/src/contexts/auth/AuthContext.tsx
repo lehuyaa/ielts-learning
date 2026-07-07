@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import {
@@ -6,10 +6,13 @@ import {
   register as registerRequest,
 } from '@/api/auth'
 import {
+  APIError,
   clearAccessToken,
   getAccessToken,
+  setUnauthorizedHandler,
   setAccessToken as persistAccessToken,
 } from '@/api/api'
+import { router } from '@/app/router'
 import { currentUserQueryKey } from '@/features/auth/hooks/useCurrentUser'
 import type { LoginInput, RegisterInput } from '@/types/auth'
 import type { User } from '@/types/user'
@@ -20,6 +23,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [accessToken, setAccessToken] = useState(() => getAccessToken())
 
+  const clearSession = useCallback(() => {
+    clearAccessToken()
+    setAccessToken(null)
+    queryClient.clear()
+  }, [queryClient])
+
   const saveSession = useCallback(
     (token: string, user: User) => {
       persistAccessToken(token)
@@ -29,6 +38,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [queryClient],
   )
+
+  useEffect(() => {
+    setUnauthorizedHandler((error: APIError) => {
+      const pathname = window.location.pathname
+      const isAuthPage =
+        pathname === '/login' || pathname === '/register'
+
+      clearSession()
+
+      if (!isAuthPage) {
+        void router.navigate('/login', {
+          replace: true,
+          state: {
+            sessionExpired: true,
+            reason: error.code,
+          },
+        })
+      }
+    })
+
+    return () => {
+      setUnauthorizedHandler(null)
+    }
+  }, [clearSession])
 
   const loginMutation = useMutation({
     mutationFn: loginRequest,
@@ -59,10 +92,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const logout = useCallback(() => {
-    clearAccessToken()
-    setAccessToken(null)
-    queryClient.clear()
-  }, [queryClient])
+    clearSession()
+  }, [clearSession])
 
   const value = useMemo(
     () => ({

@@ -22,6 +22,9 @@ export function DashboardPage() {
         !dashboardQuery.data
       }
       isLoading={dashboardQuery.isLoading}
+      onRetry={() => {
+        void dashboardQuery.refetch()
+      }}
     />
   )
 }

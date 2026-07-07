@@ -1,5 +1,4 @@
 import {
-  AlertCircle,
   ArrowLeft,
   BookOpen,
   ChevronDown,
@@ -16,6 +15,10 @@ import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { APIError } from "@/api/api";
+import { CardSkeleton } from "@/components/state/CardSkeleton";
+import { EmptyState } from "@/components/state/EmptyState";
+import { ErrorState } from "@/components/state/ErrorState";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,6 +83,14 @@ export function VocabularyPage() {
     setPage(defaultPage);
   }
 
+  function clearFilters() {
+    setQuery("");
+    setDifficulty("All");
+    setBand("All");
+    setStatus("All");
+    setPage(defaultPage);
+  }
+
   return (
     <div className="min-h-screen bg-[#f7f7fc] text-[#10111f]">
       <VocabularyHeader
@@ -140,26 +151,34 @@ export function VocabularyPage() {
           </div>
         </section>
 
-        {vocabularyQuery.isLoading ? (
-          <VocabularyStateMessage
-            description="Loading words, progress, and filter results."
-            title="Loading vocabulary"
-          />
-        ) : null}
+        {vocabularyQuery.isLoading ? <VocabularyLoadingSkeleton /> : null}
 
         {errorMessage ? (
-          <VocabularyStateMessage
+          <ErrorState
+            actionHref="/dashboard"
+            actionLabel="Go to dashboard"
             description={errorMessage}
+            onRetry={() => {
+              void vocabularyQuery.refetch();
+            }}
             title="Vocabulary unavailable"
-            tone="error"
+            className="mt-6"
           />
         ) : null}
 
         {isEmpty ? (
-          <VocabularyStateMessage
+          <EmptyState
+            actionLabel="Clear filters"
+            onAction={clearFilters}
             description="Try a different search term or clear one of the filters."
-            icon="filters"
             title="No matching words"
+            className="mt-6"
+            icon={
+              <SlidersHorizontal
+                className="size-5 text-[#85889c]"
+                aria-hidden="true"
+              />
+            }
           />
         ) : null}
 
@@ -453,37 +472,28 @@ function PaginationControls({
   );
 }
 
-type VocabularyStateMessageProps = {
-  title: string;
-  description: string;
-  tone?: "default" | "error";
-  icon?: "filters";
-};
-
-function VocabularyStateMessage({
-  title,
-  description,
-  tone = "default",
-  icon,
-}: VocabularyStateMessageProps) {
+function VocabularyLoadingSkeleton() {
   return (
-    <section className="mt-6 rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm">
-      {tone === "error" ? (
-        <AlertCircle
-          className="mx-auto size-9 text-destructive"
-          aria-hidden="true"
-        />
-      ) : null}
-      {icon === "filters" ? (
-        <SlidersHorizontal
-          className="mx-auto size-9 text-[#85889c]"
-          aria-hidden="true"
-        />
-      ) : null}
-      <h2 className="mt-4 text-xl font-bold tracking-normal">{title}</h2>
-      <p className="mx-auto mt-3 max-w-md text-base font-medium text-[#676982]">
-        {description}
-      </p>
+    <section className="mt-6">
+      <div className="grid gap-4 lg:grid-cols-2">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <CardSkeleton
+            className="border-[#e6e6f3]"
+            key={index}
+            lines={4}
+            showIcon
+          />
+        ))}
+      </div>
+      <div className="mt-6 rounded-2xl border border-[#e6e6f3] bg-white p-4 shadow-sm">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <Skeleton className="h-4 w-40" />
+          <div className="flex gap-3">
+            <Skeleton className="h-11 w-28 rounded-full" />
+            <Skeleton className="h-11 w-24 rounded-full" />
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

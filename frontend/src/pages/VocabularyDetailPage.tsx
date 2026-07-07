@@ -1,5 +1,4 @@
 import {
-  AlertCircle,
   ArrowLeft,
   ArrowRight,
   Bookmark,
@@ -11,9 +10,13 @@ import {
 } from 'lucide-react'
 import type React from 'react'
 import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { APIError } from '@/api/api'
+import { EmptyState } from '@/components/state/EmptyState'
+import { ErrorState } from '@/components/state/ErrorState'
+import { CardSkeleton } from '@/components/state/CardSkeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { useVocabularyDetail } from '@/features/vocabulary/hooks/useVocabularyDetail'
 import { mapVocabularyDetail } from '@/features/vocabulary/mapVocabulary'
@@ -43,10 +46,7 @@ export function VocabularyDetailPage() {
   if (vocabularyQuery.isLoading) {
     return (
       <VocabularyDetailShell navigateBack={() => navigate('/vocabulary')}>
-        <VocabularyDetailState
-          description="Loading word metadata, examples, and your progress."
-          title="Loading word"
-        />
+        <VocabularyDetailLoadingSkeleton />
       </VocabularyDetailShell>
     )
   }
@@ -54,10 +54,14 @@ export function VocabularyDetailPage() {
   if (errorMessage) {
     return (
       <VocabularyDetailShell navigateBack={() => navigate('/vocabulary')}>
-        <VocabularyDetailState
+        <ErrorState
+          actionHref="/vocabulary"
+          actionLabel="Back to vocabulary"
           description={errorMessage}
+          onRetry={() => {
+            void vocabularyQuery.refetch()
+          }}
           title="Word unavailable"
-          tone="error"
         />
       </VocabularyDetailShell>
     )
@@ -408,47 +412,50 @@ function StatRow({ label, value }: { label: string; value: string }) {
 
 function VocabularyNotFound() {
   return (
-    <section className="mx-auto w-full max-w-md rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm">
-      <h1 className="text-2xl font-bold tracking-normal">Word not found</h1>
-      <p className="mt-3 text-base font-medium text-[#676982]">
-        This vocabulary item does not exist yet.
-      </p>
-      <Button asChild className="mt-8 rounded-full">
-        <Link to="/vocabulary">Back to vocabulary</Link>
-      </Button>
-    </section>
+    <EmptyState
+      actionHref="/vocabulary"
+      actionLabel="Back to vocabulary"
+      className="mx-auto w-full max-w-md"
+      description="This vocabulary item does not exist yet."
+      title="Word not found"
+    />
   )
 }
 
-type VocabularyDetailStateProps = {
-  title: string
-  description: string
-  tone?: 'default' | 'error'
-}
-
-function VocabularyDetailState({
-  title,
-  description,
-  tone = 'default',
-}: VocabularyDetailStateProps) {
+function VocabularyDetailLoadingSkeleton() {
   return (
-    <section className="rounded-2xl border border-[#e6e6f3] bg-white p-6 text-center shadow-sm">
-      {tone === 'error' ? (
-        <AlertCircle
-          className="mx-auto size-9 text-destructive"
-          aria-hidden="true"
-        />
-      ) : null}
-      <h2 className="mt-4 text-xl font-bold tracking-normal">{title}</h2>
-      <p className="mx-auto mt-3 max-w-md text-base font-medium text-[#676982]">
-        {description}
-      </p>
-      {tone === 'error' ? (
-        <Button asChild className="mt-8 rounded-full">
-          <Link to="/vocabulary">Back to vocabulary</Link>
-        </Button>
-      ) : null}
-    </section>
+    <>
+      <section className="rounded-[28px] bg-white p-6 shadow-sm md:p-7">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-3">
+              <Skeleton className="h-8 w-24 rounded-full" />
+              <Skeleton className="h-8 w-24 rounded-full" />
+            </div>
+            <Skeleton className="h-12 w-56 max-w-full" />
+            <Skeleton className="h-6 w-48 max-w-full" />
+            <Skeleton className="h-5 w-64 max-w-full" />
+          </div>
+          <div className="grid gap-4">
+            <Skeleton className="h-10 w-28 rounded-full" />
+            <Skeleton className="h-5 w-24" />
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
+        <div className="space-y-5">
+          <Skeleton className="h-12 rounded-[22px]" />
+          <CardSkeleton className="border-[#e6e6f3]" lines={4} />
+          <CardSkeleton className="border-[#e6e6f3]" lines={4} />
+        </div>
+        <div className="space-y-5">
+          <CardSkeleton className="border-[#e6e6f3]" lines={3} />
+          <CardSkeleton className="border-[#e6e6f3]" lines={4} />
+          <CardSkeleton className="border-[#e6e6f3]" lines={2} />
+        </div>
+      </section>
+    </>
   )
 }
 
