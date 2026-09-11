@@ -2,13 +2,17 @@ import { ArrowLeft, HelpCircle, MessageSquare, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { APIError } from '@/api/api'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/contexts/toast/useToast'
 import {
-  addCustomScenario,
+  addScenario,
   type ScenarioLevel,
 } from '@/features/aiConversation/scenarios'
+import { useCreateScenario } from '@/features/aiConversation/hooks/useCreateScenario'
 import { cn } from '@/lib/utils'
+import type { ScenarioLevelApi } from '@/types/aiConversation'
 
 const levels: ScenarioLevel[] = ['Beginner', 'Intermediate', 'Advanced']
 
@@ -18,12 +22,22 @@ const levelSelectedClasses: Record<ScenarioLevel, string> = {
   Advanced: 'border-red-300 bg-red-50 text-red-700',
 }
 
+const levelToApi: Record<ScenarioLevel, ScenarioLevelApi> = {
+  Beginner: 'BEGINNER',
+  Intermediate: 'INTERMEDIATE',
+  Advanced: 'ADVANCED',
+}
+
 export function AIConversationCreatePage() {
   const navigate = useNavigate()
+  const { showToast } = useToast()
+  const createScenarioMutation = useCreateScenario()
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [level, setLevel] = useState<ScenarioLevel>('Beginner')
   const [situationContext, setSituationContext] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
   const canSubmit = title.trim().length > 0 && description.trim().length > 0
 
@@ -53,18 +67,49 @@ export function AIConversationCreatePage() {
           className="space-y-6"
           onSubmit={(event) => {
             event.preventDefault()
-            if (!canSubmit) {
+            if (!canSubmit || createScenarioMutation.isPending) {
               return
             }
 
-            const scenario = addCustomScenario({
-              title: title.trim(),
-              description: description.trim(),
-              duration: '5-10 min',
-              level,
-              situationContext,
-            })
-            navigate(`/ai-conversation/${scenario.slug}`)
+            setFieldErrors({})
+
+            createScenarioMutation.mutate(
+              {
+                title: title.trim(),
+                description: description.trim(),
+                situationContext: situationContext.trim() || undefined,
+                level: levelToApi[level],
+                duration: '5-10 min',
+              },
+              {
+                onSuccess: (created) => {
+                  addScenario({
+                    slug: created.slug,
+                    title: created.title,
+                    description: created.description,
+                    duration: created.duration,
+                    level,
+                    situationContext: created.situationContext,
+                  })
+                  navigate('/ai-conversation')
+                },
+                onError: (error) => {
+                  if (error instanceof APIError && error.fields) {
+                    setFieldErrors(error.fields)
+                    return
+                  }
+
+                  showToast({
+                    title: 'Could not create scenario',
+                    description:
+                      error instanceof Error
+                        ? error.message
+                        : 'Please try creating the scenario again.',
+                    tone: 'error',
+                  })
+                },
+              },
+            )
           }}
         >
           <div className="relative w-fit">
@@ -86,6 +131,9 @@ export function AIConversationCreatePage() {
               placeholder="e.g. Doctor's Appointment"
               value={title}
             />
+            {fieldErrors.title ? (
+              <p className="text-xs text-red-500">{fieldErrors.title}</p>
+            ) : null}
           </div>
 
           <div className="space-y-1.5">
@@ -101,6 +149,9 @@ export function AIConversationCreatePage() {
               placeholder="e.g. Practice explaining symptoms and asking the doctor questions."
               value={description}
             />
+            {fieldErrors.description ? (
+              <p className="text-xs text-red-500">{fieldErrors.description}</p>
+            ) : null}
           </div>
 
           <div className="space-y-2">
@@ -124,6 +175,9 @@ export function AIConversationCreatePage() {
                 </button>
               ))}
             </div>
+            {fieldErrors.level ? (
+              <p className="text-xs text-red-500">{fieldErrors.level}</p>
+            ) : null}
           </div>
 
           <div className="space-y-1.5">
@@ -146,13 +200,25 @@ export function AIConversationCreatePage() {
               rows={4}
               value={situationContext}
             />
-            <p className="text-xs text-muted-foreground">
-              The AI will use this context to guide the conversation.
-            </p>
+            {fieldErrors.situationContext ? (
+              <p className="text-xs text-red-500">
+                {fieldErrors.situationContext}
+              </p>
+            ) : (
+              <p className="text-xs text-muted-foreground">
+                The AI will use this context to guide the conversation.
+              </p>
+            )}
           </div>
 
-          <Button className="w-full rounded-xl py-6 text-base" disabled={!canSubmit} type="submit">
-            Create Scenario
+          <Button
+            className="w-full rounded-xl py-6 text-base"
+            disabled={!canSubmit || createScenarioMutation.isPending}
+            type="submit"
+          >
+            {createScenarioMutation.isPending
+              ? 'Creating…'
+              : 'Create Scenario'}
           </Button>
         </form>
       </div>

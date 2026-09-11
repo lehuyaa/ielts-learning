@@ -11,6 +11,7 @@ import (
 	"ielts-learning/backend/internal/config"
 	"ielts-learning/backend/internal/database"
 	"ielts-learning/backend/internal/middleware"
+	aiconversationmodule "ielts-learning/backend/internal/modules/aiconversation"
 	authmodule "ielts-learning/backend/internal/modules/auth"
 	dashboardmodule "ielts-learning/backend/internal/modules/dashboard"
 	flashcardmodule "ielts-learning/backend/internal/modules/flashcard"
@@ -73,6 +74,7 @@ func main() {
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
+	aiconversationmodule.RegisterRoutes(api, db, jwtManager)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)

@@ -1,5 +1,44 @@
 basePath: /api/v1
 definitions:
+  aiconversation.CreateScenarioRequest:
+    properties:
+      description:
+        type: string
+      duration:
+        type: string
+      level:
+        $ref: '#/definitions/models.DifficultyLevel'
+      situationContext:
+        type: string
+      title:
+        type: string
+    type: object
+  aiconversation.ListScenariosResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/aiconversation.ScenarioResponse'
+        type: array
+    type: object
+  aiconversation.ScenarioResponse:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      duration:
+        type: string
+      id:
+        type: integer
+      level:
+        $ref: '#/definitions/models.DifficultyLevel'
+      situationContext:
+        type: string
+      slug:
+        type: string
+      title:
+        type: string
+    type: object
   auth.AuthResponse:
     properties:
       accessToken:
@@ -1379,6 +1418,77 @@ paths:
       summary: Preview a vocabulary Excel import
       tags:
       - Vocabularies
+  /ai-conversations/scenarios:
+    get:
+      consumes:
+      - application/json
+      description: Return the authenticated user's AI Conversation scenarios.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/aiconversation.ListScenariosResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List conversation scenarios
+      tags:
+      - AI Conversation
+    post:
+      consumes:
+      - application/json
+      description: Create a custom AI Conversation practice scenario owned by the
+        authenticated user.
+      parameters:
+      - description: Create scenario request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/aiconversation.CreateScenarioRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/aiconversation.ScenarioResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Create a conversation scenario
+      tags:
+      - AI Conversation
   /auth/login:
     post:
       consumes:

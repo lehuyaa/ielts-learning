@@ -1,11 +1,13 @@
+import { LogOut } from 'lucide-react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { APIError } from '@/api/api'
+import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/auth/useAuth'
 import { useCurrentUser } from '@/features/auth/hooks/useCurrentUser'
 
 export function ProtectedRoute() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, logout } = useAuth()
   const currentUserQuery = useCurrentUser()
   const location = useLocation()
 
@@ -41,6 +43,14 @@ export function ProtectedRoute() {
           <p className="mt-1 text-muted-foreground">
             Please try again in a moment.
           </p>
+          <Button
+            className="mt-4 gap-1.5 rounded-full"
+            onClick={logout}
+            type="button"
+          >
+            <LogOut className="size-4" aria-hidden="true" />
+            Log out
+          </Button>
         </div>
       </main>
     )

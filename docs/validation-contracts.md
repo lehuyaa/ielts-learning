@@ -135,3 +135,46 @@ At least one supported field must be provided.
 - max 20
 - allowed format: language or language-region
 - regex: `^[a-z]{2}(-[a-z]{2})?$`
+
+---
+
+## AI Conversation - Create Scenario
+
+Endpoint: `POST /api/v1/ai-conversations/scenarios`.
+
+Fields:
+
+### title
+
+- required
+- trim
+- string
+- min 3
+- max 120
+
+### description
+
+- required
+- trim
+- string
+- max 500
+
+### situationContext
+
+- optional
+- trim
+- string
+- max 2000
+
+### level
+
+- optional (defaults to `BEGINNER` when omitted)
+- allowed values: `BEGINNER`, `INTERMEDIATE`, `ADVANCED`
+
+### duration
+
+- optional
+- trim
+- string
+- max 50
+- free-text, for example `5-10 min`

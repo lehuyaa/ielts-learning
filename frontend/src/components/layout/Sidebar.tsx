@@ -3,6 +3,7 @@ import {
   BookOpen,
   // Brain,
   FileSpreadsheet,
+  LogOut,
   MessageSquare,
   Star,
   Target,
@@ -11,6 +12,7 @@ import {
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
+import { useAuth } from "@/contexts/auth/useAuth";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { cn } from "@/lib/utils";
 
@@ -85,6 +87,7 @@ function getNavLinkClass(isActive: boolean) {
 
 export function Sidebar() {
   const { pathname } = useLocation();
+  const { logout } = useAuth();
   const currentUserQuery = useCurrentUser();
   const isAdmin = currentUserQuery.data?.role === "ADMIN";
 
@@ -147,6 +150,17 @@ export function Sidebar() {
           <div className="h-full w-3/5 rounded-full bg-amber-500" />
         </div>
         <div className="mt-1 text-xs text-amber-700">6 / 10 words</div>
+      </div>
+
+      <div className="border-t border-border p-3">
+        <button
+          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+          onClick={logout}
+          type="button"
+        >
+          <LogOut className="size-[18px]" aria-hidden="true" />
+          Log out
+        </button>
       </div>
     </aside>
   );

@@ -1,14 +1,18 @@
 import { Clock, MessageSquare, Plus, Star } from "lucide-react";
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 import { Link } from "react-router-dom";
 
+import { getApiErrorMessage } from "@/api/api";
+import { CardSkeleton } from "@/components/state/CardSkeleton";
+import { ErrorState } from "@/components/state/ErrorState";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
+import { useScenarios } from "@/features/aiConversation/hooks/useScenarios";
 import {
-  getCustomScenarios,
-  scenarios,
-  subscribeToCustomScenarios,
+  getScenarios,
+  replaceScenariosFromApi,
+  subscribeToScenarios,
   type Scenario,
   type ScenarioLevel,
 } from "@/features/aiConversation/scenarios";
@@ -42,10 +46,14 @@ const levelBadgeClasses: Record<ScenarioLevel, string> = {
 };
 
 export function AIConversationPage() {
-  const myScenarios = useSyncExternalStore(
-    subscribeToCustomScenarios,
-    getCustomScenarios,
-  );
+  const scenarios = useSyncExternalStore(subscribeToScenarios, getScenarios);
+  const scenariosQuery = useScenarios();
+
+  useEffect(() => {
+    if (scenariosQuery.data) {
+      replaceScenariosFromApi(scenariosQuery.data.items);
+    }
+  }, [scenariosQuery.data]);
 
   return (
     <div className="space-y-6">
@@ -77,23 +85,11 @@ export function AIConversationPage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold text-foreground">
-          Choose a scenario
-        </h2>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {scenarios.map((scenario) => (
-            <ScenarioCard key={scenario.slug} scenario={scenario} />
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-3">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-bold text-foreground">My scenarios</h2>
+            <h2 className="text-lg font-bold text-foreground">Scenarios</h2>
             <p className="text-sm text-muted-foreground">
-              Scenarios you created
+              Choose a scenario or create your own
             </p>
           </div>
           <Button asChild className="gap-1.5 rounded-full">
@@ -104,9 +100,26 @@ export function AIConversationPage() {
           </Button>
         </div>
 
-        {myScenarios.length > 0 ? (
+        {scenariosQuery.isLoading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {myScenarios.map((scenario) => (
+            {Array.from({ length: 6 }).map((_, index) => (
+              <CardSkeleton key={index} lines={2} showIcon />
+            ))}
+          </div>
+        ) : scenariosQuery.error ? (
+          <ErrorState
+            description={getApiErrorMessage(
+              scenariosQuery.error,
+              "Unable to load your scenarios right now.",
+            )}
+            onRetry={() => {
+              void scenariosQuery.refetch();
+            }}
+            title="Could not load your scenarios"
+          />
+        ) : scenarios.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {scenarios.map((scenario) => (
               <ScenarioCard key={scenario.slug} scenario={scenario} />
             ))}
           </div>

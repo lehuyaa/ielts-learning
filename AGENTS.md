@@ -493,6 +493,7 @@ Rules:
 5. Use soft delete only where useful.
 6. Seed data should be deterministic.
 7. MySQL charset should be utf8mb4.
+8. Never drop, truncate, or recreate a database or table (including the local dev DB) to resolve a seed/migration error. Ask the user first and prefer a targeted fix: delete only the specific conflicting rows, or fix the underlying bug.
 
 ---
 

@@ -2,7 +2,8 @@ import { ArrowLeft, HelpCircle, Mic, Send } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
-import { getScenarioBySlug } from '@/features/aiConversation/scenarios'
+import { useScenarios } from '@/features/aiConversation/hooks/useScenarios'
+import { mapScenarioResponseToScenario } from '@/features/aiConversation/scenarios'
 import { cn } from '@/lib/utils'
 
 type Message = {
@@ -21,7 +22,15 @@ function formatElapsed(totalSeconds: number) {
 export function AIConversationSessionPage() {
   const { scenarioSlug } = useParams()
   const navigate = useNavigate()
-  const scenario = getScenarioBySlug(scenarioSlug)
+  const scenariosQuery = useScenarios()
+
+  const scenarioResponse = scenariosQuery.data?.items.find(
+    (item) => item.slug === scenarioSlug,
+  )
+  const scenario = scenarioResponse
+    ? mapScenarioResponseToScenario(scenarioResponse)
+    : undefined
+  const isResolvingScenario = !scenario && scenariosQuery.isLoading
 
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [messages, setMessages] = useState<Message[]>([])
@@ -61,6 +70,14 @@ export function AIConversationSessionPage() {
   }, [messages, isAiTyping])
 
   if (!scenario) {
+    if (isResolvingScenario) {
+      return (
+        <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
+          Loading scenario…
+        </div>
+      )
+    }
+
     return <Navigate replace to="/ai-conversation" />
   }
 
