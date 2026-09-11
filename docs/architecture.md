@@ -663,7 +663,7 @@ Recommended handler annotation example:
 
 ```txt
 APP_ENV=development
-APP_PORT=8080
+APP_PORT=8081
 
 DB_HOST=localhost
 DB_PORT=3306
@@ -674,13 +674,13 @@ DB_NAME=ielts_vocab
 JWT_SECRET=change_me
 JWT_EXPIRES_IN_HOURS=168
 
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:5175
 ```
 
 ### Frontend `.env`
 
 ```txt
-VITE_API_BASE_URL=http://localhost:8080/api/v1
+VITE_API_BASE_URL=http://localhost:8081/api/v1
 ```
 
 ---
@@ -778,7 +778,7 @@ userRole
 Backend should allow frontend origin:
 
 ```txt
-http://localhost:5173
+http://localhost:5175
 ```
 
 Allow headers:

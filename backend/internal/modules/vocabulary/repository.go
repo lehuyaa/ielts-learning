@@ -1,6 +1,7 @@
 package vocabulary
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -139,6 +140,174 @@ func (r Repository) FindTopicContext(vocabularyIDs []uint) (map[uint]VocabularyT
 	}
 
 	return contexts, nil
+}
+
+func (r Repository) FindTopicsBySlugs(slugs []string) (map[string]models.Topic, error) {
+	result := make(map[string]models.Topic)
+	if len(slugs) == 0 {
+		return result, nil
+	}
+
+	var topics []models.Topic
+	if err := r.db.Where("slug IN ?", slugs).Find(&topics).Error; err != nil {
+		return nil, fmt.Errorf("find topics by slug: %w", err)
+	}
+
+	for _, topic := range topics {
+		result[topic.Slug] = topic
+	}
+	return result, nil
+}
+
+func (r Repository) FindLessonsByTopicIDsAndSlugs(topicIDs []uint, slugs []string) ([]models.Lesson, error) {
+	if len(topicIDs) == 0 || len(slugs) == 0 {
+		return nil, nil
+	}
+
+	var lessons []models.Lesson
+	err := r.db.
+		Where("topic_id IN ? AND slug IN ?", topicIDs, slugs).
+		Find(&lessons).Error
+	if err != nil {
+		return nil, fmt.Errorf("find lessons by topic and slug: %w", err)
+	}
+
+	return lessons, nil
+}
+
+type ImportCommitStats struct {
+	VocabulariesCreated int
+	VocabulariesUpdated int
+	LessonLinksCreated  int
+	LessonLinksUpdated  int
+}
+
+// CommitImportRows persists every valid row in a single transaction, upserting
+// the Vocabulary by slug and the LessonVocabulary link by (lessonId, vocabularyId).
+// Invalid rows are skipped. Each committed row's VocabularyAction/LinkAction is
+// set to CREATE or UPDATE so the caller can report a per-row outcome.
+func (r Repository) CommitImportRows(rows []ImportRow) (ImportCommitStats, error) {
+	var stats ImportCommitStats
+
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		for i := range rows {
+			row := &rows[i]
+			if !row.Valid() {
+				continue
+			}
+
+			vocabulary, vocabularyAction, err := upsertVocabulary(tx, *row)
+			if err != nil {
+				return fmt.Errorf("row %d: upsert vocabulary: %w", row.RowNumber, err)
+			}
+			row.VocabularyAction = vocabularyAction
+			if vocabularyAction == "CREATE" {
+				stats.VocabulariesCreated++
+			} else {
+				stats.VocabulariesUpdated++
+			}
+
+			linkAction, err := upsertLessonVocabulary(tx, row.LessonID, vocabulary.ID, row.OrderIndex, row.IsRequired)
+			if err != nil {
+				return fmt.Errorf("row %d: upsert lesson vocabulary: %w", row.RowNumber, err)
+			}
+			row.LinkAction = linkAction
+			if linkAction == "CREATE" {
+				stats.LessonLinksCreated++
+			} else {
+				stats.LessonLinksUpdated++
+			}
+		}
+
+		return nil
+	})
+	if err != nil {
+		return ImportCommitStats{}, err
+	}
+
+	return stats, nil
+}
+
+func upsertVocabulary(tx *gorm.DB, row ImportRow) (models.Vocabulary, string, error) {
+	synonymsJSON, _ := json.Marshal(row.Synonyms)
+	antonymsJSON, _ := json.Marshal(row.Antonyms)
+	collocationsJSON, _ := json.Marshal(row.Collocations)
+
+	var vocabulary models.Vocabulary
+	err := tx.Where("slug = ?", row.Slug).First(&vocabulary).Error
+	switch {
+	case err == nil:
+		vocabulary.Word = row.Word
+		vocabulary.IPA = row.IPA
+		vocabulary.PartOfSpeech = row.PartOfSpeech
+		vocabulary.MeaningVI = row.MeaningVI
+		vocabulary.MeaningEN = row.MeaningEN
+		vocabulary.ShortDefinition = row.ShortDefinition
+		vocabulary.ExampleSentence = row.ExampleSentence
+		vocabulary.ExampleMeaningVI = row.ExampleMeaningVI
+		vocabulary.ExampleSource = row.ExampleSource
+		vocabulary.SynonymsJSON = synonymsJSON
+		vocabulary.AntonymsJSON = antonymsJSON
+		vocabulary.CollocationsJSON = collocationsJSON
+		vocabulary.Difficulty = row.Difficulty
+		vocabulary.TargetBand = row.TargetBand
+
+		if err := tx.Save(&vocabulary).Error; err != nil {
+			return models.Vocabulary{}, "", err
+		}
+		return vocabulary, "UPDATE", nil
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		vocabulary = models.Vocabulary{
+			Word:             row.Word,
+			Slug:             row.Slug,
+			IPA:              row.IPA,
+			PartOfSpeech:     row.PartOfSpeech,
+			MeaningVI:        row.MeaningVI,
+			MeaningEN:        row.MeaningEN,
+			ShortDefinition:  row.ShortDefinition,
+			ExampleSentence:  row.ExampleSentence,
+			ExampleMeaningVI: row.ExampleMeaningVI,
+			ExampleSource:    row.ExampleSource,
+			SynonymsJSON:     synonymsJSON,
+			AntonymsJSON:     antonymsJSON,
+			CollocationsJSON: collocationsJSON,
+			Difficulty:       row.Difficulty,
+			TargetBand:       row.TargetBand,
+		}
+		if err := tx.Create(&vocabulary).Error; err != nil {
+			return models.Vocabulary{}, "", err
+		}
+		return vocabulary, "CREATE", nil
+	default:
+		return models.Vocabulary{}, "", err
+	}
+}
+
+func upsertLessonVocabulary(tx *gorm.DB, lessonID uint, vocabularyID uint, orderIndex int, isRequired bool) (string, error) {
+	var link models.LessonVocabulary
+	err := tx.Where("lesson_id = ? AND vocabulary_id = ?", lessonID, vocabularyID).First(&link).Error
+	switch {
+	case err == nil:
+		link.OrderIndex = orderIndex
+		link.IsRequired = isRequired
+		if err := tx.Save(&link).Error; err != nil {
+			return "", err
+		}
+		return "UPDATE", nil
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		link = models.LessonVocabulary{
+			LessonID:     lessonID,
+			VocabularyID: vocabularyID,
+			OrderIndex:   orderIndex,
+			IsRequired:   isRequired,
+		}
+		if err := tx.Create(&link).Error; err != nil {
+			return "", err
+		}
+		return "CREATE", nil
+	default:
+		return "", err
+	}
 }
 
 func (r Repository) filteredVocabularyQuery(userID uint, query ListQuery) *gorm.DB {

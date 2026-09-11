@@ -1128,6 +1128,57 @@ definitions:
       word:
         type: string
     type: object
+  vocabulary.ImportResultResponse:
+    properties:
+      dryRun:
+        type: boolean
+      lessonLinksCreated:
+        type: integer
+      lessonLinksUpdated:
+        type: integer
+      rows:
+        items:
+          $ref: '#/definitions/vocabulary.ImportRowResult'
+        type: array
+      summary:
+        $ref: '#/definitions/vocabulary.ImportSummary'
+      vocabulariesCreated:
+        type: integer
+      vocabulariesUpdated:
+        type: integer
+    type: object
+  vocabulary.ImportRowResult:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+      lessonSlug:
+        type: string
+      linkAction:
+        type: string
+      row:
+        type: integer
+      slug:
+        type: string
+      topicSlug:
+        type: string
+      valid:
+        type: boolean
+      vocabularyAction:
+        type: string
+      word:
+        type: string
+    type: object
+  vocabulary.ImportSummary:
+    properties:
+      invalidRows:
+        type: integer
+      totalRows:
+        type: integer
+      validRows:
+        type: integer
+    type: object
   vocabulary.ListItemResponse:
     properties:
       difficulty:
@@ -1237,6 +1288,97 @@ info:
   title: IELTS Learning API
   version: v1
 paths:
+  /admin/vocabularies/import:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 'Parse, validate, and commit an uploaded Excel file of vocabulary
+        rows: upserts each vocabulary by slug and assigns it to the given topic/lesson.
+        Admin only.'
+      parameters:
+      - description: Excel file (.xlsx) with vocabulary rows
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/vocabulary.ImportResultResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Commit a vocabulary Excel import
+      tags:
+      - Vocabularies
+  /admin/vocabularies/import/preview:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Parse and validate an uploaded Excel file of vocabulary rows without
+        writing to the database. Admin only.
+      parameters:
+      - description: Excel file (.xlsx) with vocabulary rows
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/vocabulary.ImportResultResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Preview a vocabulary Excel import
+      tags:
+      - Vocabularies
   /auth/login:
     post:
       consumes:

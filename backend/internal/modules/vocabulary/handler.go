@@ -13,12 +13,78 @@ import (
 	"ielts-learning/backend/internal/shared/response"
 )
 
+const maxImportFileSizeBytes = 5 << 20 // 5MB
+
 type Handler struct {
 	service Service
 }
 
 func NewHandler(service Service) Handler {
 	return Handler{service: service}
+}
+
+// ImportPreview godoc
+// @Summary Preview a vocabulary Excel import
+// @Description Parse and validate an uploaded Excel file of vocabulary rows without writing to the database. Admin only.
+// @Tags Vocabularies
+// @Accept multipart/form-data
+// @Produce json
+// @Security BearerAuth
+// @Param file formData file true "Excel file (.xlsx) with vocabulary rows"
+// @Success 200 {object} response.SuccessResponse{data=ImportResultResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /admin/vocabularies/import/preview [post]
+func (h Handler) ImportPreview(c *gin.Context) {
+	h.runImport(c, true)
+}
+
+// Import godoc
+// @Summary Commit a vocabulary Excel import
+// @Description Parse, validate, and commit an uploaded Excel file of vocabulary rows: upserts each vocabulary by slug and assigns it to the given topic/lesson. Admin only.
+// @Tags Vocabularies
+// @Accept multipart/form-data
+// @Produce json
+// @Security BearerAuth
+// @Param file formData file true "Excel file (.xlsx) with vocabulary rows"
+// @Success 200 {object} response.SuccessResponse{data=ImportResultResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /admin/vocabularies/import [post]
+func (h Handler) Import(c *gin.Context) {
+	h.runImport(c, false)
+}
+
+func (h Handler) runImport(c *gin.Context, dryRun bool) {
+	fileHeader, err := c.FormFile("file")
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "INVALID_INPUT", `An Excel file is required under the "file" field`)
+		return
+	}
+
+	if fileHeader.Size > maxImportFileSizeBytes {
+		response.Error(c, http.StatusBadRequest, "INVALID_INPUT", "File is too large (max 5MB)")
+		return
+	}
+
+	file, err := fileHeader.Open()
+	if err != nil {
+		response.Error(c, http.StatusBadRequest, "INVALID_INPUT", "Unable to read uploaded file")
+		return
+	}
+	defer file.Close()
+
+	result, err := h.service.Import(file, dryRun)
+	if err != nil {
+		writeVocabularyError(c, err)
+		return
+	}
+
+	response.OK(c, result)
 }
 
 // List godoc
@@ -198,6 +264,8 @@ func writeVocabularyError(c *gin.Context, err error) {
 		response.Error(c, http.StatusNotFound, "VOCABULARY_NOT_FOUND", "Vocabulary was not found")
 	case errors.Is(err, ErrUserNotFound):
 		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+	case errors.Is(err, ErrImportFileInvalid):
+		response.Error(c, http.StatusBadRequest, "INVALID_FILE", err.Error())
 	default:
 		response.Error(c, http.StatusInternalServerError, "INTERNAL_ERROR", "Something went wrong")
 	}

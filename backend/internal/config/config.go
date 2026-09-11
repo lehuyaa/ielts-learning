@@ -18,10 +18,10 @@ type Config struct {
 func Load() Config {
 	return Config{
 		AppEnv:              getEnv("APP_ENV", "development"),
-		AppPort:             getEnv("APP_PORT", "8080"),
-		FrontendURL:         getEnv("FRONTEND_URL", "http://localhost:5173"),
+		AppPort:             getEnv("APP_PORT", "8081"),
+		FrontendURL:         getEnv("FRONTEND_URL", "http://localhost:5175"),
 		DBHost:              getEnv("DB_HOST", "localhost"),
-		DBPort:              getEnv("DB_PORT", "3307"),
+		DBPort:              getEnv("DB_PORT", "3308"),
 		DBUser:              getEnv("DB_USER", "root"),
 		DBPassword:          getEnv("DB_PASSWORD", "password"),
 		DBName:              getEnv("DB_NAME", "ielts_vocab"),

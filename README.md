@@ -41,7 +41,7 @@ pnpm dev
 The frontend should run at:
 
 ```txt
-http://localhost:5173
+http://localhost:5175
 ```
 
 ## Run Backend
@@ -57,7 +57,7 @@ go run ./cmd/api
 The backend should run at:
 
 ```txt
-http://localhost:8080
+http://localhost:8081
 ```
 
 ## Run Database
@@ -72,7 +72,7 @@ Expected local database defaults:
 
 ```txt
 Host: localhost
-Port: 3306
+Port: 3308
 Database: ielts_vocab
 User: root
 Password: password

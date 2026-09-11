@@ -129,6 +129,34 @@ export type VocabularyListItemViewModel = {
   shortDefinition: string
 }
 
+export type ImportSummary = {
+  totalRows: number
+  validRows: number
+  invalidRows: number
+}
+
+export type ImportRowResult = {
+  row: number
+  word: string
+  slug: string
+  topicSlug: string
+  lessonSlug: string
+  valid: boolean
+  errors?: string[]
+  vocabularyAction?: 'CREATE' | 'UPDATE'
+  linkAction?: 'CREATE' | 'UPDATE'
+}
+
+export type ImportResultResponse = {
+  dryRun: boolean
+  summary: ImportSummary
+  vocabulariesCreated: number
+  vocabulariesUpdated: number
+  lessonLinksCreated: number
+  lessonLinksUpdated: number
+  rows: ImportRowResult[]
+}
+
 export type VocabularyDetailViewModel = VocabularyListItemViewModel & {
   slug: string
   frequencyScore: number

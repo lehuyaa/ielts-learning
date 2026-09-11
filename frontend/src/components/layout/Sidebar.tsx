@@ -2,6 +2,7 @@ import {
   BarChart3,
   BookOpen,
   // Brain,
+  FileSpreadsheet,
   Star,
   Target,
   Trophy,
@@ -9,6 +10,7 @@ import {
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { cn } from "@/lib/utils";
 
 const navigationItems = [
@@ -55,6 +57,15 @@ const navigationItems = [
   },
 ];
 
+const adminNavigationItems = [
+  {
+    label: "Import Vocabulary",
+    to: "/admin/vocabularies/import",
+    icon: FileSpreadsheet,
+    match: (pathname: string) => pathname === "/admin/vocabularies/import",
+  },
+];
+
 function getNavLinkClass(isActive: boolean) {
   return cn(
     "flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
@@ -66,6 +77,8 @@ function getNavLinkClass(isActive: boolean) {
 
 export function Sidebar() {
   const { pathname } = useLocation();
+  const currentUserQuery = useCurrentUser();
+  const isAdmin = currentUserQuery.data?.role === "ADMIN";
 
   return (
     <aside className="fixed left-0 top-0 z-30 hidden min-h-screen w-60 flex-col border-r border-border bg-white md:flex">
@@ -89,6 +102,22 @@ export function Sidebar() {
             {item.label}
           </NavLink>
         ))}
+
+        {isAdmin ? (
+          <>
+            <div className="my-2 border-t border-border" />
+            {adminNavigationItems.map((item) => (
+              <NavLink
+                className={() => getNavLinkClass(item.match(pathname))}
+                key={item.to}
+                to={item.to}
+              >
+                <item.icon className="size-[18px]" aria-hidden="true" />
+                {item.label}
+              </NavLink>
+            ))}
+          </>
+        ) : null}
       </nav>
 
       <div className="mx-3 mb-4 rounded-xl border border-amber-200 bg-amber-50 p-3">

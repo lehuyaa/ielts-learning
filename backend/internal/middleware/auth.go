@@ -6,11 +6,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"ielts-learning/backend/internal/models"
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 	"ielts-learning/backend/internal/shared/response"
 )
 
-const UserIDContextKey = "userID"
+const (
+	UserIDContextKey = "userID"
+	RoleContextKey   = "role"
+)
 
 func Auth(jwtManager sharedjwt.Manager) gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -36,6 +40,22 @@ func Auth(jwtManager sharedjwt.Manager) gin.HandlerFunc {
 		}
 
 		c.Set(UserIDContextKey, claims.UserID)
+		c.Set(RoleContextKey, claims.Role)
+		c.Next()
+	}
+}
+
+// RequireAdmin must be chained after Auth. It rejects requests from
+// authenticated users whose role is not ADMIN.
+func RequireAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, ok := GetRole(c)
+		if !ok || role != string(models.UserRoleAdmin) {
+			response.Error(c, http.StatusForbidden, "FORBIDDEN", "Admin access is required")
+			c.Abort()
+			return
+		}
+
 		c.Next()
 	}
 }
@@ -48,4 +68,14 @@ func GetUserID(c *gin.Context) (uint, bool) {
 
 	userID, ok := value.(uint)
 	return userID, ok
+}
+
+func GetRole(c *gin.Context) (string, bool) {
+	value, exists := c.Get(RoleContextKey)
+	if !exists {
+		return "", false
+	}
+
+	role, ok := value.(string)
+	return role, ok
 }

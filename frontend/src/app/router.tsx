@@ -3,7 +3,9 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AuthLayout } from '@/components/layout/AuthLayout'
 import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { MarketingLayout } from '@/components/layout/MarketingLayout'
+import { AdminRoute } from '@/features/auth/AdminRoute'
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute'
+import { AdminVocabularyImportPage } from '@/pages/AdminVocabularyImportPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { FlashcardPage } from '@/pages/FlashcardPage'
 import { LandingPage } from '@/pages/LandingPage'
@@ -86,6 +88,15 @@ export const router = createBrowserRouter([
           {
             path: '/profile',
             element: <ProfilePage />,
+          },
+          {
+            element: <AdminRoute />,
+            children: [
+              {
+                path: '/admin/vocabularies/import',
+                element: <AdminVocabularyImportPage />,
+              },
+            ],
           },
         ],
       },

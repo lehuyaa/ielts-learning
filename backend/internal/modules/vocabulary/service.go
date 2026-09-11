@@ -2,10 +2,15 @@ package vocabulary
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
 	"strings"
 
 	"ielts-learning/backend/internal/models"
 )
+
+var ErrImportFileInvalid = errors.New("invalid import file")
 
 type Service struct {
 	repository Repository
@@ -13,6 +18,152 @@ type Service struct {
 
 func NewService(repository Repository) Service {
 	return Service{repository: repository}
+}
+
+// Import parses an Excel file of vocabulary rows, validates each row
+// (structurally, then against topic/lesson slugs and in-file duplicates),
+// and, unless dryRun is set, commits every valid row in one transaction:
+// upserting the Vocabulary by slug and linking it to the given lesson.
+func (s Service) Import(reader io.Reader, dryRun bool) (ImportResultResponse, error) {
+	rows, err := ParseImportExcel(reader)
+	if err != nil {
+		return ImportResultResponse{}, fmt.Errorf("%w: %s", ErrImportFileInvalid, err.Error())
+	}
+
+	topicSlugs := uniqueNonEmptyStrings(rowTopicSlugs(rows))
+	topicsBySlug, err := s.repository.FindTopicsBySlugs(topicSlugs)
+	if err != nil {
+		return ImportResultResponse{}, err
+	}
+
+	topicIDs := make([]uint, 0, len(topicsBySlug))
+	for _, topic := range topicsBySlug {
+		topicIDs = append(topicIDs, topic.ID)
+	}
+
+	lessonSlugs := uniqueNonEmptyStrings(rowLessonSlugs(rows))
+	lessons, err := s.repository.FindLessonsByTopicIDsAndSlugs(topicIDs, lessonSlugs)
+	if err != nil {
+		return ImportResultResponse{}, err
+	}
+
+	lessonsByTopicAndSlug := make(map[string]models.Lesson, len(lessons))
+	for _, lesson := range lessons {
+		lessonsByTopicAndSlug[lessonLookupKey(lesson.TopicID, lesson.Slug)] = lesson
+	}
+
+	seenRowByKey := make(map[string]int, len(rows))
+	for i := range rows {
+		row := &rows[i]
+		if !row.Valid() {
+			continue
+		}
+
+		topic, topicFound := topicsBySlug[row.TopicSlug]
+		if !topicFound {
+			row.addError(fmt.Sprintf("topic with slug %q was not found", row.TopicSlug))
+			continue
+		}
+		row.TopicID = topic.ID
+
+		lesson, lessonFound := lessonsByTopicAndSlug[lessonLookupKey(topic.ID, row.LessonSlug)]
+		if !lessonFound {
+			row.addError(fmt.Sprintf("lesson with slug %q was not found under topic %q", row.LessonSlug, row.TopicSlug))
+			continue
+		}
+		row.LessonID = lesson.ID
+
+		dedupeKey := lessonLookupKey(lesson.ID, row.Slug)
+		if firstRowNumber, exists := seenRowByKey[dedupeKey]; exists {
+			row.addError(fmt.Sprintf("word %q for this lesson is duplicated with row %d", row.Word, firstRowNumber))
+			continue
+		}
+		seenRowByKey[dedupeKey] = row.RowNumber
+	}
+
+	result := ImportResultResponse{DryRun: dryRun}
+
+	if !dryRun {
+		stats, err := s.repository.CommitImportRows(rows)
+		if err != nil {
+			return ImportResultResponse{}, fmt.Errorf("commit import: %w", err)
+		}
+		result.VocabulariesCreated = stats.VocabulariesCreated
+		result.VocabulariesUpdated = stats.VocabulariesUpdated
+		result.LessonLinksCreated = stats.LessonLinksCreated
+		result.LessonLinksUpdated = stats.LessonLinksUpdated
+	}
+
+	result.Summary = buildImportSummary(rows)
+	result.Rows = importRowResults(rows)
+
+	return result, nil
+}
+
+func rowTopicSlugs(rows []ImportRow) []string {
+	values := make([]string, 0, len(rows))
+	for _, row := range rows {
+		values = append(values, row.TopicSlug)
+	}
+	return values
+}
+
+func rowLessonSlugs(rows []ImportRow) []string {
+	values := make([]string, 0, len(rows))
+	for _, row := range rows {
+		values = append(values, row.LessonSlug)
+	}
+	return values
+}
+
+func uniqueNonEmptyStrings(values []string) []string {
+	seen := make(map[string]struct{}, len(values))
+	result := make([]string, 0, len(values))
+	for _, value := range values {
+		if value == "" {
+			continue
+		}
+		if _, exists := seen[value]; exists {
+			continue
+		}
+		seen[value] = struct{}{}
+		result = append(result, value)
+	}
+	return result
+}
+
+func lessonLookupKey(topicOrLessonID uint, slug string) string {
+	return fmt.Sprintf("%d|%s", topicOrLessonID, slug)
+}
+
+func buildImportSummary(rows []ImportRow) ImportSummary {
+	summary := ImportSummary{TotalRows: len(rows)}
+	for _, row := range rows {
+		if row.Valid() {
+			summary.ValidRows++
+		} else {
+			summary.InvalidRows++
+		}
+	}
+	return summary
+}
+
+func importRowResults(rows []ImportRow) []ImportRowResult {
+	results := make([]ImportRowResult, 0, len(rows))
+	for _, row := range rows {
+		results = append(results, ImportRowResult{
+			Row:              row.RowNumber,
+			Word:             row.Word,
+			Slug:             row.Slug,
+			TopicSlug:        row.TopicSlug,
+			LessonSlug:       row.LessonSlug,
+			Valid:            row.Valid(),
+			Errors:           row.Errors,
+			VocabularyAction: row.VocabularyAction,
+			LinkAction:       row.LinkAction,
+		})
+	}
+	return results
 }
 
 func (s Service) List(userID uint, query ListQuery) (ListResponse, error) {

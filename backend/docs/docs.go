@@ -15,6 +15,152 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/vocabularies/import": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Parse, validate, and commit an uploaded Excel file of vocabulary rows: upserts each vocabulary by slug and assigns it to the given topic/lesson. Admin only.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Commit a vocabulary Excel import",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Excel file (.xlsx) with vocabulary rows",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/vocabulary.ImportResultResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/vocabularies/import/preview": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Parse and validate an uploaded Excel file of vocabulary rows without writing to the database. Admin only.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Vocabularies"
+                ],
+                "summary": "Preview a vocabulary Excel import",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Excel file (.xlsx) with vocabulary rows",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/vocabulary.ImportResultResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Authenticate a user with email and password and return an access token.",
@@ -3164,6 +3310,84 @@ const docTemplate = `{
                 },
                 "word": {
                     "type": "string"
+                }
+            }
+        },
+        "vocabulary.ImportResultResponse": {
+            "type": "object",
+            "properties": {
+                "dryRun": {
+                    "type": "boolean"
+                },
+                "lessonLinksCreated": {
+                    "type": "integer"
+                },
+                "lessonLinksUpdated": {
+                    "type": "integer"
+                },
+                "rows": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/vocabulary.ImportRowResult"
+                    }
+                },
+                "summary": {
+                    "$ref": "#/definitions/vocabulary.ImportSummary"
+                },
+                "vocabulariesCreated": {
+                    "type": "integer"
+                },
+                "vocabulariesUpdated": {
+                    "type": "integer"
+                }
+            }
+        },
+        "vocabulary.ImportRowResult": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "lessonSlug": {
+                    "type": "string"
+                },
+                "linkAction": {
+                    "type": "string"
+                },
+                "row": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "topicSlug": {
+                    "type": "string"
+                },
+                "valid": {
+                    "type": "boolean"
+                },
+                "vocabularyAction": {
+                    "type": "string"
+                },
+                "word": {
+                    "type": "string"
+                }
+            }
+        },
+        "vocabulary.ImportSummary": {
+            "type": "object",
+            "properties": {
+                "invalidRows": {
+                    "type": "integer"
+                },
+                "totalRows": {
+                    "type": "integer"
+                },
+                "validRows": {
+                    "type": "integer"
                 }
             }
         },

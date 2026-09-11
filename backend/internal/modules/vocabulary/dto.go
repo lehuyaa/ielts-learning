@@ -109,3 +109,31 @@ type ProgressDetailResponse struct {
 	LearnedAt      *time.Time              `json:"learnedAt"`
 	MasteryScore   int                     `json:"masteryScore"`
 }
+
+type ImportSummary struct {
+	TotalRows   int `json:"totalRows"`
+	ValidRows   int `json:"validRows"`
+	InvalidRows int `json:"invalidRows"`
+}
+
+type ImportRowResult struct {
+	Row              int      `json:"row"`
+	Word             string   `json:"word"`
+	Slug             string   `json:"slug"`
+	TopicSlug        string   `json:"topicSlug"`
+	LessonSlug       string   `json:"lessonSlug"`
+	Valid            bool     `json:"valid"`
+	Errors           []string `json:"errors,omitempty"`
+	VocabularyAction string   `json:"vocabularyAction,omitempty"`
+	LinkAction       string   `json:"linkAction,omitempty"`
+}
+
+type ImportResultResponse struct {
+	DryRun              bool              `json:"dryRun"`
+	Summary             ImportSummary     `json:"summary"`
+	VocabulariesCreated int               `json:"vocabulariesCreated"`
+	VocabulariesUpdated int               `json:"vocabulariesUpdated"`
+	LessonLinksCreated  int               `json:"lessonLinksCreated"`
+	LessonLinksUpdated  int               `json:"lessonLinksUpdated"`
+	Rows                []ImportRowResult `json:"rows"`
+}
