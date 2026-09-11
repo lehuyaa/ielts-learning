@@ -1,5 +1,6 @@
 import { landingFeatures } from '@/components/marketing/marketingContent'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
+import { CardDescription, CardTitle } from '@/components/ui/card'
 
 export function LandingFeatures() {
   return (
@@ -20,12 +21,15 @@ export function LandingFeatures() {
               <div className="grid size-12 place-items-center rounded-xl bg-accent text-primary">
                 <feature.icon className="size-5" aria-hidden="true" />
               </div>
-              <h3 className="mt-6 text-xl font-semibold tracking-normal text-slate-950">
+              <CardTitle
+                as="h3"
+                className="mt-6 text-xl leading-normal text-slate-950"
+              >
                 {feature.title}
-              </h3>
-              <p className="mt-3 leading-6 text-muted-foreground">
+              </CardTitle>
+              <CardDescription className="mt-3 leading-6">
                 {feature.description}
-              </p>
+              </CardDescription>
             </article>
           ))}
         </div>

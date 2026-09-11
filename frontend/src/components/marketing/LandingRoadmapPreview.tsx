@@ -5,6 +5,7 @@ import { roadmapPreview } from '@/components/marketing/marketingContent'
 import { SectionHeader } from '@/components/marketing/SectionHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { CardDescription, CardTitle } from '@/components/ui/card'
 
 export function LandingRoadmapPreview() {
   return (
@@ -26,12 +27,12 @@ export function LandingRoadmapPreview() {
                     <step.icon className="size-5" aria-hidden="true" />
                   </div>
                 </div>
-                <h3 className="mt-6 text-xl font-semibold tracking-normal">
+                <CardTitle as="h3" className="mt-6 text-xl leading-normal">
                   {step.title}
-                </h3>
-                <p className="mt-3 text-sm font-medium text-muted-foreground">
+                </CardTitle>
+                <CardDescription className="mt-3 font-medium">
                   {step.lessons}
-                </p>
+                </CardDescription>
               </article>
 
               {index < roadmapPreview.length - 1 ? (

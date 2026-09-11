@@ -21,6 +21,7 @@ import { CardSkeleton } from '@/components/state/CardSkeleton'
 import { EmptyState } from '@/components/state/EmptyState'
 import { ErrorState } from '@/components/state/ErrorState'
 import { ListSkeleton } from '@/components/state/ListSkeleton'
+import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { DashboardViewModel } from '@/features/dashboard/mapDashboardSummary'
 import { cn } from '@/lib/utils'
@@ -114,7 +115,7 @@ export function DashboardOverview({
             {dashboard.subtitle}
           </p>
         </div>
-        <div className="flex w-fit items-center gap-2 rounded-2xl border border-border bg-white px-4 py-2.5 shadow-sm">
+        <Card className="flex w-fit items-center gap-2 px-4 py-2.5">
           <Flame className="size-5 fill-orange-500 text-orange-500" />
           <div>
             <div className="text-lg font-bold leading-none text-foreground">
@@ -122,15 +123,12 @@ export function DashboardOverview({
             </div>
             <div className="text-xs text-muted-foreground">Day streak</div>
           </div>
-        </div>
+        </Card>
       </section>
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {dashboard.progressCards.map((card) => (
-          <div
-            className="rounded-2xl border border-border bg-white p-4 shadow-sm"
-            key={card.label}
-          >
+          <Card className="p-4" key={card.label}>
             <div
               className={cn(
                 'mb-3 flex size-9 items-center justify-center rounded-xl',
@@ -159,7 +157,7 @@ export function DashboardOverview({
             <div className="mt-1 text-xs text-emerald-600">
               {card.supportText}
             </div>
-          </div>
+          </Card>
         ))}
       </section>
 
@@ -191,9 +189,9 @@ function DashboardLoadingSkeleton() {
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-4 w-72 max-w-full" />
         </div>
-        <div className="rounded-2xl border border-border bg-white px-4 py-2.5 shadow-sm">
+        <Card className="px-4 py-2.5">
           <Skeleton className="h-10 w-24" />
-        </div>
+        </Card>
       </section>
 
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -237,7 +235,7 @@ function TargetBandCard({ dashboard }: { dashboard: DashboardViewModel }) {
   ]
 
   return (
-    <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <div className="text-sm font-semibold text-foreground">
@@ -291,13 +289,13 @@ function TargetBandCard({ dashboard }: { dashboard: DashboardViewModel }) {
         <span>{dashboard.targetBand.startLabel}</span>
         <span>{dashboard.targetBand.targetLabel}</span>
       </div>
-    </div>
+    </Card>
   )
 }
 
 function TodayProgressCard({ dashboard }: { dashboard: DashboardViewModel }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-5 shadow-sm lg:col-span-2">
+    <Card className="p-5 lg:col-span-2">
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className="text-sm font-semibold text-foreground">
           Today&apos;s Progress
@@ -318,7 +316,7 @@ function TodayProgressCard({ dashboard }: { dashboard: DashboardViewModel }) {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -349,7 +347,7 @@ function QuickActions() {
 
 function RecentActivityCard({ dashboard }: { dashboard: DashboardViewModel }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm font-semibold text-foreground">
           Recent Activity
@@ -395,13 +393,13 @@ function RecentActivityCard({ dashboard }: { dashboard: DashboardViewModel }) {
           here once activity is recorded.
         </div>
       )}
-    </div>
+    </Card>
   )
 }
 
 function DueReviewCard({ dashboard }: { dashboard: DashboardViewModel }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm font-semibold text-foreground">
           Due for Review
@@ -426,13 +424,13 @@ function DueReviewCard({ dashboard }: { dashboard: DashboardViewModel }) {
           {dashboard.reviewDue.description}
         </p>
       </div>
-    </div>
+    </Card>
   )
 }
 
 function XPLevelCard({ dashboard }: { dashboard: DashboardViewModel }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <div className="text-sm font-semibold text-foreground">
@@ -478,13 +476,13 @@ function XPLevelCard({ dashboard }: { dashboard: DashboardViewModel }) {
         <span>Level progress</span>
         <span>{dashboard.xp.progressPercentage}%</span>
       </div>
-    </div>
+    </Card>
   )
 }
 
 function VocabularyStatsCard({ dashboard }: { dashboard: DashboardViewModel }) {
   return (
-    <div className="rounded-2xl border border-border bg-white p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="text-sm font-semibold text-foreground">
           Vocabulary Statistics
@@ -501,7 +499,7 @@ function VocabularyStatsCard({ dashboard }: { dashboard: DashboardViewModel }) {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }
 

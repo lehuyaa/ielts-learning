@@ -2,9 +2,19 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-function Card({ className, ...props }: React.ComponentProps<'div'>) {
+type PolymorphicProps<T extends React.ElementType> = {
+  as?: T
+} & Omit<React.ComponentPropsWithoutRef<T>, 'as'>
+
+function Card<T extends React.ElementType = 'div'>({
+  as,
+  className,
+  ...props
+}: PolymorphicProps<T>) {
+  const Comp = as ?? 'div'
+
   return (
-    <div
+    <Comp
       className={cn(
         'rounded-2xl border border-border bg-card text-card-foreground shadow-sm',
         className,
@@ -25,9 +35,15 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
+function CardTitle<T extends React.ElementType = 'div'>({
+  as,
+  className,
+  ...props
+}: PolymorphicProps<T>) {
+  const Comp = as ?? 'div'
+
   return (
-    <div
+    <Comp
       className={cn('font-semibold leading-none tracking-normal', className)}
       data-slot="card-title"
       {...props}
@@ -35,9 +51,15 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
+function CardDescription<T extends React.ElementType = 'div'>({
+  as,
+  className,
+  ...props
+}: PolymorphicProps<T>) {
+  const Comp = as ?? 'div'
+
   return (
-    <div
+    <Comp
       className={cn('text-sm text-muted-foreground', className)}
       data-slot="card-description"
       {...props}

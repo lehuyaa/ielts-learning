@@ -3,6 +3,7 @@ import {
   BookOpen,
   // Brain,
   FileSpreadsheet,
+  MessageSquare,
   Star,
   Target,
   Trophy,
@@ -55,6 +56,13 @@ const navigationItems = [
     icon: Trophy,
     match: (pathname: string) => pathname === "/profile",
   },
+  {
+    label: "AI Conversation",
+    to: "/ai-conversation",
+    icon: MessageSquare,
+    badge: "New",
+    match: (pathname: string) => pathname === "/ai-conversation",
+  },
 ];
 
 const adminNavigationItems = [
@@ -100,6 +108,11 @@ export function Sidebar() {
           >
             <item.icon className="size-[18px]" aria-hidden="true" />
             {item.label}
+            {item.badge ? (
+              <span className="ml-auto rounded-full bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">
+                {item.badge}
+              </span>
+            ) : null}
           </NavLink>
         ))}
 

@@ -21,6 +21,7 @@ import { ErrorState } from "@/components/state/ErrorState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useVocabularies } from "@/features/vocabulary/hooks/useVocabularies";
 import { mapVocabularyListItem } from "@/features/vocabulary/mapVocabulary";
@@ -102,7 +103,7 @@ export function VocabularyPage() {
       />
 
       <main className="mx-auto max-w-5xl px-4 pb-8 pt-6 lg:px-0">
-        <section className="mt-6 rounded-2xl border border-[#e6e6f3] bg-white p-4 shadow-sm">
+        <Card as="section" className="mt-6 border-[#e6e6f3] p-4">
           <div className="grid gap-4 lg:grid-cols-[1fr_auto_auto_auto]">
             <label className="relative block lg:self-end">
               <span className="sr-only">Search vocabulary</span>
@@ -149,7 +150,7 @@ export function VocabularyPage() {
               value={status}
             />
           </div>
-        </section>
+        </Card>
 
         {vocabularyQuery.isLoading ? <VocabularyLoadingSkeleton /> : null}
 
@@ -291,7 +292,7 @@ type HeaderStatCardProps = {
 
 function HeaderStatCard({ icon, label, value }: HeaderStatCardProps) {
   return (
-    <article className="flex items-center gap-4 rounded-2xl border border-[#e3e4f8] bg-white p-4 shadow-sm">
+    <Card as="article" className="flex items-center gap-4 border-[#e3e4f8] p-4">
       <div className="grid size-9 shrink-0 place-items-center rounded-full bg-[#ececf6]">
         {icon}
       </div>
@@ -301,7 +302,7 @@ function HeaderStatCard({ icon, label, value }: HeaderStatCardProps) {
         </p>
         <p className="mt-1 text-sm font-medium text-[#676982]">{label}</p>
       </div>
-    </article>
+    </Card>
   );
 }
 
@@ -344,7 +345,10 @@ type VocabularyListCardProps = {
 function VocabularyListCard({ item }: VocabularyListCardProps) {
   return (
     <Link aria-label={`Open ${item.word}`} to={`/vocabulary/${item.id}`}>
-      <article className="h-full cursor-pointer rounded-2xl border border-[#e6e6f3] bg-white p-5 shadow-sm transition-colors hover:border-[#c6c4ff]">
+      <Card
+        as="article"
+        className="h-full cursor-pointer border-[#e6e6f3] p-5 transition-colors hover:border-[#c6c4ff]"
+      >
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-3">
@@ -379,7 +383,7 @@ function VocabularyListCard({ item }: VocabularyListCardProps) {
         <p className="mt-2 text-sm font-bold text-[#676982]">
           {item.masteryScore}% mastery
         </p>
-      </article>
+      </Card>
     </Link>
   );
 }
@@ -442,7 +446,10 @@ function PaginationControls({
   }
 
   return (
-    <section className="mt-6 flex flex-col gap-4 rounded-2xl border border-[#e6e6f3] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <Card
+      as="section"
+      className="mt-6 flex flex-col gap-4 border-[#e6e6f3] p-4 sm:flex-row sm:items-center sm:justify-between"
+    >
       <p className="text-sm font-bold text-[#676982]">
         Page {pagination.page} of {pagination.totalPages} · {pagination.total}{" "}
         words
@@ -468,7 +475,7 @@ function PaginationControls({
           <ChevronRight aria-hidden="true" />
         </Button>
       </div>
-    </section>
+    </Card>
   );
 }
 
@@ -485,7 +492,7 @@ function VocabularyLoadingSkeleton() {
           />
         ))}
       </div>
-      <div className="mt-6 rounded-2xl border border-[#e6e6f3] bg-white p-4 shadow-sm">
+      <Card className="mt-6 border-[#e6e6f3] p-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Skeleton className="h-4 w-40" />
           <div className="flex gap-3">
@@ -493,7 +500,7 @@ function VocabularyLoadingSkeleton() {
             <Skeleton className="h-11 w-24 rounded-full" />
           </div>
         </div>
-      </div>
+      </Card>
     </section>
   );
 }

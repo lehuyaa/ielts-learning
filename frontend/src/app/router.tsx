@@ -6,6 +6,9 @@ import { MarketingLayout } from '@/components/layout/MarketingLayout'
 import { AdminRoute } from '@/features/auth/AdminRoute'
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute'
 import { AdminVocabularyImportPage } from '@/pages/AdminVocabularyImportPage'
+import { AIConversationCreatePage } from '@/pages/AIConversationCreatePage'
+import { AIConversationPage } from '@/pages/AIConversationPage'
+import { AIConversationSessionPage } from '@/pages/AIConversationSessionPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { FlashcardPage } from '@/pages/FlashcardPage'
 import { LandingPage } from '@/pages/LandingPage'
@@ -88,6 +91,18 @@ export const router = createBrowserRouter([
           {
             path: '/profile',
             element: <ProfilePage />,
+          },
+          {
+            path: '/ai-conversation',
+            element: <AIConversationPage />,
+          },
+          {
+            path: '/ai-conversation/create',
+            element: <AIConversationCreatePage />,
+          },
+          {
+            path: '/ai-conversation/:scenarioSlug',
+            element: <AIConversationSessionPage />,
           },
           {
             element: <AdminRoute />,

@@ -10,7 +10,8 @@ export function DashboardLayout() {
     pathname === "/reviews" ||
     pathname.startsWith("/topics/") ||
     pathname.startsWith("/vocabulary") ||
-    pathname.startsWith("/lessons/");
+    pathname.startsWith("/lessons/") ||
+    pathname.startsWith("/ai-conversation/");
 
   if (isFullBleedPage) {
     return <Outlet />;
