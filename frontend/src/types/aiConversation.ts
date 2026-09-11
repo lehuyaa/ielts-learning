@@ -22,3 +22,20 @@ export type ScenarioResponse = {
 export type ListScenariosResponse = {
   items: ScenarioResponse[]
 }
+
+export type ChatRole = 'user' | 'assistant'
+
+export type ChatHistoryItem = {
+  role: ChatRole
+  content: string
+}
+
+export type SendChatMessageInput = {
+  message: string
+  systemPrompt?: string
+  history?: ChatHistoryItem[]
+}
+
+export type SendChatMessageResponse = {
+  reply: string
+}

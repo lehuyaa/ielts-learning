@@ -1,6 +1,7 @@
 package aiconversation
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"math/rand"
@@ -15,11 +16,12 @@ var ErrSlugGenerationFailed = errors.New("could not generate a unique scenario s
 var slugInvalidChars = regexp.MustCompile(`[^a-z0-9]+`)
 
 type Service struct {
-	repository Repository
+	repository   Repository
+	openAIClient *openAIClient
 }
 
-func NewService(repository Repository) Service {
-	return Service{repository: repository}
+func NewService(repository Repository, openAIClient *openAIClient) Service {
+	return Service{repository: repository, openAIClient: openAIClient}
 }
 
 func (s Service) CreateScenario(userID uint, req CreateScenarioRequest) (ScenarioResponse, error) {
@@ -52,6 +54,24 @@ func (s Service) ListScenarios(userID uint) (ListScenariosResponse, error) {
 	}
 
 	return ListScenariosResponse{Items: toScenarioResponses(scenarios)}, nil
+}
+
+func (s Service) SendChatMessage(ctx context.Context, req ChatRequest) (ChatResponse, error) {
+	messages := make([]openAIMessage, 0, len(req.History)+2)
+	if req.SystemPrompt != "" {
+		messages = append(messages, openAIMessage{Role: "system", Content: req.SystemPrompt})
+	}
+	for _, item := range req.History {
+		messages = append(messages, openAIMessage{Role: item.Role, Content: item.Content})
+	}
+	messages = append(messages, openAIMessage{Role: "user", Content: req.Message})
+
+	reply, err := s.openAIClient.CreateChatCompletion(ctx, messages)
+	if err != nil {
+		return ChatResponse{}, err
+	}
+
+	return ChatResponse{Reply: strings.TrimSpace(reply)}, nil
 }
 
 func (s Service) generateUniqueSlug(userID uint, title string) (string, error) {

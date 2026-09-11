@@ -2,6 +2,7 @@ package aiconversation
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -86,6 +87,61 @@ func (h Handler) ListScenarios(c *gin.Context) {
 	}
 
 	response.OK(c, result)
+}
+
+// SendChatMessage godoc
+// @Summary Send a chat message to the AI
+// @Description Send a message (with optional prior turns for context) and get back the AI's reply.
+// @Tags AI Conversation
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body ChatRequest true "Chat request"
+// @Success 200 {object} response.SuccessResponse{data=ChatResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 502 {object} response.ErrorResponse
+// @Failure 503 {object} response.ErrorResponse
+// @Router /ai-conversations/chat [post]
+func (h Handler) SendChatMessage(c *gin.Context) {
+	_, ok := middleware.GetUserID(c)
+	if !ok {
+		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+		return
+	}
+
+	var req ChatRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.ValidationError(c, map[string]string{
+			"request": "Invalid JSON request body",
+		})
+		return
+	}
+
+	validatedReq, err := ValidateChatRequest(req)
+	if err != nil {
+		writeScenarioError(c, err)
+		return
+	}
+
+	result, err := h.service.SendChatMessage(c.Request.Context(), validatedReq)
+	if err != nil {
+		writeChatError(c, err)
+		return
+	}
+
+	response.OK(c, result)
+}
+
+func writeChatError(c *gin.Context, err error) {
+	log.Printf("ai chat error: %v", err)
+
+	if errors.Is(err, ErrAIChatNotConfigured) {
+		response.Error(c, http.StatusServiceUnavailable, "AI_CHAT_NOT_CONFIGURED", "AI chat is not configured on the server")
+		return
+	}
+
+	response.Error(c, http.StatusBadGateway, "AI_CHAT_REQUEST_FAILED", "Unable to get a response from the AI right now")
 }
 
 func writeScenarioError(c *gin.Context, err error) {

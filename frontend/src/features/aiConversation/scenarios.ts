@@ -15,7 +15,7 @@ export type Scenario = {
   level: ScenarioLevel
   icon: LucideIcon
   openingLine: string
-  aiReplies: string[]
+  situationContext: string
 }
 
 const apiLevelToLocal: Record<ScenarioLevelApi, ScenarioLevel> = {
@@ -65,7 +65,7 @@ function buildScenario(input: {
   level: ScenarioLevel
   situationContext?: string
 }): Scenario {
-  const context = input.situationContext?.trim()
+  const context = input.situationContext?.trim() ?? ''
 
   return {
     slug: input.slug,
@@ -77,12 +77,7 @@ function buildScenario(input: {
     openingLine: context
       ? `Let's begin. ${context}`
       : `Let's practice "${input.title}". ${input.description}`,
-    aiReplies: [
-      "That's a great point. Can you tell me more?",
-      'I see. What would you say or do next in this situation?',
-      'Good. How would you respond if that did not go as planned?',
-      "Let's keep going — what happens after that?",
-    ],
+    situationContext: context,
   }
 }
 
@@ -97,9 +92,8 @@ export function addScenario(input: NewScenarioInput): Scenario {
 }
 
 /**
- * Maps one backend scenario record to the local chat-simulation shape. The
- * icon/opening line/AI replies are generated locally since the backend does
- * not store them.
+ * Maps one backend scenario record to the local chat shape. The icon and
+ * opening line are generated locally since the backend does not store them.
  */
 export function mapScenarioResponseToScenario(item: ScenarioResponse): Scenario {
   return buildScenario({

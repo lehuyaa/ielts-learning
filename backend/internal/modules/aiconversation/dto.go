@@ -50,3 +50,18 @@ func toScenarioResponses(scenarios []models.AIConversationScenario) []ScenarioRe
 
 	return items
 }
+
+type ChatHistoryItem struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+type ChatRequest struct {
+	Message      string            `json:"message"`
+	SystemPrompt string            `json:"systemPrompt"`
+	History      []ChatHistoryItem `json:"history"`
+}
+
+type ChatResponse struct {
+	Reply string `json:"reply"`
+}

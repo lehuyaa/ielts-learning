@@ -13,6 +13,8 @@ type Config struct {
 	DBName              string
 	JWTSecret           string
 	JWTAccessTTLMinutes string
+	OpenAIAPIKey        string
+	OpenAIModel         string
 }
 
 func Load() Config {
@@ -27,6 +29,8 @@ func Load() Config {
 		DBName:              getEnv("DB_NAME", "ielts_vocab"),
 		JWTSecret:           getEnv("JWT_SECRET", "dev-secret-change-me"),
 		JWTAccessTTLMinutes: getEnv("JWT_ACCESS_TTL_MINUTES", "1440"),
+		OpenAIAPIKey:        getEnv("OPENAI_API_KEY", ""),
+		OpenAIModel:         getEnv("OPENAI_MODEL", "gpt-4o-mini"),
 	}
 }
 

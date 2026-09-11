@@ -2,7 +2,9 @@ import { ArrowLeft, HelpCircle, Mic, Send } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
+import { getApiErrorMessage } from '@/api/api'
 import { useScenarios } from '@/features/aiConversation/hooks/useScenarios'
+import { useSendChatMessage } from '@/features/aiConversation/hooks/useSendChatMessage'
 import { mapScenarioResponseToScenario } from '@/features/aiConversation/scenarios'
 import { cn } from '@/lib/utils'
 
@@ -12,6 +14,8 @@ type Message = {
   text: string
   time: string
 }
+
+const MAX_HISTORY_MESSAGES = 20
 
 function formatElapsed(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60)
@@ -39,8 +43,8 @@ export function AIConversationSessionPage() {
   const [isAiTyping, setIsAiTyping] = useState(false)
 
   const nextMessageId = useRef(1)
-  const nextReplyIndex = useRef(0)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const sendChatMessageMutation = useSendChatMessage()
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -83,9 +87,14 @@ export function AIConversationSessionPage() {
 
   function sendMessage() {
     const text = inputValue.trim()
-    if (!text || !scenario) {
+    if (!text || !scenario || sendChatMessageMutation.isPending) {
       return
     }
+
+    const history = messages.slice(-MAX_HISTORY_MESSAGES).map((message) => ({
+      role: message.sender === 'user' ? ('user' as const) : ('assistant' as const),
+      content: message.text,
+    }))
 
     setMessages((current) => [
       ...current,
@@ -99,22 +108,42 @@ export function AIConversationSessionPage() {
     setInputValue('')
     setIsAiTyping(true)
 
-    window.setTimeout(() => {
-      const reply =
-        scenario.aiReplies[nextReplyIndex.current % scenario.aiReplies.length]
-      nextReplyIndex.current += 1
-
-      setMessages((current) => [
-        ...current,
-        {
-          id: nextMessageId.current++,
-          sender: 'ai',
-          text: reply,
-          time: formatElapsed(elapsedSeconds),
+    sendChatMessageMutation.mutate(
+      {
+        message: text,
+        systemPrompt: scenario.situationContext,
+        history,
+      },
+      {
+        onSuccess: (result) => {
+          setMessages((current) => [
+            ...current,
+            {
+              id: nextMessageId.current++,
+              sender: 'ai',
+              text: result.reply,
+              time: formatElapsed(elapsedSeconds),
+            },
+          ])
+          setIsAiTyping(false)
         },
-      ])
-      setIsAiTyping(false)
-    }, 1000)
+        onError: (error) => {
+          setMessages((current) => [
+            ...current,
+            {
+              id: nextMessageId.current++,
+              sender: 'ai',
+              text: getApiErrorMessage(
+                error,
+                "Sorry, I couldn't respond right now. Please try again.",
+              ),
+              time: formatElapsed(elapsedSeconds),
+            },
+          ])
+          setIsAiTyping(false)
+        },
+      },
+    )
   }
 
   return (
@@ -260,7 +289,7 @@ export function AIConversationSessionPage() {
           <button
             aria-label="Send message"
             className="grid size-11 shrink-0 place-items-center rounded-full bg-primary text-white transition-opacity disabled:opacity-40"
-            disabled={!inputValue.trim()}
+            disabled={!inputValue.trim() || sendChatMessageMutation.isPending}
             type="submit"
           >
             <Send className="size-4" aria-hidden="true" />

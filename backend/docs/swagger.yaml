@@ -1,5 +1,28 @@
 basePath: /api/v1
 definitions:
+  aiconversation.ChatHistoryItem:
+    properties:
+      content:
+        type: string
+      role:
+        type: string
+    type: object
+  aiconversation.ChatRequest:
+    properties:
+      history:
+        items:
+          $ref: '#/definitions/aiconversation.ChatHistoryItem'
+        type: array
+      message:
+        type: string
+      systemPrompt:
+        type: string
+    type: object
+  aiconversation.ChatResponse:
+    properties:
+      reply:
+        type: string
+    type: object
   aiconversation.CreateScenarioRequest:
     properties:
       description:
@@ -1418,6 +1441,52 @@ paths:
       summary: Preview a vocabulary Excel import
       tags:
       - Vocabularies
+  /ai-conversations/chat:
+    post:
+      consumes:
+      - application/json
+      description: Send a message (with optional prior turns for context) and get
+        back the AI's reply.
+      parameters:
+      - description: Chat request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/aiconversation.ChatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/aiconversation.ChatResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Send a chat message to the AI
+      tags:
+      - AI Conversation
   /ai-conversations/scenarios:
     get:
       consumes:

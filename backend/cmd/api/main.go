@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -35,6 +36,10 @@ import (
 // @name Authorization
 // @description Type "Bearer " followed by a JWT access token.
 func main() {
+	// .env is optional (e.g. in production env vars are set directly), so a
+	// missing file is not a fatal error.
+	_ = godotenv.Load()
+
 	cfg := config.Load()
 
 	if cfg.AppEnv == "production" {
@@ -74,7 +79,7 @@ func main() {
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
-	aiconversationmodule.RegisterRoutes(api, db, jwtManager)
+	aiconversationmodule.RegisterRoutes(api, db, jwtManager, cfg.OpenAIAPIKey, cfg.OpenAIModel)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)
