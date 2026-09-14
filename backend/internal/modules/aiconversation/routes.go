@@ -17,5 +17,6 @@ func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.M
 	group := router.Group("/ai-conversations", middleware.Auth(jwtManager))
 	group.POST("/scenarios", handler.CreateScenario)
 	group.GET("/scenarios", handler.ListScenarios)
-	group.POST("/chat", handler.SendChatMessage)
+	group.GET("/scenarios/:slug/messages", handler.ListMessages)
+	group.POST("/scenarios/:slug/messages", handler.SendChatMessage)
 }

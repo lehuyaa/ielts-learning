@@ -1,21 +1,8 @@
 basePath: /api/v1
 definitions:
-  aiconversation.ChatHistoryItem:
-    properties:
-      content:
-        type: string
-      role:
-        type: string
-    type: object
   aiconversation.ChatRequest:
     properties:
-      history:
-        items:
-          $ref: '#/definitions/aiconversation.ChatHistoryItem'
-        type: array
       message:
-        type: string
-      systemPrompt:
         type: string
     type: object
   aiconversation.ChatResponse:
@@ -36,12 +23,30 @@ definitions:
       title:
         type: string
     type: object
+  aiconversation.ListMessagesResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/aiconversation.MessageResponse'
+        type: array
+    type: object
   aiconversation.ListScenariosResponse:
     properties:
       items:
         items:
           $ref: '#/definitions/aiconversation.ScenarioResponse'
         type: array
+    type: object
+  aiconversation.MessageResponse:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      role:
+        type: string
     type: object
   aiconversation.ScenarioResponse:
     properties:
@@ -1441,52 +1446,6 @@ paths:
       summary: Preview a vocabulary Excel import
       tags:
       - Vocabularies
-  /ai-conversations/chat:
-    post:
-      consumes:
-      - application/json
-      description: Send a message (with optional prior turns for context) and get
-        back the AI's reply.
-      parameters:
-      - description: Chat request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/aiconversation.ChatRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.SuccessResponse'
-            - properties:
-                data:
-                  $ref: '#/definitions/aiconversation.ChatResponse'
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "502":
-          description: Bad Gateway
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-        "503":
-          description: Service Unavailable
-          schema:
-            $ref: '#/definitions/response.ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Send a chat message to the AI
-      tags:
-      - AI Conversation
   /ai-conversations/scenarios:
     get:
       consumes:
@@ -1556,6 +1515,101 @@ paths:
       security:
       - BearerAuth: []
       summary: Create a conversation scenario
+      tags:
+      - AI Conversation
+  /ai-conversations/scenarios/{slug}/messages:
+    get:
+      consumes:
+      - application/json
+      description: Return the persisted chat history for one of the authenticated
+        user's scenarios, oldest first.
+      parameters:
+      - description: Scenario slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/aiconversation.ListMessagesResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List a scenario's chat messages
+      tags:
+      - AI Conversation
+    post:
+      consumes:
+      - application/json
+      description: Send a message for a scenario and get back the AI's reply. Both
+        the message and the reply are persisted as the scenario's chat history.
+      parameters:
+      - description: Scenario slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Chat request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/aiconversation.ChatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/aiconversation.ChatResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Send a chat message to the AI
       tags:
       - AI Conversation
   /auth/login:

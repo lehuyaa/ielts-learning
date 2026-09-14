@@ -2,6 +2,7 @@ import { api, unwrapData } from '@/api/api'
 import type { APIResponse } from '@/types/api'
 import type {
   CreateScenarioInput,
+  ListMessagesResponse,
   ListScenariosResponse,
   ScenarioResponse,
   SendChatMessageInput,
@@ -25,9 +26,20 @@ export async function listScenarios() {
   return unwrapData<ListScenariosResponse>(response)
 }
 
-export async function sendChatMessage(payload: SendChatMessageInput) {
+export async function listChatMessages(scenarioSlug: string) {
+  const response = await api.get<APIResponse<ListMessagesResponse>>(
+    `/ai-conversations/scenarios/${scenarioSlug}/messages`,
+  )
+
+  return unwrapData<ListMessagesResponse>(response)
+}
+
+export async function sendChatMessage(
+  scenarioSlug: string,
+  payload: SendChatMessageInput,
+) {
   const response = await api.post<APIResponse<SendChatMessageResponse>>(
-    '/ai-conversations/chat',
+    `/ai-conversations/scenarios/${scenarioSlug}/messages`,
     payload,
   )
 

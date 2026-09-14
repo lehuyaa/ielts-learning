@@ -4,8 +4,7 @@ import "time"
 
 // AIConversationScenario is a user-owned conversation practice scenario
 // (title, description, optional situation context, level, duration) used by
-// the AI Conversation feature. Every user gets a default set seeded the
-// first time they list their scenarios (see aiconversation.Service).
+// the AI Conversation feature.
 type AIConversationScenario struct {
 	ID     uint `gorm:"primaryKey" json:"id"`
 	UserID uint `gorm:"uniqueIndex:idx_scenario_user_slug;not null" json:"userId"`
@@ -21,4 +20,16 @@ type AIConversationScenario struct {
 	UpdatedAt        time.Time       `json:"updatedAt"`
 
 	User User `gorm:"foreignKey:UserID" json:"-"`
+}
+
+// AIConversationMessage is one turn (user or assistant) in a scenario's chat
+// history, persisted so a session can be resumed later.
+type AIConversationMessage struct {
+	ID         uint      `gorm:"primaryKey" json:"id"`
+	ScenarioID uint      `gorm:"index;not null" json:"scenarioId"`
+	Role       string    `gorm:"size:20;not null" json:"role"`
+	Content    string    `gorm:"type:text;not null" json:"content"`
+	CreatedAt  time.Time `json:"createdAt"`
+
+	Scenario AIConversationScenario `gorm:"foreignKey:ScenarioID" json:"-"`
 }

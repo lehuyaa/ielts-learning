@@ -12,6 +12,13 @@ import (
 )
 
 var ErrSlugGenerationFailed = errors.New("could not generate a unique scenario slug")
+var ErrScenarioNotFound = errors.New("scenario not found")
+
+const (
+	chatRoleUser      = "user"
+	chatRoleAssistant = "assistant"
+	chatRoleSystem    = "system"
+)
 
 var slugInvalidChars = regexp.MustCompile(`[^a-z0-9]+`)
 
@@ -56,22 +63,67 @@ func (s Service) ListScenarios(userID uint) (ListScenariosResponse, error) {
 	return ListScenariosResponse{Items: toScenarioResponses(scenarios)}, nil
 }
 
-func (s Service) SendChatMessage(ctx context.Context, req ChatRequest) (ChatResponse, error) {
-	messages := make([]openAIMessage, 0, len(req.History)+2)
-	if req.SystemPrompt != "" {
-		messages = append(messages, openAIMessage{Role: "system", Content: req.SystemPrompt})
+// SendChatMessage looks up the caller's scenario, replays its persisted
+// history (plus the scenario's SituationContext as the system prompt) to the
+// AI, then persists both the user's message and the AI's reply so the
+// conversation survives across sessions.
+func (s Service) SendChatMessage(ctx context.Context, userID uint, scenarioSlug string, userMessage string) (ChatResponse, error) {
+	scenario, err := s.repository.FindByUserAndSlug(userID, scenarioSlug)
+	if err != nil {
+		return ChatResponse{}, err
 	}
-	for _, item := range req.History {
+
+	history, err := s.repository.FindMessagesByScenario(scenario.ID)
+	if err != nil {
+		return ChatResponse{}, err
+	}
+
+	messages := make([]openAIMessage, 0, len(history)+2)
+	if scenario.SituationContext != "" {
+		messages = append(messages, openAIMessage{Role: chatRoleSystem, Content: scenario.SituationContext})
+	}
+	for _, item := range history {
 		messages = append(messages, openAIMessage{Role: item.Role, Content: item.Content})
 	}
-	messages = append(messages, openAIMessage{Role: "user", Content: req.Message})
+	messages = append(messages, openAIMessage{Role: chatRoleUser, Content: userMessage})
 
 	reply, err := s.openAIClient.CreateChatCompletion(ctx, messages)
 	if err != nil {
 		return ChatResponse{}, err
 	}
+	reply = strings.TrimSpace(reply)
 
-	return ChatResponse{Reply: strings.TrimSpace(reply)}, nil
+	if err := s.repository.CreateMessage(&models.AIConversationMessage{
+		ScenarioID: scenario.ID,
+		Role:       chatRoleUser,
+		Content:    userMessage,
+	}); err != nil {
+		return ChatResponse{}, err
+	}
+
+	if err := s.repository.CreateMessage(&models.AIConversationMessage{
+		ScenarioID: scenario.ID,
+		Role:       chatRoleAssistant,
+		Content:    reply,
+	}); err != nil {
+		return ChatResponse{}, err
+	}
+
+	return ChatResponse{Reply: reply}, nil
+}
+
+func (s Service) ListMessages(userID uint, scenarioSlug string) (ListMessagesResponse, error) {
+	scenario, err := s.repository.FindByUserAndSlug(userID, scenarioSlug)
+	if err != nil {
+		return ListMessagesResponse{}, err
+	}
+
+	messages, err := s.repository.FindMessagesByScenario(scenario.ID)
+	if err != nil {
+		return ListMessagesResponse{}, err
+	}
+
+	return ListMessagesResponse{Items: toMessageResponses(messages)}, nil
 }
 
 func (s Service) generateUniqueSlug(userID uint, title string) (string, error) {

@@ -51,17 +51,39 @@ func toScenarioResponses(scenarios []models.AIConversationScenario) []ScenarioRe
 	return items
 }
 
-type ChatHistoryItem struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
-}
-
 type ChatRequest struct {
-	Message      string            `json:"message"`
-	SystemPrompt string            `json:"systemPrompt"`
-	History      []ChatHistoryItem `json:"history"`
+	Message string `json:"message"`
 }
 
 type ChatResponse struct {
 	Reply string `json:"reply"`
+}
+
+type ListMessagesResponse struct {
+	Items []MessageResponse `json:"items"`
+}
+
+type MessageResponse struct {
+	ID        uint      `json:"id"`
+	Role      string    `json:"role"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+func toMessageResponse(message models.AIConversationMessage) MessageResponse {
+	return MessageResponse{
+		ID:        message.ID,
+		Role:      message.Role,
+		Content:   message.Content,
+		CreatedAt: message.CreatedAt,
+	}
+}
+
+func toMessageResponses(messages []models.AIConversationMessage) []MessageResponse {
+	items := make([]MessageResponse, 0, len(messages))
+	for _, message := range messages {
+		items = append(items, toMessageResponse(message))
+	}
+
+	return items
 }

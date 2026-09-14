@@ -91,24 +91,28 @@ func (h Handler) ListScenarios(c *gin.Context) {
 
 // SendChatMessage godoc
 // @Summary Send a chat message to the AI
-// @Description Send a message (with optional prior turns for context) and get back the AI's reply.
+// @Description Send a message for a scenario and get back the AI's reply. Both the message and the reply are persisted as the scenario's chat history.
 // @Tags AI Conversation
 // @Accept json
 // @Produce json
 // @Security BearerAuth
+// @Param slug path string true "Scenario slug"
 // @Param request body ChatRequest true "Chat request"
 // @Success 200 {object} response.SuccessResponse{data=ChatResponse}
 // @Failure 400 {object} response.ErrorResponse
 // @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
 // @Failure 502 {object} response.ErrorResponse
 // @Failure 503 {object} response.ErrorResponse
-// @Router /ai-conversations/chat [post]
+// @Router /ai-conversations/scenarios/{slug}/messages [post]
 func (h Handler) SendChatMessage(c *gin.Context) {
-	_, ok := middleware.GetUserID(c)
+	userID, ok := middleware.GetUserID(c)
 	if !ok {
 		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
 		return
 	}
+
+	scenarioSlug := c.Param("slug")
 
 	var req ChatRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -124,9 +128,40 @@ func (h Handler) SendChatMessage(c *gin.Context) {
 		return
 	}
 
-	result, err := h.service.SendChatMessage(c.Request.Context(), validatedReq)
+	result, err := h.service.SendChatMessage(c.Request.Context(), userID, scenarioSlug, validatedReq.Message)
 	if err != nil {
 		writeChatError(c, err)
+		return
+	}
+
+	response.OK(c, result)
+}
+
+// ListMessages godoc
+// @Summary List a scenario's chat messages
+// @Description Return the persisted chat history for one of the authenticated user's scenarios, oldest first.
+// @Tags AI Conversation
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param slug path string true "Scenario slug"
+// @Success 200 {object} response.SuccessResponse{data=ListMessagesResponse}
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /ai-conversations/scenarios/{slug}/messages [get]
+func (h Handler) ListMessages(c *gin.Context) {
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+		return
+	}
+
+	scenarioSlug := c.Param("slug")
+
+	result, err := h.service.ListMessages(userID, scenarioSlug)
+	if err != nil {
+		writeScenarioError(c, err)
 		return
 	}
 
@@ -136,12 +171,14 @@ func (h Handler) SendChatMessage(c *gin.Context) {
 func writeChatError(c *gin.Context, err error) {
 	log.Printf("ai chat error: %v", err)
 
-	if errors.Is(err, ErrAIChatNotConfigured) {
+	switch {
+	case errors.Is(err, ErrScenarioNotFound):
+		response.Error(c, http.StatusNotFound, "NOT_FOUND", "Scenario was not found")
+	case errors.Is(err, ErrAIChatNotConfigured):
 		response.Error(c, http.StatusServiceUnavailable, "AI_CHAT_NOT_CONFIGURED", "AI chat is not configured on the server")
-		return
+	default:
+		response.Error(c, http.StatusBadGateway, "AI_CHAT_REQUEST_FAILED", "Unable to get a response from the AI right now")
 	}
-
-	response.Error(c, http.StatusBadGateway, "AI_CHAT_REQUEST_FAILED", "Unable to get a response from the AI right now")
 }
 
 func writeScenarioError(c *gin.Context, err error) {
@@ -149,6 +186,8 @@ func writeScenarioError(c *gin.Context, err error) {
 	switch {
 	case errors.As(err, &validationErr):
 		response.ValidationError(c, validationErr.Fields)
+	case errors.Is(err, ErrScenarioNotFound):
+		response.Error(c, http.StatusNotFound, "NOT_FOUND", "Scenario was not found")
 	default:
 		response.Error(c, http.StatusInternalServerError, "INTERNAL_ERROR", "Something went wrong")
 	}

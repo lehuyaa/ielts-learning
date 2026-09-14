@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
 import { getApiErrorMessage } from '@/api/api'
+import { ErrorState } from '@/components/state/ErrorState'
+import { useChatMessages } from '@/features/aiConversation/hooks/useChatMessages'
 import { useScenarios } from '@/features/aiConversation/hooks/useScenarios'
 import { useSendChatMessage } from '@/features/aiConversation/hooks/useSendChatMessage'
 import { mapScenarioResponseToScenario } from '@/features/aiConversation/scenarios'
@@ -15,12 +17,21 @@ type Message = {
   time: string
 }
 
-const MAX_HISTORY_MESSAGES = 20
-
 function formatElapsed(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60)
   const seconds = totalSeconds % 60
   return `${minutes}:${String(seconds).padStart(2, '0')}`
+}
+
+function nextMessageId(messages: Message[]) {
+  return messages.length === 0
+    ? 1
+    : Math.max(...messages.map((message) => message.id)) + 1
+}
+
+function secondsBetween(laterIso: string, earlierIso: string) {
+  const diffMs = new Date(laterIso).getTime() - new Date(earlierIso).getTime()
+  return Math.max(0, Math.round(diffMs / 1000))
 }
 
 export function AIConversationSessionPage() {
@@ -34,17 +45,52 @@ export function AIConversationSessionPage() {
   const scenario = scenarioResponse
     ? mapScenarioResponseToScenario(scenarioResponse)
     : undefined
-  const isResolvingScenario = !scenario && scenariosQuery.isLoading
+  const messagesQuery = useChatMessages(scenario?.slug)
 
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [messages, setMessages] = useState<Message[]>([])
   const [inputValue, setInputValue] = useState('')
   const [isRecording, setIsRecording] = useState(false)
   const [isAiTyping, setIsAiTyping] = useState(false)
+  const [restoredSlug, setRestoredSlug] = useState<string | undefined>(
+    undefined,
+  )
 
-  const nextMessageId = useRef(1)
   const scrollRef = useRef<HTMLDivElement>(null)
   const sendChatMessageMutation = useSendChatMessage()
+
+  // Restore (or seed) the chat for this scenario once its persisted history
+  // has loaded. Adjusting state during render — guarded by the slug
+  // comparison — instead of in an effect avoids an extra render pass; see
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  if (scenario && messagesQuery.data && scenario.slug !== restoredSlug) {
+    setRestoredSlug(scenario.slug)
+
+    const items = messagesQuery.data.items
+    if (items.length > 0) {
+      const firstCreatedAt = items[0].createdAt
+      setMessages(
+        items.map((item) => ({
+          id: item.id,
+          sender: item.role === 'user' ? 'user' : 'ai',
+          text: item.content,
+          time: formatElapsed(secondsBetween(item.createdAt, firstCreatedAt)),
+        })),
+      )
+      setElapsedSeconds(
+        secondsBetween(items[items.length - 1].createdAt, firstCreatedAt),
+      )
+    } else {
+      setMessages([
+        {
+          id: 1,
+          sender: 'ai',
+          text: scenario.openingLine,
+          time: '0:00',
+        },
+      ])
+    }
+  }
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,27 +100,11 @@ export function AIConversationSessionPage() {
   }, [])
 
   useEffect(() => {
-    if (!scenario) {
-      return
-    }
-
-    setMessages([
-      {
-        id: nextMessageId.current++,
-        sender: 'ai',
-        text: scenario.openingLine,
-        time: '0:00',
-      },
-    ])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scenario?.slug])
-
-  useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
   }, [messages, isAiTyping])
 
   if (!scenario) {
-    if (isResolvingScenario) {
+    if (scenariosQuery.isLoading) {
       return (
         <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
           Loading scenario…
@@ -85,21 +115,41 @@ export function AIConversationSessionPage() {
     return <Navigate replace to="/ai-conversation" />
   }
 
+  if (scenario.slug !== restoredSlug) {
+    if (messagesQuery.isError) {
+      return (
+        <div className="grid min-h-screen place-items-center bg-background px-4">
+          <ErrorState
+            description={getApiErrorMessage(
+              messagesQuery.error,
+              'Unable to load this conversation right now.',
+            )}
+            onRetry={() => {
+              void messagesQuery.refetch()
+            }}
+            title="Could not load conversation"
+          />
+        </div>
+      )
+    }
+
+    return (
+      <div className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">
+        Loading conversation…
+      </div>
+    )
+  }
+
   function sendMessage() {
     const text = inputValue.trim()
     if (!text || !scenario || sendChatMessageMutation.isPending) {
       return
     }
 
-    const history = messages.slice(-MAX_HISTORY_MESSAGES).map((message) => ({
-      role: message.sender === 'user' ? ('user' as const) : ('assistant' as const),
-      content: message.text,
-    }))
-
     setMessages((current) => [
       ...current,
       {
-        id: nextMessageId.current++,
+        id: nextMessageId(current),
         sender: 'user',
         text,
         time: formatElapsed(elapsedSeconds),
@@ -110,16 +160,15 @@ export function AIConversationSessionPage() {
 
     sendChatMessageMutation.mutate(
       {
+        scenarioSlug: scenario.slug,
         message: text,
-        systemPrompt: scenario.situationContext,
-        history,
       },
       {
         onSuccess: (result) => {
           setMessages((current) => [
             ...current,
             {
-              id: nextMessageId.current++,
+              id: nextMessageId(current),
               sender: 'ai',
               text: result.reply,
               time: formatElapsed(elapsedSeconds),
@@ -131,7 +180,7 @@ export function AIConversationSessionPage() {
           setMessages((current) => [
             ...current,
             {
-              id: nextMessageId.current++,
+              id: nextMessageId(current),
               sender: 'ai',
               text: getApiErrorMessage(
                 error,

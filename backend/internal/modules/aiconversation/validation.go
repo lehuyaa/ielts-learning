@@ -69,25 +69,10 @@ func ValidateCreateScenarioRequest(req CreateScenarioRequest) (CreateScenarioReq
 	return req, nil
 }
 
-const (
-	maxChatMessageLength      = 4000
-	maxChatSystemPromptLength = 4000
-	maxChatHistoryItems       = 20
-)
-
-var allowedChatRoles = map[string]bool{
-	"user":      true,
-	"assistant": true,
-}
+const maxChatMessageLength = 4000
 
 func NormalizeChatRequest(req ChatRequest) ChatRequest {
 	req.Message = strings.TrimSpace(req.Message)
-	req.SystemPrompt = strings.TrimSpace(req.SystemPrompt)
-	for i, item := range req.History {
-		item.Role = strings.ToLower(strings.TrimSpace(item.Role))
-		item.Content = strings.TrimSpace(item.Content)
-		req.History[i] = item
-	}
 
 	return req
 }
@@ -100,25 +85,6 @@ func ValidateChatRequest(req ChatRequest) (ChatRequest, error) {
 		fields["message"] = "Message is required"
 	} else if len(req.Message) > maxChatMessageLength {
 		fields["message"] = fmt.Sprintf("Message must be at most %d characters", maxChatMessageLength)
-	}
-
-	if len(req.SystemPrompt) > maxChatSystemPromptLength {
-		fields["systemPrompt"] = fmt.Sprintf("System prompt must be at most %d characters", maxChatSystemPromptLength)
-	}
-
-	if len(req.History) > maxChatHistoryItems {
-		fields["history"] = fmt.Sprintf("History can include at most %d prior messages", maxChatHistoryItems)
-	} else {
-		for _, item := range req.History {
-			if !allowedChatRoles[item.Role] {
-				fields["history"] = "Each history item's role must be \"user\" or \"assistant\""
-				break
-			}
-			if item.Content == "" || len(item.Content) > maxChatMessageLength {
-				fields["history"] = fmt.Sprintf("Each history item's content must be 1-%d characters", maxChatMessageLength)
-				break
-			}
-		}
 	}
 
 	if len(fields) > 0 {
