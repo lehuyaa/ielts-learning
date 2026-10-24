@@ -62,12 +62,18 @@ func (r Repository) FindByUserAndSlug(userID uint, slug string) (models.AIConver
 	return scenario, nil
 }
 
-func (r Repository) CreateMessage(message *models.AIConversationMessage) error {
-	if err := r.db.Create(message).Error; err != nil {
-		return fmt.Errorf("create ai conversation message: %w", err)
-	}
+// CreateMessages saves all messages in one transaction, so either every
+// message is saved or none is.
+func (r Repository) CreateMessages(messages []models.AIConversationMessage) error {
+	return r.db.Transaction(func(tx *gorm.DB) error {
+		for i := range messages {
+			if err := tx.Create(&messages[i]).Error; err != nil {
+				return fmt.Errorf("create ai conversation message: %w", err)
+			}
+		}
 
-	return nil
+		return nil
+	})
 }
 
 func (r Repository) FindMessagesByScenario(scenarioID uint) ([]models.AIConversationMessage, error) {
