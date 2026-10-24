@@ -1,4 +1,4 @@
-import { ArrowLeft, HelpCircle, Mic, Send } from 'lucide-react'
+import { ArrowLeft, Eye, EyeOff, HelpCircle, Mic, Send } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
@@ -8,6 +8,7 @@ import { useToast } from '@/contexts/toast/useToast'
 import { useChatMessages } from '@/features/aiConversation/hooks/useChatMessages'
 import { useScenarios } from '@/features/aiConversation/hooks/useScenarios'
 import { useSendChatMessage } from '@/features/aiConversation/hooks/useSendChatMessage'
+import { useSpeechRecognition } from '@/features/aiConversation/hooks/useSpeechRecognition'
 import { mapScenarioResponseToScenario } from '@/features/aiConversation/scenarios'
 import { cn } from '@/lib/utils'
 
@@ -30,6 +31,23 @@ function nextMessageId(messages: Message[]) {
     : Math.max(...messages.map((message) => message.id)) + 1
 }
 
+// Reads AI replies aloud; a no-op in browsers without speech synthesis.
+function speak(text: string) {
+  if (!('speechSynthesis' in window)) {
+    return
+  }
+  window.speechSynthesis.cancel()
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.lang = 'en-US'
+  window.speechSynthesis.speak(utterance)
+}
+
+function stopSpeaking() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel()
+  }
+}
+
 function secondsBetween(laterIso: string, earlierIso: string) {
   const diffMs = new Date(laterIso).getTime() - new Date(earlierIso).getTime()
   return Math.max(0, Math.round(diffMs / 1000))
@@ -50,8 +68,9 @@ export function AIConversationSessionPage() {
 
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [messages, setMessages] = useState<Message[]>([])
+  // AI replies start blurred so the learner listens before reading.
+  const [isAiTextVisible, setIsAiTextVisible] = useState(false)
   const [inputValue, setInputValue] = useState('')
-  const [isRecording, setIsRecording] = useState(false)
   const [isAiTyping, setIsAiTyping] = useState(false)
   const [restoredSlug, setRestoredSlug] = useState<string | undefined>(
     undefined,
@@ -63,6 +82,14 @@ export function AIConversationSessionPage() {
   const elapsedSecondsRef = useRef(0)
   const sendChatMessageMutation = useSendChatMessage()
   const { showToast } = useToast()
+  const speechRecognition = useSpeechRecognition((message) =>
+    showToast({
+      tone: 'error',
+      title: 'Voice input unavailable',
+      description: message,
+    }),
+  )
+  const isRecording = speechRecognition.isListening
 
   // Restore the chat for this scenario once its persisted history has loaded.
   // Waiting for !isFetching skips stale cached history on remount, which would
@@ -108,6 +135,9 @@ export function AIConversationSessionPage() {
     elapsedSecondsRef.current = elapsedSeconds
   }, [elapsedSeconds])
 
+  // Speech keeps playing after navigation unless cancelled.
+  useEffect(() => stopSpeaking, [])
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
   }, [messages, isAiTyping])
@@ -149,6 +179,22 @@ export function AIConversationSessionPage() {
     )
   }
 
+  // First tap transcribes speech into the input, second tap sends it.
+  function handleMicClick() {
+    if (!isRecording) {
+      // Otherwise the microphone transcribes the AI's own voice.
+      stopSpeaking()
+      const typedText = inputValue.trim()
+      speechRecognition.start((transcript) =>
+        setInputValue([typedText, transcript].filter(Boolean).join(' ')),
+      )
+      return
+    }
+
+    speechRecognition.stop()
+    sendMessage()
+  }
+
   function sendMessage() {
     const text = inputValue.trim()
     if (!text || !scenario || sendChatMessageMutation.isPending) {
@@ -185,6 +231,7 @@ export function AIConversationSessionPage() {
             },
           ])
           setIsAiTyping(false)
+          speak(result.reply)
         },
         onError: (error) => {
           // The backend saves nothing on failure, so drop the optimistic
@@ -244,6 +291,19 @@ export function AIConversationSessionPage() {
         <div className="text-xs text-muted-foreground">
           {isRecording ? 'Listening…' : isAiTyping ? 'Typing…' : 'Ready'}
         </div>
+        <button
+          aria-pressed={isAiTextVisible}
+          className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          onClick={() => setIsAiTextVisible((current) => !current)}
+          type="button"
+        >
+          {isAiTextVisible ? (
+            <EyeOff className="size-3.5" aria-hidden="true" />
+          ) : (
+            <Eye className="size-3.5" aria-hidden="true" />
+          )}
+          {isAiTextVisible ? 'Hide AI text' : 'Show AI text'}
+        </button>
       </div>
 
       <div
@@ -266,7 +326,18 @@ export function AIConversationSessionPage() {
                   : 'rounded-bl-md border border-border bg-white text-foreground shadow-sm',
               )}
             >
-              {message.text}
+              <span
+                className={cn(
+                  'transition-[filter]',
+                  // The opening line is never read aloud, so it stays readable.
+                  message.sender === 'ai' &&
+                    message.id !== 0 &&
+                    !isAiTextVisible &&
+                    'select-none blur-sm',
+                )}
+              >
+                {message.text}
+              </span>
               <div
                 className={cn(
                   'mt-1 text-[11px]',
@@ -305,12 +376,12 @@ export function AIConversationSessionPage() {
 
         <div className="flex flex-col items-center gap-2 pb-4">
           <button
-            aria-label={isRecording ? 'Stop recording' : 'Start recording'}
+            aria-label={isRecording ? 'Stop and send' : 'Start recording'}
             className={cn(
               'grid size-14 place-items-center rounded-full text-white transition-colors',
               isRecording ? 'bg-red-500' : 'bg-primary hover:bg-primary/90',
             )}
-            onClick={() => setIsRecording((current) => !current)}
+            onClick={handleMicClick}
             type="button"
           >
             <Mic className="size-6" aria-hidden="true" />
@@ -338,12 +409,15 @@ export function AIConversationSessionPage() {
           className="flex items-center gap-2"
           onSubmit={(event) => {
             event.preventDefault()
+            // Stop first, or the next transcript would refill the cleared input.
+            speechRecognition.stop()
             sendMessage()
           }}
         >
           <input
             className="h-11 flex-1 rounded-full border border-border bg-muted/30 px-4 text-sm text-foreground outline-none transition-colors focus:border-primary"
             onChange={(event) => setInputValue(event.target.value)}
+            readOnly={isRecording}
             placeholder="Or type your message..."
             value={inputValue}
           />
