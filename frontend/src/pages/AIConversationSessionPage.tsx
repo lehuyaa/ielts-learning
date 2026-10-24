@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
 import { getApiErrorMessage } from '@/api/api'
 import { ErrorState } from '@/components/state/ErrorState'
+import { useToast } from '@/contexts/toast/useToast'
 import { useChatMessages } from '@/features/aiConversation/hooks/useChatMessages'
 import { useScenarios } from '@/features/aiConversation/hooks/useScenarios'
 import { useSendChatMessage } from '@/features/aiConversation/hooks/useSendChatMessage'
@@ -57,39 +58,43 @@ export function AIConversationSessionPage() {
   )
 
   const scrollRef = useRef<HTMLDivElement>(null)
+  // Mutation callbacks resolve seconds after sending, so they read the
+  // current elapsed time from here instead of their stale closure.
+  const elapsedSecondsRef = useRef(0)
   const sendChatMessageMutation = useSendChatMessage()
+  const { showToast } = useToast()
 
-  // Restore (or seed) the chat for this scenario once its persisted history
-  // has loaded. Adjusting state during render — guarded by the slug
-  // comparison — instead of in an effect avoids an extra render pass; see
+  // Restore the chat for this scenario once its persisted history has loaded.
+  // Waiting for !isFetching skips stale cached history on remount, which would
+  // otherwise miss messages sent during the previous visit. Adjusting state
+  // during render — guarded by the slug comparison — instead of in an effect
+  // avoids an extra render pass; see
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
-  if (scenario && messagesQuery.data && scenario.slug !== restoredSlug) {
+  if (
+    scenario &&
+    messagesQuery.data &&
+    !messagesQuery.isFetching &&
+    scenario.slug !== restoredSlug
+  ) {
     setRestoredSlug(scenario.slug)
 
     const items = messagesQuery.data.items
-    if (items.length > 0) {
-      const firstCreatedAt = items[0].createdAt
-      setMessages(
-        items.map((item) => ({
-          id: item.id,
-          sender: item.role === 'user' ? 'user' : 'ai',
-          text: item.content,
-          time: formatElapsed(secondsBetween(item.createdAt, firstCreatedAt)),
-        })),
-      )
-      setElapsedSeconds(
-        secondsBetween(items[items.length - 1].createdAt, firstCreatedAt),
-      )
-    } else {
-      setMessages([
-        {
-          id: 1,
-          sender: 'ai',
-          text: scenario.openingLine,
-          time: '0:00',
-        },
-      ])
-    }
+    const firstCreatedAt = items[0]?.createdAt
+    const lastCreatedAt = items[items.length - 1]?.createdAt
+    // The opening line is display-only (the AI gets the same context as its
+    // system prompt), so it is never persisted and is re-added on every restore.
+    setMessages([
+      { id: 0, sender: 'ai', text: scenario.openingLine, time: '0:00' },
+      ...items.map((item) => ({
+        id: item.id,
+        sender: item.role === 'user' ? ('user' as const) : ('ai' as const),
+        text: item.content,
+        time: formatElapsed(secondsBetween(item.createdAt, firstCreatedAt)),
+      })),
+    ])
+    setElapsedSeconds(
+      lastCreatedAt ? secondsBetween(lastCreatedAt, firstCreatedAt) : 0,
+    )
   }
 
   useEffect(() => {
@@ -98,6 +103,10 @@ export function AIConversationSessionPage() {
     }, 1000)
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    elapsedSecondsRef.current = elapsedSeconds
+  }, [elapsedSeconds])
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
@@ -146,10 +155,11 @@ export function AIConversationSessionPage() {
       return
     }
 
+    const userMessageId = nextMessageId(messages)
     setMessages((current) => [
       ...current,
       {
-        id: nextMessageId(current),
+        id: userMessageId,
         sender: 'user',
         text,
         time: formatElapsed(elapsedSeconds),
@@ -171,25 +181,27 @@ export function AIConversationSessionPage() {
               id: nextMessageId(current),
               sender: 'ai',
               text: result.reply,
-              time: formatElapsed(elapsedSeconds),
+              time: formatElapsed(elapsedSecondsRef.current),
             },
           ])
           setIsAiTyping(false)
         },
         onError: (error) => {
-          setMessages((current) => [
-            ...current,
-            {
-              id: nextMessageId(current),
-              sender: 'ai',
-              text: getApiErrorMessage(
-                error,
-                "Sorry, I couldn't respond right now. Please try again.",
-              ),
-              time: formatElapsed(elapsedSeconds),
-            },
-          ])
+          // The backend saves nothing on failure, so drop the optimistic
+          // message and give the text back to keep the screen in sync with the DB.
+          setMessages((current) =>
+            current.filter((message) => message.id !== userMessageId),
+          )
+          setInputValue((current) => current || text)
           setIsAiTyping(false)
+          showToast({
+            tone: 'error',
+            title: 'Message not sent',
+            description: getApiErrorMessage(
+              error,
+              "Sorry, I couldn't respond right now. Please try again.",
+            ),
+          })
         },
       },
     )

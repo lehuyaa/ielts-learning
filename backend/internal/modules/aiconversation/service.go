@@ -93,18 +93,9 @@ func (s Service) SendChatMessage(ctx context.Context, userID uint, scenarioSlug 
 	}
 	reply = strings.TrimSpace(reply)
 
-	if err := s.repository.CreateMessage(&models.AIConversationMessage{
-		ScenarioID: scenario.ID,
-		Role:       chatRoleUser,
-		Content:    userMessage,
-	}); err != nil {
-		return ChatResponse{}, err
-	}
-
-	if err := s.repository.CreateMessage(&models.AIConversationMessage{
-		ScenarioID: scenario.ID,
-		Role:       chatRoleAssistant,
-		Content:    reply,
+	if err := s.repository.CreateMessages([]models.AIConversationMessage{
+		{ScenarioID: scenario.ID, Role: chatRoleUser, Content: userMessage},
+		{ScenarioID: scenario.ID, Role: chatRoleAssistant, Content: reply},
 	}); err != nil {
 		return ChatResponse{}, err
 	}
