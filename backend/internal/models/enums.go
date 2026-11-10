@@ -76,3 +76,19 @@ const (
 	SubscriptionPastDue  SubscriptionStatus = "PAST_DUE"
 	SubscriptionCanceled SubscriptionStatus = "CANCELED"
 )
+
+type CourseKind string
+
+const (
+	CourseKindIELTS CourseKind = "IELTS"
+	CourseKindCEFR  CourseKind = "CEFR"
+)
+
+// TopicTrack separates the main learning path from free-practice libraries
+// inside a level. Lessons unlock sequentially only within the same track.
+type TopicTrack string
+
+const (
+	TopicTrackCore       TopicTrack = "CORE"
+	TopicTrackVocabulary TopicTrack = "VOCABULARY"
+)

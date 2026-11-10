@@ -1655,7 +1655,7 @@ Request/response details: `docs/foundation-spec.md` §5 (answer shapes), §6 (AI
 | Method | Path | Task |
 |---|---|---|
 | GET | `/api/v1/courses` | 49 |
-| PATCH | `/api/v1/profile/active-course` | 49 |
+| PATCH | `/api/v1/me/active-course` | 49 |
 | GET | `/api/v1/roadmap?courseSlug=` | 49 |
 | GET | `/api/v1/lessons/:lessonId/activities` | 50 |
 | GET | `/api/v1/activities/:activityId` | 51 |

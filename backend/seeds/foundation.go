@@ -3,6 +3,7 @@ package seeds
 import (
 	_ "embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"gorm.io/gorm"
@@ -25,6 +26,7 @@ const (
 type foundationFile struct {
 	BandLevel struct {
 		BandScore float64 `json:"bandScore"`
+		CEFRLevel string  `json:"cefrLevel"`
 		Title     string  `json:"title"`
 	} `json:"bandLevel"`
 	Topics []foundationTopic `json:"topics"`
@@ -47,10 +49,20 @@ type foundationLesson struct {
 	OrderIndex int    `json:"orderIndex"`
 }
 
-// RunFoundation seeds the A1 Foundation band level (topics + lessons) into the
-// published course, without touching demo users or progress. It is idempotent:
-// run it once before importing the A1 vocabulary Excel file, and again after the
-// import to (re)build each lesson's quiz from its imported words.
+const (
+	foundationCourseSlug = "foundation-english"
+	ieltsCourseSlug      = "ielts-vocabulary-roadmap"
+	// legacyA1BandScore is where Task 44 put "A1 Foundation" inside the IELTS
+	// course before the CEFR course existed (Task 49 moves it).
+	legacyA1BandScore = 3.0
+)
+
+// RunFoundation seeds the Foundation English (CEFR) course with its A1 level
+// and A1 vocabulary library (topics + lessons), without touching demo users or
+// progress. It is idempotent: run it once before importing the A1 vocabulary
+// Excel file, and again after the import to (re)build each lesson's quiz from
+// its imported words. It also moves the A1 band level created by older
+// versions of this seed out of the IELTS course, keeping its IDs and progress.
 func RunFoundation(db *gorm.DB) error {
 	var file foundationFile
 	if err := json.Unmarshal(foundationA1JSON, &file); err != nil {
@@ -58,7 +70,7 @@ func RunFoundation(db *gorm.DB) error {
 	}
 
 	return db.Transaction(func(tx *gorm.DB) error {
-		course, err := seedCourse(tx)
+		course, err := seedFoundationCourse(tx)
 		if err != nil {
 			return err
 		}
@@ -77,36 +89,108 @@ func RunFoundation(db *gorm.DB) error {
 			return err
 		}
 
-		return updateCourseTotals(tx, course.ID)
+		if err := updateCourseTotals(tx, course.ID); err != nil {
+			return err
+		}
+
+		// The IELTS course lost the legacy A1 band, so refresh its totals too.
+		var ieltsCourse models.Course
+		err = tx.Where("slug = ?", ieltsCourseSlug).First(&ieltsCourse).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		if err != nil {
+			return fmt.Errorf("load IELTS course: %w", err)
+		}
+		return updateCourseTotals(tx, ieltsCourse.ID)
 	})
 }
 
-func seedFoundationBand(db *gorm.DB, courseID uint, file foundationFile) (models.BandLevel, error) {
-	minScore := 1.0
-	maxScore := 3.5
-	statusLabel := "Start here"
-	band := models.BandLevel{
-		CourseID:    courseID,
-		BandScore:   file.BandLevel.BandScore,
-		MinScore:    &minScore,
-		MaxScore:    &maxScore,
-		Title:       file.BandLevel.Title,
-		Description: "Nền tảng tiếng Anh cho người mất gốc: từ vựng A1 thông dụng nhất, có phiên âm IPA, nghĩa tiếng Việt và câu ví dụ.",
-		StatusLabel: &statusLabel,
-		// IELTS band levels use 1..4, so 0 puts A1 first on the roadmap.
-		OrderIndex: 0,
+func seedFoundationCourse(db *gorm.DB) (models.Course, error) {
+	course := models.Course{
+		Title:       "Foundation English",
+		Description: "Lộ trình tiếng Anh nền tảng cho người đi làm mất gốc, từ A1 đến B2: từ vựng, ngữ pháp, phát âm, nghe, đọc, viết và luyện nói với AI.",
+		Slug:        foundationCourseSlug,
+		Kind:        models.CourseKindCEFR,
+		IsPublished: true,
+		OrderIndex:  2,
+		BandMin:     1.0,
+		BandMax:     4.0,
 	}
 
-	if err := db.Where("course_id = ? AND band_score = ?", courseID, band.BandScore).Assign(band).FirstOrCreate(&band).Error; err != nil {
-		return models.BandLevel{}, fmt.Errorf("seed foundation band: %w", err)
+	if err := db.Where("slug = ?", course.Slug).Assign(course).FirstOrCreate(&course).Error; err != nil {
+		return models.Course{}, fmt.Errorf("seed foundation course: %w", err)
+	}
+
+	return course, nil
+}
+
+func seedFoundationBand(db *gorm.DB, courseID uint, file foundationFile) (models.BandLevel, error) {
+	cefrLevel := file.BandLevel.CEFRLevel
+	minScore := file.BandLevel.BandScore
+	maxScore := file.BandLevel.BandScore + 0.5
+	statusLabel := "Start here"
+
+	var band models.BandLevel
+	err := db.Where("course_id = ? AND cefr_level = ?", courseID, cefrLevel).First(&band).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		err = findLegacyA1Band(db, &band)
+	}
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.BandLevel{}, fmt.Errorf("find foundation band: %w", err)
+	}
+
+	// Updates via a map so zero values (order_index 0 → 1 etc.) are written too.
+	values := map[string]any{
+		"course_id":    courseID,
+		"band_score":   file.BandLevel.BandScore,
+		"cefr_level":   cefrLevel,
+		"min_score":    minScore,
+		"max_score":    maxScore,
+		"title":        file.BandLevel.Title,
+		"description":  "Nền tảng tiếng Anh cho người mất gốc: giao tiếp hằng ngày, từ vựng A1 có phiên âm IPA, nghĩa tiếng Việt và câu ví dụ.",
+		"status_label": statusLabel,
+		"order_index":  1,
+	}
+
+	if band.ID == 0 {
+		band = models.BandLevel{
+			CourseID:    courseID,
+			BandScore:   file.BandLevel.BandScore,
+			CEFRLevel:   &cefrLevel,
+			MinScore:    &minScore,
+			MaxScore:    &maxScore,
+			Title:       file.BandLevel.Title,
+			StatusLabel: &statusLabel,
+			OrderIndex:  1,
+		}
+		if err := db.Create(&band).Error; err != nil {
+			return models.BandLevel{}, fmt.Errorf("create foundation band: %w", err)
+		}
+	}
+
+	if err := db.Model(&band).Updates(values).Error; err != nil {
+		return models.BandLevel{}, fmt.Errorf("update foundation band: %w", err)
+	}
+	if err := db.First(&band, band.ID).Error; err != nil {
+		return models.BandLevel{}, fmt.Errorf("reload foundation band: %w", err)
 	}
 
 	return band, nil
 }
 
+// findLegacyA1Band finds the A1 band level that older versions of this seed
+// created inside the IELTS course.
+func findLegacyA1Band(db *gorm.DB, band *models.BandLevel) error {
+	return db.
+		Joins("JOIN courses ON courses.id = band_levels.course_id").
+		Where("courses.slug = ? AND band_levels.band_score = ?", ieltsCourseSlug, legacyA1BandScore).
+		First(band).Error
+}
+
 func seedFoundationTopicsAndLessons(db *gorm.DB, band models.BandLevel, topics []foundationTopic) ([]models.Lesson, error) {
-	bandMin := 1.0
-	bandMax := 3.5
+	bandMin := band.BandScore
+	bandMax := band.BandScore + 0.5
 	timeLimit := 600
 
 	lessons := make([]models.Lesson, 0)
@@ -119,6 +203,7 @@ func seedFoundationTopicsAndLessons(db *gorm.DB, band models.BandLevel, topics [
 			Icon:        seed.Icon,
 			Emoji:       seed.Emoji,
 			Color:       seed.Color,
+			Track:       models.TopicTrackVocabulary,
 			OrderIndex:  seed.OrderIndex,
 		}
 		if err := db.Where("band_level_id = ? AND slug = ?", band.ID, seed.Slug).Assign(topic).FirstOrCreate(&topic).Error; err != nil {

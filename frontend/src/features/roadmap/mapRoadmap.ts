@@ -15,8 +15,9 @@ export function mapRoadmapToViewModel(
   roadmap: RoadmapResponse,
 ): RoadmapViewModel {
   return {
+    kind: roadmap.course.kind ?? "IELTS",
     title: roadmap.course.title || "Vocabulary Roadmap",
-    subtitle: `Band ${roadmap.course.bandMin.toFixed(1)} → ${roadmap.course.bandMax.toFixed(1)}`,
+    subtitle: courseSubtitle(roadmap),
     topicsCompleted: roadmap.summary.topicsCompleted,
     totalTopics: roadmap.summary.totalTopics,
     currentBand: roadmap.summary.currentBand,
@@ -26,10 +27,24 @@ export function mapRoadmapToViewModel(
   };
 }
 
+function courseSubtitle(roadmap: RoadmapResponse) {
+  if (roadmap.course.kind === "CEFR") {
+    const levels = roadmap.bandLevels
+      .map((band) => band.cefrLevel)
+      .filter((level): level is string => Boolean(level));
+    return levels.length > 1
+      ? `CEFR ${levels[0]} → ${levels[levels.length - 1]}`
+      : `CEFR ${levels[0] ?? ""}`.trim();
+  }
+
+  return `Band ${roadmap.course.bandMin.toFixed(1)} → ${roadmap.course.bandMax.toFixed(1)}`;
+}
+
 function mapBand(band: RoadmapBandLevel): RoadmapBand {
   return {
     id: String(band.id),
     band: band.bandScore.toFixed(1),
+    cefrLevel: band.cefrLevel ?? null,
     title: band.title,
     description: band.description,
     status: mapStatus(band.status),
@@ -47,6 +62,7 @@ function mapTopic(topic: RoadmapTopic) {
   return {
     id: topic.id,
     title: topic.title,
+    track: topic.track ?? "CORE",
     description: "",
     progress: topic.progressPercentage,
     icon: getTopicDisplayIcon(topic),

@@ -184,7 +184,7 @@ assert len(lesson_slugs) == len(set(lesson_slugs)), "duplicate lesson slug"
 
 os.makedirs(out_dir, exist_ok=True)
 with open(os.path.join(out_dir, "foundation_a1.json"), "w", encoding="utf-8") as fh:
-    json.dump({"bandLevel": {"bandScore": 3.0, "title": "A1 Foundation"}, "topics": structure},
+    json.dump({"bandLevel": {"bandScore": 1.0, "cefrLevel": "A1", "title": "A1 Foundation"}, "topics": structure},
               fh, ensure_ascii=False, indent=2)
 with open(os.path.join(out_dir, "a1_rows.json"), "w", encoding="utf-8") as fh:
     json.dump(rows, fh, ensure_ascii=False, indent=1)

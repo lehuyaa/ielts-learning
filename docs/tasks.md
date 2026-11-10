@@ -1815,6 +1815,8 @@ Spec: `docs/foundation-spec.md` §2-§5, §9-§10.
 
 ### Task 49 - Foundation English Course and Course Switcher
 
+Status: done.
+
 Goal:
 
 Separate the CEFR course from the IELTS course and let the learner switch between them on the roadmap.
@@ -1824,7 +1826,7 @@ Requirements:
 - Add `courses.kind`, `band_levels.cefr_level`, `topics.track`, `users.active_course_id` (spec §3.1).
 - Seed course `foundation-english` (`kind = CEFR`) with band level A1 (`band_score = 1.0`, `cefr_level = A1`).
 - One-off, idempotent migration in `-only-foundation`: move the Task 44 "A1 Foundation" band level to the new course, set `cefr_level = A1`, `band_score = 1.0`, and set its 14 topics to `track = VOCABULARY`. Existing IDs and progress are kept.
-- `GET /courses`, `PATCH /profile/active-course`, `GET /roadmap?courseSlug=` (defaults to the active course).
+- `GET /courses`, `PATCH /me/active-course`, `GET /roadmap?courseSlug=` (defaults to the active course).
 - Unlock chain computed per course and per track; VOCABULARY lessons always unlocked.
 - Roadmap UI: course switcher, CEFR label instead of band number, CORE weeks first and a "Vocabulary library" section.
 

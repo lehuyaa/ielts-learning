@@ -554,7 +554,7 @@ All endpoints are under `/api/v1`, protected unless noted, using the standard re
 | Method | Path | Task | Purpose |
 |---|---|---|---|
 | GET | `/courses` | 49 | Published courses with progress summary |
-| PATCH | `/profile/active-course` | 49 | `{ "courseId": 2 }` |
+| PATCH | `/me/active-course` | 49 | `{ "courseId": 2 }` |
 | GET | `/roadmap?courseSlug=` | 49 | Existing roadmap, scoped to a course, with `cefrLevel` and `track` |
 | GET | `/lessons/:lessonId/activities` | 50 | Activities + user progress (no exercise answers) |
 | GET | `/activities/:activityId` | 51 | Activity detail, exercises with `payload` only, linked grammar point / passage / scenario |

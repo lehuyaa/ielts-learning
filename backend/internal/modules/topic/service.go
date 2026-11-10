@@ -64,7 +64,7 @@ func (s Service) toResponse(
 
 	for _, lesson := range lessons {
 		progress, hasProgress := progressByLesson[lesson.ID]
-		status := lessonStatus(hasProgress, progress, previousLessonCompleted)
+		status := lessonStatus(hasProgress, progress, previousLessonCompleted || topic.IsAlwaysUnlocked())
 		if status == models.LessonStatusCompleted {
 			completedLessons++
 		}

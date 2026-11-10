@@ -1,6 +1,7 @@
 {
   "bandLevel": {
-    "bandScore": 3.0,
+    "bandScore": 1.0,
+    "cefrLevel": "A1",
     "title": "A1 Foundation"
   },
   "topics": [
