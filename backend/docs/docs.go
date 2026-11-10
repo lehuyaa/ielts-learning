@@ -619,6 +619,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/courses": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return published courses (IELTS and Foundation English) with the user's completed lessons and active course.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "List courses",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/course.ListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/dashboard/summary": {
             "get": {
                 "security": [
@@ -1238,6 +1290,81 @@ const docTemplate = `{
                 }
             }
         },
+        "/me/active-course": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Choose which course the roadmap shows by default.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Courses"
+                ],
+                "summary": "Set active course",
+                "parameters": [
+                    {
+                        "description": "Active course request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/course.SetActiveCourseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/course.SetActiveCourseResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/me/profile": {
             "get": {
                 "security": [
@@ -1575,7 +1702,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Return the IELTS vocabulary roadmap with course, band levels, topics, lessons, and authenticated user progress.",
+                "description": "Return a course roadmap (IELTS or Foundation English) with band/CEFR levels, topics, lessons, and authenticated user progress. Defaults to the user's active course.",
                 "consumes": [
                     "application/json"
                 ],
@@ -1586,6 +1713,14 @@ const docTemplate = `{
                     "Roadmap"
                 ],
                 "summary": "Get roadmap",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Course slug, e.g. foundation-english",
+                        "name": "courseSlug",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2083,6 +2218,77 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "course.CourseResponse": {
+            "type": "object",
+            "properties": {
+                "bandMax": {
+                    "type": "number"
+                },
+                "bandMin": {
+                    "type": "number"
+                },
+                "completedLessons": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isActive": {
+                    "type": "boolean"
+                },
+                "kind": {
+                    "$ref": "#/definitions/models.CourseKind"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "totalLessons": {
+                    "type": "integer"
+                },
+                "totalTopics": {
+                    "type": "integer"
+                },
+                "totalWords": {
+                    "type": "integer"
+                }
+            }
+        },
+        "course.ListResponse": {
+            "type": "object",
+            "properties": {
+                "activeCourseId": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/course.CourseResponse"
+                    }
+                }
+            }
+        },
+        "course.SetActiveCourseRequest": {
+            "type": "object",
+            "properties": {
+                "courseId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "course.SetActiveCourseResponse": {
+            "type": "object",
+            "properties": {
+                "activeCourseId": {
+                    "type": "integer"
                 }
             }
         },
@@ -2652,6 +2858,17 @@ const docTemplate = `{
                 }
             }
         },
+        "models.CourseKind": {
+            "type": "string",
+            "enum": [
+                "IELTS",
+                "CEFR"
+            ],
+            "x-enum-varnames": [
+                "CourseKindIELTS",
+                "CourseKindCEFR"
+            ]
+        },
         "models.DifficultyLevel": {
             "type": "string",
             "enum": [
@@ -2723,6 +2940,17 @@ const docTemplate = `{
                 "QuizQuestionWordChoice",
                 "QuizQuestionUsageChoice",
                 "QuizQuestionSentenceChoice"
+            ]
+        },
+        "models.TopicTrack": {
+            "type": "string",
+            "enum": [
+                "CORE",
+                "VOCABULARY"
+            ],
+            "x-enum-varnames": [
+                "TopicTrackCore",
+                "TopicTrackVocabulary"
             ]
         },
         "models.UserRole": {
@@ -3303,6 +3531,9 @@ const docTemplate = `{
                 "bandScore": {
                     "type": "number"
                 },
+                "cefrLevel": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
@@ -3343,6 +3574,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                },
+                "kind": {
+                    "$ref": "#/definitions/models.CourseKind"
                 },
                 "slug": {
                     "type": "string"
@@ -3465,6 +3699,9 @@ const docTemplate = `{
                 },
                 "totalLessons": {
                     "type": "integer"
+                },
+                "track": {
+                    "$ref": "#/definitions/models.TopicTrack"
                 }
             }
         },

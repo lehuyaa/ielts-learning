@@ -133,6 +133,52 @@ definitions:
       username:
         type: string
     type: object
+  course.CourseResponse:
+    properties:
+      bandMax:
+        type: number
+      bandMin:
+        type: number
+      completedLessons:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      kind:
+        $ref: '#/definitions/models.CourseKind'
+      slug:
+        type: string
+      title:
+        type: string
+      totalLessons:
+        type: integer
+      totalTopics:
+        type: integer
+      totalWords:
+        type: integer
+    type: object
+  course.ListResponse:
+    properties:
+      activeCourseId:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/course.CourseResponse'
+        type: array
+    type: object
+  course.SetActiveCourseRequest:
+    properties:
+      courseId:
+        type: integer
+    type: object
+  course.SetActiveCourseResponse:
+    properties:
+      activeCourseId:
+        type: integer
+    type: object
   dashboard.LearningStatsResponse:
     properties:
       lessonsCompleted:
@@ -503,6 +549,14 @@ definitions:
       wrongCount:
         type: integer
     type: object
+  models.CourseKind:
+    enum:
+    - IELTS
+    - CEFR
+    type: string
+    x-enum-varnames:
+    - CourseKindIELTS
+    - CourseKindCEFR
   models.DifficultyLevel:
     enum:
     - BEGINNER
@@ -561,6 +615,14 @@ definitions:
     - QuizQuestionWordChoice
     - QuizQuestionUsageChoice
     - QuizQuestionSentenceChoice
+  models.TopicTrack:
+    enum:
+    - CORE
+    - VOCABULARY
+    type: string
+    x-enum-varnames:
+    - TopicTrackCore
+    - TopicTrackVocabulary
   models.UserRole:
     enum:
     - USER
@@ -942,6 +1004,8 @@ definitions:
     properties:
       bandScore:
         type: number
+      cefrLevel:
+        type: string
       description:
         type: string
       id:
@@ -969,6 +1033,8 @@ definitions:
         type: number
       id:
         type: integer
+      kind:
+        $ref: '#/definitions/models.CourseKind'
       slug:
         type: string
       title:
@@ -1049,6 +1115,8 @@ definitions:
         type: string
       totalLessons:
         type: integer
+      track:
+        $ref: '#/definitions/models.TopicTrack'
     type: object
   topic.BandLevelResponse:
     properties:
@@ -1726,6 +1794,37 @@ paths:
       summary: Register user
       tags:
       - Auth
+  /courses:
+    get:
+      consumes:
+      - application/json
+      description: Return published courses (IELTS and Foundation English) with the
+        user's completed lessons and active course.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/course.ListResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List courses
+      tags:
+      - Courses
   /dashboard/summary:
     get:
       consumes:
@@ -2109,6 +2208,51 @@ paths:
       summary: Start lesson
       tags:
       - Lessons
+  /me/active-course:
+    patch:
+      consumes:
+      - application/json
+      description: Choose which course the roadmap shows by default.
+      parameters:
+      - description: Active course request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/course.SetActiveCourseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/course.SetActiveCourseResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Set active course
+      tags:
+      - Courses
   /me/profile:
     get:
       consumes:
@@ -2313,8 +2457,14 @@ paths:
     get:
       consumes:
       - application/json
-      description: Return the IELTS vocabulary roadmap with course, band levels, topics,
-        lessons, and authenticated user progress.
+      description: Return a course roadmap (IELTS or Foundation English) with band/CEFR
+        levels, topics, lessons, and authenticated user progress. Defaults to the
+        user's active course.
+      parameters:
+      - description: Course slug, e.g. foundation-english
+        in: query
+        name: courseSlug
+        type: string
       produces:
       - application/json
       responses:

@@ -33,5 +33,9 @@ func AutoMigrateModels() []interface{} {
 		&AIExampleRequest{},
 		&AIConversationScenario{},
 		&AIConversationMessage{},
+		&LessonActivity{},
+		&UserActivityProgress{},
+		&Exercise{},
+		&UserExerciseAnswer{},
 	}
 }

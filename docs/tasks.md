@@ -1840,6 +1840,8 @@ Acceptance criteria:
 
 ### Task 50 - Lesson Activities
 
+Status: done.
+
 Goal:
 
 Store a CORE lesson as an ordered list of skill activities.
@@ -1847,7 +1849,7 @@ Store a CORE lesson as an ordered list of skill activities.
 Requirements:
 
 - Models `lesson_activities`, `user_activity_progresses` (spec §3.2).
-- New module `activity`: `GET /lessons/:lessonId/activities` returns activities with type, title, instructions, status, best score, `isLocked` (an activity is locked until the previous required one is passed).
+- New module `lessonactivity` (`activity` already holds daily activity/streak): `GET /lessons/:lessonId/activities` returns activities with type, title, instructions, status, best score, `isLocked` (an activity is locked until the previous required one is passed).
 - Lesson locked → `ACTIVITY_LOCKED`.
 
 Acceptance criteria:
@@ -1858,6 +1860,8 @@ Acceptance criteria:
 ---
 
 ### Task 51 - Exercise Engine
+
+Status: done. Answers are stored per attempt (`user_exercise_answers` unique on user + exercise + attempt, latest answer wins); retrying a passed activity never re-locks later ones (`passed_at`).
 
 Goal:
 
