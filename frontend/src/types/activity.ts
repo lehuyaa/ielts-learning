@@ -105,10 +105,44 @@ export type AnswerResult = {
   answeredAt: string
 }
 
+export type VocabularyCard = {
+  id: number
+  word: string
+  slug: string
+  ipa: string
+  audioUrl: string
+  partOfSpeech: string
+  meaningVi: string
+  meaningEn: string
+  exampleSentence: string
+  exampleMeaningVi: string
+}
+
 export type ActivityDetailResponse = {
   activity: ActivityDetail
   exercises: Exercise[]
+  vocabularies: VocabularyCard[]
   answers: AnswerResult[]
+}
+
+export type CompleteActivityResponse = {
+  activity: ActivityItem
+  score: number
+  passed: boolean
+  correctCount: number
+  answeredCount: number
+  totalCount: number
+  xpAwarded: number
+  nextActivityId: number | null
+  lesson: {
+    id: number
+    status: 'LOCKED' | 'UNLOCKED' | 'IN_PROGRESS' | 'COMPLETED'
+    passedRequired: number
+    totalRequired: number
+    justCompleted: boolean
+    score: number | null
+    xpAwarded: number
+  }
 }
 
 export type SubmitAnswerInput = {

@@ -143,6 +143,41 @@ func (h Handler) SubmitAnswer(c *gin.Context) {
 	response.OK(c, result)
 }
 
+// CompleteActivity godoc
+// @Summary Finish an activity attempt
+// @Description Score the current attempt, pass or fail the activity, award XP on the first pass, and complete the lesson when every required activity is passed.
+// @Tags Activities
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param activityId path int true "Activity ID"
+// @Success 200 {object} response.SuccessResponse{data=CompleteActivityResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 401 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Router /activities/{activityId}/complete [post]
+func (h Handler) CompleteActivity(c *gin.Context) {
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+		return
+	}
+	activityID, ok := parseIDParam(c, "activityId")
+	if !ok {
+		return
+	}
+
+	result, err := h.service.CompleteActivity(userID, activityID)
+	if err != nil {
+		writeActivityError(c, err)
+		return
+	}
+
+	response.OK(c, result)
+}
+
 func parseIDParam(c *gin.Context, name string) (uint, bool) {
 	value, err := strconv.ParseUint(c.Param(name), 10, 64)
 	if err != nil || value == 0 {
@@ -162,6 +197,8 @@ func writeActivityError(c *gin.Context, err error) {
 		response.Error(c, http.StatusForbidden, "LESSON_LOCKED", "Complete previous lessons to unlock this lesson")
 	case errors.Is(err, ErrActivityLocked):
 		response.Error(c, http.StatusForbidden, "ACTIVITY_LOCKED", "Complete the previous activities first")
+	case errors.Is(err, ErrActivityNotStarted):
+		response.Error(c, http.StatusBadRequest, "ACTIVITY_NOT_STARTED", "Answer at least one exercise before finishing")
 	case errors.Is(err, ErrExerciseNotInActivity):
 		response.Error(c, http.StatusBadRequest, "EXERCISE_NOT_IN_ACTIVITY", "This exercise does not belong to the activity")
 	case errors.Is(err, ErrInvalidAnswerShape):

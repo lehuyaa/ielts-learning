@@ -1885,6 +1885,8 @@ Acceptance criteria:
 
 ### Task 52 - Lesson Player
 
+Status: done. All exercise types already have a basic renderer (`src/features/exercise/renderers.tsx`); later tasks polish them. A failed retry never removes an earlier pass.
+
 Goal:
 
 One page that walks the learner through a lesson's activities.

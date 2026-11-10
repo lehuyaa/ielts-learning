@@ -2,6 +2,7 @@ import { api, unwrapData } from '@/api/api'
 import type {
   ActivityDetailResponse,
   AnswerResult,
+  CompleteActivityResponse,
   LessonActivitiesResponse,
   SubmitAnswerInput,
 } from '@/types/activity'
@@ -33,4 +34,12 @@ export async function submitActivityAnswer(
   )
 
   return unwrapData<AnswerResult>(response)
+}
+
+export async function completeActivity(activityId: number | string) {
+  const response = await api.post<APIResponse<CompleteActivityResponse>>(
+    `/activities/${activityId}/complete`,
+  )
+
+  return unwrapData<CompleteActivityResponse>(response)
 }

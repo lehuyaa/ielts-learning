@@ -17,4 +17,5 @@ func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.M
 	router.GET("/lessons/:lessonId/activities", auth, handler.ListActivities)
 	router.GET("/activities/:activityId", auth, handler.GetActivity)
 	router.POST("/activities/:activityId/answers", auth, handler.SubmitAnswer)
+	router.POST("/activities/:activityId/complete", auth, handler.CompleteActivity)
 }

@@ -51,6 +51,8 @@ type ActivityItem struct {
 type ActivityDetailResponse struct {
 	Activity  ActivityDetail     `json:"activity"`
 	Exercises []ExerciseResponse `json:"exercises"`
+	// Vocabularies are the word cards of a VOCABULARY activity, in content order.
+	Vocabularies []VocabularyCard `json:"vocabularies"`
 	// Answers already given in the current (unfinished) attempt, for resuming.
 	Answers []AnswerResult `json:"answers"`
 }
@@ -89,4 +91,40 @@ type AnswerResult struct {
 	CorrectAnswer any             `json:"correctAnswer"`
 	ExplanationVI string          `json:"explanationVi"`
 	AnsweredAt    time.Time       `json:"answeredAt"`
+}
+
+type VocabularyCard struct {
+	ID               uint   `json:"id"`
+	Word             string `json:"word"`
+	Slug             string `json:"slug"`
+	IPA              string `json:"ipa"`
+	AudioURL         string `json:"audioUrl"`
+	PartOfSpeech     string `json:"partOfSpeech"`
+	MeaningVI        string `json:"meaningVi"`
+	MeaningEN        string `json:"meaningEn"`
+	ExampleSentence  string `json:"exampleSentence"`
+	ExampleMeaningVI string `json:"exampleMeaningVi"`
+}
+
+type CompleteActivityResponse struct {
+	Activity       ActivityItem `json:"activity"`
+	Score          int          `json:"score"`
+	Passed         bool         `json:"passed"`
+	CorrectCount   int          `json:"correctCount"`
+	AnsweredCount  int          `json:"answeredCount"`
+	TotalCount     int          `json:"totalCount"`
+	XPAwarded      int          `json:"xpAwarded"`
+	NextActivityID *uint        `json:"nextActivityId"`
+	Lesson         LessonResult `json:"lesson"`
+}
+
+type LessonResult struct {
+	ID             uint                `json:"id"`
+	Status         models.LessonStatus `json:"status"`
+	PassedRequired int                 `json:"passedRequired"`
+	TotalRequired  int                 `json:"totalRequired"`
+	// JustCompleted is true only for the activity that finished the lesson.
+	JustCompleted bool `json:"justCompleted"`
+	Score         *int `json:"score"`
+	XPAwarded     int  `json:"xpAwarded"`
 }

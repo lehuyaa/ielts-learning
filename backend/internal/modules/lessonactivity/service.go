@@ -121,6 +121,11 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		answerResults = append(answerResults, toAnswerResult(exercise, answer))
 	}
 
+	vocabularies, err := s.vocabularyCards(activity)
+	if err != nil {
+		return ActivityDetailResponse{}, err
+	}
+
 	counts := map[uint]int{activity.ID: len(exercises)}
 	locks := activityLocks(ctx.activities, ctx.progress)
 	return ActivityDetailResponse{
@@ -133,8 +138,9 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 			ScenarioID:     activity.ScenarioID,
 			CurrentAttempt: attempt,
 		},
-		Exercises: exerciseResponses,
-		Answers:   answerResults,
+		Exercises:    exerciseResponses,
+		Vocabularies: vocabularies,
+		Answers:      answerResults,
 	}, nil
 }
 
@@ -193,7 +199,10 @@ func (s Service) SubmitAnswer(userID uint, activityID uint, req SubmitAnswerRequ
 		}
 
 		answer.ActivityAttempt = progress.Attempts
-		return tx.UpsertAnswer(&answer)
+		if err := tx.UpsertAnswer(&answer); err != nil {
+			return err
+		}
+		return markLessonStarted(tx, userID, activity.LessonID, now)
 	})
 	if err != nil {
 		return AnswerResult{}, err
@@ -386,4 +395,22 @@ func rawJSON(value datatypes.JSON) json.RawMessage {
 		return json.RawMessage("null")
 	}
 	return json.RawMessage(value)
+}
+
+// markLessonStarted moves an untouched lesson to IN_PROGRESS so the roadmap
+// shows it as started.
+func markLessonStarted(tx Repository, userID uint, lessonID uint, now time.Time) error {
+	progress, found, err := tx.FindLessonProgressForUpdate(userID, lessonID)
+	if err != nil {
+		return err
+	}
+	if found && progress.Status != models.LessonStatusUnlocked {
+		return nil
+	}
+	progress.Status = models.LessonStatusInProgress
+	if progress.StartedAt == nil {
+		progress.StartedAt = &now
+	}
+	progress.LastStudiedAt = &now
+	return tx.SaveLessonProgress(&progress)
 }

@@ -3,11 +3,16 @@ package lessonactivity
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"ielts-learning/backend/internal/models"
+	achievementmodule "ielts-learning/backend/internal/modules/achievement"
+	activitymodule "ielts-learning/backend/internal/modules/activity"
+	notificationmodule "ielts-learning/backend/internal/modules/notification"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 var (
@@ -16,16 +21,29 @@ var (
 )
 
 type Repository struct {
-	db *gorm.DB
+	db                 *gorm.DB
+	xpService          xpmodule.Service
+	achievementService achievementmodule.Service
+	dailyActivity      activitymodule.Service
 }
 
 func NewRepository(db *gorm.DB) Repository {
-	return Repository{db: db}
+	xpService := xpmodule.NewService(xpmodule.NewRepository(db))
+	notificationService := notificationmodule.NewService(notificationmodule.NewRepository(db))
+	return Repository{
+		db:                 db,
+		xpService:          xpService,
+		achievementService: achievementmodule.NewService(achievementmodule.NewRepository(db), xpService, notificationService),
+		dailyActivity:      activitymodule.NewService(activitymodule.NewRepository(db)),
+	}
 }
 
+// Transaction runs fn with a repository bound to one database transaction.
 func (r Repository) Transaction(fn func(tx Repository) error) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		return fn(Repository{db: tx})
+		txRepository := r
+		txRepository.db = tx
+		return fn(txRepository)
 	})
 }
 
@@ -203,4 +221,96 @@ func (r Repository) UpsertAnswer(answer *models.UserExerciseAnswer) error {
 		return fmt.Errorf("save exercise answer: %w", err)
 	}
 	return nil
+}
+
+func (r Repository) FindVocabulariesBySlugs(slugs []string) ([]models.Vocabulary, error) {
+	if len(slugs) == 0 {
+		return []models.Vocabulary{}, nil
+	}
+
+	var vocabularies []models.Vocabulary
+	if err := r.db.Where("slug IN ?", slugs).Find(&vocabularies).Error; err != nil {
+		return nil, fmt.Errorf("find vocabularies: %w", err)
+	}
+
+	return vocabularies, nil
+}
+
+// FindLessonProgressForUpdate returns the user's lesson progress (locked), or
+// a new unsaved row when the user has not started the lesson.
+func (r Repository) FindLessonProgressForUpdate(userID uint, lessonID uint) (models.UserLessonProgress, bool, error) {
+	var progress models.UserLessonProgress
+	err := r.db.
+		Clauses(clause.Locking{Strength: "UPDATE"}).
+		Where("user_id = ? AND lesson_id = ?", userID, lessonID).
+		First(&progress).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.UserLessonProgress{UserID: userID, LessonID: lessonID}, false, nil
+	}
+	if err != nil {
+		return models.UserLessonProgress{}, false, fmt.Errorf("find lesson progress: %w", err)
+	}
+
+	return progress, true, nil
+}
+
+func (r Repository) SaveLessonProgress(progress *models.UserLessonProgress) error {
+	if err := r.db.Save(progress).Error; err != nil {
+		return fmt.Errorf("save lesson progress: %w", err)
+	}
+	return nil
+}
+
+// UnlockNextLesson creates an UNLOCKED progress row for the next lesson of
+// the topic, mirroring what a passed quiz does.
+func (r Repository) UnlockNextLesson(userID uint, lesson models.Lesson, now time.Time) error {
+	var nextLesson models.Lesson
+	err := r.db.
+		Where("topic_id = ? AND is_published = ? AND (order_index > ? OR (order_index = ? AND id > ?))", lesson.TopicID, true, lesson.OrderIndex, lesson.OrderIndex, lesson.ID).
+		Order("order_index ASC, id ASC").
+		First(&nextLesson).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil
+	}
+	if err != nil {
+		return fmt.Errorf("find next lesson: %w", err)
+	}
+
+	var count int64
+	if err := r.db.Model(&models.UserLessonProgress{}).
+		Where("user_id = ? AND lesson_id = ?", userID, nextLesson.ID).
+		Count(&count).Error; err != nil {
+		return fmt.Errorf("find next lesson progress: %w", err)
+	}
+	if count > 0 {
+		return nil
+	}
+
+	progress := models.UserLessonProgress{
+		UserID:        userID,
+		LessonID:      nextLesson.ID,
+		Status:        models.LessonStatusUnlocked,
+		LastStudiedAt: &now,
+	}
+	if err := r.db.Create(&progress).Error; err != nil {
+		return fmt.Errorf("unlock next lesson: %w", err)
+	}
+	return nil
+}
+
+func (r Repository) AwardXP(input xpmodule.AwardInput) (bool, error) {
+	result, err := r.xpService.AwardXP(r.db, input)
+	if err != nil {
+		return false, err
+	}
+	return result.EventCreated, nil
+}
+
+func (r Repository) RecordDailyActivity(userID uint, event activitymodule.Event) error {
+	return r.dailyActivity.RecordActivityTx(r.db, userID, event)
+}
+
+func (r Repository) CheckAchievements(userID uint) error {
+	_, err := r.achievementService.CheckAndUnlockAchievementsTx(r.db, userID)
+	return err
 }

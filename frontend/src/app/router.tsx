@@ -17,6 +17,7 @@ import { LoginPage } from '@/pages/LoginPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { QuizPage } from '@/pages/QuizPage'
 import { RegisterPage } from '@/pages/RegisterPage'
+import { LessonPlayerPage } from '@/pages/LessonPlayerPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
 import { TopicDetailPage } from '@/pages/TopicDetailPage'
@@ -75,6 +76,10 @@ export const router = createBrowserRouter([
           {
             path: '/lessons/:lessonId/quiz',
             element: <QuizPage />,
+          },
+          {
+            path: '/lessons/:lessonId/learn',
+            element: <LessonPlayerPage />,
           },
           {
             path: '/reviews',
