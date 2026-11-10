@@ -55,6 +55,7 @@ export function mapVocabularyDetail(
     word: response.word,
     slug: response.slug,
     ipa: response.ipa,
+    audioUrl: response.audioUrl,
     partOfSpeech: response.partOfSpeech,
     topic: response.topic?.title ?? 'General',
     band: formatBand(response.targetBand ?? response.bandLevel?.bandScore ?? null),
@@ -83,9 +84,9 @@ export function mapVocabularyDetail(
       response.meaningVi ||
       'No meaning yet',
     examples,
-    synonyms: response.synonyms,
-    antonyms: response.antonyms,
-    collocations: response.collocations,
+    synonyms: response.synonyms ?? [],
+    antonyms: response.antonyms ?? [],
+    collocations: response.collocations ?? [],
     ieltsUsage:
       response.ieltsUsage ||
       'IELTS usage guidance has not been added for this word yet.',

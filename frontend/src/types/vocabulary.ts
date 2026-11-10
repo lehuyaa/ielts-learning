@@ -159,6 +159,7 @@ export type ImportResultResponse = {
 
 export type VocabularyDetailViewModel = VocabularyListItemViewModel & {
   slug: string
+  audioUrl?: string
   frequencyScore: number
   reviewCount: number
   lastReviewedAt: string

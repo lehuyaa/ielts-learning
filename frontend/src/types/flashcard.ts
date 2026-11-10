@@ -89,6 +89,7 @@ export type FlashcardSessionCard = {
   vocabularyId: number;
   word: string;
   ipa: string;
+  audioUrl?: string;
   partOfSpeech: string;
   meaningEn: string;
   meaningVi: string;

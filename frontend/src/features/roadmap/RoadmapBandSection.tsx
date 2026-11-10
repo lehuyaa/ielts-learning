@@ -19,6 +19,7 @@ export function RoadmapBandSection({ band, isLast }: RoadmapBandSectionProps) {
     <section className="relative z-10 py-2">
       <BandNode
         band={band.band}
+        title={band.title}
         status={bandStatusLabel(band.status)}
         statusVariant={band.status}
         topicCount={band.topicCount}
@@ -50,12 +51,19 @@ function bandStatusLabel(status: RoadmapLessonStatus) {
 
 type BandNodeProps = {
   band: string;
+  title: string;
   status: string;
   statusVariant: RoadmapLessonStatus;
   topicCount: number;
 };
 
-function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
+function BandNode({
+  band,
+  title,
+  status,
+  statusVariant,
+  topicCount,
+}: BandNodeProps) {
   const isLocked = statusVariant === "locked";
   const isComplete = statusVariant === "completed";
   const color = getBandColor(band);
@@ -88,7 +96,7 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
               isLocked ? "text-muted-foreground" : "text-foreground",
             )}
           >
-            Band {band}
+            {isFoundationBand(band) ? title : `Band ${band}`}
           </h2>
           <p className="text-xs text-muted-foreground">
             {isLocked ? "Complete previous band" : `${topicCount} topics`}
@@ -126,8 +134,23 @@ function ConnectorDots({ isActive }: { isActive: boolean }) {
   );
 }
 
+// CEFR foundation levels (e.g. "A1 Foundation") sit below IELTS band 5.0 and
+// are labelled by their title instead of a band score.
+function isFoundationBand(band: string) {
+  return Number.parseFloat(band) < 5;
+}
+
 function getBandColor(band: string) {
   const numericBand = Number.parseFloat(band);
+
+  if (isFoundationBand(band)) {
+    return {
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      dot: "from-emerald-400 to-teal-500",
+      badge: "bg-emerald-100 text-emerald-700",
+    };
+  }
 
   if (numericBand < 6) {
     return {

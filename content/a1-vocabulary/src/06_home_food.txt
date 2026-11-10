@@ -1,0 +1,135 @@
+## a1-home | Home & Things | Nhà cửa, phòng ốc và đồ dùng trong nhà | house | emerald
+### Rooms in a House
+home|noun|nhà (tổ ấm)|the place where you live|I am at home now.|Bây giờ tôi đang ở nhà.
+house|noun|ngôi nhà|a building where a family lives|My house has three bedrooms.|Nhà tôi có ba phòng ngủ.
+apartment|noun|căn hộ|a set of rooms in a large building|I live in an apartment.|Tôi sống trong một căn hộ.
+room|noun|phòng|a part of a building with walls|My room is small.|Phòng tôi nhỏ.
+bedroom|noun|phòng ngủ|a room for sleeping|The bedroom is upstairs.|Phòng ngủ ở trên lầu.
+bathroom|noun|phòng tắm|a room with a bath or shower|The bathroom is next to the kitchen.|Phòng tắm cạnh nhà bếp.
+kitchen|noun|nhà bếp|a room for cooking|My mother is in the kitchen.|Mẹ tôi đang ở trong bếp.
+living room|noun|phòng khách|a room for relaxing and talking|We watch TV in the living room.|Chúng tôi xem tivi ở phòng khách.
+dining room|noun|phòng ăn|a room for eating meals|We eat in the dining room.|Chúng tôi ăn ở phòng ăn.
+toilet|noun|nhà vệ sinh|a room with a toilet|Where is the toilet?|Nhà vệ sinh ở đâu?
+garden|noun|vườn|land near a house with flowers or plants|We have a small garden.|Chúng tôi có một khu vườn nhỏ.
+yard|noun|sân|land around a house|The kids play in the yard.|Bọn trẻ chơi ngoài sân.
+### Parts of a House
+door|noun|cửa ra vào|the thing you open to go into a room|Please close the door.|Làm ơn đóng cửa.
+window|noun|cửa sổ|an opening in a wall with glass|Open the window, please.|Làm ơn mở cửa sổ.
+wall|noun|bức tường|a side of a room or building|There is a picture on the wall.|Có một bức tranh trên tường.
+floor|noun|sàn nhà; tầng|the bottom of a room; a level of a building|My office is on the third floor.|Văn phòng tôi ở tầng ba.
+stairs|noun|cầu thang|steps from one floor to another|Take the stairs to the second floor.|Đi cầu thang lên tầng hai.
+roof|noun|mái nhà|the top of a building|The roof is red.|Mái nhà màu đỏ.
+key|noun|chìa khóa|a metal thing that opens a lock|I lost my key.|Tôi làm mất chìa khóa.
+light|noun|đèn; ánh sáng|a lamp; what helps you see|Turn on the light, please.|Làm ơn bật đèn.
+hall|noun|hành lang, sảnh|the area inside the main door|Leave your shoes in the hall.|Để giày ở sảnh.
+### Furniture
+table|noun|cái bàn|furniture with a flat top and legs|The keys are on the table.|Chìa khóa ở trên bàn.
+chair|noun|cái ghế|a seat for one person|Sit on this chair.|Ngồi lên ghế này.
+bed|noun|giường|furniture you sleep on|My bed is very comfortable.|Giường của tôi rất êm.
+sofa|noun|ghế sofa|a long soft seat for two or more people|The cat is on the sofa.|Con mèo ở trên ghế sofa.
+shelf|noun|cái kệ|a flat board on a wall for things|The books are on the shelf.|Sách ở trên kệ.
+box|noun|cái hộp|a container with flat sides|Put the toys in the box.|Cho đồ chơi vào hộp.
+lamp|noun|đèn bàn|a light you can move|There is a lamp on my desk.|Có một cái đèn trên bàn làm việc.
+mirror|noun|gương|glass that shows your face|Look in the mirror.|Nhìn vào gương.
+fan|noun|quạt|a machine that moves air|Turn on the fan, it is hot.|Bật quạt lên, nóng quá.
+air conditioner|noun|máy điều hòa|a machine that makes the air cool|The air conditioner is broken.|Máy điều hòa bị hỏng.
+### Things at Home
+television|noun|tivi|a machine that shows programs|We have a big television.|Chúng tôi có một chiếc tivi lớn.
+TV|noun|tivi|television|What's on TV tonight?|Tối nay tivi có gì?
+radio|noun|đài, radio|a machine for listening to programs|I listen to the radio in the car.|Tôi nghe radio trong xe hơi.
+telephone|noun|điện thoại bàn|a phone|The telephone is ringing.|Điện thoại đang reo.
+camera|noun|máy ảnh|a machine for taking photos|This camera is expensive.|Máy ảnh này đắt.
+machine|noun|máy móc|a thing with parts that does work|The washing machine is new.|Máy giặt còn mới.
+towel|noun|khăn tắm|a cloth for drying your body|Can I have a clean towel?|Cho tôi một chiếc khăn sạch được không?
+clock|noun|đồng hồ|a machine that shows the time|The clock is slow.|Đồng hồ chạy chậm.
+picture|noun|bức tranh, hình ảnh|a painting, drawing or photo|I like this picture.|Tôi thích bức tranh này.
+photo|noun|ảnh chụp|a picture taken with a camera|Can I take a photo?|Tôi chụp ảnh được không?
+vase|noun|lọ hoa|a container for flowers|Put the flowers in the vase.|Cắm hoa vào lọ.
+tool|noun|dụng cụ|a thing you use to make or repair something|Where are the tools?|Dụng cụ ở đâu?
+### Kitchen Things
+cup|noun|tách, chén uống|a small container for drinking|A cup of coffee, please.|Cho tôi một tách cà phê.
+glass|noun|cốc thủy tinh|a container made of glass for drinking|Can I have a glass of water?|Cho tôi một cốc nước được không?
+bottle|noun|chai|a container for liquids|I buy a bottle of water.|Tôi mua một chai nước.
+bowl|noun|cái bát|a round deep dish|I eat a bowl of pho.|Tôi ăn một bát phở.
+plate|noun|cái đĩa|a flat dish for food|Put the cake on the plate.|Đặt bánh lên đĩa.
+dish|noun|món ăn; cái đĩa|food prepared in a special way; a plate|This dish is delicious.|Món này ngon.
+knife|noun|con dao|a tool for cutting|Use a knife to cut the bread.|Dùng dao để cắt bánh mì.
+spoon|noun|cái thìa|a tool for eating soup|Can I have a spoon?|Cho tôi cái thìa được không?
+fork|noun|cái nĩa|a tool with points for eating|I eat with a fork.|Tôi ăn bằng nĩa.
+chopsticks|noun|đũa|two thin sticks for eating|We eat rice with chopsticks.|Chúng tôi ăn cơm bằng đũa.
+fridge|noun|tủ lạnh|a machine that keeps food cold|The milk is in the fridge.|Sữa ở trong tủ lạnh.
+bucket|noun|cái xô|a round container with a handle|Fill the bucket with water.|Đổ đầy nước vào xô.
+garbage|noun|rác|things you throw away|Take out the garbage, please.|Làm ơn đổ rác.
+## a1-food-and-drink | Food & Drink | Đồ ăn, thức uống và đi ăn nhà hàng | utensils | rose
+### Meals & Eating
+food|noun|thức ăn|things you eat|Vietnamese food is delicious.|Đồ ăn Việt Nam rất ngon.
+meal|noun|bữa ăn|the food you eat at one time|We have three meals a day.|Chúng tôi ăn ba bữa một ngày.
+lunch|noun|bữa trưa|the meal in the middle of the day|Let's have lunch together.|Cùng ăn trưa nhé.
+eat|verb|ăn|to put food in your mouth|I eat rice every day.|Tôi ăn cơm mỗi ngày.
+drink|verb|uống|to take liquid into your mouth|I drink a lot of water.|Tôi uống nhiều nước.
+hungry|adjective|đói|wanting to eat|I am hungry.|Tôi đói.
+thirsty|adjective|khát|wanting to drink|I am very thirsty.|Tôi rất khát.
+delicious|adjective|ngon|tasting very good|This soup is delicious.|Món súp này ngon.
+sweet|adjective|ngọt|tasting like sugar|This cake is too sweet.|Bánh này ngọt quá.
+hot|adjective|nóng; cay|very warm; spicy|Be careful, the soup is hot.|Cẩn thận, súp nóng đấy.
+cold|adjective|lạnh|not warm|I want a cold drink.|Tôi muốn đồ uống lạnh.
+full|adjective|no; đầy|having eaten enough; containing as much as possible|I am full, thank you.|Tôi no rồi, cảm ơn.
+### Drinks
+water|noun|nước|the clear liquid we drink|Can I have some water?|Cho tôi ít nước được không?
+coffee|noun|cà phê|a hot brown drink|I drink coffee every morning.|Tôi uống cà phê mỗi sáng.
+tea|noun|trà|a hot drink made from leaves|Would you like some tea?|Bạn có muốn uống trà không?
+milk|noun|sữa|the white drink from cows|My son drinks milk every night.|Con trai tôi uống sữa mỗi tối.
+juice|noun|nước ép|a drink made from fruit|I like orange juice.|Tôi thích nước cam.
+beer|noun|bia|an alcoholic drink|Let's have a beer after work.|Uống bia sau giờ làm nhé.
+coke|noun|nước ngọt cola|a sweet brown drink|A coke, please.|Cho tôi một lon coca.
+ice|noun|đá (lạnh)|frozen water|Can I have some ice?|Cho tôi ít đá được không?
+sugar|noun|đường|something sweet you put in drinks|No sugar, please.|Không đường nhé.
+cream|noun|kem sữa|the thick part of milk|Do you want cream in your coffee?|Bạn có muốn thêm kem vào cà phê không?
+### Main Foods
+rice|noun|cơm, gạo|small white grains you cook and eat|We eat rice every day.|Chúng tôi ăn cơm mỗi ngày.
+bread|noun|bánh mì|food made from flour and baked|I eat bread for breakfast.|Tôi ăn bánh mì vào bữa sáng.
+noodles|noun|mì, bún, phở|long thin food made from flour|I love beef noodle soup.|Tôi thích phở bò.
+meat|noun|thịt|the parts of animals we eat|I don't eat much meat.|Tôi không ăn nhiều thịt.
+beef|noun|thịt bò|meat from a cow|This beef is very good.|Thịt bò này rất ngon.
+pork|noun|thịt lợn|meat from a pig|I cook pork with rice.|Tôi nấu thịt lợn ăn cơm.
+chicken|noun|thịt gà; con gà|a bird; its meat|I want chicken and rice.|Tôi muốn cơm gà.
+fish|noun|cá|an animal that lives in water; its meat|We eat fish on Friday.|Chúng tôi ăn cá vào thứ Sáu.
+egg|noun|trứng|a round thing from a chicken that we eat|I eat two eggs for breakfast.|Tôi ăn hai quả trứng vào bữa sáng.
+soup|noun|súp, canh|hot liquid food|The soup is too hot.|Súp nóng quá.
+salad|noun|món rau trộn|a dish of cold vegetables|I have a salad for lunch.|Tôi ăn salad vào bữa trưa.
+sandwich|noun|bánh mì kẹp|two pieces of bread with food inside|I buy a sandwich for lunch.|Tôi mua bánh mì kẹp cho bữa trưa.
+### Fruit & Vegetables
+fruit|noun|trái cây|food like apples and bananas|I eat fruit every day.|Tôi ăn trái cây mỗi ngày.
+apple|noun|quả táo|a round red or green fruit|An apple a day is good for you.|Mỗi ngày một quả táo tốt cho sức khỏe.
+banana|noun|quả chuối|a long yellow fruit|Bananas are cheap here.|Chuối ở đây rẻ.
+orange|noun|quả cam|a round orange fruit|I drink orange juice.|Tôi uống nước cam.
+grape|noun|quả nho|a small round green or purple fruit|I like green grapes.|Tôi thích nho xanh.
+mango|noun|quả xoài|a sweet yellow tropical fruit|Mangoes are sweet in summer.|Xoài ngọt vào mùa hè.
+vegetable|noun|rau củ|a plant we eat, like carrots|Eat more vegetables.|Ăn nhiều rau hơn.
+potato|noun|khoai tây|a round vegetable that grows in the ground|I like fried potatoes.|Tôi thích khoai tây chiên.
+tomato|noun|cà chua|a soft red fruit used as a vegetable|Put tomatoes in the salad.|Cho cà chua vào salad.
+bean|noun|đậu|a seed we cook and eat|I eat beans and rice.|Tôi ăn đậu với cơm.
+corn|noun|ngô|a tall plant with yellow seeds we eat|We eat corn in the evening.|Chúng tôi ăn ngô vào buổi tối.
+### Snacks & Sweet Things
+cake|noun|bánh ngọt|a sweet food baked in an oven|We have a cake for her birthday.|Chúng tôi có bánh cho sinh nhật cô ấy.
+chocolate|noun|sô-cô-la|a sweet brown food|I love chocolate.|Tôi thích sô-cô-la.
+ice cream|noun|kem|a cold sweet food|Do you want ice cream?|Bạn muốn ăn kem không?
+cookie|noun|bánh quy|a small sweet flat cake|My kids love cookies.|Con tôi thích bánh quy.
+biscuit|noun|bánh quy|a small dry sweet cake|Have a biscuit with your tea.|Ăn bánh quy với trà nhé.
+candy|noun|kẹo|small sweet food|Too much candy is bad for your teeth.|Ăn nhiều kẹo không tốt cho răng.
+cheese|noun|phô mai|a food made from milk|I like cheese on my pizza.|Tôi thích phô mai trên pizza.
+butter|noun|bơ (từ sữa)|a yellow food made from milk|Put butter on the bread.|Phết bơ lên bánh mì.
+yogurt|noun|sữa chua|a thick food made from milk|I eat yogurt after lunch.|Tôi ăn sữa chua sau bữa trưa.
+pizza|noun|bánh pizza|a flat round bread with cheese and tomato|Let's order a pizza.|Gọi pizza nhé.
+hamburger|noun|bánh hamburger|meat in a round bread|I want a hamburger and fries.|Tôi muốn một bánh hamburger và khoai chiên.
+### At a Restaurant
+restaurant|noun|nhà hàng|a place where you buy and eat meals|This restaurant is very good.|Nhà hàng này rất ngon.
+cafe|noun|quán cà phê|a small place to have drinks and food|Let's meet at the cafe.|Gặp nhau ở quán cà phê nhé.
+menu|noun|thực đơn|a list of food in a restaurant|Can I see the menu, please?|Cho tôi xem thực đơn được không?
+order|verb|gọi món, đặt hàng|to ask for food or goods|Are you ready to order?|Anh chị gọi món chưa ạ?
+bill|noun|hóa đơn|a paper showing how much to pay|Can I have the bill, please?|Cho tôi hóa đơn nhé.
+table|noun|bàn (ăn)|a table at a restaurant|A table for two, please.|Cho tôi bàn hai người.
+like|verb|thích|to enjoy something|I like Vietnamese coffee.|Tôi thích cà phê Việt Nam.
+love|verb|yêu, rất thích|to like very much|I love pho.|Tôi rất thích phở.
+taste|verb|có vị; nếm|to have a flavor; to try food|It tastes good.|Nó có vị ngon.
+breakfast|noun|bữa sáng|the first meal of the day|Breakfast is at seven.|Bữa sáng lúc bảy giờ.

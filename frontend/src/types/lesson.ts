@@ -97,6 +97,7 @@ export type LessonVocabularyItem = {
   id: string
   word: string
   ipa: string
+  audioUrl?: string
   partOfSpeech: string
   shortDefinition: string
   definition: string

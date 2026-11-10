@@ -362,7 +362,8 @@ func stringSlice(data []byte) []string {
 	}
 
 	var values []string
-	if err := json.Unmarshal(data, &values); err != nil {
+	if err := json.Unmarshal(data, &values); err != nil || values == nil {
+		// Also covers JSON "null", so the API never returns null for a list.
 		return []string{}
 	}
 

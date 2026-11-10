@@ -89,7 +89,8 @@ export function AdminVocabularyImportPage() {
             <p className="mt-1 text-xs text-muted-foreground">
               Required columns: <code>word</code>, <code>meaningVi</code>,{' '}
               <code>topicSlug</code>, <code>lessonSlug</code>. Optional:{' '}
-              <code>ipa</code>, <code>partOfSpeech</code>, <code>meaningEn</code>,{' '}
+              <code>ipa</code>, <code>audioUrl</code>, <code>partOfSpeech</code>,{' '}
+              <code>meaningEn</code>,{' '}
               <code>shortDefinition</code>, <code>exampleSentence</code>,{' '}
               <code>exampleMeaningVi</code>, <code>exampleSource</code>,{' '}
               <code>synonyms</code>, <code>antonyms</code>,{' '}

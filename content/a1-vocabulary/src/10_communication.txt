@@ -1,0 +1,65 @@
+## a1-communication | Communication & Everyday Ideas | Gọi điện, tin nhắn, giấy tờ và các danh từ trừu tượng thông dụng | message-circle | slate
+### Phone & Messages
+mobile phone|noun|điện thoại di động|a phone you carry with you|My mobile phone is new.|Điện thoại di động của tôi mới.
+phone call|noun|cuộc gọi điện thoại|when you talk to someone on the phone|I have a phone call at ten.|Tôi có một cuộc gọi lúc mười giờ.
+text|verb|nhắn tin|to send a written message on a phone|Text me when you arrive.|Nhắn tin cho tôi khi bạn đến nhé.
+send|verb|gửi|to make something go to another person|Send me the photo.|Gửi tôi bức ảnh nhé.
+receive|verb|nhận|to get something someone sends|I received your email.|Tôi đã nhận được email của bạn.
+reply|verb|trả lời, hồi âm|to answer a message|Please reply soon.|Vui lòng trả lời sớm.
+answer|verb|trả lời; nghe máy|to reply; to pick up the phone|Can you answer the phone?|Bạn nghe máy được không?
+ring|verb|reo, đổ chuông|to make a bell sound|The phone is ringing.|Điện thoại đang đổ chuông.
+letter|noun|lá thư; chữ cái|a written message; a sign like A or B|I write a letter to my friend.|Tôi viết thư cho bạn tôi.
+mail|noun|thư từ|letters and parcels|Is there any mail for me?|Có thư cho tôi không?
+note|noun|ghi chú|a short written message|I leave a note on your desk.|Tôi để lại ghi chú trên bàn bạn.
+online|adverb|trực tuyến|on the internet|I buy clothes online.|Tôi mua quần áo trên mạng.
+### Talking with People
+conversation|noun|cuộc trò chuyện|a talk between people|We have a nice conversation.|Chúng tôi có một cuộc trò chuyện vui vẻ.
+agree|verb|đồng ý|to have the same opinion|I agree with you.|Tôi đồng ý với bạn.
+discuss|verb|thảo luận|to talk about something|Let's discuss the plan.|Cùng thảo luận kế hoạch nhé.
+describe|verb|miêu tả|to say what something is like|Describe your house.|Hãy miêu tả ngôi nhà của bạn.
+explain|verb|giải thích|to make something clear|Can you explain this word?|Bạn giải thích từ này được không?
+guess|verb|đoán|to give an answer without knowing for sure|Guess how old I am.|Đoán xem tôi bao nhiêu tuổi.
+hope|verb|hy vọng|to want something to happen|I hope you are well.|Tôi hy vọng bạn khỏe.
+wish|verb|ước, chúc|to want something good|I wish you a happy birthday.|Chúc bạn sinh nhật vui vẻ.
+imagine|verb|tưởng tượng|to make a picture in your mind|Imagine you are on a beach.|Hãy tưởng tượng bạn đang ở bãi biển.
+worry|verb|lo lắng|to think about problems|Don't worry.|Đừng lo.
+suggestion|noun|gợi ý, đề xuất|an idea you give to someone|Do you have any suggestions?|Bạn có gợi ý nào không?
+opinion|noun|ý kiến|what you think about something|What is your opinion?|Ý kiến của bạn là gì?
+### Forms & Information
+form|noun|mẫu đơn|a paper with spaces to write information|Please fill in this form.|Vui lòng điền vào mẫu đơn này.
+blank|adjective|trống, để trống|with nothing written on it|Write your name in the blank space.|Viết tên bạn vào chỗ trống.
+sign|verb|ký tên|to write your name on a document|Please sign here.|Vui lòng ký vào đây.
+check|verb|kiểm tra|to look at something to see if it is correct|Please check your email.|Vui lòng kiểm tra email.
+code|noun|mã|a set of numbers or letters|Enter the code.|Nhập mã vào.
+password|noun|mật khẩu|a secret word to open an account|I forgot my password.|Tôi quên mật khẩu.
+type|noun|loại, kiểu|a kind of something|What type of room do you want?|Bạn muốn loại phòng nào?
+kind|noun|loại|a type|What kind of music do you like?|Bạn thích loại nhạc nào?
+item|noun|món, mục|one thing in a list or group|How many items do you have?|Bạn có bao nhiêu món đồ?
+copy|noun|bản sao|a thing made to look the same as another|I need a copy of your ID.|Tôi cần một bản sao giấy tờ tùy thân của bạn.
+rule|noun|quy định, luật lệ|something that tells you what you can or cannot do|Please follow the rules.|Vui lòng tuân theo quy định.
+### Life & Ideas
+life|noun|cuộc sống|the time you are alive; the way you live|Life in the city is busy.|Cuộc sống ở thành phố bận rộn.
+thing|noun|đồ vật; điều|an object; a fact or idea|I have many things to do.|Tôi có nhiều việc phải làm.
+reason|noun|lý do|why something happens|What is the reason?|Lý do là gì?
+matter|noun|vấn đề, chuyện|a problem or subject|What's the matter?|Có chuyện gì vậy?
+dream|noun|giấc mơ, ước mơ|pictures in your mind when you sleep; a wish|My dream is to travel the world.|Ước mơ của tôi là đi du lịch khắp thế giới.
+goal|noun|mục tiêu; bàn thắng|something you want to achieve; a point in football|My goal is to speak English well.|Mục tiêu của tôi là nói tiếng Anh tốt.
+luck|noun|sự may mắn|good things that happen by chance|Good luck!|Chúc may mắn!
+memory|noun|kỷ niệm; trí nhớ|something you remember|I have good memories of my school.|Tôi có nhiều kỷ niệm đẹp về trường.
+difference|noun|sự khác biệt|the way things are not the same|What is the difference?|Sự khác biệt là gì?
+culture|noun|văn hóa|the customs and art of a group of people|I love Japanese culture.|Tôi yêu văn hóa Nhật Bản.
+history|noun|lịch sử|events of the past|I am interested in history.|Tôi quan tâm đến lịch sử.
+science|noun|khoa học|the study of the natural world|My son likes science.|Con trai tôi thích khoa học.
+technology|noun|công nghệ|machines and computers made by science|I work in technology.|Tôi làm trong ngành công nghệ.
+### Useful Adverbs
+quickly|adverb|một cách nhanh chóng|fast|Please come quickly.|Vui lòng đến nhanh.
+slowly|adverb|một cách chậm rãi|not fast|Please speak slowly.|Vui lòng nói chậm.
+carefully|adverb|một cách cẩn thận|with care|Drive carefully.|Lái xe cẩn thận nhé.
+well|adverb|tốt, giỏi|in a good way|You speak English well.|Bạn nói tiếng Anh tốt.
+hard|adverb|chăm chỉ, vất vả|with a lot of effort|She works very hard.|Cô ấy làm việc rất chăm chỉ.
+loudly|adverb|một cách to tiếng|with a lot of noise|Don't speak loudly in the library.|Đừng nói to trong thư viện.
+together|adverb|cùng nhau|with each other|We work together.|Chúng tôi làm việc cùng nhau.
+of course|adverb|tất nhiên|certainly; yes|Of course I can help.|Tất nhiên tôi có thể giúp.
+a little|adverb|một chút|slightly|I am a little tired.|Tôi hơi mệt một chút.
+enough|adverb|đủ|as much as you need|Is it big enough?|Nó có đủ lớn không?
+instead|adverb|thay vào đó|in place of something else|Let's have tea instead.|Uống trà thay vào đó đi.

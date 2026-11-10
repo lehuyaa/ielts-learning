@@ -1719,3 +1719,154 @@ Acceptance criteria:
 - No hardcoded user ID.
 - Backend does not expose password hash.
 - Quiz correct answers are not exposed before submit.
+
+---
+
+# Part 2 - A1 Foundation (General English, CEFR)
+
+Goal of Part 2: turn the platform into a complete A1 course for an adult beginner who has lost their English foundation — vocabulary, grammar, pronunciation/IPA, listening, reading, writing and AI speaking practice. The full roadmap (A1 → B2) and the A1 syllabus (9 grammar points, 36 everyday situations) are summarised in `docs/foundation-spec.md` (Task 47).
+
+Conventions for Part 2:
+
+- Same rules as Part 1 (`AGENTS.md`): one task at a time, module pattern, React Query, axios only, validation contracts on both sides, Swagger regenerated after endpoint changes.
+- Tasks prefixed `D` are content/data tasks, not code.
+- Content is for private, personal study only.
+
+## 12. Milestone 11 - A1 Vocabulary on the Existing Roadmap (temporary)
+
+### Task 44 - Seed A1 Foundation Structure
+
+Goal:
+
+Create an "A1 Foundation" band level with vocabulary topics and lessons inside the existing published course, so A1 words can be imported with the current Excel importer.
+
+Requirements:
+
+- New seed function, idempotent (`FirstOrCreate` / `Assign`), runnable on its own: `go run ./cmd/seed -only-foundation`.
+- Band level: `bandScore = 3.0`, title `A1 Foundation`, ordered before band 5.0.
+- Topic and lesson slugs are prefixed `a1-` so they never collide with IELTS slugs.
+- Lessons hold ~12-15 words each and are ordered in study order (week 1 → week 4).
+- Running `-only-foundation` must not touch demo users/progress.
+- Update course totals after seeding.
+
+Acceptance criteria:
+
+- Roadmap shows "A1 Foundation" first with its topics and lessons.
+- Re-running the command does not create duplicates.
+
+---
+
+### Task 45 - Vocabulary Import Supports `audioUrl`
+
+Goal:
+
+Allow the Excel importer to set `vocabularies.audio_url`.
+
+Requirements:
+
+- Optional column `audioUrl` (relative path such as `/audio/vocab/apple.mp3` or absolute URL).
+- Upsert overwrites `audio_url` like other fields.
+- Update `docs/admin-guide.md`.
+
+Acceptance criteria:
+
+- Preview and commit accept the column; existing files without it still import.
+
+---
+
+### Task 46 - Play Vocabulary Audio
+
+Goal:
+
+Make the existing speaker buttons play pronunciation.
+
+Requirements:
+
+- Shared helper/hook: play `audioUrl` if present, otherwise fall back to browser `speechSynthesis` (`en-US`, rate 0.85).
+- Wire: flashcard front, lesson vocabulary preview list, vocabulary detail page.
+- Clicking the flashcard speaker must not flip the card.
+
+Acceptance criteria:
+
+- Each speaker button produces sound with or without `audioUrl`.
+
+---
+
+### Task D1-D4 - A1 Vocabulary Data
+
+- D1: A1 word list (CEFR-J Wordlist A1 entries), grouped into study topics/lessons matching Task 44.
+- D2: IPA (US) from CMU Pronouncing Dictionary; audio generated with macOS text-to-speech (`content/a1-vocabulary/generate_audio.sh`) into `frontend/public/audio/vocab/`.
+- D3: Vietnamese meaning, simple English definition, A1 example sentence + Vietnamese translation; automatic checks (missing IPA, example contains the word).
+- D4: Generate `.xlsx` in the import format, preview + import via `/admin/vocabularies/import`, study-test with flashcards.
+
+## 13. Milestone 12 - Specification
+
+### Task 47 - Foundation Spec
+
+Write `docs/foundation-spec.md`: CEFR course structure, `LessonActivity` model, JSON schema per activity type (grammar, pronunciation, listening, reading, writing, speaking), AI prompts, scoring rules, content import pipeline.
+
+### Task 48 - Update Database/API Docs
+
+Update `docs/database-v2.md` and `docs/api-v2.md` from the spec; expand Tasks 49-77 with full requirements/acceptance criteria.
+
+## 14. Milestone 13 - Learning Framework
+
+- Task 49 - Separate CEFR course + course switcher on Roadmap; migrate the temporary A1 band level.
+- Task 50 - `LessonActivity` model + API to list a lesson's activities.
+- Task 51 - Quiz engine extension: `payload_json`, new question types, typed-answer grading.
+- Task 52 - Lesson Player page: runs activities in order, saves progress, awards XP.
+- Task 53 - Admin content import (JSON/Excel) with DRAFT/PUBLISHED status.
+
+## 15. Milestone 14 - Grammar
+
+- Task 54 - Grammar point model + theory card UI (formula, examples, common Vietnamese-learner mistakes).
+- Task 55 - Exercise types: FILL_BLANK, REORDER, ERROR_CORRECTION, TRANSFORM, TRANSLATE_VI_EN (AI-graded when needed).
+- Task 56 - `user_grammar_progress` + review suggestions.
+- Task D5 - 9 A1 grammar points: theory + ~360 exercises (reviewed).
+
+## 16. Milestone 15 - Pronunciation and IPA (no recording yet)
+
+- Task 57 - IPA chart page (44 sounds) + sound detail card.
+- Task 58 - Exercise types: MINIMAL_PAIR, IPA_TO_WORD, WORD_TO_IPA, ENDING_SOUND (-s/-ed), WORD_STRESS.
+- Task 59 - Clickable IPA on vocabulary pages linking to sound cards.
+- Task D6 - 44 sound cards (Vietnamese mouth-position notes, common mistakes), ~150 minimal pairs with audio.
+
+## 17. Milestone 16 - Listening and Reading
+
+- Task 60 - `Passage` model (text, audio, timestamped segments).
+- Task 61 - Audio player (speed, replay sentence, blurred transcript).
+- Task 62 - Listening exercises: DICTATION, LISTEN_GAP_FILL, LISTEN_PICK_IMAGE, LISTEN_NUMBERS, true/false.
+- Task 63 - Reading with tap-to-translate and add-to-flashcards.
+- Task 64 - Audio import tool: Whisper transcript with sentence timestamps.
+- Task 65 - PDF/image import tool: AI extracts exercises to JSON.
+- Task D7 - ~36 model dialogues + ~100 dictation sentences.
+- Task D8 - ~30 A1 reading passages.
+
+## 18. Milestone 17 - Writing
+
+- Task 66 - `writing_submissions`: AI grading (JSON schema), diff UI, mandatory rewrite.
+- Task D9 - ~20 writing prompts by week.
+
+## 19. Milestone 18 - AI Speaking Upgrade
+
+- Task 67 - Quick wins: level-aware system prompt, slower TTS for beginners, cap chat history sent to the model.
+- Task 68 - System scenarios linked to lessons.
+- Task 69 - `ai_conversation_sessions`: finish session, feedback report, XP.
+- Task 70 - Vietnamese hint button.
+- Task D10 - 36 A1 situations (role, task, target patterns, model dialogue).
+
+## 20. Milestone 19 - Pronunciation Scoring
+
+- Task 71 - Recording (MediaRecorder) + backend Azure Pronunciation Assessment (IPA phonemes).
+- Task 72 - Shadowing / read-aloud with per-phoneme colouring; `user_phoneme_progress`.
+
+## 21. Milestone 20 - Mistake Log and Review
+
+- Task 73 - `learner_mistakes` from speaking, writing and quizzes → SRS flashcards.
+- Task 74 - AI-generated extra practice for weak areas.
+
+## 22. Milestone 21 - Progress and Completion
+
+- Task 75 - Weekly checkpoint test that unlocks the next week.
+- Task 76 - A1 dashboard: per-skill progress, "A1 reached" checklist.
+- Task 77 - Full QA + complete A1 study run-through, content fixes.

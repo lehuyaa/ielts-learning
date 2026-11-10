@@ -199,6 +199,7 @@ function mapLessonDetailToViewModel(
       id: String(vocabulary.id),
       word: vocabulary.word,
       ipa: vocabulary.ipa,
+      audioUrl: vocabulary.audioUrl,
       partOfSpeech: vocabulary.partOfSpeech,
       shortDefinition:
         vocabulary.shortDefinition ||

@@ -1,1 +1,4 @@
 .env
+# Generated pronunciation audio (content/a1-vocabulary/generate_audio.sh)
+frontend/public/audio/vocab/
+.DS_Store
