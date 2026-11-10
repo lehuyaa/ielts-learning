@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -22,6 +24,7 @@ import (
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
 	lessonactivitymodule "ielts-learning/backend/internal/modules/lessonactivity"
 	notificationmodule "ielts-learning/backend/internal/modules/notification"
+	passagemodule "ielts-learning/backend/internal/modules/passage"
 	phonememodule "ielts-learning/backend/internal/modules/phoneme"
 	profilemodule "ielts-learning/backend/internal/modules/profile"
 	quizmodule "ielts-learning/backend/internal/modules/quiz"
@@ -73,6 +76,10 @@ func main() {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	if err := os.MkdirAll(cfg.MediaDir, 0o755); err != nil {
+		log.Fatalf("failed to create media folder: %v", err)
+	}
+	router.Static("/media", cfg.MediaDir)
 
 	api := router.Group("/api/v1")
 	authmodule.RegisterRoutes(api, db, jwtManager)
@@ -81,15 +88,19 @@ func main() {
 	coursemodule.RegisterRoutes(api, db, jwtManager)
 	topicmodule.RegisterRoutes(api, db, jwtManager)
 	lessonmodule.RegisterRoutes(api, db, jwtManager)
-	aiClient := sharedai.New(cfg.OpenAIAPIKey, cfg.OpenAIModel, cfg.OpenAIBaseURL)
+	aiClient := sharedai.New(cfg.OpenAIAPIKey, cfg.OpenAIModel, cfg.OpenAIBaseURL).WithTranscribeModel(cfg.OpenAITranscribeModel)
+	// Vision extraction of many pages takes longer than a chat turn.
+	contentAIClient := sharedai.New(cfg.OpenAIAPIKey, cfg.OpenAIModel, cfg.OpenAIBaseURL).
+		WithTranscribeModel(cfg.OpenAITranscribeModel).WithTimeout(3 * time.Minute)
 	aiGrader := lessonactivitymodule.NewAIGrader(db, aiClient, cfg.OpenAIModel, cfg.AIShortAnswerDailyLimit)
 	lessonactivitymodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	grammarmodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	phonememodule.RegisterRoutes(api, db, jwtManager)
+	passagemodule.RegisterRoutes(api, db, jwtManager)
 	profilemodule.RegisterRoutes(api, db, jwtManager)
 	notificationmodule.RegisterRoutes(api, db, jwtManager)
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)
-	contentimportmodule.RegisterRoutes(api, db, jwtManager)
+	contentimportmodule.RegisterRoutes(api, db, jwtManager, contentAIClient, contentimportmodule.MediaStore{Dir: cfg.MediaDir})
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
 	aiconversationmodule.RegisterRoutes(api, db, jwtManager, aiClient)

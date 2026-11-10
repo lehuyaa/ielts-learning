@@ -144,6 +144,17 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 	if err != nil {
 		return ActivityDetailResponse{}, err
 	}
+	var passage *PassageCard
+	if activity.PassageID != nil {
+		found, ok, err := s.repository.FindPassage(*activity.PassageID)
+		if err != nil {
+			return ActivityDetailResponse{}, err
+		}
+		if ok {
+			card := ToPassageCard(found)
+			passage = &card
+		}
+	}
 
 	counts := map[uint]int{activity.ID: len(exercises)}
 	locks := activityLocks(ctx.activities, ctx.progress)
@@ -161,6 +172,7 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		Vocabularies: vocabularies,
 		GrammarPoint: grammarPoint,
 		Phonemes:     phonemes,
+		Passage:      passage,
 		Answers:      answerResults,
 	}, nil
 }

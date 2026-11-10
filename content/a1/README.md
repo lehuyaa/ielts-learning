@@ -9,8 +9,8 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 | `build_sounds.py` → `a1-sounds.json` | The 40 sound cards (IPA chart) + the always-open "Sound Lab" topic: 178 minimal pairs, ending -s / -ed, 2-syllable stress. **Import first** |
 | `audio_manifest_sounds.tsv` | Words and minimal-pair audio for the sound cards and Sound Lab |
 | `build_week1.py` | Authoring source for Week 1 (edit this, not the JSON) |
-| `week-1.json` | Generated bundle: 1 topic, 9 situation lessons + review, 49 activities, 184 exercises |
-| `audio_manifest_week-1.tsv` | Sentences/words to synthesise (`path<TAB>text`) |
+| `week-1.json` | Generated bundle: 18 passages (9 dialogues, 9 reading texts), 1 topic, 9 situation lessons + review, 55 activities, 229 exercises |
+| `audio_manifest_week-1.tsv` | Sentences/words to synthesise (`path<TAB>text[<TAB>voice]`) |
 | `generate_lesson_audio.sh` | Creates the `.m4a` files with macOS text-to-speech |
 
 ## Workflow
@@ -27,6 +27,9 @@ Then upload `a1-grammar.json` and `a1-sounds.json`, then `week-1.json` at **Admi
 (Preview, then Confirm import). GRAMMAR activities link to their theory card
 through `content.grammarPointSlug`; exercises practise a card through the skill
 tag `grammar:<slug>`, which also drives the learner's mastery on `/grammar`.
+LISTENING / READING activities point to a passage with `passageSlug`; each
+dialogue line is its own audio file (one passage segment, voiced per speaker),
+which gives the player sentence replay, 0.75x speed and dictation items.
 PRONUNCIATION activities list their sounds in `content.phonemes` (symbols as on
 the sound cards); the player shows those cards above the exercises and
 `/pronunciation/:symbol` lists the lessons that teach each sound.

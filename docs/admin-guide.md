@@ -161,6 +161,20 @@ Rules:
 - `VOCABULARY` activities list word slugs in `content.vocabularySlugs`; those
   words must already be imported.
 
+Passages (listening and reading):
+
+- A bundle's `passages` hold texts and recordings (upserted by slug);
+  LISTENING / READING activities use them through `passageSlug`, and a
+  DICTATION item can play one sentence with `"passageSlug": "...", "segmentIndex": 2`.
+- **Import Audio** (`/admin/passages/import`): upload an mp3/m4a (max 25MB),
+  Whisper returns the transcript split into timed sentences; fix words, add
+  speakers, then *Save passage* (or download JSON for the repo). Recordings are
+  stored in `MEDIA_DIR` (default `backend/storage/media`, git-ignored) and
+  served at `/media`. Needs `OPENAI_API_KEY`.
+- **Extract from PDF** (`/admin/content/extract`): upload up to 10 page photos
+  or one PDF; the AI writes a lesson bundle (activities DRAFT by default) and
+  opens it in Import Lessons for review. Check every answer before importing.
+
 Sound cards (IPA):
 
 - Import `content/a1/a1-sounds.json` (built by `content/a1/build_sounds.py`)

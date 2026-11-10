@@ -100,7 +100,7 @@ function ActivitySession({
   lessonId: number;
   onCompleted: (completion: CompleteActivityResponse) => void;
 }) {
-  const { activity, exercises, vocabularies, grammarPoint, phonemes } = data;
+  const { activity, exercises, vocabularies, grammarPoint, phonemes, passage } = data;
   const showTheory = Boolean(grammarPoint) && activity.content?.showTheory !== false;
   const answersById = useMemo(
     () => new Map(data.answers.map((answer) => [answer.exerciseId, answer])),
@@ -204,7 +204,12 @@ function ActivitySession({
 
       {phase === "exercises" && exercise ? (
         <div>
-          <ActivityContent activity={activity} phonemes={phonemes} />
+          <ActivityContent
+            activity={activity}
+            answered={exercises.length > 0 && answeredCount >= exercises.length}
+            passage={passage}
+            phonemes={phonemes}
+          />
           <ProgressDots count={exercises.length} current={index} results={results} exercises={exercises} />
 
           <section className="rounded-3xl border bg-white p-5 shadow-sm sm:p-7">

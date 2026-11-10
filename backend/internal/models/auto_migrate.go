@@ -43,5 +43,6 @@ func AutoMigrateModels() []interface{} {
 		&AIShortAnswerGrading{},
 		&Phoneme{},
 		&UserPhonemeProgress{},
+		&Passage{},
 	}
 }

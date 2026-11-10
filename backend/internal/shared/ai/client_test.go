@@ -64,3 +64,24 @@ func TestNotConfigured(t *testing.T) {
 		t.Fatalf("expected ErrNotConfigured, got %v", err)
 	}
 }
+
+func TestTranscribeSendsVerboseJSON(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/audio/transcriptions" {
+			t.Errorf("path %s", r.URL.Path)
+		}
+		if err := r.ParseMultipartForm(1 << 20); err != nil {
+			t.Fatal(err)
+		}
+		if r.FormValue("response_format") != "verbose_json" || r.FormValue("model") != "whisper-1" {
+			t.Errorf("form %v", r.MultipartForm.Value)
+		}
+		_, _ = w.Write([]byte(`{"text":"Hi. Bye.","segments":[{"start":0,"end":1.2,"text":" Hi."},{"start":1.2,"end":2,"text":" Bye."}]}`))
+	}))
+	defer server.Close()
+
+	result, err := New("key", "m", server.URL).Transcribe(context.Background(), "a.mp3", []byte("audio"))
+	if err != nil || len(result.Segments) != 2 || result.Segments[1].End != 2 {
+		t.Fatalf("result=%+v err=%v", result, err)
+	}
+}

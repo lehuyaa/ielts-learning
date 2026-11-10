@@ -21,6 +21,8 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { GrammarDetailPage } from '@/pages/GrammarDetailPage'
 import { GrammarPage } from '@/pages/GrammarPage'
 import { PronunciationDetailPage } from '@/pages/PronunciationDetailPage'
+import { AdminContentExtractPage } from '@/pages/AdminContentExtractPage'
+import { AdminPassageImportPage } from '@/pages/AdminPassageImportPage'
 import { PronunciationPage } from '@/pages/PronunciationPage'
 import { LessonPlayerPage } from '@/pages/LessonPlayerPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
@@ -140,6 +142,14 @@ export const router = createBrowserRouter([
               {
                 path: '/admin/content/import',
                 element: <AdminContentImportPage />,
+              },
+              {
+                path: '/admin/content/extract',
+                element: <AdminContentExtractPage />,
+              },
+              {
+                path: '/admin/passages/import',
+                element: <AdminPassageImportPage />,
               },
             ],
           },

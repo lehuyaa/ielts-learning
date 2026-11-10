@@ -27,11 +27,12 @@ type Message struct {
 
 // Client calls the chat completions API. Safe for concurrent use.
 type Client struct {
-	apiKey     string
-	model      string
-	baseURL    string
-	httpClient *http.Client
-	retryDelay time.Duration
+	apiKey          string
+	model           string
+	transcribeModel string
+	baseURL         string
+	httpClient      *http.Client
+	retryDelay      time.Duration
 }
 
 // New creates a client. baseURL may be empty (OpenAI default); it exists so
@@ -41,12 +42,27 @@ func New(apiKey string, model string, baseURL string) *Client {
 		baseURL = defaultBaseURL
 	}
 	return &Client{
-		apiKey:     apiKey,
-		model:      model,
-		baseURL:    strings.TrimRight(baseURL, "/"),
-		httpClient: &http.Client{Timeout: 30 * time.Second},
-		retryDelay: 500 * time.Millisecond,
+		apiKey:          apiKey,
+		model:           model,
+		transcribeModel: "whisper-1",
+		baseURL:         strings.TrimRight(baseURL, "/"),
+		httpClient:      &http.Client{Timeout: 30 * time.Second},
+		retryDelay:      500 * time.Millisecond,
 	}
+}
+
+// WithTranscribeModel sets the speech-to-text model (default whisper-1).
+func (c *Client) WithTranscribeModel(model string) *Client {
+	if model != "" {
+		c.transcribeModel = model
+	}
+	return c
+}
+
+// WithTimeout sets the timeout of chat calls (default 30s; vision calls need more).
+func (c *Client) WithTimeout(timeout time.Duration) *Client {
+	c.httpClient = &http.Client{Timeout: timeout}
+	return c
 }
 
 // Configured reports whether an API key is set.
@@ -121,6 +137,10 @@ func (c *Client) complete(ctx context.Context, request chatRequest) (string, err
 	if err != nil {
 		return "", fmt.Errorf("marshal openai request: %w", err)
 	}
+	return c.completeRaw(ctx, payload)
+}
+
+func (c *Client) completeRaw(ctx context.Context, payload []byte) (string, error) {
 
 	// One retry on 5xx or network errors.
 	var lastErr error

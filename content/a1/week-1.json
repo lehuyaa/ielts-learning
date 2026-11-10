@@ -2,6 +2,392 @@
   "version": 1,
   "courseSlug": "foundation-english",
   "cefrLevel": "A1",
+  "passages": [
+    {
+      "slug": "a1-w1-l1-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Chào buổi sáng ở văn phòng",
+      "bodyText": "A: Good morning, Lan.\nB: Good morning, Minh. How are you?\nA: I'm fine, thank you. And you?\nB: I'm very well, thanks.\nA: See you at the meeting. Bye!\nB: Bye!",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "Good morning, Lan.",
+          "audioUrl": "/audio/a1/w1/l1-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "Good morning, Minh. How are you?",
+          "audioUrl": "/audio/a1/w1/l1-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "I'm fine, thank you. And you?",
+          "audioUrl": "/audio/a1/w1/l1-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "I'm very well, thanks.",
+          "audioUrl": "/audio/a1/w1/l1-s4.m4a"
+        },
+        {
+          "index": 4,
+          "speaker": "A",
+          "text": "See you at the meeting. Bye!",
+          "audioUrl": "/audio/a1/w1/l1-s5.m4a"
+        },
+        {
+          "index": 5,
+          "speaker": "B",
+          "text": "Bye!",
+          "audioUrl": "/audio/a1/w1/l1-s6.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l1-reading",
+      "genre": "NOTICE",
+      "title": "Thông báo đầu tuần",
+      "bodyText": "Good morning, everyone! Welcome back to work. The team meeting is at 9 o'clock in Room A. Please be on time. Have a nice day! Anna, Office Manager",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l2-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Ngày đầu đi làm",
+      "bodyText": "A: Hi, I'm Minh. I'm the new designer.\nB: Nice to meet you, Minh. I'm Lan.\nA: Nice to meet you too. Where are you from?\nB: I'm from Da Nang, but I live in Hanoi now.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "Hi, I'm Minh. I'm the new designer.",
+          "audioUrl": "/audio/a1/w1/l2-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "Nice to meet you, Minh. I'm Lan.",
+          "audioUrl": "/audio/a1/w1/l2-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "Nice to meet you too. Where are you from?",
+          "audioUrl": "/audio/a1/w1/l2-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "I'm from Da Nang, but I live in Hanoi now.",
+          "audioUrl": "/audio/a1/w1/l2-s4.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l2-reading",
+      "genre": "PROFILE",
+      "title": "Hồ sơ nhân viên mới",
+      "bodyText": "Hello! My name is Mai. I'm 26 years old. I'm from Hue, but I live in Ho Chi Minh City. I'm an accountant at a tech company. Nice to meet you!",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l3-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Giới thiệu đồng nghiệp",
+      "bodyText": "A: Lan, this is Peter. He is our new developer.\nB: Hi, Peter. Nice to meet you.\nC: Nice to meet you too, Lan.\nA: Peter is from Canada. He is very friendly.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "Lan, this is Peter. He is our new developer.",
+          "audioUrl": "/audio/a1/w1/l3-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "Hi, Peter. Nice to meet you.",
+          "audioUrl": "/audio/a1/w1/l3-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "C",
+          "text": "Nice to meet you too, Lan.",
+          "audioUrl": "/audio/a1/w1/l3-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "A",
+          "text": "Peter is from Canada. He is very friendly.",
+          "audioUrl": "/audio/a1/w1/l3-s4.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l3-reading",
+      "genre": "EMAIL",
+      "title": "Email giới thiệu người mới",
+      "bodyText": "Hi team, Please welcome Peter Brown. He is our new developer. He is from Toronto, Canada, and he is 29 years old. Peter is in the tech team on the third floor. Please say hello to him! Thanks, Lan",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l4-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Điền thông tin ở lễ tân",
+      "bodyText": "A: What's your name, please?\nB: My name is Huy. H-U-Y.\nA: And what's your phone number?\nB: It's 0912 345 678.\nA: How old are you?\nB: I'm thirty-two.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "What's your name, please?",
+          "audioUrl": "/audio/a1/w1/l4-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "My name is Huy. H-U-Y.",
+          "audioUrl": "/audio/a1/w1/l4-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "And what's your phone number?",
+          "audioUrl": "/audio/a1/w1/l4-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "It's 0912 345 678.",
+          "audioUrl": "/audio/a1/w1/l4-s4.m4a"
+        },
+        {
+          "index": 4,
+          "speaker": "A",
+          "text": "How old are you?",
+          "audioUrl": "/audio/a1/w1/l4-s5.m4a"
+        },
+        {
+          "index": 5,
+          "speaker": "B",
+          "text": "I'm thirty-two.",
+          "audioUrl": "/audio/a1/w1/l4-s6.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l4-reading",
+      "genre": "PROFILE",
+      "title": "Phiếu thông tin nhân viên",
+      "bodyText": "Name: Nguyen Van Huy\nAge: 32\nPhone: 0912 345 678\nEmail: huy.nv@example.com\nAddress: 15 Tran Hung Dao Street, Hanoi\nJob: software developer",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l5-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Ảnh gia đình",
+      "bodyText": "A: Is this your family?\nB: Yes. This is my father and this is my mother.\nA: Who is this?\nB: That's my sister, Hoa. She is a nurse. And these are her two children.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "Is this your family?",
+          "audioUrl": "/audio/a1/w1/l5-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "Yes. This is my father and this is my mother.",
+          "audioUrl": "/audio/a1/w1/l5-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "Who is this?",
+          "audioUrl": "/audio/a1/w1/l5-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "That's my sister, Hoa. She is a nurse. And these are her two children.",
+          "audioUrl": "/audio/a1/w1/l5-s4.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l5-reading",
+      "genre": "MESSAGE",
+      "title": "Tin nhắn của Nam",
+      "bodyText": "Hi Lan! Thanks for the invitation. I can come to the party with my wife, Linh. Our son is five and our daughter is two. Is that OK? Nam",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l6-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Cuối tuần bạn làm gì?",
+      "bodyText": "A: What do you do in your free time, Lan?\nB: I like music. I sing and play the guitar.\nA: Cool! My hobby is fishing. I go fishing with my father on Sunday.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "What do you do in your free time, Lan?",
+          "audioUrl": "/audio/a1/w1/l6-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "I like music. I sing and play the guitar.",
+          "audioUrl": "/audio/a1/w1/l6-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "Cool! My hobby is fishing. I go fishing with my father on Sunday.",
+          "audioUrl": "/audio/a1/w1/l6-s3.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l6-reading",
+      "genre": "MESSAGE",
+      "title": "Rủ đi lễ hội âm nhạc",
+      "bodyText": "Hi Minh! Are you free on Saturday? There is a music festival in the park. My sister and I love rock music. We have three tickets. Do you want to come with us? Lan",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l7-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Bạn làm nghề gì?",
+      "bodyText": "A: What do you do, Hoa?\nB: I'm an accountant. I work for a bank.\nA: Is it a big bank?\nB: Yes, it is. There are two hundred people in my office.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "What do you do, Hoa?",
+          "audioUrl": "/audio/a1/w1/l7-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "I'm an accountant. I work for a bank.",
+          "audioUrl": "/audio/a1/w1/l7-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "Is it a big bank?",
+          "audioUrl": "/audio/a1/w1/l7-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "Yes, it is. There are two hundred people in my office.",
+          "audioUrl": "/audio/a1/w1/l7-s4.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l7-reading",
+      "genre": "PROFILE",
+      "title": "Một ngày của Sarah",
+      "bodyText": "Sarah is a nurse. Her hospital is in the city centre. Her work day is from 7 a.m. to 3 p.m. Her job is hard, but she is happy. Her husband, Tom, is a chef. His restaurant is next to the hospital.",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l8-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Hỏi đường trong tòa nhà",
+      "bodyText": "A: Excuse me, where is the meeting room?\nB: It's on the thirteenth floor, next to the kitchen.\nA: And where are the toilets?\nB: They're near the stairs.",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "Excuse me, where is the meeting room?",
+          "audioUrl": "/audio/a1/w1/l8-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "It's on the thirteenth floor, next to the kitchen.",
+          "audioUrl": "/audio/a1/w1/l8-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "And where are the toilets?",
+          "audioUrl": "/audio/a1/w1/l8-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "They're near the stairs.",
+          "audioUrl": "/audio/a1/w1/l8-s4.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l8-reading",
+      "genre": "NOTICE",
+      "title": "Bảng chỉ dẫn tòa nhà",
+      "bodyText": "Floor 1: Reception, Cafe. Floor 2: Sales team, Meeting room A. Floor 3: Tech team, Meeting room B. Toilets are on every floor, next to the stairs.",
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l9-dialogue",
+      "genre": "DIALOGUE",
+      "title": "Mượn đồ đồng nghiệp",
+      "bodyText": "A: Excuse me, Nam. Can I use your pen, please?\nB: Sure. Here you are.\nA: Thanks. And are those your notebooks?\nB: Yes, they are. Do you need one?\nA: Yes, please. Thank you so much!",
+      "segments": [
+        {
+          "index": 0,
+          "speaker": "A",
+          "text": "Excuse me, Nam. Can I use your pen, please?",
+          "audioUrl": "/audio/a1/w1/l9-s1.m4a"
+        },
+        {
+          "index": 1,
+          "speaker": "B",
+          "text": "Sure. Here you are.",
+          "audioUrl": "/audio/a1/w1/l9-s2.m4a"
+        },
+        {
+          "index": 2,
+          "speaker": "A",
+          "text": "Thanks. And are those your notebooks?",
+          "audioUrl": "/audio/a1/w1/l9-s3.m4a"
+        },
+        {
+          "index": 3,
+          "speaker": "B",
+          "text": "Yes, they are. Do you need one?",
+          "audioUrl": "/audio/a1/w1/l9-s4.m4a"
+        },
+        {
+          "index": 4,
+          "speaker": "A",
+          "text": "Yes, please. Thank you so much!",
+          "audioUrl": "/audio/a1/w1/l9-s5.m4a"
+        }
+      ],
+      "source": "generated (A1 Week 1)"
+    },
+    {
+      "slug": "a1-w1-l9-reading",
+      "genre": "MESSAGE",
+      "title": "Mẩu giấy nhắn của Mai",
+      "bodyText": "Hi Nam, sorry! I have your stapler and two of your pens. They are on my desk, next to the printer. Can I use your laptop charger this afternoon? Thanks! Mai",
+      "source": "generated (A1 Week 1)"
+    }
+  ],
   "topics": [
     {
       "slug": "a1-week-1",
@@ -317,36 +703,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Chào buổi sáng ở văn phòng",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l1-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l1-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "Good morning, Lan."
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Good morning, Minh. How are you?"
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "I'm fine, thank you. And you?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "I'm very well, thanks."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "See you at the meeting. Bye!"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Bye!"
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -387,6 +751,123 @@
                   },
                   "explanationVi": "I'm fine = tôi khỏe.",
                   "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l1-s1.m4a",
+                    "wordCount": 3
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Good morning, Lan."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l1-s2.m4a",
+                    "wordCount": 6
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Good morning, Minh. How are you?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                }
+              ]
+            },
+            {
+              "slug": "reading",
+              "type": "READING",
+              "title": "Thông báo đầu tuần",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
+              "isRequired": false,
+              "passageSlug": "a1-w1-l1-reading",
+              "content": {
+                "tapToTranslate": true
+              },
+              "exercises": [
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Cuộc họp lúc mấy giờ?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "9 o'clock"
+                      },
+                      {
+                        "id": "b",
+                        "text": "10 o'clock"
+                      },
+                      {
+                        "id": "c",
+                        "text": "8 o'clock"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"The team meeting is at 9 o'clock.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "The meeting is in Room B."
+                  },
+                  "answer": {
+                    "value": false
+                  },
+                  "explanationVi": "Cuộc họp ở Room A.",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Anna is the office manager."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "\"Anna, Office Manager\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Thông báo này viết cho ai?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "everyone"
+                      },
+                      {
+                        "id": "b",
+                        "text": "Anna"
+                      },
+                      {
+                        "id": "c",
+                        "text": "the manager"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"Good morning, everyone!\"",
+                  "skillTag": "reading"
                 }
               ]
             },
@@ -751,28 +1232,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Ngày đầu đi làm",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l2-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l2-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "Hi, I'm Minh. I'm the new designer."
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Nice to meet you, Minh. I'm Lan."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Nice to meet you too. Where are you from?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "I'm from Da Nang, but I live in Hanoi now."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -826,6 +1293,36 @@
                   },
                   "explanationVi": "Câu chào khi lần đầu gặp.",
                   "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l2-s1.m4a",
+                    "wordCount": 7
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Hi, I'm Minh. I'm the new designer."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l2-s2.m4a",
+                    "wordCount": 7
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Nice to meet you, Minh. I'm Lan."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
                 }
               ]
             },
@@ -833,10 +1330,11 @@
               "slug": "reading",
               "type": "READING",
               "title": "Hồ sơ nhân viên mới",
-              "instructionsVi": "Đọc đoạn văn, rồi trả lời câu hỏi.",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
               "isRequired": false,
+              "passageSlug": "a1-w1-l2-reading",
               "content": {
-                "text": "Hello! My name is Mai. I'm 26 years old. I'm from Hue, but I live in Ho Chi Minh City. I'm an accountant at a tech company. Nice to meet you!"
+                "tapToTranslate": true
               },
               "exercises": [
                 {
@@ -899,6 +1397,18 @@
                     "correct": "a"
                   },
                   "explanationVi": "\"I'm an accountant.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Mai lives in Ho Chi Minh City."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "\"...but I live in Ho Chi Minh City.\"",
                   "skillTag": "reading"
                 }
               ]
@@ -1261,28 +1771,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Giới thiệu đồng nghiệp",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l3-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l3-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "Lan, this is Peter. He is our new developer."
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Hi, Peter. Nice to meet you."
-                  },
-                  {
-                    "speaker": "C",
-                    "text": "Nice to meet you too, Lan."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Peter is from Canada. He is very friendly."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -1336,6 +1832,123 @@
                   },
                   "explanationVi": "This is + tên: giới thiệu ai đó.",
                   "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l3-s1.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Lan, this is Peter. He is our new developer."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l3-s2.m4a",
+                    "wordCount": 6
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Hi, Peter. Nice to meet you."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                }
+              ]
+            },
+            {
+              "slug": "reading",
+              "type": "READING",
+              "title": "Email giới thiệu người mới",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
+              "isRequired": false,
+              "passageSlug": "a1-w1-l3-reading",
+              "content": {
+                "tapToTranslate": true
+              },
+              "exercises": [
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Peter is a designer."
+                  },
+                  "answer": {
+                    "value": false
+                  },
+                  "explanationVi": "\"He is our new developer.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Peter đến từ thành phố nào?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "Toronto"
+                      },
+                      {
+                        "id": "b",
+                        "text": "Sydney"
+                      },
+                      {
+                        "id": "c",
+                        "text": "London"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"He is from Toronto, Canada.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Peter bao nhiêu tuổi?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "29"
+                      },
+                      {
+                        "id": "b",
+                        "text": "19"
+                      },
+                      {
+                        "id": "c",
+                        "text": "39"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"he is 29 years old\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "The tech team is on the third floor."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "\"in the tech team on the third floor\"",
+                  "skillTag": "reading"
                 }
               ]
             },
@@ -1692,36 +2305,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Điền thông tin ở lễ tân",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l4-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l4-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "What's your name, please?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "My name is Huy. H-U-Y."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "And what's your phone number?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "It's 0912 345 678."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "How old are you?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "I'm thirty-two."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -1765,6 +2356,136 @@
                   },
                   "explanationVi": "Đánh vần: H-U-Y.",
                   "skillTag": "listening"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l4-s1.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What's your name, please?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l4-s2.m4a",
+                    "wordCount": 5
+                  },
+                  "answer": {
+                    "accepted": [
+                      "My name is Huy. H-U-Y."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                }
+              ]
+            },
+            {
+              "slug": "reading",
+              "type": "READING",
+              "title": "Phiếu thông tin nhân viên",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
+              "isRequired": false,
+              "passageSlug": "a1-w1-l4-reading",
+              "content": {
+                "tapToTranslate": true
+              },
+              "exercises": [
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Huy sống ở thành phố nào?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "Hanoi"
+                      },
+                      {
+                        "id": "b",
+                        "text": "Hue"
+                      },
+                      {
+                        "id": "c",
+                        "text": "Da Nang"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "Address: ... Hanoi.",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Huy is 23 years old."
+                  },
+                  "answer": {
+                    "value": false
+                  },
+                  "explanationVi": "Age: 32 (thirty-two), không phải 23.",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Huy làm nghề gì?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "software developer"
+                      },
+                      {
+                        "id": "b",
+                        "text": "doctor"
+                      },
+                      {
+                        "id": "c",
+                        "text": "teacher"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "Job: software developer.",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Số nhà của Huy là bao nhiêu?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "15"
+                      },
+                      {
+                        "id": "b",
+                        "text": "50"
+                      },
+                      {
+                        "id": "c",
+                        "text": "5"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "15 Tran Hung Dao Street.",
+                  "skillTag": "reading"
                 }
               ]
             },
@@ -2132,28 +2853,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Ảnh gia đình",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l5-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l5-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "Is this your family?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Yes. This is my father and this is my mother."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Who is this?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "That's my sister, Hoa. She is a nurse. And these are her two children."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -2210,6 +2917,36 @@
                   },
                   "explanationVi": "",
                   "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l5-s1.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Is this your family?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l5-s3.m4a",
+                    "wordCount": 3
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Who is this?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
                 }
               ]
             },
@@ -2217,10 +2954,11 @@
               "slug": "reading",
               "type": "READING",
               "title": "Tin nhắn của Nam",
-              "instructionsVi": "Đọc đoạn văn, rồi trả lời câu hỏi.",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
               "isRequired": false,
+              "passageSlug": "a1-w1-l5-reading",
               "content": {
-                "text": "Hi Lan! Thanks for the invitation. I can come to the party with my wife, Linh. Our son is five and our daughter is two. Is that OK? Nam"
+                "tapToTranslate": true
               },
               "exercises": [
                 {
@@ -2283,6 +3021,18 @@
                     "correct": "a"
                   },
                   "explanationVi": "\"my wife, Linh\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Nam writes to Lan."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "Tin nhắn bắt đầu bằng \"Hi Lan!\".",
                   "skillTag": "reading"
                 }
               ]
@@ -2632,24 +3382,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Cuối tuần bạn làm gì?",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l6-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l6-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "What do you do in your free time, Lan?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "I like music. I sing and play the guitar."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Cool! My hobby is fishing. I go fishing with my father on Sunday."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -2708,6 +3448,123 @@
                   },
                   "explanationVi": "",
                   "skillTag": "listening:gap-fill"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l6-s1.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What do you do in your free time, Lan?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l6-s2.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I like music. I sing and play the guitar."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                }
+              ]
+            },
+            {
+              "slug": "reading",
+              "type": "READING",
+              "title": "Rủ đi lễ hội âm nhạc",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
+              "isRequired": false,
+              "passageSlug": "a1-w1-l6-reading",
+              "content": {
+                "tapToTranslate": true
+              },
+              "exercises": [
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Lễ hội âm nhạc ở đâu?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "in the park"
+                      },
+                      {
+                        "id": "b",
+                        "text": "at school"
+                      },
+                      {
+                        "id": "c",
+                        "text": "at the office"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"There is a music festival in the park.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Lan likes rock music."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "\"My sister and I love rock music.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Họ có mấy vé?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "3"
+                      },
+                      {
+                        "id": "b",
+                        "text": "2"
+                      },
+                      {
+                        "id": "c",
+                        "text": "4"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"We have three tickets.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "The festival is on Sunday."
+                  },
+                  "answer": {
+                    "value": false
+                  },
+                  "explanationVi": "Lễ hội vào thứ Bảy (Saturday).",
+                  "skillTag": "reading"
                 }
               ]
             },
@@ -3047,28 +3904,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Bạn làm nghề gì?",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l7-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l7-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "What do you do, Hoa?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "I'm an accountant. I work for a bank."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Is it a big bank?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Yes, it is. There are two hundred people in my office."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -3125,6 +3968,123 @@
                   },
                   "explanationVi": "an + accountant.",
                   "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l7-s1.m4a",
+                    "wordCount": 5
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What do you do, Hoa?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l7-s2.m4a",
+                    "wordCount": 8
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I'm an accountant. I work for a bank."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                }
+              ]
+            },
+            {
+              "slug": "reading",
+              "type": "READING",
+              "title": "Một ngày của Sarah",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
+              "isRequired": false,
+              "passageSlug": "a1-w1-l7-reading",
+              "content": {
+                "tapToTranslate": true
+              },
+              "exercises": [
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Sarah làm nghề gì?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "nurse"
+                      },
+                      {
+                        "id": "b",
+                        "text": "chef"
+                      },
+                      {
+                        "id": "c",
+                        "text": "doctor"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"Sarah is a nurse.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Tom is a doctor."
+                  },
+                  "answer": {
+                    "value": false
+                  },
+                  "explanationVi": "Tom là đầu bếp (chef).",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Sarah làm việc đến mấy giờ?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "3 p.m."
+                      },
+                      {
+                        "id": "b",
+                        "text": "7 a.m."
+                      },
+                      {
+                        "id": "c",
+                        "text": "5 p.m."
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"from 7 a.m. to 3 p.m.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Tom's restaurant is next to the hospital."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "\"His restaurant is next to the hospital.\"",
+                  "skillTag": "reading"
                 }
               ]
             },
@@ -3486,28 +4446,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Hỏi đường trong tòa nhà",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l8-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l8-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "Excuse me, where is the meeting room?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "It's on the thirteenth floor, next to the kitchen."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "And where are the toilets?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "They're near the stairs."
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -3567,6 +4513,36 @@
                   },
                   "explanationVi": "",
                   "skillTag": "listening:gap-fill"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l8-s1.m4a",
+                    "wordCount": 7
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Excuse me, where is the meeting room?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l8-s2.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "It's on the thirteenth floor, next to the kitchen."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
                 }
               ]
             },
@@ -3574,10 +4550,11 @@
               "slug": "reading",
               "type": "READING",
               "title": "Bảng chỉ dẫn tòa nhà",
-              "instructionsVi": "Đọc đoạn văn, rồi trả lời câu hỏi.",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
               "isRequired": false,
+              "passageSlug": "a1-w1-l8-reading",
               "content": {
-                "text": "Floor 1: Reception, Cafe. Floor 2: Sales team, Meeting room A. Floor 3: Tech team, Meeting room B. Toilets are on every floor, next to the stairs."
+                "tapToTranslate": true
               },
               "exercises": [
                 {
@@ -3627,6 +4604,31 @@
                     "value": true
                   },
                   "explanationVi": "\"Toilets are on every floor.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Sales team ở tầng mấy?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "2"
+                      },
+                      {
+                        "id": "b",
+                        "text": "1"
+                      },
+                      {
+                        "id": "c",
+                        "text": "3"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "Floor 2: Sales team.",
                   "skillTag": "reading"
                 }
               ]
@@ -3999,32 +5001,14 @@
               "slug": "listening",
               "type": "LISTENING",
               "title": "Mượn đồ đồng nghiệp",
-              "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
+              "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+              "passageSlug": "a1-w1-l9-dialogue",
               "content": {
-                "audioUrl": "/audio/a1/w1/l9-dialogue.m4a",
-                "transcript": [
-                  {
-                    "speaker": "A",
-                    "text": "Excuse me, Nam. Can I use your pen, please?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Sure. Here you are."
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Thanks. And are those your notebooks?"
-                  },
-                  {
-                    "speaker": "B",
-                    "text": "Yes, they are. Do you need one?"
-                  },
-                  {
-                    "speaker": "A",
-                    "text": "Yes, please. Thank you so much!"
-                  }
+                "speeds": [
+                  0.75,
+                  1.0
                 ],
-                "showTranscript": "AFTER_COMPLETE"
+                "transcript": "AFTER_ANSWER"
               },
               "exercises": [
                 {
@@ -4078,6 +5062,123 @@
                   },
                   "explanationVi": "",
                   "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l9-s1.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Excuse me, Nam. Can I use your pen, please?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l9-s2.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Sure. Here you are."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                }
+              ]
+            },
+            {
+              "slug": "reading",
+              "type": "READING",
+              "title": "Mẩu giấy nhắn của Mai",
+              "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.",
+              "isRequired": false,
+              "passageSlug": "a1-w1-l9-reading",
+              "content": {
+                "tapToTranslate": true
+              },
+              "exercises": [
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "Mai has three of Nam's pens."
+                  },
+                  "answer": {
+                    "value": false
+                  },
+                  "explanationVi": "\"two of your pens\" — hai cây bút.",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Mai muốn mượn gì chiều nay?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "a laptop charger"
+                      },
+                      {
+                        "id": "b",
+                        "text": "a stapler"
+                      },
+                      {
+                        "id": "c",
+                        "text": "a printer"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "\"Can I use your laptop charger?\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "TRUE_FALSE",
+                  "prompt": "Đúng hay sai?",
+                  "payload": {
+                    "statement": "The pens are next to the printer."
+                  },
+                  "answer": {
+                    "value": true
+                  },
+                  "explanationVi": "\"They are on my desk, next to the printer.\"",
+                  "skillTag": "reading"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Ai viết mẩu giấy này?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "Mai"
+                      },
+                      {
+                        "id": "b",
+                        "text": "Nam"
+                      },
+                      {
+                        "id": "c",
+                        "text": "Lan"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "Ký tên: Mai.",
+                  "skillTag": "reading"
                 }
               ]
             },

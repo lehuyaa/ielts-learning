@@ -12,6 +12,8 @@ import {
   FileJson,
   Puzzle,
   AudioLines,
+  FileAudio,
+  FileSearch,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -94,6 +96,18 @@ const adminNavigationItems = [
     to: "/admin/content/import",
     icon: FileJson,
     match: (pathname: string) => pathname === "/admin/content/import",
+  },
+  {
+    label: "Import Audio",
+    to: "/admin/passages/import",
+    icon: FileAudio,
+    match: (pathname: string) => pathname === "/admin/passages/import",
+  },
+  {
+    label: "Extract from PDF",
+    to: "/admin/content/extract",
+    icon: FileSearch,
+    match: (pathname: string) => pathname === "/admin/content/extract",
   },
 ];
 

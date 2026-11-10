@@ -218,3 +218,24 @@ func (r Repository) ExistingPhonemeSymbols(symbols []string) (map[string]bool, e
 	}
 	return result, nil
 }
+
+func (r Repository) FindPassage(slug string) (models.Passage, bool, error) {
+	var passage models.Passage
+	err := r.db.Where("slug = ?", slug).First(&passage).Error
+	return passage, found(err), ignoreNotFound(err, "find passage")
+}
+
+func (r Repository) PassageIDs(slugs []string) (map[string]uint, error) {
+	result := map[string]uint{}
+	if len(slugs) == 0 {
+		return result, nil
+	}
+	var passages []models.Passage
+	if err := r.db.Select("id", "slug").Where("slug IN ?", slugs).Find(&passages).Error; err != nil {
+		return nil, fmt.Errorf("find passages: %w", err)
+	}
+	for _, passage := range passages {
+		result[passage.Slug] = passage.ID
+	}
+	return result, nil
+}

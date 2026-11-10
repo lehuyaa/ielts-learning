@@ -57,6 +57,8 @@ type ActivityDetailResponse struct {
 	GrammarPoint *GrammarPointCard `json:"grammarPoint"`
 	// Phonemes are the sound cards of a PRONUNCIATION activity (content.phonemes).
 	Phonemes []PhonemeCard `json:"phonemes"`
+	// Passage is the text/recording of a LISTENING or READING activity.
+	Passage *PassageCard `json:"passage"`
 	// Answers already given in the current (unfinished) attempt, for resuming.
 	Answers []AnswerResult `json:"answers"`
 }
@@ -202,5 +204,36 @@ func ToPhonemeCard(phoneme models.Phoneme) PhonemeCard {
 		AudioURL:     phoneme.AudioURL,
 		ImageURL:     phoneme.ImageURL,
 		OrderIndex:   phoneme.OrderIndex,
+	}
+}
+
+// PassageCard is a listening/reading text (also used by the passage module).
+type PassageCard struct {
+	ID        uint            `json:"id"`
+	Slug      string          `json:"slug"`
+	CEFRLevel string          `json:"cefrLevel"`
+	Genre     string          `json:"genre"`
+	Title     string          `json:"title"`
+	BodyText  string          `json:"bodyText"`
+	AudioURL  *string         `json:"audioUrl"`
+	Segments  json.RawMessage `json:"segments" swaggertype:"array,object"`
+	Glossary  json.RawMessage `json:"glossary" swaggertype:"array,object"`
+	Source    string          `json:"source"`
+	WordCount int             `json:"wordCount"`
+}
+
+func ToPassageCard(passage models.Passage) PassageCard {
+	return PassageCard{
+		ID:        passage.ID,
+		Slug:      passage.Slug,
+		CEFRLevel: passage.CEFRLevel,
+		Genre:     string(passage.Genre),
+		Title:     passage.Title,
+		BodyText:  passage.BodyText,
+		AudioURL:  passage.AudioURL,
+		Segments:  jsonList(passage.SegmentsJSON),
+		Glossary:  jsonList(passage.GlossaryJSON),
+		Source:    passage.Source,
+		WordCount: passage.WordCount,
 	}
 }

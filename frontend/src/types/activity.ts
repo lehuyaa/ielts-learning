@@ -1,3 +1,4 @@
+import type { PassageCard } from '@/types/passage'
 import type { PhonemeCard } from '@/types/phoneme'
 import type { GrammarPointCard } from '@/types/grammar'
 
@@ -138,6 +139,8 @@ export type ActivityDetailResponse = {
   grammarPoint: GrammarPointCard | null
   /** Sound cards of a PRONUNCIATION activity (content.phonemes). */
   phonemes?: PhonemeCard[]
+  /** Text/recording of a LISTENING or READING activity. */
+  passage?: PassageCard | null
   answers: AnswerResult[]
 }
 

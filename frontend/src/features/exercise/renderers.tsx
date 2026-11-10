@@ -1,7 +1,8 @@
-import { ArrowDown, Check, CornerDownLeft, Mic, RotateCcw, X } from "lucide-react";
+import { ArrowDown, Check, CornerDownLeft, Mic, RotateCcw, Snail, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { Input } from "@/components/ui/input";
+import { playPronunciation } from "@/lib/pronunciation";
 import { cn } from "@/lib/utils";
 import type {
   AnswerResult,
@@ -11,6 +12,7 @@ import type {
 } from "@/types/activity";
 
 import { AudioButton } from "./AudioButton";
+import { DictationExercise } from "./DictationExercise";
 import { choiceOptions, optionLabel, str, strList } from "./payload";
 
 export type ExerciseRendererProps = {
@@ -35,7 +37,7 @@ const renderers: Record<ExerciseType, Renderer> = {
   FILL_BLANK: FillBlankExercise,
   TRANSFORM: WritingExercise,
   TRANSLATE_VI_EN: WritingExercise,
-  DICTATION: TextExercise,
+  DICTATION: DictationExercise,
   LISTEN_NUMBERS: TextExercise,
   REORDER: ReorderExercise,
   ERROR_CORRECTION: ErrorCorrectionExercise,
@@ -64,8 +66,15 @@ function ExerciseAudio({ exercise }: { exercise: Exercise }) {
     return null;
   }
   return (
-    <div className="mb-5 flex justify-center">
+    <div className="mb-5 flex flex-wrap justify-center gap-2">
       <AudioButton audioUrl={audioUrl} label="Nghe" />
+      <button
+        className="inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold text-muted-foreground hover:border-primary/40 hover:text-foreground"
+        onClick={() => playPronunciation("", audioUrl, { rate: 0.75 })}
+        type="button"
+      >
+        <Snail className="size-4" /> Nghe chậm
+      </button>
     </div>
   );
 }

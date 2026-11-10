@@ -5,8 +5,8 @@ import {
   TriangleAlert,
   Upload,
 } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,7 @@ import {
   useContentImportCommit,
   useContentImportPreview,
 } from '@/features/admin/hooks/useContentImport'
+import { previewContentImport } from '@/api/contentImport'
 import { cn } from '@/lib/utils'
 import type {
   ContentImportItem,
@@ -26,14 +27,33 @@ type LessonGroup = {
   activities: { activity: ContentImportItem; exercises: ContentImportItem[] }[]
 }
 
+/** A bundle handed over by the PDF/image extraction page. */
+type HandedOverBundle = { bundleText?: string; fileName?: string } | null
+
 export function AdminContentImportPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(() => {
+    const handedOver = location.state as HandedOverBundle
+    return handedOver?.bundleText
+      ? new File([handedOver.bundleText], handedOver.fileName ?? 'extracted.json', { type: 'application/json' })
+      : null
+  })
   const [report, setReport] = useState<ContentImportResult | null>(null)
 
   const previewMutation = useContentImportPreview()
   const commitMutation = useContentImportCommit()
+
+  // Preview a handed-over bundle right away (once, also under StrictMode).
+  const autoPreviewed = useRef(false)
+  useEffect(() => {
+    if (selectedFile && (location.state as HandedOverBundle)?.bundleText && !autoPreviewed.current) {
+      autoPreviewed.current = true
+      // Called directly (not through the mutation) so StrictMode's remount cannot drop the result.
+      previewContentImport(selectedFile).then(setReport, () => undefined)
+    }
+  }, [selectedFile, location.state])
 
   function reset() {
     setSelectedFile(null)
@@ -44,6 +64,7 @@ export function AdminContentImportPage() {
   }
 
   const groups = useMemo(() => groupItems(report?.items ?? []), [report])
+  const passages = report?.items.filter((item) => item.kind === 'PASSAGE') ?? []
   const topics =
     report?.items.filter((item) => item.kind === 'TOPIC' || item.kind === 'GRAMMAR_POINT') ?? []
   const phonemes = report?.items.filter((item) => item.kind === 'PHONEME') ?? []
@@ -78,6 +99,11 @@ export function AdminContentImportPage() {
             file again updates it. Preview never writes to the database.
           </p>
 
+          {selectedFile && (location.state as HandedOverBundle)?.bundleText ? (
+            <p className="mt-3 text-xs text-muted-foreground">
+              File: <span className="font-semibold text-foreground">{selectedFile.name}</span>
+            </p>
+          ) : null}
           <input
             accept=".json,application/json"
             className="mt-4 block w-full cursor-pointer text-sm text-muted-foreground file:mr-3 file:cursor-pointer file:rounded-lg file:border-0 file:bg-muted file:px-3 file:py-2 file:text-sm file:font-medium file:text-foreground hover:file:bg-muted/70"
@@ -185,6 +211,18 @@ export function AdminContentImportPage() {
                   {phoneme.title}: {phoneme.errors.join('; ')}
                 </p>
               ))}
+
+            {passages.length > 0 ? (
+              <p className="mb-3 text-sm">
+                <span className="font-semibold">Passages ({passages.length}):</span>{' '}
+                {passages.map((passage) => (
+                  <span className="mr-2 inline-flex items-center gap-1" key={passage.path}>
+                    <ItemStatus item={passage} /> {passage.title}
+                    {passage.errors.length > 0 ? <span className="text-xs text-destructive">({passage.errors.join('; ')})</span> : null}
+                  </span>
+                ))}
+              </p>
+            ) : null}
 
             {topics.map((topic) => (
               <p className="mb-3 text-sm" key={topic.path}>

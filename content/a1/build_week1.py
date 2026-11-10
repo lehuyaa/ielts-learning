@@ -14,13 +14,18 @@ import sys
 
 WEEK = "w1"
 AUDIO_ROOT = "/audio/a1"
-audio_lines = {}  # audio key -> text spoken
+audio_lines = {}  # audio key -> (text spoken, voice or "")
+passages = []     # listening/reading texts (docs/foundation-spec.md §3.3)
+
+# macOS voices per speaker gender (generate_lesson_audio.sh falls back to the
+# default voice when one is not installed).
+VOICE = {"F": "Samantha", "M": "Alex"}
 
 
-def audio(key, text):
+def audio(key, text, voice=""):
     """Registers a sentence to synthesise and returns its public URL."""
     path = f"{WEEK}/{key}"
-    audio_lines[path] = text
+    audio_lines[path] = (text, voice)
     return f"{AUDIO_ROOT}/{path}.m4a"
 
 
@@ -158,20 +163,55 @@ def grammar(title, instructions, point, exercises):
             "content": {"grammarPointSlug": point, "showTheory": True}, "exercises": exercises}
 
 
-def listening(key, title, lines, exercises):
-    """lines: [(speaker, text), ...] — the whole dialogue is one audio file."""
-    transcript = [{"speaker": s, "text": t} for s, t in lines]
-    url = audio(f"{key}-dialogue", " ".join(t for _, t in lines))
+# Speaker genders per dialogue (A, B, C…), for the TTS voices.
+DIALOGUE_VOICES = {"l1": "MF", "l2": "MF", "l3": "MFM", "l4": "FM", "l5": "FM",
+                   "l6": "MF", "l7": "MF", "l8": "FM", "l9": "FM"}
+
+
+def listening(key, title, lines, exercises, extra_dictation=2):
+    """lines: [(speaker, text), ...]. Each line is its own audio file (one
+    passage segment), so the player can replay sentence by sentence. Adds
+    dictation items from short dialogue lines."""
+    genders = DIALOGUE_VOICES.get(key, "FM")
+    segments = []
+    for index, (speaker, text) in enumerate(lines):
+        gender = genders[(ord(speaker) - ord("A")) % len(genders)]
+        segments.append({"index": index, "speaker": speaker, "text": text,
+                         "audioUrl": audio(f"{key}-s{index + 1}", text, VOICE[gender])})
+    slug = f"a1-{WEEK}-{key}-dialogue"
+    passages.append({"slug": slug, "genre": "DIALOGUE", "title": title,
+                     "bodyText": "\n".join(f"{s}: {t}" for s, t in lines), "segments": segments,
+                     "source": "generated (A1 Week 1)"})
+
+    dictated = {e["answer"]["accepted"][0] for e in exercises if e["type"] == "DICTATION"}
+    added = 0
+    for segment in segments:
+        words = segment["text"].split()
+        if added >= extra_dictation or not 3 <= len(words) <= 9 or segment["text"] in dictated:
+            continue
+        exercises.append(ex("DICTATION", "Nghe và chép lại câu",
+                            {"audioUrl": segment["audioUrl"], "wordCount": len(words)},
+                            {"accepted": [segment["text"]]}, "", "listening:dictation"))
+        added += 1
+
     return {"slug": "listening", "type": "LISTENING", "title": title,
-            "instructionsVi": "Nghe hội thoại (có thể nghe nhiều lần), rồi trả lời câu hỏi.",
-            "content": {"audioUrl": url, "transcript": transcript, "showTranscript": "AFTER_COMPLETE"},
+            "instructionsVi": "Nghe hội thoại (có thể nghe chậm và nghe lại từng câu), rồi trả lời câu hỏi.",
+            "passageSlug": slug, "content": {"speeds": [0.75, 1.0], "transcript": "AFTER_ANSWER"},
             "exercises": exercises}
 
 
+READING_GENRES = {"l1": "NOTICE", "l2": "PROFILE", "l3": "EMAIL", "l4": "PROFILE", "l5": "MESSAGE",
+                  "l6": "MESSAGE", "l7": "PROFILE", "l8": "NOTICE", "l9": "MESSAGE"}
+
+
 def reading(title, text, exercises):
+    key = k  # the lesson key of the lesson being built
+    slug = f"a1-{WEEK}-{key}-reading"
+    passages.append({"slug": slug, "genre": READING_GENRES.get(key, "MESSAGE"), "title": title,
+                     "bodyText": text, "source": "generated (A1 Week 1)"})
     return {"slug": "reading", "type": "READING", "title": title,
-            "instructionsVi": "Đọc đoạn văn, rồi trả lời câu hỏi.", "isRequired": False,
-            "content": {"text": text}, "exercises": exercises}
+            "instructionsVi": "Đọc đoạn văn (chạm vào từ để xem nghĩa), rồi trả lời câu hỏi.", "isRequired": False,
+            "passageSlug": slug, "content": {"tapToTranslate": True}, "exercises": exercises}
 
 
 def speaking(sentences):
@@ -221,6 +261,12 @@ lessons.append({
             true_false("Lan is not well.", False, "Lan nói 'I'm very well' (tôi rất khỏe).", "listening"),
             dictation(k + "1", "I'm fine, thank you.", "I'm fine = tôi khỏe."),
         ]),
+        reading("Thông báo đầu tuần", "Good morning, everyone! Welcome back to work. The team meeting is at 9 o'clock in Room A. Please be on time. Have a nice day! Anna, Office Manager", [
+            mc("Cuộc họp lúc mấy giờ?", ["9 o'clock", "10 o'clock", "8 o'clock"], 0, "\"The team meeting is at 9 o'clock.\"", "reading"),
+            true_false("The meeting is in Room B.", False, "Cuộc họp ở Room A.", "reading"),
+            true_false("Anna is the office manager.", True, "\"Anna, Office Manager\"", "reading"),
+            mc("Thông báo này viết cho ai?", ["everyone", "Anna", "the manager"], 0, "\"Good morning, everyone!\"", "reading"),
+        ]),
         speaking(["Good morning! How are you?", "I'm fine, thank you. And you?", "Sorry, I'm late."]),
     ],
 })
@@ -262,6 +308,7 @@ lessons.append({
             true_false("Mai is from Ho Chi Minh City.", False, "Mai quê ở Huế.", "reading"),
             mc("Mai bao nhiêu tuổi?", ["26", "36", "16"], 0, "\"I'm 26 years old.\"", "reading"),
             mc("Mai làm nghề gì?", ["accountant", "teacher", "designer"], 0, "\"I'm an accountant.\"", "reading"),
+            true_false("Mai lives in Ho Chi Minh City.", True, "\"...but I live in Ho Chi Minh City.\"", "reading"),
         ]),
         speaking(["Hi, I'm Huy. I'm a developer.", "I'm from Vietnam. I live in Hanoi.", "Nice to meet you!"]),
     ],
@@ -300,6 +347,12 @@ lessons.append({
             mc("Peter đến từ đâu?", ["Canada", "Australia", "the USA"], 0, "\"Peter is from Canada.\"", "listening"),
             dictation(k + "1", "This is Peter.", "This is + tên: giới thiệu ai đó."),
         ]),
+        reading("Email giới thiệu người mới", "Hi team, Please welcome Peter Brown. He is our new developer. He is from Toronto, Canada, and he is 29 years old. Peter is in the tech team on the third floor. Please say hello to him! Thanks, Lan", [
+            true_false("Peter is a designer.", False, "\"He is our new developer.\"", "reading"),
+            mc("Peter đến từ thành phố nào?", ["Toronto", "Sydney", "London"], 0, "\"He is from Toronto, Canada.\"", "reading"),
+            mc("Peter bao nhiêu tuổi?", ["29", "19", "39"], 0, "\"he is 29 years old\"", "reading"),
+            true_false("The tech team is on the third floor.", True, "\"in the tech team on the third floor\"", "reading"),
+        ]),
         speaking(["This is my colleague, Lan.", "She is a designer.", "They are my friends."]),
     ],
 })
@@ -337,6 +390,12 @@ lessons.append({
             numbers(k + "1", "It's 0912 345 678.", "Số điện thoại của Huy là gì?", "PHONE", ["0912 345 678"], "Đọc từng số một."),
             numbers(k + "2", "I'm thirty-two.", "Huy bao nhiêu tuổi?", "NUMBER", ["32"], "thirty-two = 32."),
             true_false("Huy spells his name H-U-Y.", True, "Đánh vần: H-U-Y.", "listening"),
+        ]),
+        reading("Phiếu thông tin nhân viên", "Name: Nguyen Van Huy\nAge: 32\nPhone: 0912 345 678\nEmail: huy.nv@example.com\nAddress: 15 Tran Hung Dao Street, Hanoi\nJob: software developer", [
+            mc("Huy sống ở thành phố nào?", ["Hanoi", "Hue", "Da Nang"], 0, "Address: ... Hanoi.", "reading"),
+            true_false("Huy is 23 years old.", False, "Age: 32 (thirty-two), không phải 23.", "reading"),
+            mc("Huy làm nghề gì?", ["software developer", "doctor", "teacher"], 0, "Job: software developer.", "reading"),
+            mc("Số nhà của Huy là bao nhiêu?", ["15", "50", "5"], 0, "15 Tran Hung Dao Street.", "reading"),
         ]),
         speaking(["What's your name?", "What's your phone number?", "How old are you?"]),
     ],
@@ -379,6 +438,7 @@ lessons.append({
             true_false("Nam has two children.", True, "Một con trai và một con gái.", "reading"),
             mc("Con trai Nam bao nhiêu tuổi?", ["5", "2", "7"], 0, "\"Our son is five.\"", "reading"),
             mc("Vợ Nam tên gì?", ["Linh", "Lan", "Hoa"], 0, "\"my wife, Linh\"", "reading"),
+            true_false("Nam writes to Lan.", True, "Tin nhắn bắt đầu bằng \"Hi Lan!\".", "reading"),
         ]),
         speaking(["I have one brother and two sisters.", "My mother is a teacher.", "This is my family."]),
     ],
@@ -418,6 +478,12 @@ lessons.append({
             gap_fill(k + "1", "I go fishing with my father on Sunday.", "I go {{1}} with my father on {{2}}.",
                      {"1": ["fishing"], "2": ["Sunday"]}),
         ]),
+        reading("Rủ đi lễ hội âm nhạc", "Hi Minh! Are you free on Saturday? There is a music festival in the park. My sister and I love rock music. We have three tickets. Do you want to come with us? Lan", [
+            mc("Lễ hội âm nhạc ở đâu?", ["in the park", "at school", "at the office"], 0, "\"There is a music festival in the park.\"", "reading"),
+            true_false("Lan likes rock music.", True, "\"My sister and I love rock music.\"", "reading"),
+            mc("Họ có mấy vé?", ["3", "2", "4"], 0, "\"We have three tickets.\"", "reading"),
+            true_false("The festival is on Sunday.", False, "Lễ hội vào thứ Bảy (Saturday).", "reading"),
+        ]),
         speaking(["My hobby is reading.", "I like music and movies.", "What do you do in your free time?"]),
     ],
 })
@@ -454,6 +520,12 @@ lessons.append({
             mc("Hoa làm việc ở đâu?", ["a bank", "a hospital", "a school"], 0, "\"I work for a bank.\"", "listening"),
             numbers(k + "1", "There are two hundred people in my office.", "Văn phòng của Hoa có bao nhiêu người?", "NUMBER", ["200"], "two hundred = 200."),
             dictation(k + "1", "I'm an accountant.", "an + accountant."),
+        ]),
+        reading("Một ngày của Sarah", "Sarah is a nurse. Her hospital is in the city centre. Her work day is from 7 a.m. to 3 p.m. Her job is hard, but she is happy. Her husband, Tom, is a chef. His restaurant is next to the hospital.", [
+            mc("Sarah làm nghề gì?", ["nurse", "chef", "doctor"], 0, "\"Sarah is a nurse.\"", "reading"),
+            true_false("Tom is a doctor.", False, "Tom là đầu bếp (chef).", "reading"),
+            mc("Sarah làm việc đến mấy giờ?", ["3 p.m.", "7 a.m.", "5 p.m."], 0, "\"from 7 a.m. to 3 p.m.\"", "reading"),
+            true_false("Tom's restaurant is next to the hospital.", True, "\"His restaurant is next to the hospital.\"", "reading"),
         ]),
         speaking(["What do you do?", "I'm a developer. I work for a tech company.", "My office is in District 1."]),
     ],
@@ -497,6 +569,7 @@ lessons.append({
             mc("Meeting room B ở tầng mấy?", ["3", "2", "1"], 0, "Floor 3: Tech team, Meeting room B.", "reading"),
             true_false("There is a cafe on the second floor.", False, "Cafe ở tầng 1.", "reading"),
             true_false("There are toilets on every floor.", True, "\"Toilets are on every floor.\"", "reading"),
+            mc("Sales team ở tầng mấy?", ["2", "1", "3"], 0, "Floor 2: Sales team.", "reading"),
         ]),
         speaking(["Excuse me, where is the meeting room?", "It's on the second floor.", "The toilets are next to the stairs."]),
     ],
@@ -536,6 +609,12 @@ lessons.append({
             true_false("The notebooks are Nam's.", True, "\"Are those your notebooks?\" — \"Yes, they are.\"", "listening"),
             dictation(k + "1", "Can I use your pen, please?", ""),
         ]),
+        reading("Mẩu giấy nhắn của Mai", "Hi Nam, sorry! I have your stapler and two of your pens. They are on my desk, next to the printer. Can I use your laptop charger this afternoon? Thanks! Mai", [
+            true_false("Mai has three of Nam's pens.", False, "\"two of your pens\" — hai cây bút.", "reading"),
+            mc("Mai muốn mượn gì chiều nay?", ["a laptop charger", "a stapler", "a printer"], 0, "\"Can I use your laptop charger?\"", "reading"),
+            true_false("The pens are next to the printer.", True, "\"They are on my desk, next to the printer.\"", "reading"),
+            mc("Ai viết mẩu giấy này?", ["Mai", "Nam", "Lan"], 0, "Ký tên: Mai.", "reading"),
+        ]),
         speaking(["Can I use your laptop, please?", "Can you help me, please?", "Thank you so much!"]),
     ],
 })
@@ -570,6 +649,7 @@ bundle = {
     "version": 1,
     "courseSlug": "foundation-english",
     "cefrLevel": "A1",
+    "passages": passages,
     "topics": [{
         "slug": "a1-week-1", "title": "Week 1 · Meeting People", "track": "CORE", "orderIndex": 1,
         "description": "Chào hỏi, giới thiệu bản thân và người khác, gia đình, sở thích, nghề nghiệp, công sở. Ngữ pháp: to be, danh từ, a/an, this/these.",
@@ -592,8 +672,8 @@ if vocab_path:
 with open("week-1.json", "w", encoding="utf-8") as fh:
     json.dump(bundle, fh, ensure_ascii=False, indent=2)
 with open("audio_manifest_week-1.tsv", "w", encoding="utf-8") as fh:
-    for path, text in sorted(audio_lines.items()):
-        fh.write(f"{path}\t{text}\n")
+    for path, (text, voice) in sorted(audio_lines.items()):
+        fh.write(f"{path}\t{text}\t{voice}\n" if voice else f"{path}\t{text}\n")
 
 count = sum(len(a.get("exercises", [])) for lesson in lessons for a in lesson["activities"])
-print(f"lessons={len(lessons)} activities={sum(len(l['activities']) for l in lessons)} exercises={count} audio={len(audio_lines)}")
+print(f"passages={len(passages)} lessons={len(lessons)} activities={sum(len(l['activities']) for l in lessons)} exercises={count} audio={len(audio_lines)}")

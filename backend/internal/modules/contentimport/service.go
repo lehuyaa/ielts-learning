@@ -25,10 +25,19 @@ const (
 
 type Service struct {
 	repository Repository
+	ai         aiClient
+	media      MediaStore
 }
 
 func NewService(repository Repository) Service {
 	return Service{repository: repository}
+}
+
+// WithAI enables the Whisper audio import and the PDF/image extraction.
+func (s Service) WithAI(client aiClient, media MediaStore) Service {
+	s.ai = client
+	s.media = media
+	return s
 }
 
 // ParseBundle decodes a bundle file, rejecting unknown fields so typos in
@@ -53,7 +62,7 @@ func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
 
 	result := ImportResult{BundleErrors: []string{}, Warnings: []string{}, Items: []ItemResult{}}
 	for name, raw := range map[string]json.RawMessage{
-		"passages": bundle.Passages, "scenarios": bundle.Scenarios,
+		"scenarios": bundle.Scenarios,
 	} {
 		if len(raw) > 0 && string(raw) != "[]" && string(raw) != "null" {
 			result.Warnings = append(result.Warnings, fmt.Sprintf("%s are not imported yet and were ignored", name))
@@ -121,7 +130,25 @@ func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, kn
 			grammarIDs[slug] = id
 		}
 	}
-	links := grammarLinks{ids: grammarIDs, warned: map[string]bool{}}
+	passageIDs, err := s.applyPassages(repo, bundle, commit, result)
+	if err != nil {
+		return err
+	}
+	existingPassages, err := repo.PassageIDs(collectPassageSlugs(bundle))
+	if err != nil {
+		return err
+	}
+	for slug, id := range existingPassages {
+		if _, ok := passageIDs[slug]; !ok {
+			passageIDs[slug] = id
+		}
+	}
+	links := contentLinks{
+		grammar: slugLinks{ids: grammarIDs, warned: map[string]bool{},
+			message: "grammar point %q not found — import the grammar bundle first; activities are imported without the theory card"},
+		passages: slugLinks{ids: passageIDs, warned: map[string]bool{},
+			message: "passage %q not found — add it to \"passages\" or import its bundle first; activities are imported without it"},
+	}
 
 	topicSlugs := map[string]bool{}
 	for topicIndex, topicInput := range bundle.Topics {
@@ -163,7 +190,7 @@ func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, kn
 	return nil
 }
 
-func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists bool, topicInput TopicInput, knownVocabulary map[string]bool, links *grammarLinks, commit bool, result *ImportResult) error {
+func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists bool, topicInput TopicInput, knownVocabulary map[string]bool, links *contentLinks, commit bool, result *ImportResult) error {
 	lessonSlugs := map[string]bool{}
 	for lessonIndex, lessonInput := range topicInput.Lessons {
 		path := topicInput.Slug + "/" + lessonInput.Slug
@@ -214,7 +241,7 @@ func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists b
 	return nil
 }
 
-func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonExists bool, lessonPath string, activities []ActivityInput, knownVocabulary map[string]bool, links *grammarLinks, commit bool, result *ImportResult) error {
+func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonExists bool, lessonPath string, activities []ActivityInput, knownVocabulary map[string]bool, links *contentLinks, commit bool, result *ImportResult) error {
 	activitySlugs := map[string]bool{}
 	for activityIndex, input := range activities {
 		path := lessonPath + "/" + input.Slug
@@ -254,21 +281,22 @@ func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonEx
 		activity.IsRequired = input.IsRequired == nil || *input.IsRequired
 		activity.OrderIndex = activityIndex + 1
 		activity.Status = models.ContentStatus(item.Status)
-		activity.GrammarPointID = links.resolve(grammarPointSlug(input), result)
+		activity.GrammarPointID = links.grammar.resolve(grammarPointSlug(input), result)
+		activity.PassageID = links.passages.resolve(passageSlug(input), result)
 		if commit {
 			if err := repo.SaveActivity(&activity); err != nil {
 				return err
 			}
 		}
 
-		if err := s.applyExercises(repo, activity, exists, path, input.Exercises, commit, result); err != nil {
+		if err := s.applyExercises(repo, activity, exists, path, input.Exercises, links, commit, result); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (s Service) applyExercises(repo Repository, activity models.LessonActivity, activityExists bool, activityPath string, exercises []ExerciseInput, commit bool, result *ImportResult) error {
+func (s Service) applyExercises(repo Repository, activity models.LessonActivity, activityExists bool, activityPath string, exercises []ExerciseInput, links *contentLinks, commit bool, result *ImportResult) error {
 	existing := map[int]uint{}
 	if activityExists {
 		var err error
@@ -286,6 +314,10 @@ func (s Service) applyExercises(repo Repository, activity models.LessonActivity,
 			Title:  fmt.Sprintf("%s · %s", input.Type, input.Prompt),
 			Errors: validateExercise(input),
 		}
+		payload, payloadErr := resolvePayloadPassage(input.Payload, links.passages.ids)
+		if payloadErr != "" {
+			item.Errors = append(item.Errors, payloadErr)
+		}
 		existingID, exists := existing[orderIndex]
 		if !s.record(result, &item, exists) {
 			continue
@@ -300,7 +332,7 @@ func (s Service) applyExercises(repo Repository, activity models.LessonActivity,
 			ActivityID:    activity.ID,
 			Type:          models.ExerciseType(input.Type),
 			Prompt:        input.Prompt,
-			PayloadJSON:   datatypes.JSON(input.Payload),
+			PayloadJSON:   datatypes.JSON(payload),
 			AnswerJSON:    datatypes.JSON(input.Answer),
 			ExplanationVI: input.ExplanationVI,
 			SkillTag:      input.SkillTag,
@@ -399,16 +431,23 @@ func defaultPtr(value *int, fallback int) int {
 	return *value
 }
 
-// grammarLinks resolves grammar point slugs to IDs for activity links.
-type grammarLinks struct {
-	ids    map[string]uint
-	warned map[string]bool
+// contentLinks resolves the slugs an activity refers to.
+type contentLinks struct {
+	grammar  slugLinks
+	passages slugLinks
 }
 
-// resolve returns the grammar point ID for slug, or nil (with a one-time
-// warning) when the grammar point does not exist. In a preview of a new
-// grammar point the ID is still 0, which is fine since nothing is written.
-func (l *grammarLinks) resolve(slug string, result *ImportResult) *uint {
+// slugLinks resolves slugs (grammar points, passages) to IDs for activity links.
+type slugLinks struct {
+	ids     map[string]uint
+	warned  map[string]bool
+	message string
+}
+
+// resolve returns the ID for slug, or nil (with a one-time warning) when the
+// item does not exist. In a preview of a new item the ID is still 0, which
+// is fine since nothing is written.
+func (l *slugLinks) resolve(slug string, result *ImportResult) *uint {
 	if slug == "" {
 		return nil
 	}
@@ -416,8 +455,7 @@ func (l *grammarLinks) resolve(slug string, result *ImportResult) *uint {
 	if !ok {
 		if !l.warned[slug] {
 			l.warned[slug] = true
-			result.Warnings = append(result.Warnings, fmt.Sprintf(
-				"grammar point %q not found — import the grammar bundle first; activities are imported without the theory card", slug))
+			result.Warnings = append(result.Warnings, fmt.Sprintf(l.message, slug))
 		}
 		return nil
 	}
@@ -570,4 +608,86 @@ func jsonOrEmptyList(raw json.RawMessage) json.RawMessage {
 		return json.RawMessage("[]")
 	}
 	return raw
+}
+
+func (s Service) applyPassages(repo Repository, bundle Bundle, commit bool, result *ImportResult) (map[string]uint, error) {
+	ids := map[string]uint{}
+	for _, input := range bundle.Passages {
+		item := ItemResult{Kind: KindPassage, Path: "passage:" + input.Slug, Title: input.Title, Errors: validatePassage(input)}
+		if _, duplicate := ids[input.Slug]; duplicate {
+			item.Errors = append(item.Errors, "duplicate passage slug in this file")
+		}
+
+		passage, exists, err := repo.FindPassage(input.Slug)
+		if err != nil {
+			return nil, err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		passage.Slug = input.Slug
+		passage.CEFRLevel = defaultString(input.CEFRLevel, bundle.CEFRLevel)
+		passage.Genre = models.PassageGenre(input.Genre)
+		passage.Title = input.Title
+		passage.BodyText = strings.TrimSpace(input.BodyText)
+		passage.AudioURL = nil
+		if input.AudioURL != "" {
+			audioURL := input.AudioURL
+			passage.AudioURL = &audioURL
+		}
+		passage.SegmentsJSON = datatypes.JSON(jsonOrEmptyList(input.Segments))
+		passage.GlossaryJSON = datatypes.JSON(jsonOrEmptyList(input.Glossary))
+		passage.Source = input.Source
+		passage.WordCount = len(strings.Fields(passage.BodyText))
+		if commit {
+			if err := repo.Save(&passage); err != nil {
+				return nil, err
+			}
+		}
+		ids[input.Slug] = passage.ID
+	}
+	return ids, nil
+}
+
+func collectPassageSlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				if slug := passageSlug(activity); slug != "" {
+					slugs = append(slugs, slug)
+				}
+			}
+		}
+	}
+	return slugs
+}
+
+// resolvePayloadPassage replaces payload.passageSlug (e.g. a DICTATION item
+// that plays one segment of a passage) with payload.passageId.
+func resolvePayloadPassage(payload json.RawMessage, passageIDs map[string]uint) (json.RawMessage, string) {
+	var fields map[string]json.RawMessage
+	if len(payload) == 0 || json.Unmarshal(payload, &fields) != nil {
+		return payload, ""
+	}
+	raw, ok := fields["passageSlug"]
+	if !ok {
+		return payload, ""
+	}
+	var slug string
+	if json.Unmarshal(raw, &slug) != nil || slug == "" {
+		return payload, "payload.passageSlug must be a string"
+	}
+	id, ok := passageIDs[slug]
+	if !ok {
+		return payload, fmt.Sprintf("payload.passageSlug %q not found", slug)
+	}
+	delete(fields, "passageSlug")
+	fields["passageId"], _ = json.Marshal(id)
+	resolved, err := json.Marshal(fields)
+	if err != nil {
+		return payload, "payload cannot be encoded"
+	}
+	return resolved, ""
 }

@@ -1,6 +1,9 @@
+import { AudioPlayer } from "@/features/audio/AudioPlayer";
 import { AudioButton } from "@/features/exercise/AudioButton";
+import { ReadingView } from "@/features/passage/ReadingView";
 import { SoundChip } from "@/features/pronunciation/SoundChip";
 import type { ActivityDetail } from "@/types/activity";
+import type { PassageCard, TranscriptMode } from "@/types/passage";
 import type { PhonemeCard } from "@/types/phoneme";
 
 type TranscriptLine = { speaker?: string; text: string };
@@ -10,8 +13,44 @@ type TranscriptLine = { speaker?: string; text: string };
  * LISTENING activity (transcript only after it has been passed) and the text
  * of a READING activity, and the sound cards of a PRONUNCIATION activity.
  */
-export function ActivityContent({ activity, phonemes = [] }: { activity: ActivityDetail; phonemes?: PhonemeCard[] }) {
+export function ActivityContent({
+  activity,
+  phonemes = [],
+  passage = null,
+  answered = false,
+}: {
+  activity: ActivityDetail;
+  phonemes?: PhonemeCard[];
+  passage?: PassageCard | null;
+  /** Every exercise of this attempt is answered. */
+  answered?: boolean;
+}) {
   const content = activity.content ?? {};
+  const passed = activity.bestScore !== null && activity.bestScore >= activity.passScore;
+
+  if (passage && activity.type === "READING") {
+    return (
+      <section className="mb-6 rounded-3xl border bg-white p-5 shadow-sm">
+        <ReadingView
+          passage={passage}
+          readAloud={content.readAloud === true}
+          tapToTranslate={content.tapToTranslate !== false}
+        />
+      </section>
+    );
+  }
+  if (passage) {
+    const speeds = Array.isArray(content.speeds) ? (content.speeds as number[]) : undefined;
+    const mode = ["HIDDEN", "BLURRED", "AFTER_ANSWER"].includes(String(content.transcript))
+      ? (content.transcript as TranscriptMode)
+      : "AFTER_ANSWER";
+    return (
+      <section className="mb-6 rounded-3xl border bg-white p-5 shadow-sm">
+        <AudioPlayer answered={answered} passage={passage} passed={passed} speeds={speeds} transcript={mode} />
+      </section>
+    );
+  }
+
   const audioUrl = typeof content.audioUrl === "string" ? content.audioUrl : "";
   const text = typeof content.text === "string" ? content.text : "";
   const transcript = Array.isArray(content.transcript)

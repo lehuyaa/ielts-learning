@@ -4,3 +4,6 @@ frontend/public/audio/vocab/
 .DS_Store
 # Generated lesson audio (content/a1/generate_lesson_audio.sh)
 frontend/public/audio/a1/
+
+# Uploaded media (imported recordings)
+backend/storage/

@@ -113,6 +113,10 @@ type exercisePayload struct {
 	Word      string          `json:"word"`
 	IPA       string          `json:"ipa"`
 	AudioURL  string          `json:"audioUrl"`
+	// A DICTATION item may play one segment of a passage instead of audioUrl.
+	PassageSlug  string `json:"passageSlug"`
+	PassageID    uint   `json:"passageId"`
+	SegmentIndex *int   `json:"segmentIndex"`
 }
 
 type exerciseAnswer struct {
@@ -188,7 +192,11 @@ func validateExercise(exercise ExerciseInput) []string {
 		if exerciseType == models.ExerciseTransform && payload.Sentence == "" {
 			errs = append(errs, "payload.sentence is required")
 		}
-		if (exerciseType == models.ExerciseDictation || exerciseType == models.ExerciseListenNumbers) && payload.AudioURL == "" {
+		usesSegment := (payload.PassageSlug != "" || payload.PassageID != 0) && payload.SegmentIndex != nil
+		if exerciseType == models.ExerciseDictation && payload.AudioURL == "" && !usesSegment {
+			errs = append(errs, "payload.audioUrl (or passageSlug + segmentIndex) is required")
+		}
+		if exerciseType == models.ExerciseListenNumbers && payload.AudioURL == "" {
 			errs = append(errs, "payload.audioUrl is required")
 		}
 		if len(answer.Accepted) == 0 {
@@ -469,6 +477,89 @@ func validatePhoneme(phoneme PhonemeInput) []string {
 			for i, pair := range pairs {
 				if pair.A == "" || pair.B == "" {
 					errs = append(errs, fmt.Sprintf("minimalPairs[%d] needs a and b", i))
+				}
+			}
+		}
+	}
+	return errs
+}
+
+func passageSlug(activity ActivityInput) string {
+	if activity.PassageSlug != "" {
+		return activity.PassageSlug
+	}
+	var content struct {
+		PassageSlug string `json:"passageSlug"`
+	}
+	if len(activity.Content) > 0 {
+		_ = json.Unmarshal(activity.Content, &content)
+	}
+	return content.PassageSlug
+}
+
+var passageGenres = map[string]bool{
+	string(models.GenreDialogue): true, string(models.GenreMessage): true, string(models.GenreEmail): true,
+	string(models.GenreNotice): true, string(models.GenreMenu): true, string(models.GenreSchedule): true,
+	string(models.GenreArticle): true, string(models.GenreProfile): true, string(models.GenreMonologue): true,
+}
+
+type passageSegment struct {
+	Index    *int     `json:"index"`
+	Speaker  string   `json:"speaker"`
+	Text     string   `json:"text"`
+	Start    *float64 `json:"start"`
+	End      *float64 `json:"end"`
+	AudioURL string   `json:"audioUrl"`
+}
+
+type glossaryEntry struct {
+	Word string `json:"word"`
+}
+
+func validatePassage(passage PassageInput) []string {
+	errs := validateSlug(passage.Slug)
+	if !passageGenres[passage.Genre] {
+		errs = append(errs, fmt.Sprintf("genre %q must be one of DIALOGUE, MESSAGE, EMAIL, NOTICE, MENU, SCHEDULE, ARTICLE, PROFILE, MONOLOGUE", passage.Genre))
+	}
+	if strings.TrimSpace(passage.Title) == "" {
+		errs = append(errs, "title is required")
+	}
+	if strings.TrimSpace(passage.BodyText) == "" {
+		errs = append(errs, "bodyText is required")
+	}
+
+	if len(passage.Segments) > 0 && string(passage.Segments) != "null" {
+		var segments []passageSegment
+		if err := json.Unmarshal(passage.Segments, &segments); err != nil {
+			errs = append(errs, "segments must be a list of {index, speaker?, text, start?, end?, audioUrl?}")
+		} else {
+			for i, segment := range segments {
+				if strings.TrimSpace(segment.Text) == "" {
+					errs = append(errs, fmt.Sprintf("segments[%d].text is required", i))
+				}
+				if segment.Index != nil && *segment.Index != i {
+					errs = append(errs, fmt.Sprintf("segments[%d].index must be %d", i, i))
+				}
+				if (segment.Start == nil) != (segment.End == nil) {
+					errs = append(errs, fmt.Sprintf("segments[%d] needs both start and end", i))
+				} else if segment.Start != nil && *segment.End <= *segment.Start {
+					errs = append(errs, fmt.Sprintf("segments[%d].end must be after start", i))
+				}
+				if segment.Start != nil && passage.AudioURL == "" {
+					errs = append(errs, fmt.Sprintf("segments[%d] has times but the passage has no audioUrl", i))
+				}
+			}
+		}
+	}
+
+	if len(passage.Glossary) > 0 && string(passage.Glossary) != "null" {
+		var glossary []glossaryEntry
+		if err := json.Unmarshal(passage.Glossary, &glossary); err != nil {
+			errs = append(errs, "glossary must be a list of {word, vocabularySlug?, meaningVi?, ipa?}")
+		} else {
+			for i, entry := range glossary {
+				if strings.TrimSpace(entry.Word) == "" {
+					errs = append(errs, fmt.Sprintf("glossary[%d].word is required", i))
 				}
 			}
 		}

@@ -2034,6 +2034,8 @@ Requirements:
 - Model `passages`; bundle import supports `passages`; activities reference them via `passageSlug`.
 - `GET /passages/:passageId`.
 
+Status: done. `passages` model; bundle `passages` (upsert by slug), activities link with `passageSlug` (or `content.passageSlug`), exercise payloads may use `passageSlug` (resolved to `passageId` on import). Activity detail returns `passage`. Module `backend/internal/modules/passage`: `GET /passages/:passageId`. Segments carry either their own `audioUrl` (generated dialogues, one file per line) or `start`/`end` inside the passage audio (Whisper imports).
+
 ### Task 61 - Audio Player
 
 Requirements:
@@ -2041,11 +2043,15 @@ Requirements:
 - Play/pause, speed 0.75 / 1.0, previous/next sentence and "replay sentence" using `segments_json`, transcript mode `HIDDEN` / `BLURRED` / `AFTER_ANSWER`, highlight of the current sentence.
 - Works on desktop Chrome and mobile Safari.
 
+Status: done. `src/features/audio/AudioPlayer.tsx` + `segmentPlayer.ts` (one reused audio element; browser voice when a file is missing). Modes HIDDEN / BLURRED / AFTER_ANSWER; the transcript is always shown once the activity is passed.
+
 ### Task 62 - Listening Exercises
 
 Requirements:
 
 - Renderers: `DICTATION` (one segment at a time, word-level diff feedback), `LISTEN_GAP_FILL`, `LISTEN_PICK_IMAGE`, `LISTEN_NUMBERS`, `TRUE_FALSE`.
+
+Status: done. New `DictationExercise` (normal/slow play, own file or passage segment, word-level diff via `wordDiff.ts`); all audio exercises got a "Nghe chậm" (0.75x) button. LISTEN_GAP_FILL / PICK_IMAGE / NUMBERS / TRUE_FALSE renderers existed since Task 51.
 
 ### Task 63 - Reading with Tap-to-Translate
 
@@ -2054,11 +2060,15 @@ Requirements:
 - Reading view with tokenised text; tapping a word shows IPA, Vietnamese meaning, audio (lookup by `glossary_json`, then vocabulary by word) and "Add to flashcards".
 - "Add to flashcards" creates `user_vocabulary_progresses` for that word (status NEW) so it appears in reviews.
 
+Status: done. `TappableText` + `WordSheet` (also used in listening transcripts). `GET /words/lookup?word=&passageId=` checks the passage glossary (`{word, vocabularySlug?, meaningVi?, ipa?}`) then the vocabulary by base forms (plural, -ed, -ing; A1 words first). `POST /words/:vocabularyId/flashcard` adds a NEW progress row due now (no-op if present).
+
 ### Task 64 - Audio Import (Whisper)
 
 Requirements:
 
 - Admin uploads an mp3 (+ optional title/source) → backend calls Whisper with segment timestamps → returns a passage draft (body, segments) to edit and save.
+
+Status: done. `POST /admin/passages/transcribe` (multipart, max 25MB; file kept under `MEDIA_DIR`, served at `/media`) → draft; `POST /admin/passages` saves it. Page `/admin/passages/import` (sidebar "Import Audio"): edit sentences/speakers, preview in the player, save or download JSON. Errors `AI_UNAVAILABLE`, `AUDIO_INVALID`.
 
 ### Task 65 - PDF / Image Import
 
@@ -2066,10 +2076,14 @@ Requirements:
 
 - Admin uploads up to 10 page images or a PDF → vision model extracts theory/exercises into a bundle draft (spec §8.2) → reviewed in the content import preview.
 
+Status: done. `POST /admin/content/extract` (≤10 images or one PDF) → vision model with a strict JSON schema → bundle draft (activities DRAFT unless `publish=true`; warns when a grammar point would be replaced). Page `/admin/content/extract` (sidebar "Extract from PDF") hands the draft to Import Lessons, which previews it automatically.
+
 ### Task D7 / D8 - Listening and Reading Content
 
 - D7: 36 model dialogues (one per situation, from *English File Elementary* audio or generated + TTS) and ~100 dictation sentences.
 - D8: ~30 A1 reading texts (messages, notices, menus, schedules, profiles), each with 4-6 exercises.
+
+Status: partial. Week 1 done: 9 dialogues as passages (one TTS file per line, a voice per speaker) with 25 dictation items, and 9 reading texts (messages, notices, profiles, email) with 4 exercises each. Weeks 2-4 passages are written together with those weeks' lessons.
 
 ## 18. Milestone 17 - Writing
 

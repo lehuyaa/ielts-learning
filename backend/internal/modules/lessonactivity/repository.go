@@ -339,3 +339,15 @@ func (r Repository) FindPhonemes(symbols []string) ([]models.Phoneme, error) {
 	}
 	return phonemes, nil
 }
+
+func (r Repository) FindPassage(id uint) (models.Passage, bool, error) {
+	var passage models.Passage
+	err := r.db.First(&passage, id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.Passage{}, false, nil
+	}
+	if err != nil {
+		return models.Passage{}, false, fmt.Errorf("find passage: %w", err)
+	}
+	return passage, true, nil
+}

@@ -13,8 +13,9 @@ type Bundle struct {
 	GrammarPoints []GrammarPointInput `json:"grammarPoints"`
 	Phonemes      []PhonemeInput      `json:"phonemes"`
 
+	Passages []PassageInput `json:"passages"`
+
 	// Reserved for later tasks; a bundle that uses them gets a warning.
-	Passages  json.RawMessage `json:"passages,omitempty" swaggertype:"array,object"`
 	Scenarios json.RawMessage `json:"scenarios,omitempty" swaggertype:"array,object"`
 }
 
@@ -44,6 +45,20 @@ type PhonemeInput struct {
 	AudioURL     string          `json:"audioUrl"`
 	ImageURL     *string         `json:"imageUrl"`
 	OrderIndex   int             `json:"orderIndex"`
+}
+
+// PassageInput is a text/recording for LISTENING and READING (spec §3.3),
+// upserted by slug.
+type PassageInput struct {
+	Slug      string          `json:"slug"`
+	CEFRLevel string          `json:"cefrLevel"`
+	Genre     string          `json:"genre"`
+	Title     string          `json:"title"`
+	BodyText  string          `json:"bodyText"`
+	AudioURL  string          `json:"audioUrl"`
+	Segments  json.RawMessage `json:"segments" swaggertype:"array,object"`
+	Glossary  json.RawMessage `json:"glossary" swaggertype:"array,object"`
+	Source    string          `json:"source"`
 }
 
 type TopicInput struct {
@@ -77,12 +92,15 @@ type ActivityInput struct {
 	Content        json.RawMessage `json:"content,omitempty" swaggertype:"object"`
 	// GrammarPointSlug links a GRAMMAR activity to its theory card; it may
 	// also be given as content.grammarPointSlug.
-	GrammarPointSlug string          `json:"grammarPointSlug"`
-	PassScore        *int            `json:"passScore"`
-	XPReward         *int            `json:"xpReward"`
-	IsRequired       *bool           `json:"isRequired"`
-	Status           string          `json:"status"`
-	Exercises        []ExerciseInput `json:"exercises"`
+	GrammarPointSlug string `json:"grammarPointSlug"`
+	// PassageSlug links a LISTENING / READING activity to its passage; it
+	// may also be given as content.passageSlug.
+	PassageSlug string          `json:"passageSlug"`
+	PassScore   *int            `json:"passScore"`
+	XPReward    *int            `json:"xpReward"`
+	IsRequired  *bool           `json:"isRequired"`
+	Status      string          `json:"status"`
+	Exercises   []ExerciseInput `json:"exercises"`
 }
 
 type ExerciseInput struct {
