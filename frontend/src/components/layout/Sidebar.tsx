@@ -9,6 +9,7 @@ import {
   Target,
   Trophy,
   // Zap,
+  FileJson,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -73,6 +74,12 @@ const adminNavigationItems = [
     to: "/admin/vocabularies/import",
     icon: FileSpreadsheet,
     match: (pathname: string) => pathname === "/admin/vocabularies/import",
+  },
+  {
+    label: "Import Lessons",
+    to: "/admin/content/import",
+    icon: FileJson,
+    match: (pathname: string) => pathname === "/admin/content/import",
   },
 ];
 

@@ -5,6 +5,7 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout'
 import { MarketingLayout } from '@/components/layout/MarketingLayout'
 import { AdminRoute } from '@/features/auth/AdminRoute'
 import { ProtectedRoute } from '@/features/auth/ProtectedRoute'
+import { AdminContentImportPage } from '@/pages/AdminContentImportPage'
 import { AdminVocabularyImportPage } from '@/pages/AdminVocabularyImportPage'
 import { AIConversationCreatePage } from '@/pages/AIConversationCreatePage'
 import { AIConversationPage } from '@/pages/AIConversationPage'
@@ -115,6 +116,10 @@ export const router = createBrowserRouter([
               {
                 path: '/admin/vocabularies/import',
                 element: <AdminVocabularyImportPage />,
+              },
+              {
+                path: '/admin/content/import',
+                element: <AdminContentImportPage />,
               },
             ],
           },

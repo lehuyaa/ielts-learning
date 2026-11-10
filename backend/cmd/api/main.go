@@ -14,6 +14,7 @@ import (
 	"ielts-learning/backend/internal/middleware"
 	aiconversationmodule "ielts-learning/backend/internal/modules/aiconversation"
 	authmodule "ielts-learning/backend/internal/modules/auth"
+	contentimportmodule "ielts-learning/backend/internal/modules/contentimport"
 	coursemodule "ielts-learning/backend/internal/modules/course"
 	dashboardmodule "ielts-learning/backend/internal/modules/dashboard"
 	flashcardmodule "ielts-learning/backend/internal/modules/flashcard"
@@ -81,6 +82,7 @@ func main() {
 	profilemodule.RegisterRoutes(api, db, jwtManager)
 	notificationmodule.RegisterRoutes(api, db, jwtManager)
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)
+	contentimportmodule.RegisterRoutes(api, db, jwtManager)
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
 	aiconversationmodule.RegisterRoutes(api, db, jwtManager, cfg.OpenAIAPIKey, cfg.OpenAIModel)

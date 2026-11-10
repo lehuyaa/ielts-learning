@@ -12,6 +12,8 @@ export type Topic = {
   emoji: string
   color: string
   description: string
+  /** CORE (skill lessons) or VOCABULARY (word banks); absent on older APIs. */
+  track?: 'CORE' | 'VOCABULARY'
 }
 
 export type TopicBandLevel = {
@@ -66,6 +68,8 @@ export type TopicLessonViewModel = {
 }
 
 export type TopicDetailViewModel = {
+  /** Skill-lesson topics (Foundation weeks) are not "… Vocabulary" topics. */
+  isSkillTopic?: boolean
   id: string
   title: string
   icon: string

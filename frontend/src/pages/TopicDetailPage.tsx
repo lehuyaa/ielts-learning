@@ -93,6 +93,8 @@ function mapTopicDetailToViewModel(
   return {
     id: String(response.topic.id),
     title: response.topic.title,
+    isSkillTopic:
+      response.topic.track === 'CORE' && response.bandLevel.bandScore < 5,
     icon: getTopicDisplayIcon(response.topic),
     band: response.bandLevel.title,
     description: response.topic.description,

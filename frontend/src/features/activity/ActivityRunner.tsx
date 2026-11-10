@@ -23,6 +23,7 @@ import type {
   ExerciseAnswer,
 } from "@/types/activity";
 
+import { ActivityContent } from "./ActivityContent";
 import { VocabularyCards } from "./VocabularyCards";
 import { useActivity } from "./hooks/useActivity";
 import { useCompleteActivity } from "./hooks/useCompleteActivity";
@@ -178,6 +179,7 @@ function ActivitySession({
 
       {phase === "exercises" && exercise ? (
         <div>
+          <ActivityContent activity={activity} />
           <ProgressDots count={exercises.length} current={index} results={results} exercises={exercises} />
 
           <section className="rounded-3xl border bg-white p-5 shadow-sm sm:p-7">

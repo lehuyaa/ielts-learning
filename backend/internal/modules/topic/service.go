@@ -96,6 +96,7 @@ func (s Service) toResponse(
 			Emoji:       topic.Emoji,
 			Color:       topic.Color,
 			Description: topic.Description,
+			Track:       string(topic.Track),
 		},
 		BandLevel: BandLevelResponse{
 			ID:        topic.BandLevel.ID,

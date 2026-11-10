@@ -1908,6 +1908,8 @@ Acceptance criteria:
 
 ### Task 53 - Content Bundle Import
 
+Status: done, with Week 1 content (`content/a1/`: 9 situation lessons + review, 184 exercises). Grammar points, phonemes, passages and scenarios in a bundle are reported as "not imported yet" until Tasks 54, 57, 60 and 68. Listening/reading text lives in `activity.content` (`audioUrl`, `transcript`, `text`) until passages exist.
+
 Goal:
 
 Load lessons, activities and exercises from JSON files instead of code.

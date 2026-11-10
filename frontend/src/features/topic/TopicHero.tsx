@@ -17,7 +17,7 @@ export function TopicHero({ topic }: TopicHeroProps) {
           </span>
           <div className="min-w-0">
             <h2 className="text-2xl font-bold tracking-normal text-[#10111f] md:text-3xl">
-              {topic.title} Vocabulary
+              {topic.isSkillTopic ? topic.title : `${topic.title} Vocabulary`}
             </h2>
             <p className="mt-3 text-base font-medium text-[#676982]">
               {topic.description}

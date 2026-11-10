@@ -1,0 +1,361 @@
+package contentimport
+
+import (
+	"encoding/json"
+	"fmt"
+	"regexp"
+	"sort"
+	"strings"
+
+	"ielts-learning/backend/internal/models"
+	"ielts-learning/backend/internal/modules/lessonactivity"
+)
+
+var slugPattern = regexp.MustCompile(`^[a-z0-9]+(?:-[a-z0-9]+)*$`)
+
+var activityTypes = map[string]bool{
+	string(models.ActivityVocabulary): true, string(models.ActivityPronunciation): true,
+	string(models.ActivityGrammar): true, string(models.ActivityListening): true,
+	string(models.ActivityReading): true, string(models.ActivityWriting): true,
+	string(models.ActivitySpeaking): true, string(models.ActivityCheckpoint): true,
+}
+
+func validateSlug(slug string) []string {
+	if slug == "" {
+		return []string{"slug is required"}
+	}
+	if !slugPattern.MatchString(slug) {
+		return []string{fmt.Sprintf("slug %q must use lowercase letters, digits and dashes", slug)}
+	}
+	return nil
+}
+
+func validateTopic(topic TopicInput) []string {
+	errs := validateSlug(topic.Slug)
+	if strings.TrimSpace(topic.Title) == "" {
+		errs = append(errs, "title is required")
+	}
+	if topic.Track != "" && topic.Track != string(models.TopicTrackCore) && topic.Track != string(models.TopicTrackVocabulary) {
+		errs = append(errs, fmt.Sprintf("track %q must be CORE or VOCABULARY", topic.Track))
+	}
+	return errs
+}
+
+func validateLesson(lesson LessonInput) []string {
+	errs := validateSlug(lesson.Slug)
+	if strings.TrimSpace(lesson.Title) == "" {
+		errs = append(errs, "title is required")
+	}
+	if lesson.RequiredScore < 0 || lesson.RequiredScore > 100 {
+		errs = append(errs, "requiredScore must be between 0 and 100")
+	}
+	return errs
+}
+
+// validateActivity checks one activity; knownVocabulary holds the vocabulary
+// slugs that exist in the database.
+func validateActivity(activity ActivityInput, knownVocabulary map[string]bool) []string {
+	errs := validateSlug(activity.Slug)
+	if !activityTypes[activity.Type] {
+		errs = append(errs, fmt.Sprintf("unknown activity type %q", activity.Type))
+	}
+	if strings.TrimSpace(activity.Title) == "" {
+		errs = append(errs, "title is required")
+	}
+	if activity.Status != "" && activity.Status != string(models.ContentDraft) && activity.Status != string(models.ContentPublished) {
+		errs = append(errs, fmt.Sprintf("status %q must be DRAFT or PUBLISHED", activity.Status))
+	}
+	if activity.PassScore != nil && (*activity.PassScore < 0 || *activity.PassScore > 100) {
+		errs = append(errs, "passScore must be between 0 and 100")
+	}
+	if len(activity.Content) > 0 && !isJSONObject(activity.Content) {
+		errs = append(errs, "content must be a JSON object")
+	}
+
+	if activity.Type == string(models.ActivityVocabulary) {
+		slugs := vocabularySlugs(activity.Content)
+		if len(slugs) == 0 {
+			errs = append(errs, "content.vocabularySlugs must list at least one word")
+		}
+		var missing []string
+		for _, slug := range slugs {
+			if !knownVocabulary[slug] {
+				missing = append(missing, slug)
+			}
+		}
+		if len(missing) > 0 {
+			errs = append(errs, "vocabulary not found: "+strings.Join(missing, ", "))
+		}
+	}
+	return errs
+}
+
+func vocabularySlugs(content json.RawMessage) []string {
+	var parsed struct {
+		VocabularySlugs []string `json:"vocabularySlugs"`
+	}
+	if len(content) == 0 {
+		return nil
+	}
+	_ = json.Unmarshal(content, &parsed)
+	return parsed.VocabularySlugs
+}
+
+// exercisePayload / exerciseAnswer list every field any exercise type uses.
+type exercisePayload struct {
+	Options   json.RawMessage `json:"options"`
+	Tokens    []string        `json:"tokens"`
+	Text      string          `json:"text"`
+	Sentence  string          `json:"sentence"`
+	SourceVI  string          `json:"sourceVi"`
+	Statement string          `json:"statement"`
+	Syllables []string        `json:"syllables"`
+	Word      string          `json:"word"`
+	IPA       string          `json:"ipa"`
+	AudioURL  string          `json:"audioUrl"`
+}
+
+type exerciseAnswer struct {
+	Correct     *string             `json:"correct"`
+	Value       *bool               `json:"value"`
+	Accepted    []string            `json:"accepted"`
+	Reference   []string            `json:"reference"`
+	WrongIndex  *int                `json:"wrongIndex"`
+	Blanks      map[string][]string `json:"blanks"`
+	StressIndex *int                `json:"stressIndex"`
+}
+
+var blankPattern = regexp.MustCompile(`\{\{(\w+)\}\}`)
+
+// validateExercise checks an exercise's payload and answer for its type, then
+// grades the expected correct answer to prove the item is answerable.
+func validateExercise(exercise ExerciseInput) []string {
+	var errs []string
+	exerciseType := models.ExerciseType(exercise.Type)
+	if strings.TrimSpace(exercise.Prompt) == "" {
+		errs = append(errs, "prompt is required")
+	}
+	if !isJSONObject(exercise.Payload) {
+		return append(errs, "payload must be a JSON object")
+	}
+	if !isJSONObject(exercise.Answer) {
+		return append(errs, "answer must be a JSON object")
+	}
+
+	var payload exercisePayload
+	var answer exerciseAnswer
+	if err := json.Unmarshal(exercise.Payload, &payload); err != nil {
+		return append(errs, "payload: "+err.Error())
+	}
+	if err := json.Unmarshal(exercise.Answer, &answer); err != nil {
+		return append(errs, "answer: "+err.Error())
+	}
+
+	var canonical any
+	switch exerciseType {
+	case models.ExerciseMultipleChoice, models.ExerciseListenPickImage, models.ExerciseMinimalPair,
+		models.ExerciseIPAToWord, models.ExerciseWordToIPA, models.ExerciseEndingSound:
+		ids, err := optionIDs(payload.Options)
+		if err != nil {
+			errs = append(errs, err.Error())
+		} else if len(ids) < 2 {
+			errs = append(errs, "payload.options needs at least 2 options")
+		}
+		if answer.Correct == nil {
+			errs = append(errs, "answer.correct is required")
+		} else if !contains(ids, *answer.Correct) {
+			errs = append(errs, fmt.Sprintf("answer.correct %q is not one of the option ids", *answer.Correct))
+		}
+		if exerciseType == models.ExerciseIPAToWord && payload.IPA == "" {
+			errs = append(errs, "payload.ipa is required")
+		}
+		if answer.Correct != nil {
+			canonical = map[string]any{"optionId": *answer.Correct}
+		}
+	case models.ExerciseTrueFalse:
+		if payload.Statement == "" {
+			errs = append(errs, "payload.statement is required")
+		}
+		if answer.Value == nil {
+			errs = append(errs, "answer.value (true/false) is required")
+		} else {
+			canonical = map[string]any{"value": *answer.Value}
+		}
+	case models.ExerciseFillBlank, models.ExerciseTransform, models.ExerciseDictation, models.ExerciseListenNumbers:
+		if exerciseType == models.ExerciseFillBlank && payload.Sentence == "" {
+			errs = append(errs, "payload.sentence is required")
+		}
+		if exerciseType == models.ExerciseTransform && payload.Sentence == "" {
+			errs = append(errs, "payload.sentence is required")
+		}
+		if (exerciseType == models.ExerciseDictation || exerciseType == models.ExerciseListenNumbers) && payload.AudioURL == "" {
+			errs = append(errs, "payload.audioUrl is required")
+		}
+		if len(answer.Accepted) == 0 {
+			errs = append(errs, "answer.accepted needs at least one answer")
+		} else {
+			canonical = map[string]any{"text": answer.Accepted[0]}
+		}
+	case models.ExerciseTranslateViEn:
+		if payload.SourceVI == "" {
+			errs = append(errs, "payload.sourceVi is required")
+		}
+		all := append(append([]string{}, answer.Accepted...), answer.Reference...)
+		if len(all) == 0 {
+			errs = append(errs, "answer.reference needs at least one translation")
+		} else {
+			canonical = map[string]any{"text": all[0]}
+		}
+	case models.ExerciseReorder:
+		if len(payload.Tokens) < 2 {
+			errs = append(errs, "payload.tokens needs at least 2 tokens")
+		}
+		if len(answer.Accepted) == 0 {
+			errs = append(errs, "answer.accepted needs at least one sentence")
+		} else if len(payload.Tokens) > 0 && !sameTokens(payload.Tokens, answer.Accepted[0]) {
+			errs = append(errs, "payload.tokens must be exactly the words of answer.accepted[0]")
+		}
+		// Tokens are shuffled on purpose, so the self-check grades the sentence order.
+		if len(answer.Accepted) > 0 {
+			canonical = map[string]any{"tokens": sentenceTokens(answer.Accepted[0])}
+		}
+	case models.ExerciseErrorCorrection:
+		if len(payload.Tokens) < 2 {
+			errs = append(errs, "payload.tokens needs at least 2 tokens")
+		}
+		if answer.WrongIndex == nil || *answer.WrongIndex < 0 || *answer.WrongIndex >= len(payload.Tokens) {
+			errs = append(errs, "answer.wrongIndex must point to a token")
+		}
+		if len(answer.Accepted) == 0 {
+			errs = append(errs, "answer.accepted needs the corrected word")
+		}
+		if answer.WrongIndex != nil && len(answer.Accepted) > 0 {
+			canonical = map[string]any{"index": *answer.WrongIndex, "text": answer.Accepted[0]}
+		}
+	case models.ExerciseListenGapFill:
+		blanks := blankPattern.FindAllStringSubmatch(payload.Text, -1)
+		if len(blanks) == 0 {
+			errs = append(errs, "payload.text needs blanks like {{1}}")
+		}
+		if payload.AudioURL == "" {
+			errs = append(errs, "payload.audioUrl is required")
+		}
+		first := map[string]string{}
+		for _, blank := range blanks {
+			accepted := answer.Blanks[blank[1]]
+			if len(accepted) == 0 {
+				errs = append(errs, fmt.Sprintf("answer.blanks.%s needs at least one answer", blank[1]))
+				continue
+			}
+			first[blank[1]] = accepted[0]
+		}
+		if len(answer.Blanks) != len(blanks) {
+			errs = append(errs, "answer.blanks must have one entry per blank in payload.text")
+		}
+		canonical = map[string]any{"blanks": first}
+	case models.ExerciseWordStress:
+		if len(payload.Syllables) < 2 {
+			errs = append(errs, "payload.syllables needs at least 2 syllables")
+		}
+		if answer.StressIndex == nil || *answer.StressIndex < 0 || *answer.StressIndex >= len(payload.Syllables) {
+			errs = append(errs, "answer.stressIndex must point to a syllable")
+		} else {
+			canonical = map[string]any{"stressIndex": *answer.StressIndex}
+		}
+	case models.ExerciseSpeak:
+		if payload.Text == "" {
+			errs = append(errs, "payload.text is required")
+		}
+		canonical = map[string]any{"selfCheck": true}
+	default:
+		return append(errs, fmt.Sprintf("unknown exercise type %q", exercise.Type))
+	}
+
+	if len(errs) > 0 || canonical == nil {
+		return errs
+	}
+
+	submitted, _ := json.Marshal(canonical)
+	result, err := lessonactivity.Grade(exerciseType, exercise.Payload, exercise.Answer, submitted)
+	if err != nil {
+		return append(errs, "self-check failed: "+err.Error())
+	}
+	if !result.IsCorrect {
+		return append(errs, "self-check failed: the expected answer is graded as wrong")
+	}
+	return nil
+}
+
+func optionIDs(raw json.RawMessage) ([]string, error) {
+	if len(raw) == 0 {
+		return nil, fmt.Errorf("payload.options is required")
+	}
+	var plain []string
+	if err := json.Unmarshal(raw, &plain); err == nil {
+		return plain, nil
+	}
+	var objects []struct {
+		ID string `json:"id"`
+	}
+	if err := json.Unmarshal(raw, &objects); err != nil {
+		return nil, fmt.Errorf("payload.options must be a list of strings or objects with an id")
+	}
+	ids := make([]string, 0, len(objects))
+	seen := map[string]bool{}
+	for _, option := range objects {
+		if option.ID == "" {
+			return nil, fmt.Errorf("every option needs an id")
+		}
+		if seen[option.ID] {
+			return nil, fmt.Errorf("duplicate option id %q", option.ID)
+		}
+		seen[option.ID] = true
+		ids = append(ids, option.ID)
+	}
+	return ids, nil
+}
+
+var tokenPattern = regexp.MustCompile(`[\p{L}\p{N}'’-]+|[.,!?;:]`)
+
+// sentenceTokens splits a sentence into words and punctuation marks.
+func sentenceTokens(sentence string) []string {
+	return tokenPattern.FindAllString(sentence, -1)
+}
+
+func sameTokens(tokens []string, sentence string) bool {
+	expected := sentenceTokens(sentence)
+	if len(expected) != len(tokens) {
+		return false
+	}
+	a := lowerSorted(tokens)
+	b := lowerSorted(expected)
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func lowerSorted(values []string) []string {
+	result := make([]string, len(values))
+	for i, value := range values {
+		result[i] = strings.ToLower(strings.TrimSpace(value))
+	}
+	sort.Strings(result)
+	return result
+}
+
+func contains(values []string, target string) bool {
+	for _, value := range values {
+		if value == target {
+			return true
+		}
+	}
+	return false
+}
+
+func isJSONObject(raw json.RawMessage) bool {
+	var value map[string]json.RawMessage
+	return len(raw) > 0 && json.Unmarshal(raw, &value) == nil && value != nil
+}

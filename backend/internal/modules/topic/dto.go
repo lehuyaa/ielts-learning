@@ -17,6 +17,8 @@ type TopicResponse struct {
 	Emoji       string `json:"emoji"`
 	Color       string `json:"color"`
 	Description string `json:"description"`
+	// Track is CORE (skill lessons) or VOCABULARY (word-bank lessons).
+	Track string `json:"track"`
 }
 
 type BandLevelResponse struct {

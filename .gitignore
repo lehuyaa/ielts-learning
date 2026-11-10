@@ -2,3 +2,5 @@
 # Generated pronunciation audio (content/a1-vocabulary/generate_audio.sh)
 frontend/public/audio/vocab/
 .DS_Store
+# Generated lesson audio (content/a1/generate_lesson_audio.sh)
+frontend/public/audio/a1/
