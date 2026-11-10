@@ -1803,70 +1803,348 @@ Acceptance criteria:
 
 ### Task 47 - Foundation Spec
 
-Write `docs/foundation-spec.md`: CEFR course structure, `LessonActivity` model, JSON schema per activity type (grammar, pronunciation, listening, reading, writing, speaking), AI prompts, scoring rules, content import pipeline.
+Done: `docs/foundation-spec.md`. CEFR course structure, `LessonActivity` model, JSON schema per activity type (grammar, pronunciation, listening, reading, writing, speaking), AI prompts, scoring rules, content import pipeline.
 
 ### Task 48 - Update Database/API Docs
 
-Update `docs/database-v2.md` and `docs/api-v2.md` from the spec; expand Tasks 49-77 with full requirements/acceptance criteria.
+Done: `docs/database-v2.md` §14, `docs/api-v2.md` §23, Tasks 49-77 below.
 
 ## 14. Milestone 13 - Learning Framework
 
-- Task 49 - Separate CEFR course + course switcher on Roadmap; migrate the temporary A1 band level.
-- Task 50 - `LessonActivity` model + API to list a lesson's activities.
-- Task 51 - Quiz engine extension: `payload_json`, new question types, typed-answer grading.
-- Task 52 - Lesson Player page: runs activities in order, saves progress, awards XP.
-- Task 53 - Admin content import (JSON/Excel) with DRAFT/PUBLISHED status.
+Spec: `docs/foundation-spec.md` §2-§5, §9-§10.
+
+### Task 49 - Foundation English Course and Course Switcher
+
+Goal:
+
+Separate the CEFR course from the IELTS course and let the learner switch between them on the roadmap.
+
+Requirements:
+
+- Add `courses.kind`, `band_levels.cefr_level`, `topics.track`, `users.active_course_id` (spec §3.1).
+- Seed course `foundation-english` (`kind = CEFR`) with band level A1 (`band_score = 1.0`, `cefr_level = A1`).
+- One-off, idempotent migration in `-only-foundation`: move the Task 44 "A1 Foundation" band level to the new course, set `cefr_level = A1`, `band_score = 1.0`, and set its 14 topics to `track = VOCABULARY`. Existing IDs and progress are kept.
+- `GET /courses`, `PATCH /profile/active-course`, `GET /roadmap?courseSlug=` (defaults to the active course).
+- Unlock chain computed per course and per track; VOCABULARY lessons always unlocked.
+- Roadmap UI: course switcher, CEFR label instead of band number, CORE weeks first and a "Vocabulary library" section.
+
+Acceptance criteria:
+
+- IELTS roadmap looks and behaves exactly as before.
+- Foundation roadmap shows A1 with the 14 vocabulary topics in the library, all unlocked.
+- Progress made on A1 vocabulary lessons before the migration is still there.
+
+---
+
+### Task 50 - Lesson Activities
+
+Goal:
+
+Store a CORE lesson as an ordered list of skill activities.
+
+Requirements:
+
+- Models `lesson_activities`, `user_activity_progresses` (spec §3.2).
+- New module `activity`: `GET /lessons/:lessonId/activities` returns activities with type, title, instructions, status, best score, `isLocked` (an activity is locked until the previous required one is passed).
+- Lesson locked → `ACTIVITY_LOCKED`.
+
+Acceptance criteria:
+
+- A lesson with activities returns them in `order_index` order with the user's progress.
+- No exercise data is returned by this endpoint.
+
+---
+
+### Task 51 - Exercise Engine
+
+Goal:
+
+Serve and grade exercises of every type in spec §5.
+
+Requirements:
+
+- Models `exercises`, `user_exercise_answers`.
+- `GET /activities/:activityId` returns exercises with `prompt` and `payload` only; `answer_json` is never serialised (`json:"-"`).
+- `POST /activities/:activityId/answers` validates the answer shape per type (`INVALID_ANSWER_SHAPE`), grades with the normalisation rules in §5.2, stores the answer, and returns `isCorrect`, `scoreRatio`, `correctAnswer`, `explanationVi`.
+- Grading lives in pure functions (one per type) with table-driven `_test.go` tests — the first tests in this repo.
+- `TRANSFORM` / `TRANSLATE_VI_EN` AI fallback is stubbed to "incorrect" until Task 55.
+
+Acceptance criteria:
+
+- Every exercise type in §5 can be answered; contractions, case and final punctuation do not cause false negatives.
+- Correct answers are not visible in any response before the item is answered.
+- `go test ./...` passes.
+
+---
+
+### Task 52 - Lesson Player
+
+Goal:
+
+One page that walks the learner through a lesson's activities.
+
+Requirements:
+
+- `POST /activities/:activityId/complete` computes the score (spec §4), updates `user_activity_progresses`, awards activity XP on first pass (`ACTIVITY_COMPLETED` XP event), and completes the lesson when all required activities passed (sets `user_lesson_progresses`, `LESSON_COMPLETED` XP once).
+- Route `/lessons/:lessonId/learn`: stepper with activity icons, resumes at the first unfinished activity, result screen per activity (score, retry, continue), lesson summary at the end.
+- Exercise renderers registered by type in `src/features/exercise/`; unknown types show a safe fallback.
+- `VOCABULARY` activity reuses the flashcard UI for its word list, then a mini quiz.
+- Lesson detail page: "Start lesson" goes to the player when the lesson has activities.
+
+Acceptance criteria:
+
+- A lesson made only of VOCABULARY + MULTIPLE_CHOICE activities can be completed end-to-end and unlocks the next lesson.
+- Reloading mid-lesson resumes at the same activity.
+
+---
+
+### Task 53 - Content Bundle Import
+
+Goal:
+
+Load lessons, activities and exercises from JSON files instead of code.
+
+Requirements:
+
+- `POST /admin/content/import/preview` and `POST /admin/content/import` (multipart field `file`, JSON, max 5 MB) with the bundle format and validation in spec §8.2. Upsert by slug, one transaction on commit.
+- `status` on activities: imported as `DRAFT` unless the bundle says `PUBLISHED`; learners only see `PUBLISHED`.
+- Admin page `/admin/content/import` (same look as the vocabulary import page): preview table grouped by lesson, errors per item, publish toggle.
+- Update `docs/admin-guide.md`.
+
+Acceptance criteria:
+
+- Importing the same bundle twice changes nothing.
+- A bundle with one invalid exercise shows the error in preview and imports the valid items on commit.
+
+---
 
 ## 15. Milestone 14 - Grammar
 
-- Task 54 - Grammar point model + theory card UI (formula, examples, common Vietnamese-learner mistakes).
-- Task 55 - Exercise types: FILL_BLANK, REORDER, ERROR_CORRECTION, TRANSFORM, TRANSLATE_VI_EN (AI-graded when needed).
-- Task 56 - `user_grammar_progress` + review suggestions.
-- Task D5 - 9 A1 grammar points: theory + ~360 exercises (reviewed).
+### Task 54 - Grammar Points and Theory Card
 
-## 16. Milestone 15 - Pronunciation and IPA (no recording yet)
+Requirements:
 
-- Task 57 - IPA chart page (44 sounds) + sound detail card.
-- Task 58 - Exercise types: MINIMAL_PAIR, IPA_TO_WORD, WORD_TO_IPA, ENDING_SOUND (-s/-ed), WORD_STRESS.
-- Task 59 - Clickable IPA on vocabulary pages linking to sound cards.
-- Task D6 - 44 sound cards (Vietnamese mouth-position notes, common mistakes), ~150 minimal pairs with audio.
+- Model `grammar_points`; bundle import supports `grammarPoints`.
+- `GET /grammar-points/:slug`.
+- Theory card component: Vietnamese summary, formula, examples with audio, "common mistakes" (wrong → right with note). Shown at the start of a GRAMMAR activity when `showTheory` is true, and on `/grammar/:slug`.
+
+Acceptance criteria:
+
+- All 9 A1 grammar points render from imported data, with audio playing for each example.
+
+---
+
+### Task 55 - Grammar Exercise UI and AI Fallback
+
+Requirements:
+
+- Renderers: `FILL_BLANK` (inline input), `REORDER` (tap tokens to build the sentence, tap again to remove), `ERROR_CORRECTION` (tap the wrong word, then type the fix), `TRANSFORM`, `TRANSLATE_VI_EN`.
+- Shared AI client `internal/shared/ai` (extract from `aiconversation/openai_client.go`, add JSON-schema responses).
+- AI short-answer grading (spec §6.4) for `TRANSFORM` / `TRANSLATE_VI_EN` when matching fails; daily limit (§6.7).
+
+Acceptance criteria:
+
+- "I don't like coffee" and "I do not like coffee." are both accepted without calling AI.
+- A valid alternative translation not in `reference` is accepted via AI.
+
+---
+
+### Task 56 - Grammar Mastery
+
+Requirements:
+
+- Model `user_grammar_progresses`; update after every answer tagged `grammar:<slug>` (rolling last 20).
+- `GET /grammar-points` with mastery; `/grammar` page sorted by weakest, "Practice" opens a review activity built from that point's exercises the learner got wrong first.
+
+Acceptance criteria:
+
+- Mastery changes after answering grammar exercises and is visible on `/grammar`.
+
+---
+
+### Task D5 - A1 Grammar Content
+
+- 9 grammar points (G1-G9, spec §2.3) from *Essential Grammar in Use*: Vietnamese summary, formula, 5 examples, 4-6 common mistakes.
+- ~40 exercises per point across the 5 types, split over the lessons of that week. Reviewed before publishing.
+
+## 16. Milestone 15 - Pronunciation and IPA
+
+### Task 57 - IPA Chart and Sound Cards
+
+Requirements:
+
+- Model `phonemes`; bundle import supports `phonemes`.
+- `GET /phonemes`, `GET /phonemes/:symbol`.
+- `/pronunciation`: chart grouped vowels / diphthongs / consonants (voiced vs voiceless); tap to hear.
+- `/pronunciation/:symbol`: mouth description (Vietnamese), example words with audio, minimal pairs, common mistakes.
+
+### Task 58 - Pronunciation Exercises
+
+Requirements:
+
+- Renderers: `MINIMAL_PAIR`, `IPA_TO_WORD`, `WORD_TO_IPA`, `ENDING_SOUND`, `WORD_STRESS`, `SPEAK` (self-check mode until Task 71).
+- Minimal pairs and ending-sound items can be generated from CMU data by a script.
+
+### Task 59 - Clickable IPA
+
+Requirements:
+
+- Component that splits an IPA string into phonemes (longest match against the phoneme list) and links each to its sound card; used on flashcards, vocabulary detail and lesson word lists.
+
+### Task D6 - Sound Content
+
+- 40 sound cards (spec §3.3 phoneme set) with Vietnamese mouth notes and typical mistakes.
+- ~150 minimal pairs with audio; ending -s / -ed and 2-syllable stress sets.
 
 ## 17. Milestone 16 - Listening and Reading
 
-- Task 60 - `Passage` model (text, audio, timestamped segments).
-- Task 61 - Audio player (speed, replay sentence, blurred transcript).
-- Task 62 - Listening exercises: DICTATION, LISTEN_GAP_FILL, LISTEN_PICK_IMAGE, LISTEN_NUMBERS, true/false.
-- Task 63 - Reading with tap-to-translate and add-to-flashcards.
-- Task 64 - Audio import tool: Whisper transcript with sentence timestamps.
-- Task 65 - PDF/image import tool: AI extracts exercises to JSON.
-- Task D7 - ~36 model dialogues + ~100 dictation sentences.
-- Task D8 - ~30 A1 reading passages.
+### Task 60 - Passages
+
+Requirements:
+
+- Model `passages`; bundle import supports `passages`; activities reference them via `passageSlug`.
+- `GET /passages/:passageId`.
+
+### Task 61 - Audio Player
+
+Requirements:
+
+- Play/pause, speed 0.75 / 1.0, previous/next sentence and "replay sentence" using `segments_json`, transcript mode `HIDDEN` / `BLURRED` / `AFTER_ANSWER`, highlight of the current sentence.
+- Works on desktop Chrome and mobile Safari.
+
+### Task 62 - Listening Exercises
+
+Requirements:
+
+- Renderers: `DICTATION` (one segment at a time, word-level diff feedback), `LISTEN_GAP_FILL`, `LISTEN_PICK_IMAGE`, `LISTEN_NUMBERS`, `TRUE_FALSE`.
+
+### Task 63 - Reading with Tap-to-Translate
+
+Requirements:
+
+- Reading view with tokenised text; tapping a word shows IPA, Vietnamese meaning, audio (lookup by `glossary_json`, then vocabulary by word) and "Add to flashcards".
+- "Add to flashcards" creates `user_vocabulary_progresses` for that word (status NEW) so it appears in reviews.
+
+### Task 64 - Audio Import (Whisper)
+
+Requirements:
+
+- Admin uploads an mp3 (+ optional title/source) → backend calls Whisper with segment timestamps → returns a passage draft (body, segments) to edit and save.
+
+### Task 65 - PDF / Image Import
+
+Requirements:
+
+- Admin uploads up to 10 page images or a PDF → vision model extracts theory/exercises into a bundle draft (spec §8.2) → reviewed in the content import preview.
+
+### Task D7 / D8 - Listening and Reading Content
+
+- D7: 36 model dialogues (one per situation, from *English File Elementary* audio or generated + TTS) and ~100 dictation sentences.
+- D8: ~30 A1 reading texts (messages, notices, menus, schedules, profiles), each with 4-6 exercises.
 
 ## 18. Milestone 17 - Writing
 
-- Task 66 - `writing_submissions`: AI grading (JSON schema), diff UI, mandatory rewrite.
-- Task D9 - ~20 writing prompts by week.
+### Task 66 - Writing Activity
+
+Requirements:
+
+- Model `writing_submissions`; `POST /writing/submissions`, `POST /writing/submissions/:id/rewrite` (spec §6.3).
+- Writing UI: prompt (Vietnamese), sentence frame chips, sentence counter, submit → score + diff view (red wrong, green fix, Vietnamese explanation on tap) → rewrite box → completion.
+- Mistakes upserted into `learner_mistakes` (table created here if Task 73 not done yet).
+
+Acceptance criteria:
+
+- A text with one tense mistake is scored, the mistake is highlighted at the right position, and the activity completes after a correct rewrite.
+
+### Task D9 - Writing Prompts
+
+- ~20 prompts (spec §4.1 format) spread over the 4 weeks, with model answers.
 
 ## 19. Milestone 18 - AI Speaking Upgrade
 
-- Task 67 - Quick wins: level-aware system prompt, slower TTS for beginners, cap chat history sent to the model.
-- Task 68 - System scenarios linked to lessons.
-- Task 69 - `ai_conversation_sessions`: finish session, feedback report, XP.
-- Task 70 - Vietnamese hint button.
-- Task D10 - 36 A1 situations (role, task, target patterns, model dialogue).
+### Task 67 - Speaking Quick Wins
+
+Requirements:
+
+- Level-aware system prompt (spec §6.1) built in the service from scenario fields; user `SituationContext` appended.
+- Beginner scenarios: browser TTS rate 0.85.
+- Send at most the last 20 messages to the model.
+
+### Task 68 - System Scenarios
+
+Requirements:
+
+- Scenario columns in spec §3.1; system scenarios (`is_system`, no `user_id`) imported via the bundle and listed for everyone; user scenarios unchanged.
+
+### Task 69 - Speaking Sessions and Report
+
+Requirements:
+
+- Model `ai_conversation_sessions`; endpoints in spec §9; each session has its own messages (`session_id`).
+- Finish → feedback report (spec §6.2), XP, mistakes → `learner_mistakes`; SPEAKING activity passes per spec §4.
+- Report screen: scores, mistakes with corrections, good phrases, new words (add to flashcards), "Try again".
+
+### Task 70 - Hints
+
+Requirements:
+
+- `POST /ai-conversations/sessions/:id/hint` (spec §6.5), hint button in the session page, disabled in checkpoints.
+
+### Task D10 - Situation Scenarios
+
+- 36 scenarios: role, task, target patterns, max turns; model dialogue shared with D7.
 
 ## 20. Milestone 19 - Pronunciation Scoring
 
-- Task 71 - Recording (MediaRecorder) + backend Azure Pronunciation Assessment (IPA phonemes).
-- Task 72 - Shadowing / read-aloud with per-phoneme colouring; `user_phoneme_progress`.
+### Task 71 - Pronunciation Assessment
+
+Requirements:
+
+- `POST /pronunciation/assess` (multipart `audio`, `referenceText`, optional `exerciseId`), Azure per spec §7, config `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`; model `pronunciation_attempts`.
+- Recorder component (MediaRecorder, max 15 s, waveform/level indicator).
+- `SPEAK` exercises graded by accuracy.
+
+### Task 72 - Shadowing and Phoneme Progress
+
+Requirements:
+
+- Shadowing mode on passages: play a segment → record → coloured result per word/phoneme.
+- `user_phoneme_progresses`; weakest sounds shown on `/pronunciation` with "Practice" links.
 
 ## 21. Milestone 20 - Mistake Log and Review
 
-- Task 73 - `learner_mistakes` from speaking, writing and quizzes → SRS flashcards.
-- Task 74 - AI-generated extra practice for weak areas.
+### Task 73 - Mistake Log
+
+Requirements:
+
+- Model `learner_mistakes` (if not created in Task 66); written by exercises, writing, speaking, pronunciation.
+- `/mistakes` page grouped by skill tag with counts; "Add to review" creates a flashcard-style card (wrong → right) in the SRS queue; repeated correct reviews mark the mistake `FIXED`.
+
+### Task 74 - Personalised Practice
+
+Requirements:
+
+- `POST /practice/generate { skillTag }` → AI generates 10 exercises (spec §6.6, validated) for that weakness; cached per user per skill tag per day; played in the Lesson Player as a temporary activity.
 
 ## 22. Milestone 21 - Progress and Completion
 
-- Task 75 - Weekly checkpoint test that unlocks the next week.
-- Task 76 - A1 dashboard: per-skill progress, "A1 reached" checklist.
-- Task 77 - Full QA + complete A1 study run-through, content fixes.
+### Task 75 - Weekly Checkpoints
+
+Requirements:
+
+- `CHECKPOINT` activity (spec §4): random items from the week's exercises + one speaking session without hints; pass to unlock the next week's first lesson.
+
+### Task 76 - Foundation Dashboard
+
+Requirements:
+
+- `GET /foundation/summary?level=A1`: per-skill progress (vocabulary words mastered, grammar mastery average, sounds accuracy, listening/reading/writing/speaking average scores), lessons done, streak.
+- `/foundation` page with the "A1 reached" checklist from spec §1.
+
+### Task 77 - A1 QA and Study Run
+
+Checklist:
+
+- Every A1 lesson can be completed end-to-end; each exercise type renders and grades correctly.
+- AI failures show a friendly retry message, never a blank page.
+- Full study run of A1 by the learner; content fixes logged and applied.
