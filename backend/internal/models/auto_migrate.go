@@ -37,5 +37,7 @@ func AutoMigrateModels() []interface{} {
 		&UserActivityProgress{},
 		&Exercise{},
 		&UserExerciseAnswer{},
+		&GrammarPoint{},
+		&UserGrammarProgress{},
 	}
 }

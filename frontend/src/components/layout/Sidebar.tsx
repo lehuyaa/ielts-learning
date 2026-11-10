@@ -10,6 +10,7 @@ import {
   Trophy,
   // Zap,
   FileJson,
+  Puzzle,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -30,6 +31,12 @@ const navigationItems = [
     icon: Target,
     match: (pathname: string) =>
       pathname === "/roadmap" || pathname.startsWith("/topics/"),
+  },
+  {
+    label: "Grammar",
+    to: "/grammar",
+    icon: Puzzle,
+    match: (pathname: string) => pathname.startsWith("/grammar"),
   },
   // {
   //   label: "Lessons",

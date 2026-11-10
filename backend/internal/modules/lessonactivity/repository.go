@@ -11,6 +11,7 @@ import (
 	"ielts-learning/backend/internal/models"
 	achievementmodule "ielts-learning/backend/internal/modules/achievement"
 	activitymodule "ielts-learning/backend/internal/modules/activity"
+	"ielts-learning/backend/internal/modules/grammarprogress"
 	notificationmodule "ielts-learning/backend/internal/modules/notification"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
@@ -313,4 +314,20 @@ func (r Repository) RecordDailyActivity(userID uint, event activitymodule.Event)
 func (r Repository) CheckAchievements(userID uint) error {
 	_, err := r.achievementService.CheckAndUnlockAchievementsTx(r.db, userID)
 	return err
+}
+
+func (r Repository) RecordGrammarAnswer(userID uint, skillTag string, scoreRatio float64, isCorrect bool, at time.Time) error {
+	return grammarprogress.Record(r.db, userID, skillTag, scoreRatio, isCorrect, at)
+}
+
+func (r Repository) FindGrammarPoint(id uint) (models.GrammarPoint, bool, error) {
+	var point models.GrammarPoint
+	err := r.db.First(&point, id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.GrammarPoint{}, false, nil
+	}
+	if err != nil {
+		return models.GrammarPoint{}, false, fmt.Errorf("find grammar point: %w", err)
+	}
+	return point, true, nil
 }

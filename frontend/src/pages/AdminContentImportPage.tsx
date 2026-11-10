@@ -44,7 +44,8 @@ export function AdminContentImportPage() {
   }
 
   const groups = useMemo(() => groupItems(report?.items ?? []), [report])
-  const topics = report?.items.filter((item) => item.kind === 'TOPIC') ?? []
+  const topics =
+    report?.items.filter((item) => item.kind === 'TOPIC' || item.kind === 'GRAMMAR_POINT') ?? []
   const validCount = report ? report.summary.created + report.summary.updated : 0
   const canConfirm =
     report && !report.committed && report.bundleErrors.length === 0 && validCount > 0

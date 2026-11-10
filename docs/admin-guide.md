@@ -161,5 +161,14 @@ Rules:
 - `VOCABULARY` activities list word slugs in `content.vocabularySlugs`; those
   words must already be imported.
 
+Grammar points:
+
+- Import `content/a1/a1-grammar.json` (built by `content/a1/build_grammar.py`)
+  **before** the week bundles. Grammar points are upserted by slug.
+- A GRAMMAR activity links to a point with `grammarPointSlug`; a missing slug
+  gives a warning and the activity imports without theory.
+- Learners see theory and mastery at `/grammar` and `/grammar/:slug`
+  (API `GET /api/v1/grammar-points`, module `backend/internal/modules/grammar/`).
+
 Lesson audio: `content/a1/generate_lesson_audio.sh` (macOS) writes
 `frontend/public/audio/a1/**.m4a` from `audio_manifest_*.tsv`.

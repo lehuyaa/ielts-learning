@@ -18,6 +18,8 @@ import { LoginPage } from '@/pages/LoginPage'
 import { ProfilePage } from '@/pages/ProfilePage'
 import { QuizPage } from '@/pages/QuizPage'
 import { RegisterPage } from '@/pages/RegisterPage'
+import { GrammarDetailPage } from '@/pages/GrammarDetailPage'
+import { GrammarPage } from '@/pages/GrammarPage'
 import { LessonPlayerPage } from '@/pages/LessonPlayerPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
@@ -81,6 +83,14 @@ export const router = createBrowserRouter([
           {
             path: '/lessons/:lessonId/learn',
             element: <LessonPlayerPage />,
+          },
+          {
+            path: '/grammar',
+            element: <GrammarPage />,
+          },
+          {
+            path: '/grammar/:slug',
+            element: <GrammarDetailPage />,
           },
           {
             path: '/reviews',

@@ -1,3 +1,5 @@
+import type { GrammarPointCard } from '@/types/grammar'
+
 // Lesson activities and exercises (docs/foundation-spec.md §4-§5).
 
 export type ActivityType =
@@ -122,6 +124,7 @@ export type ActivityDetailResponse = {
   activity: ActivityDetail
   exercises: Exercise[]
   vocabularies: VocabularyCard[]
+  grammarPoint: GrammarPointCard | null
   answers: AnswerResult[]
 }
 

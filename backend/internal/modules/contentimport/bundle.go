@@ -10,11 +10,25 @@ type Bundle struct {
 	CEFRLevel  string       `json:"cefrLevel"`
 	Topics     []TopicInput `json:"topics"`
 
+	GrammarPoints []GrammarPointInput `json:"grammarPoints"`
+
 	// Reserved for later tasks; a bundle that uses them gets a warning.
-	GrammarPoints json.RawMessage `json:"grammarPoints,omitempty" swaggertype:"array,object"`
-	Phonemes      json.RawMessage `json:"phonemes,omitempty" swaggertype:"array,object"`
-	Passages      json.RawMessage `json:"passages,omitempty" swaggertype:"array,object"`
-	Scenarios     json.RawMessage `json:"scenarios,omitempty" swaggertype:"array,object"`
+	Phonemes  json.RawMessage `json:"phonemes,omitempty" swaggertype:"array,object"`
+	Passages  json.RawMessage `json:"passages,omitempty" swaggertype:"array,object"`
+	Scenarios json.RawMessage `json:"scenarios,omitempty" swaggertype:"array,object"`
+}
+
+// GrammarPointInput is a grammar theory card (docs/foundation-spec.md §3.3).
+type GrammarPointInput struct {
+	Slug           string          `json:"slug"`
+	CEFRLevel      string          `json:"cefrLevel"`
+	Title          string          `json:"title"`
+	TitleVI        string          `json:"titleVi"`
+	SummaryVI      string          `json:"summaryVi"`
+	Formula        string          `json:"formula"`
+	Examples       json.RawMessage `json:"examples" swaggertype:"array,object"`
+	CommonMistakes json.RawMessage `json:"commonMistakes" swaggertype:"array,object"`
+	OrderIndex     int             `json:"orderIndex"`
 }
 
 type TopicInput struct {
@@ -46,11 +60,14 @@ type ActivityInput struct {
 	Title          string          `json:"title"`
 	InstructionsVI string          `json:"instructionsVi"`
 	Content        json.RawMessage `json:"content,omitempty" swaggertype:"object"`
-	PassScore      *int            `json:"passScore"`
-	XPReward       *int            `json:"xpReward"`
-	IsRequired     *bool           `json:"isRequired"`
-	Status         string          `json:"status"`
-	Exercises      []ExerciseInput `json:"exercises"`
+	// GrammarPointSlug links a GRAMMAR activity to its theory card; it may
+	// also be given as content.grammarPointSlug.
+	GrammarPointSlug string          `json:"grammarPointSlug"`
+	PassScore        *int            `json:"passScore"`
+	XPReward         *int            `json:"xpReward"`
+	IsRequired       *bool           `json:"isRequired"`
+	Status           string          `json:"status"`
+	Exercises        []ExerciseInput `json:"exercises"`
 }
 
 type ExerciseInput struct {

@@ -1942,6 +1942,8 @@ Acceptance criteria:
 
 - All 9 A1 grammar points render from imported data, with audio playing for each example.
 
+Status: done. Grammar points come from `content/a1/a1-grammar.json` (import before the week bundles); activities link via `grammarPointSlug` (or `content.grammarPointSlug`). Example audio uses the static file when present, otherwise browser TTS. Theory card shows on `/grammar/:slug` and before the first attempt of a linked activity ("Xem lại lý thuyết" during exercises).
+
 ---
 
 ### Task 55 - Grammar Exercise UI and AI Fallback
@@ -1970,12 +1972,16 @@ Acceptance criteria:
 
 - Mastery changes after answering grammar exercises and is visible on `/grammar`.
 
+Status: done. Mastery = average score of the last 20 answers tagged `grammar:<slug>` (lesson activities and practice). Practice: `GET /grammar-points/:slug/practice` (up to 10 exercises from lessons the learner has started: wrong first, then new, then correct) and `POST .../practice/answers` (stored as attempt 0, no XP).
+
 ---
 
 ### Task D5 - A1 Grammar Content
 
 - 9 grammar points (G1-G9, spec §2.3) from *Essential Grammar in Use*: Vietnamese summary, formula, 5 examples, 4-6 common mistakes.
 - ~40 exercises per point across the 5 types, split over the lessons of that week. Reviewed before publishing.
+
+Status: partial. All 9 theory cards written (`content/a1/build_grammar.py`); exercises so far only in Week 1 (G1/G2). Remaining exercises ship with Weeks 2-4.
 
 ## 16. Milestone 15 - Pronunciation and IPA
 

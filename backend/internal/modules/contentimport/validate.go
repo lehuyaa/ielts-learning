@@ -359,3 +359,62 @@ func isJSONObject(raw json.RawMessage) bool {
 	var value map[string]json.RawMessage
 	return len(raw) > 0 && json.Unmarshal(raw, &value) == nil && value != nil
 }
+
+type grammarExample struct {
+	EN string `json:"en"`
+	VI string `json:"vi"`
+}
+
+type grammarMistake struct {
+	Wrong string `json:"wrong"`
+	Right string `json:"right"`
+}
+
+func validateGrammarPoint(point GrammarPointInput) []string {
+	errs := validateSlug(point.Slug)
+	if strings.TrimSpace(point.Title) == "" {
+		errs = append(errs, "title is required")
+	}
+	if strings.TrimSpace(point.SummaryVI) == "" {
+		errs = append(errs, "summaryVi is required")
+	}
+
+	var examples []grammarExample
+	if err := json.Unmarshal(point.Examples, &examples); err != nil || len(examples) == 0 {
+		errs = append(errs, "examples must be a non-empty list of {en, vi}")
+	} else {
+		for i, example := range examples {
+			if strings.TrimSpace(example.EN) == "" {
+				errs = append(errs, fmt.Sprintf("examples[%d].en is required", i))
+			}
+		}
+	}
+
+	if len(point.CommonMistakes) > 0 && string(point.CommonMistakes) != "null" {
+		var mistakes []grammarMistake
+		if err := json.Unmarshal(point.CommonMistakes, &mistakes); err != nil {
+			errs = append(errs, "commonMistakes must be a list of {wrong, right, noteVi}")
+		} else {
+			for i, mistake := range mistakes {
+				if mistake.Wrong == "" || mistake.Right == "" {
+					errs = append(errs, fmt.Sprintf("commonMistakes[%d] needs wrong and right", i))
+				}
+			}
+		}
+	}
+	return errs
+}
+
+// grammarPointSlug returns the activity's linked grammar point slug.
+func grammarPointSlug(activity ActivityInput) string {
+	if activity.GrammarPointSlug != "" {
+		return activity.GrammarPointSlug
+	}
+	var content struct {
+		GrammarPointSlug string `json:"grammarPointSlug"`
+	}
+	if len(activity.Content) > 0 {
+		_ = json.Unmarshal(activity.Content, &content)
+	}
+	return content.GrammarPointSlug
+}

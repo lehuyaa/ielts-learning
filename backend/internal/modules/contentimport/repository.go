@@ -179,3 +179,24 @@ func ignoreNotFound(err error, action string) error {
 	}
 	return fmt.Errorf("%s: %w", action, err)
 }
+
+func (r Repository) FindGrammarPoint(slug string) (models.GrammarPoint, bool, error) {
+	var point models.GrammarPoint
+	err := r.db.Where("slug = ?", slug).First(&point).Error
+	return point, found(err), ignoreNotFound(err, "find grammar point")
+}
+
+func (r Repository) GrammarPointIDs(slugs []string) (map[string]uint, error) {
+	result := map[string]uint{}
+	if len(slugs) == 0 {
+		return result, nil
+	}
+	var points []models.GrammarPoint
+	if err := r.db.Select("id", "slug").Where("slug IN ?", slugs).Find(&points).Error; err != nil {
+		return nil, fmt.Errorf("find grammar points: %w", err)
+	}
+	for _, point := range points {
+		result[point.Slug] = point.ID
+	}
+	return result, nil
+}

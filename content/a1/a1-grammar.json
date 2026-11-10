@@ -1,0 +1,485 @@
+{
+  "version": 1,
+  "courseSlug": "foundation-english",
+  "cefrLevel": "A1",
+  "grammarPoints": [
+    {
+      "slug": "g1-to-be",
+      "title": "The verb to be: am / is / are",
+      "titleVi": "Động từ to be",
+      "summaryVi": "Dùng 'to be' để nói ai đó là ai, ở đâu, thế nào: tên, nghề nghiệp, quốc tịch, tuổi, cảm xúc. Mỗi chủ ngữ đi với một dạng riêng. Khi nói, người ta thường rút gọn: I'm, you're, he's, she's, it's, we're, they're.",
+      "formula": "I + am          → I am / I'm\nHe / She / It + is → She is / She's\nYou / We / They + are → They are / They're\n\nPhủ định: S + am/is/are + not   (isn't, aren't)\nCâu hỏi:  Am/Is/Are + S + …?   → Yes, I am. / No, she isn't.",
+      "examples": [
+        {
+          "en": "I am a developer.",
+          "vi": "Tôi là lập trình viên."
+        },
+        {
+          "en": "She is from Da Nang.",
+          "vi": "Cô ấy đến từ Đà Nẵng."
+        },
+        {
+          "en": "We are colleagues.",
+          "vi": "Chúng tôi là đồng nghiệp."
+        },
+        {
+          "en": "He isn't busy today.",
+          "vi": "Hôm nay anh ấy không bận."
+        },
+        {
+          "en": "Are you married? — No, I'm not.",
+          "vi": "Bạn đã kết hôn chưa? — Chưa."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "I is a teacher.",
+          "right": "I am a teacher.",
+          "noteVi": "'I' luôn đi với 'am'."
+        },
+        {
+          "wrong": "He are my boss.",
+          "right": "He is my boss.",
+          "noteVi": "He / She / It đi với 'is'."
+        },
+        {
+          "wrong": "I am work in a bank.",
+          "right": "I work in a bank.",
+          "noteVi": "Không dùng 'am' trước động từ thường như 'work'."
+        },
+        {
+          "wrong": "She very busy.",
+          "right": "She is very busy.",
+          "noteVi": "Tiếng Việt không cần 'là' trước tính từ, tiếng Anh thì bắt buộc có 'is'."
+        },
+        {
+          "wrong": "You are from Vietnam?",
+          "right": "Are you from Vietnam?",
+          "noteVi": "Câu hỏi: đưa 'are' lên trước chủ ngữ."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 1
+    },
+    {
+      "slug": "g2-nouns-articles",
+      "title": "Nouns, plurals, a / an / the, this / these",
+      "titleVi": "Danh từ, số nhiều, mạo từ và từ chỉ định",
+      "summaryVi": "Danh từ đếm được có số ít và số nhiều. Danh từ số ít đếm được luôn cần a/an/the hoặc từ sở hữu (my, your…). Dùng 'a' trước âm phụ âm, 'an' trước âm nguyên âm (an engineer, an hour). 'The' dùng cho thứ cả hai người đều biết. This/these chỉ vật ở gần; that/those chỉ vật ở xa.",
+      "formula": "Số nhiều: + s (books) · + es sau s, sh, ch, x (boxes, watches)\nBất quy tắc: child → children, man → men, woman → women, person → people\na + âm phụ âm (a teacher) · an + âm nguyên âm (an accountant)\nthis / that + số ít · these / those + số nhiều\nSở hữu: my, your, his, her, its, our, their + danh từ",
+      "examples": [
+        {
+          "en": "I have two sisters and a brother.",
+          "vi": "Tôi có hai chị gái và một anh trai."
+        },
+        {
+          "en": "She is an engineer.",
+          "vi": "Cô ấy là kỹ sư."
+        },
+        {
+          "en": "These are my children.",
+          "vi": "Đây là các con tôi."
+        },
+        {
+          "en": "Is that your laptop?",
+          "vi": "Kia có phải laptop của bạn không?"
+        },
+        {
+          "en": "The meeting room is on the second floor.",
+          "vi": "Phòng họp ở tầng hai."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "I am engineer.",
+          "right": "I am an engineer.",
+          "noteVi": "Nghề nghiệp số ít cần a/an."
+        },
+        {
+          "wrong": "She is a accountant.",
+          "right": "She is an accountant.",
+          "noteVi": "'accountant' bắt đầu bằng âm nguyên âm → an."
+        },
+        {
+          "wrong": "I have three child.",
+          "right": "I have three children.",
+          "noteVi": "child → children (bất quy tắc)."
+        },
+        {
+          "wrong": "This books are new.",
+          "right": "These books are new.",
+          "noteVi": "books số nhiều → these."
+        },
+        {
+          "wrong": "They are a doctors.",
+          "right": "They are doctors.",
+          "noteVi": "Không dùng a/an với danh từ số nhiều."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 2
+    },
+    {
+      "slug": "g3-present-simple",
+      "title": "Present simple",
+      "titleVi": "Thì hiện tại đơn",
+      "summaryVi": "Dùng cho thói quen, lịch trình và sự thật: việc bạn làm hằng ngày, công việc, sở thích. Với he/she/it, động từ thêm -s hoặc -es. Câu phủ định và câu hỏi dùng trợ động từ do/does, và động từ chính trở về nguyên mẫu.",
+      "formula": "I / You / We / They + V        → I work in Hanoi.\nHe / She / It + V-s/es          → She works in Hanoi.\nPhủ định: don't / doesn't + V    → He doesn't work on Sunday.\nCâu hỏi:  Do / Does + S + V?     → Does she work here?\nTrạng từ tần suất: always, usually, often, sometimes, never (đứng trước động từ thường)",
+      "examples": [
+        {
+          "en": "I start work at nine.",
+          "vi": "Tôi bắt đầu làm việc lúc chín giờ."
+        },
+        {
+          "en": "She usually takes the bus.",
+          "vi": "Cô ấy thường đi xe buýt."
+        },
+        {
+          "en": "We don't work on Saturday.",
+          "vi": "Chúng tôi không làm việc vào thứ Bảy."
+        },
+        {
+          "en": "Does he drink coffee? — Yes, he does.",
+          "vi": "Anh ấy có uống cà phê không? — Có."
+        },
+        {
+          "en": "The shop opens at 8 a.m.",
+          "vi": "Cửa hàng mở cửa lúc 8 giờ sáng."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "She work in a bank.",
+          "right": "She works in a bank.",
+          "noteVi": "He/She/It → thêm -s vào động từ."
+        },
+        {
+          "wrong": "He doesn't works here.",
+          "right": "He doesn't work here.",
+          "noteVi": "Sau doesn't, động từ trở về nguyên mẫu."
+        },
+        {
+          "wrong": "Do she like coffee?",
+          "right": "Does she like coffee?",
+          "noteVi": "He/She/It dùng 'does'."
+        },
+        {
+          "wrong": "I am go to work by bus.",
+          "right": "I go to work by bus.",
+          "noteVi": "Không dùng 'am' với động từ thường ở hiện tại đơn."
+        },
+        {
+          "wrong": "I go always to the gym.",
+          "right": "I always go to the gym.",
+          "noteVi": "Trạng từ tần suất đứng trước động từ thường."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 3
+    },
+    {
+      "slug": "g4-present-continuous",
+      "title": "Present continuous",
+      "titleVi": "Thì hiện tại tiếp diễn",
+      "summaryVi": "Dùng cho việc đang xảy ra ngay lúc nói (now, at the moment) hoặc tạm thời trong giai đoạn này. So sánh: I work in Hanoi (thường xuyên) với I'm working from home this week (tạm thời).",
+      "formula": "S + am / is / are + V-ing\nPhủ định: S + am/is/are + not + V-ing\nCâu hỏi:  Am/Is/Are + S + V-ing?\nChính tả: make → making · sit → sitting · lie → lying",
+      "examples": [
+        {
+          "en": "I'm having lunch now.",
+          "vi": "Bây giờ tôi đang ăn trưa."
+        },
+        {
+          "en": "She is talking to a customer.",
+          "vi": "Cô ấy đang nói chuyện với khách hàng."
+        },
+        {
+          "en": "They aren't working today.",
+          "vi": "Hôm nay họ không làm việc."
+        },
+        {
+          "en": "What are you doing?",
+          "vi": "Bạn đang làm gì vậy?"
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "I working now.",
+          "right": "I am working now.",
+          "noteVi": "Không được bỏ am/is/are."
+        },
+        {
+          "wrong": "She is work at the moment.",
+          "right": "She is working at the moment.",
+          "noteVi": "Sau is phải là V-ing."
+        },
+        {
+          "wrong": "I am liking coffee.",
+          "right": "I like coffee.",
+          "noteVi": "Động từ chỉ cảm xúc, sở thích (like, love, know, want) thường không dùng -ing."
+        },
+        {
+          "wrong": "He is siting there.",
+          "right": "He is sitting there.",
+          "noteVi": "sit → sitting (gấp đôi phụ âm cuối)."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 4
+    },
+    {
+      "slug": "g5-there-is-prepositions",
+      "title": "There is / there are + prepositions of place",
+      "titleVi": "There is / There are và giới từ chỉ nơi chốn",
+      "summaryVi": "Dùng 'there is / there are' để nói cái gì có ở đâu. 'There is' + danh từ số ít, 'there are' + danh từ số nhiều. Kết hợp với giới từ: in, on, at, under, next to, between, near, behind, in front of.",
+      "formula": "There is + a/an + danh từ số ít    → There is a bank near my house.\nThere are + danh từ số nhiều        → There are two meeting rooms.\nCâu hỏi: Is there…? / Are there…?    · Phủ định: There isn't / There aren't\non + tầng (on the second floor) · in + phòng/thành phố · at + địa điểm cụ thể",
+      "examples": [
+        {
+          "en": "There is a printer next to my desk.",
+          "vi": "Có một máy in bên cạnh bàn của tôi."
+        },
+        {
+          "en": "There are three people in my team.",
+          "vi": "Nhóm tôi có ba người."
+        },
+        {
+          "en": "Is there a toilet on this floor?",
+          "vi": "Tầng này có nhà vệ sinh không?"
+        },
+        {
+          "en": "The bank is between the cafe and the hotel.",
+          "vi": "Ngân hàng ở giữa quán cà phê và khách sạn."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "It has a bank near here.",
+          "right": "There is a bank near here.",
+          "noteVi": "Người Việt hay dịch 'có' thành 'have/has'; để nói vật tồn tại ở đâu, dùng 'there is'."
+        },
+        {
+          "wrong": "There is two rooms.",
+          "right": "There are two rooms.",
+          "noteVi": "Danh từ số nhiều → there are."
+        },
+        {
+          "wrong": "My office is in the third floor.",
+          "right": "My office is on the third floor.",
+          "noteVi": "Tầng: dùng 'on'."
+        },
+        {
+          "wrong": "The cafe is next the bank.",
+          "right": "The cafe is next to the bank.",
+          "noteVi": "next to: không được bỏ 'to'."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 5
+    },
+    {
+      "slug": "g6-adjectives-comparison",
+      "title": "Adjectives, comparatives and superlatives",
+      "titleVi": "Tính từ, so sánh hơn và so sánh nhất",
+      "summaryVi": "Tính từ đứng trước danh từ (a big city) hoặc sau to be (The city is big). So sánh hơn: tính từ ngắn + -er + than; tính từ dài: more + adj + than. So sánh nhất: the + adj-est / the most + adj.",
+      "formula": "Ngắn: cheap → cheaper than → the cheapest\nTận cùng -y: busy → busier → the busiest\nDài: expensive → more expensive than → the most expensive\nBất quy tắc: good → better → the best · bad → worse → the worst · far → farther → the farthest",
+      "examples": [
+        {
+          "en": "Hanoi is a busy city.",
+          "vi": "Hà Nội là một thành phố đông đúc."
+        },
+        {
+          "en": "The bus is cheaper than a taxi.",
+          "vi": "Xe buýt rẻ hơn taxi."
+        },
+        {
+          "en": "This hotel is more expensive than that one.",
+          "vi": "Khách sạn này đắt hơn khách sạn kia."
+        },
+        {
+          "en": "It's the best restaurant in town.",
+          "vi": "Đó là nhà hàng ngon nhất thị trấn."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "a city big",
+          "right": "a big city",
+          "noteVi": "Tính từ đứng trước danh từ."
+        },
+        {
+          "wrong": "more cheap",
+          "right": "cheaper",
+          "noteVi": "Tính từ ngắn thêm -er, không dùng more."
+        },
+        {
+          "wrong": "It is more better.",
+          "right": "It is better.",
+          "noteVi": "better đã là so sánh hơn, không thêm more."
+        },
+        {
+          "wrong": "She is taller me.",
+          "right": "She is taller than me.",
+          "noteVi": "So sánh hơn cần 'than'."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 6
+    },
+    {
+      "slug": "g7-can-must-should",
+      "title": "Modal verbs: can / must / should",
+      "titleVi": "Động từ khuyết thiếu can / must / should",
+      "summaryVi": "Can: khả năng hoặc xin phép / nhờ vả (Can I…? Can you…?). Must: bắt buộc (quy định). Should: lời khuyên. Sau modal luôn là động từ nguyên mẫu, không thêm -s, không thêm 'to'.",
+      "formula": "S + can / must / should + V (nguyên mẫu)\nPhủ định: can't · mustn't (cấm) · shouldn't\nCâu hỏi: Can I…? (xin phép) · Can you…? (nhờ) · Should I…? (hỏi ý kiến)\nLịch sự hơn: Could you…? · May I…?",
+      "examples": [
+        {
+          "en": "Can you help me, please?",
+          "vi": "Bạn giúp tôi được không?"
+        },
+        {
+          "en": "You must wear a helmet.",
+          "vi": "Bạn phải đội mũ bảo hiểm."
+        },
+        {
+          "en": "You should drink more water.",
+          "vi": "Bạn nên uống nhiều nước hơn."
+        },
+        {
+          "en": "I can't come to the meeting.",
+          "vi": "Tôi không thể đến cuộc họp."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "She cans swim.",
+          "right": "She can swim.",
+          "noteVi": "Modal không thêm -s."
+        },
+        {
+          "wrong": "You should to rest.",
+          "right": "You should rest.",
+          "noteVi": "Không có 'to' sau should / can / must."
+        },
+        {
+          "wrong": "He can speaks English.",
+          "right": "He can speak English.",
+          "noteVi": "Sau can là động từ nguyên mẫu."
+        },
+        {
+          "wrong": "Do you can help me?",
+          "right": "Can you help me?",
+          "noteVi": "Câu hỏi: đưa can lên đầu, không dùng do."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 7
+    },
+    {
+      "slug": "g8-past-simple",
+      "title": "Past simple",
+      "titleVi": "Thì quá khứ đơn",
+      "summaryVi": "Dùng cho việc đã xảy ra và kết thúc trong quá khứ (yesterday, last week, two days ago). Động từ có quy tắc thêm -ed; động từ bất quy tắc phải học thuộc. Câu phủ định và câu hỏi dùng did, và động từ chính trở về nguyên mẫu. Quá khứ của to be: was / were.",
+      "formula": "S + V-ed / V2          → I worked late yesterday.\nPhủ định: didn't + V     → She didn't come.\nCâu hỏi:  Did + S + V?   → Did you call him?\nto be: I/He/She/It was · You/We/They were\nBất quy tắc thường gặp: go→went · have→had · do→did · see→saw · get→got · make→made · take→took · come→came · buy→bought · eat→ate",
+      "examples": [
+        {
+          "en": "I visited my parents last weekend.",
+          "vi": "Cuối tuần trước tôi về thăm bố mẹ."
+        },
+        {
+          "en": "We went to the beach.",
+          "vi": "Chúng tôi đã đi biển."
+        },
+        {
+          "en": "She didn't feel well yesterday.",
+          "vi": "Hôm qua cô ấy thấy không khỏe."
+        },
+        {
+          "en": "Did you finish the report? — Yes, I did.",
+          "vi": "Bạn làm xong báo cáo chưa? — Xong rồi."
+        },
+        {
+          "en": "The meeting was very long.",
+          "vi": "Cuộc họp rất dài."
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "I go to Da Lat last week.",
+          "right": "I went to Da Lat last week.",
+          "noteVi": "Có 'last week' → động từ ở quá khứ."
+        },
+        {
+          "wrong": "She didn't went.",
+          "right": "She didn't go.",
+          "noteVi": "Sau didn't, động từ trở về nguyên mẫu."
+        },
+        {
+          "wrong": "Did you saw him?",
+          "right": "Did you see him?",
+          "noteVi": "Sau did, động từ trở về nguyên mẫu."
+        },
+        {
+          "wrong": "They was late.",
+          "right": "They were late.",
+          "noteVi": "They → were."
+        },
+        {
+          "wrong": "I buyed a new phone.",
+          "right": "I bought a new phone.",
+          "noteVi": "buy là động từ bất quy tắc: bought."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 8
+    },
+    {
+      "slug": "g9-future",
+      "title": "Future: will / be going to",
+      "titleVi": "Tương lai: will và be going to",
+      "summaryVi": "Be going to: kế hoạch đã định sẵn. Will: quyết định ngay lúc nói, lời hứa, đề nghị giúp đỡ, dự đoán. Thì hiện tại tiếp diễn cũng dùng cho lịch hẹn đã sắp xếp (I'm meeting him at 3).",
+      "formula": "S + am/is/are + going to + V   → I'm going to visit Hue next month.\nS + will + V                    → I'll call you later.\nPhủ định: won't + V · am/is/are not going to + V\nCâu hỏi: Will you…? · Are you going to…?",
+      "examples": [
+        {
+          "en": "I'm going to start a new course next week.",
+          "vi": "Tuần sau tôi sẽ bắt đầu một khóa học mới."
+        },
+        {
+          "en": "It's cold. I'll close the window.",
+          "vi": "Trời lạnh. Để tôi đóng cửa sổ."
+        },
+        {
+          "en": "I won't be late, I promise.",
+          "vi": "Tôi sẽ không đến muộn, tôi hứa."
+        },
+        {
+          "en": "What are you going to do this weekend?",
+          "vi": "Cuối tuần này bạn định làm gì?"
+        }
+      ],
+      "commonMistakes": [
+        {
+          "wrong": "I will to call you.",
+          "right": "I will call you.",
+          "noteVi": "Sau will là động từ nguyên mẫu, không có 'to'."
+        },
+        {
+          "wrong": "I going to travel.",
+          "right": "I'm going to travel.",
+          "noteVi": "Không được bỏ am/is/are."
+        },
+        {
+          "wrong": "She wills come.",
+          "right": "She will come.",
+          "noteVi": "will không thêm -s."
+        },
+        {
+          "wrong": "Tomorrow I go to Hue.",
+          "right": "Tomorrow I'm going to Hue.",
+          "noteVi": "Kế hoạch tương lai: dùng be going to hoặc hiện tại tiếp diễn."
+        }
+      ],
+      "cefrLevel": "A1",
+      "orderIndex": 9
+    }
+  ],
+  "topics": []
+}

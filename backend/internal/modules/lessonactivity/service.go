@@ -125,6 +125,17 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 	if err != nil {
 		return ActivityDetailResponse{}, err
 	}
+	var grammarPoint *GrammarPointCard
+	if activity.GrammarPointID != nil {
+		point, found, err := s.repository.FindGrammarPoint(*activity.GrammarPointID)
+		if err != nil {
+			return ActivityDetailResponse{}, err
+		}
+		if found {
+			card := ToGrammarPointCard(point)
+			grammarPoint = &card
+		}
+	}
 
 	counts := map[uint]int{activity.ID: len(exercises)}
 	locks := activityLocks(ctx.activities, ctx.progress)
@@ -140,6 +151,7 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		},
 		Exercises:    exerciseResponses,
 		Vocabularies: vocabularies,
+		GrammarPoint: grammarPoint,
 		Answers:      answerResults,
 	}, nil
 }
@@ -200,6 +212,9 @@ func (s Service) SubmitAnswer(userID uint, activityID uint, req SubmitAnswerRequ
 
 		answer.ActivityAttempt = progress.Attempts
 		if err := tx.UpsertAnswer(&answer); err != nil {
+			return err
+		}
+		if err := tx.RecordGrammarAnswer(userID, exercise.SkillTag, result.ScoreRatio, result.IsCorrect, now); err != nil {
 			return err
 		}
 		return markLessonStarted(tx, userID, activity.LessonID, now)

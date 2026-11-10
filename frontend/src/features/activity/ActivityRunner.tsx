@@ -23,6 +23,8 @@ import type {
   ExerciseAnswer,
 } from "@/types/activity";
 
+import { GrammarTheoryCard } from "@/features/grammar/GrammarTheoryCard";
+
 import { ActivityContent } from "./ActivityContent";
 import { VocabularyCards } from "./VocabularyCards";
 import { useActivity } from "./hooks/useActivity";
@@ -89,7 +91,7 @@ export function ActivityRunner({ activityId, lessonId, onNextActivity }: Activit
   );
 }
 
-type Phase = "cards" | "exercises";
+type Phase = "theory" | "cards" | "exercises";
 
 function ActivitySession({
   data,
@@ -100,7 +102,8 @@ function ActivitySession({
   lessonId: number;
   onCompleted: (completion: CompleteActivityResponse) => void;
 }) {
-  const { activity, exercises, vocabularies } = data;
+  const { activity, exercises, vocabularies, grammarPoint } = data;
+  const showTheory = Boolean(grammarPoint) && activity.content?.showTheory !== false;
   const answersById = useMemo(
     () => new Map(data.answers.map((answer) => [answer.exerciseId, answer])),
     [data.answers],
@@ -109,9 +112,12 @@ function ActivitySession({
   // Resume at the first unanswered exercise of an unfinished attempt.
   const firstUnanswered = exercises.findIndex((exercise) => !answersById.has(exercise.id));
   const resuming = data.answers.length > 0;
-  const [phase, setPhase] = useState<Phase>(
-    vocabularies.length > 0 && !resuming ? "cards" : "exercises",
-  );
+  const [phase, setPhase] = useState<Phase>(() => {
+    if (resuming) return "exercises";
+    // Theory is shown before the first attempt; later it is one click away.
+    if (showTheory && activity.attempts === 0) return "theory";
+    return vocabularies.length > 0 ? "cards" : "exercises";
+  });
   const [index, setIndex] = useState(firstUnanswered === -1 ? Math.max(exercises.length - 1, 0) : firstUnanswered);
   const [draft, setDraft] = useState<ExerciseAnswer | null>(null);
   const [results, setResults] = useState<Map<number, AnswerResult>>(answersById);
@@ -159,6 +165,27 @@ function ActivitySession({
           <p className="mt-1 text-muted-foreground">{activity.instructionsVi}</p>
         ) : null}
       </header>
+
+      {phase === "theory" && grammarPoint ? (
+        <div>
+          <GrammarTheoryCard point={grammarPoint} />
+          <div className="mt-6 flex justify-center">
+            <Button onClick={() => setPhase("exercises")} size="lg">
+              Đã hiểu, làm bài tập <ArrowRight />
+            </Button>
+          </div>
+        </div>
+      ) : null}
+
+      {phase === "exercises" && grammarPoint ? (
+        <button
+          className="mb-4 cursor-pointer text-sm font-semibold text-primary hover:underline"
+          onClick={() => setPhase("theory")}
+          type="button"
+        >
+          Xem lại lý thuyết: {grammarPoint.titleVi || grammarPoint.title}
+        </button>
+      ) : null}
 
       {phase === "cards" ? (
         <VocabularyCards

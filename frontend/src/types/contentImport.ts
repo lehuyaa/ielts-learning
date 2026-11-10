@@ -1,4 +1,4 @@
-export type ContentImportKind = 'TOPIC' | 'LESSON' | 'ACTIVITY' | 'EXERCISE'
+export type ContentImportKind = 'GRAMMAR_POINT' | 'TOPIC' | 'LESSON' | 'ACTIVITY' | 'EXERCISE'
 export type ContentImportAction = 'CREATE' | 'UPDATE' | 'SKIP'
 
 export type ContentImportItem = {

@@ -53,6 +53,8 @@ type ActivityDetailResponse struct {
 	Exercises []ExerciseResponse `json:"exercises"`
 	// Vocabularies are the word cards of a VOCABULARY activity, in content order.
 	Vocabularies []VocabularyCard `json:"vocabularies"`
+	// GrammarPoint is the theory card of a GRAMMAR activity, when linked.
+	GrammarPoint *GrammarPointCard `json:"grammarPoint"`
 	// Answers already given in the current (unfinished) attempt, for resuming.
 	Answers []AnswerResult `json:"answers"`
 }
@@ -127,4 +129,38 @@ type LessonResult struct {
 	JustCompleted bool `json:"justCompleted"`
 	Score         *int `json:"score"`
 	XPAwarded     int  `json:"xpAwarded"`
+}
+
+// GrammarPointCard is a grammar theory card (also used by the grammar module).
+type GrammarPointCard struct {
+	ID             uint            `json:"id"`
+	Slug           string          `json:"slug"`
+	CEFRLevel      string          `json:"cefrLevel"`
+	Title          string          `json:"title"`
+	TitleVI        string          `json:"titleVi"`
+	SummaryVI      string          `json:"summaryVi"`
+	Formula        string          `json:"formula"`
+	Examples       json.RawMessage `json:"examples" swaggertype:"array,object"`
+	CommonMistakes json.RawMessage `json:"commonMistakes" swaggertype:"array,object"`
+}
+
+func ToGrammarPointCard(point models.GrammarPoint) GrammarPointCard {
+	return GrammarPointCard{
+		ID:             point.ID,
+		Slug:           point.Slug,
+		CEFRLevel:      point.CEFRLevel,
+		Title:          point.Title,
+		TitleVI:        point.TitleVI,
+		SummaryVI:      point.SummaryVI,
+		Formula:        point.Formula,
+		Examples:       jsonList(point.ExamplesJSON),
+		CommonMistakes: jsonList(point.CommonMistakesJSON),
+	}
+}
+
+func jsonList(raw []byte) json.RawMessage {
+	if len(raw) == 0 || string(raw) == "null" {
+		return json.RawMessage("[]")
+	}
+	return json.RawMessage(raw)
 }

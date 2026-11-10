@@ -5,6 +5,7 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 
 | File | What it is |
 |---|---|
+| `build_grammar.py` → `a1-grammar.json` | The 9 A1 grammar theory cards (G1-G9). **Import this first** |
 | `build_week1.py` | Authoring source for Week 1 (edit this, not the JSON) |
 | `week-1.json` | Generated bundle: 1 topic, 9 situation lessons + review, 49 activities, 184 exercises |
 | `audio_manifest_week-1.tsv` | Sentences/words to synthesise (`path<TAB>text`) |
@@ -14,11 +15,15 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 
 ```bash
 cd content/a1
+python3 build_grammar.py
 python3 build_week1.py --vocab ../a1-vocabulary/out/a1_rows.json   # --vocab optional: checks word slugs
 ./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/w1/*.m4a
 ```
 
-Then upload `week-1.json` at **Admin → Import Lessons**: Preview, then Confirm import.
+Then upload `a1-grammar.json`, then `week-1.json` at **Admin → Import Lessons**
+(Preview, then Confirm import). GRAMMAR activities link to their theory card
+through `content.grammarPointSlug`; exercises practise a card through the skill
+tag `grammar:<slug>`, which also drives the learner's mastery on `/grammar`.
 Re-importing updates lessons in place (matched by slug; exercises by position),
 so learner progress is kept. Every exercise is self-checked on import: the
 expected answer must grade as correct, otherwise the item is skipped.

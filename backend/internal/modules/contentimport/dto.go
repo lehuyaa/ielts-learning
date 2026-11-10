@@ -1,10 +1,11 @@
 package contentimport
 
 const (
-	KindTopic    = "TOPIC"
-	KindLesson   = "LESSON"
-	KindActivity = "ACTIVITY"
-	KindExercise = "EXERCISE"
+	KindGrammarPoint = "GRAMMAR_POINT"
+	KindTopic        = "TOPIC"
+	KindLesson       = "LESSON"
+	KindActivity     = "ACTIVITY"
+	KindExercise     = "EXERCISE"
 
 	ActionCreate = "CREATE"
 	ActionUpdate = "UPDATE"

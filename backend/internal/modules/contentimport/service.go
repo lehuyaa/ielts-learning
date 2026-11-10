@@ -53,8 +53,7 @@ func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
 
 	result := ImportResult{BundleErrors: []string{}, Warnings: []string{}, Items: []ItemResult{}}
 	for name, raw := range map[string]json.RawMessage{
-		"grammarPoints": bundle.GrammarPoints, "phonemes": bundle.Phonemes,
-		"passages": bundle.Passages, "scenarios": bundle.Scenarios,
+		"phonemes": bundle.Phonemes, "passages": bundle.Passages, "scenarios": bundle.Scenarios,
 	} {
 		if len(raw) > 0 && string(raw) != "[]" && string(raw) != "null" {
 			result.Warnings = append(result.Warnings, fmt.Sprintf("%s are not imported yet and were ignored", name))
@@ -102,6 +101,22 @@ func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
 }
 
 func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, knownVocabulary map[string]bool, commit bool, result *ImportResult) error {
+	grammarIDs, err := s.applyGrammarPoints(repo, bundle, commit, result)
+	if err != nil {
+		return err
+	}
+	// Grammar points already in the database can be linked too.
+	existing, err := repo.GrammarPointIDs(collectGrammarSlugs(bundle))
+	if err != nil {
+		return err
+	}
+	for slug, id := range existing {
+		if _, ok := grammarIDs[slug]; !ok {
+			grammarIDs[slug] = id
+		}
+	}
+	links := grammarLinks{ids: grammarIDs, warned: map[string]bool{}}
+
 	topicSlugs := map[string]bool{}
 	for topicIndex, topicInput := range bundle.Topics {
 		item := ItemResult{Kind: KindTopic, Path: topicInput.Slug, Title: topicInput.Title, Errors: validateTopic(topicInput)}
@@ -135,14 +150,14 @@ func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, kn
 			}
 		}
 
-		if err := s.applyLessons(repo, topic, exists, topicInput, knownVocabulary, commit, result); err != nil {
+		if err := s.applyLessons(repo, topic, exists, topicInput, knownVocabulary, &links, commit, result); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists bool, topicInput TopicInput, knownVocabulary map[string]bool, commit bool, result *ImportResult) error {
+func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists bool, topicInput TopicInput, knownVocabulary map[string]bool, links *grammarLinks, commit bool, result *ImportResult) error {
 	lessonSlugs := map[string]bool{}
 	for lessonIndex, lessonInput := range topicInput.Lessons {
 		path := topicInput.Slug + "/" + lessonInput.Slug
@@ -186,14 +201,14 @@ func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists b
 			}
 		}
 
-		if err := s.applyActivities(repo, lesson, exists, path, lessonInput.Activities, knownVocabulary, commit, result); err != nil {
+		if err := s.applyActivities(repo, lesson, exists, path, lessonInput.Activities, knownVocabulary, links, commit, result); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonExists bool, lessonPath string, activities []ActivityInput, knownVocabulary map[string]bool, commit bool, result *ImportResult) error {
+func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonExists bool, lessonPath string, activities []ActivityInput, knownVocabulary map[string]bool, links *grammarLinks, commit bool, result *ImportResult) error {
 	activitySlugs := map[string]bool{}
 	for activityIndex, input := range activities {
 		path := lessonPath + "/" + input.Slug
@@ -233,6 +248,7 @@ func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonEx
 		activity.IsRequired = input.IsRequired == nil || *input.IsRequired
 		activity.OrderIndex = activityIndex + 1
 		activity.Status = models.ContentStatus(item.Status)
+		activity.GrammarPointID = links.resolve(grammarPointSlug(input), result)
 		if commit {
 			if err := repo.SaveActivity(&activity); err != nil {
 				return err
@@ -375,4 +391,81 @@ func defaultPtr(value *int, fallback int) int {
 		return fallback
 	}
 	return *value
+}
+
+// grammarLinks resolves grammar point slugs to IDs for activity links.
+type grammarLinks struct {
+	ids    map[string]uint
+	warned map[string]bool
+}
+
+// resolve returns the grammar point ID for slug, or nil (with a one-time
+// warning) when the grammar point does not exist. In a preview of a new
+// grammar point the ID is still 0, which is fine since nothing is written.
+func (l *grammarLinks) resolve(slug string, result *ImportResult) *uint {
+	if slug == "" {
+		return nil
+	}
+	id, ok := l.ids[slug]
+	if !ok {
+		if !l.warned[slug] {
+			l.warned[slug] = true
+			result.Warnings = append(result.Warnings, fmt.Sprintf(
+				"grammar point %q not found — import the grammar bundle first; activities are imported without the theory card", slug))
+		}
+		return nil
+	}
+	return &id
+}
+
+func (s Service) applyGrammarPoints(repo Repository, bundle Bundle, commit bool, result *ImportResult) (map[string]uint, error) {
+	ids := map[string]uint{}
+	for index, input := range bundle.GrammarPoints {
+		item := ItemResult{Kind: KindGrammarPoint, Path: input.Slug, Title: input.Title, Errors: validateGrammarPoint(input)}
+		if _, duplicate := ids[input.Slug]; duplicate {
+			item.Errors = append(item.Errors, "duplicate grammar point slug in this file")
+		}
+
+		point, exists, err := repo.FindGrammarPoint(input.Slug)
+		if err != nil {
+			return nil, err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		point.Slug = input.Slug
+		point.CEFRLevel = defaultString(input.CEFRLevel, bundle.CEFRLevel)
+		point.Title = input.Title
+		point.TitleVI = input.TitleVI
+		point.SummaryVI = input.SummaryVI
+		point.Formula = input.Formula
+		point.ExamplesJSON = datatypes.JSON(input.Examples)
+		point.CommonMistakesJSON = nil
+		if len(input.CommonMistakes) > 0 {
+			point.CommonMistakesJSON = datatypes.JSON(input.CommonMistakes)
+		}
+		point.OrderIndex = defaultInt(input.OrderIndex, index+1)
+		if commit {
+			if err := repo.Save(&point); err != nil {
+				return nil, err
+			}
+		}
+		ids[input.Slug] = point.ID
+	}
+	return ids, nil
+}
+
+func collectGrammarSlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				if slug := grammarPointSlug(activity); slug != "" {
+					slugs = append(slugs, slug)
+				}
+			}
+		}
+	}
+	return slugs
 }
