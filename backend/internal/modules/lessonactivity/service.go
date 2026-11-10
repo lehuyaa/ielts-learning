@@ -1,6 +1,7 @@
 package lessonactivity
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"time"
@@ -18,11 +19,13 @@ var (
 
 type Service struct {
 	repository Repository
+	aiGrader   *AIGrader
 	now        func() time.Time
 }
 
-func NewService(repository Repository) Service {
-	return Service{repository: repository, now: time.Now}
+// NewService builds the service. aiGrader may be nil (no AI fallback grading).
+func NewService(repository Repository, aiGrader *AIGrader) Service {
+	return Service{repository: repository, aiGrader: aiGrader, now: time.Now}
 }
 
 // lessonContext holds a lesson with its activities and the user's progress.
@@ -156,7 +159,7 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 	}, nil
 }
 
-func (s Service) SubmitAnswer(userID uint, activityID uint, req SubmitAnswerRequest) (AnswerResult, error) {
+func (s Service) SubmitAnswer(ctx context.Context, userID uint, activityID uint, req SubmitAnswerRequest) (AnswerResult, error) {
 	activity, _, err := s.loadAccessibleActivity(userID, activityID)
 	if err != nil {
 		return AnswerResult{}, err
@@ -177,11 +180,12 @@ func (s Service) SubmitAnswer(userID uint, activityID uint, req SubmitAnswerRequ
 		return AnswerResult{}, ErrExerciseNotInActivity
 	}
 
-	result, err := Grade(exercise.Type, exercise.PayloadJSON, exercise.AnswerJSON, req.Answer)
+	matched, err := Grade(exercise.Type, exercise.PayloadJSON, exercise.AnswerJSON, req.Answer)
 	if err != nil {
 		return AnswerResult{}, err
 	}
-	// NeedsAI answers stay incorrect until AI short-answer grading (Task 55).
+	// AI runs outside the transaction: it can take seconds.
+	result := s.aiGrader.Resolve(ctx, userID, exercise, req.Answer, matched)
 
 	now := s.now()
 	answer := models.UserExerciseAnswer{
@@ -232,6 +236,9 @@ func (s Service) SubmitAnswer(userID uint, activityID uint, req SubmitAnswerRequ
 		CorrectAnswer: result.CorrectAnswer,
 		ExplanationVI: exercise.ExplanationVI,
 		AnsweredAt:    now,
+		GradedBy:      result.GradedBy,
+		AIFeedback:    result.AIFeedback,
+		AIStatus:      result.AIStatus,
 	}, nil
 }
 

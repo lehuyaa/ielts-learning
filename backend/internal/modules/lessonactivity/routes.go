@@ -8,9 +8,9 @@ import (
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
-func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.Manager) {
+func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.Manager, aiGrader *AIGrader) {
 	repository := NewRepository(db)
-	service := NewService(repository)
+	service := NewService(repository, aiGrader)
 	handler := NewHandler(service)
 
 	auth := middleware.Auth(jwtManager)

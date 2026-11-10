@@ -134,7 +134,7 @@ func (h Handler) SubmitAnswer(c *gin.Context) {
 		return
 	}
 
-	result, err := h.service.SubmitAnswer(userID, activityID, req)
+	result, err := h.service.SubmitAnswer(c.Request.Context(), userID, activityID, req)
 	if err != nil {
 		writeActivityError(c, err)
 		return

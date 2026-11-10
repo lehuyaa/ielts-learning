@@ -1,10 +1,8 @@
 import {
   ArrowRight,
-  CheckCircle2,
   PartyPopper,
   RotateCcw,
   Sparkles,
-  XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -13,7 +11,7 @@ import { APIError } from "@/api/api";
 import { ErrorState } from "@/components/state/ErrorState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { formatCorrectAnswer } from "@/features/exercise/payload";
+import { ExerciseFeedback } from "@/features/exercise/ExerciseFeedback";
 import { ExerciseRenderer } from "@/features/exercise/renderers";
 import { cn } from "@/lib/utils";
 import type {
@@ -220,7 +218,7 @@ function ActivitySession({
             />
           </section>
 
-          {result ? <Feedback correctText={formatCorrectAnswer(exercise, result.correctAnswer)} result={result} /> : null}
+          {result ? <ExerciseFeedback exercise={exercise} result={result} /> : null}
 
           {submitAnswer.error ? (
             <p className="mt-3 text-center text-sm text-red-600">
@@ -244,7 +242,7 @@ function ActivitySession({
               </Button>
             ) : (
               <Button disabled={!draft || submitAnswer.isPending} onClick={check} size="lg">
-                Kiểm tra
+                {submitAnswer.isPending ? "Đang chấm…" : "Kiểm tra"}
               </Button>
             )}
           </div>
@@ -281,35 +279,6 @@ function ProgressDots({
           />
         );
       })}
-    </div>
-  );
-}
-
-function Feedback({ result, correctText }: { result: AnswerResult; correctText: string }) {
-  const partial = !result.isCorrect && result.scoreRatio > 0;
-
-  return (
-    <div
-      className={cn(
-        "mt-4 rounded-2xl border p-4",
-        result.isCorrect ? "border-emerald-200 bg-emerald-50" : partial ? "border-amber-200 bg-amber-50" : "border-red-200 bg-red-50",
-      )}
-      role="status"
-    >
-      <p className="flex items-center gap-2 font-bold">
-        {result.isCorrect ? (
-          <CheckCircle2 className="size-5 text-emerald-600" />
-        ) : (
-          <XCircle className={cn("size-5", partial ? "text-amber-600" : "text-red-600")} />
-        )}
-        {result.isCorrect ? "Chính xác!" : partial ? `Gần đúng (${Math.round(result.scoreRatio * 100)}%)` : "Chưa đúng"}
-      </p>
-      {!result.isCorrect && correctText ? (
-        <p className="mt-1">
-          Đáp án: <span className="font-semibold">{correctText}</span>
-        </p>
-      ) : null}
-      {result.explanationVi ? <p className="mt-1 text-sm text-muted-foreground">{result.explanationVi}</p> : null}
     </div>
   );
 }

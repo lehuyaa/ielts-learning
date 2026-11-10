@@ -1,6 +1,7 @@
 package grammar
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"sort"
@@ -18,11 +19,13 @@ var ErrExerciseNotAvailable = errors.New("exercise not available for practice")
 
 type Service struct {
 	repository Repository
+	aiGrader   *lessonactivity.AIGrader
 	now        func() time.Time
 }
 
-func NewService(repository Repository) Service {
-	return Service{repository: repository, now: time.Now}
+// NewService builds the service. aiGrader may be nil (no AI fallback grading).
+func NewService(repository Repository, aiGrader *lessonactivity.AIGrader) Service {
+	return Service{repository: repository, aiGrader: aiGrader, now: time.Now}
 }
 
 func (s Service) List(userID uint, cefrLevel string) (ListResponse, error) {
@@ -118,7 +121,7 @@ func (s Service) Practice(userID uint, slug string) (PracticeResponse, error) {
 	return result, nil
 }
 
-func (s Service) Answer(userID uint, slug string, req PracticeAnswerRequest) (PracticeAnswerResponse, error) {
+func (s Service) Answer(ctx context.Context, userID uint, slug string, req PracticeAnswerRequest) (PracticeAnswerResponse, error) {
 	point, err := s.repository.FindGrammarPoint(slug)
 	if err != nil {
 		return PracticeAnswerResponse{}, err
@@ -138,10 +141,11 @@ func (s Service) Answer(userID uint, slug string, req PracticeAnswerRequest) (Pr
 		return PracticeAnswerResponse{}, ErrExerciseNotAvailable
 	}
 
-	graded, err := lessonactivity.Grade(exercise.Type, exercise.PayloadJSON, exercise.AnswerJSON, req.Answer)
+	matched, err := lessonactivity.Grade(exercise.Type, exercise.PayloadJSON, exercise.AnswerJSON, req.Answer)
 	if err != nil {
 		return PracticeAnswerResponse{}, err
 	}
+	graded := s.aiGrader.Resolve(ctx, userID, exercise, req.Answer, matched)
 
 	now := s.now()
 	err = s.repository.DB().Transaction(func(tx *gorm.DB) error {
@@ -175,6 +179,9 @@ func (s Service) Answer(userID uint, slug string, req PracticeAnswerRequest) (Pr
 		CorrectAnswer: graded.CorrectAnswer,
 		ExplanationVI: exercise.ExplanationVI,
 		AnsweredAt:    now,
+		GradedBy:      graded.GradedBy,
+		AIFeedback:    graded.AIFeedback,
+		AIStatus:      graded.AIStatus,
 		Progress:      toProgress(row, ok),
 	}, nil
 }

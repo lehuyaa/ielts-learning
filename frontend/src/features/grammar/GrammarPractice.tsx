@@ -1,9 +1,9 @@
-import { ArrowRight, CheckCircle2, RotateCcw, XCircle } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
 import { APIError } from "@/api/api";
 import { Button } from "@/components/ui/button";
-import { formatCorrectAnswer } from "@/features/exercise/payload";
+import { ExerciseFeedback } from "@/features/exercise/ExerciseFeedback";
 import { ExerciseRenderer } from "@/features/exercise/renderers";
 import { cn } from "@/lib/utils";
 import type { AnswerResult, ExerciseAnswer } from "@/types/activity";
@@ -89,7 +89,7 @@ export function GrammarPractice({ slug, exercises, onFinish, onRestart }: Gramma
               className={cn(
                 "h-2 flex-1 rounded-full",
                 itemResult?.isCorrect && "bg-emerald-500",
-                itemResult && !itemResult.isCorrect && "bg-red-400",
+                itemResult && !itemResult.isCorrect && (itemResult.scoreRatio > 0 ? "bg-amber-400" : "bg-red-400"),
                 !itemResult && (i === index ? "bg-primary" : "bg-muted"),
               )}
               key={item.id}
@@ -106,26 +106,7 @@ export function GrammarPractice({ slug, exercises, onFinish, onRestart }: Gramma
         <ExerciseRenderer exercise={exercise} key={exercise.id} onChange={setDraft} onSubmit={check} result={result} />
       </section>
 
-      {result ? (
-        <div
-          className={cn(
-            "mt-4 rounded-2xl border p-4",
-            result.isCorrect ? "border-emerald-200 bg-emerald-50" : "border-red-200 bg-red-50",
-          )}
-          role="status"
-        >
-          <p className="flex items-center gap-2 font-bold">
-            {result.isCorrect ? <CheckCircle2 className="size-5 text-emerald-600" /> : <XCircle className="size-5 text-red-600" />}
-            {result.isCorrect ? "Chính xác!" : "Chưa đúng"}
-          </p>
-          {!result.isCorrect ? (
-            <p className="mt-1">
-              Đáp án: <span className="font-semibold">{formatCorrectAnswer(exercise, result.correctAnswer)}</span>
-            </p>
-          ) : null}
-          {result.explanationVi ? <p className="mt-1 text-sm text-muted-foreground">{result.explanationVi}</p> : null}
-        </div>
-      ) : null}
+      {result ? <ExerciseFeedback exercise={exercise} result={result} /> : null}
 
       {answer.error ? (
         <p className="mt-3 text-center text-sm text-red-600">
@@ -143,7 +124,7 @@ export function GrammarPractice({ slug, exercises, onFinish, onRestart }: Gramma
           </Button>
         ) : (
           <Button disabled={!draft || answer.isPending} onClick={check} size="lg">
-            Kiểm tra
+            {answer.isPending ? "Đang chấm…" : "Kiểm tra"}
           </Button>
         )}
       </div>

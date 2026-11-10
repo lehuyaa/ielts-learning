@@ -135,7 +135,7 @@ func (h Handler) Answer(c *gin.Context) {
 		return
 	}
 
-	result, err := h.service.Answer(userID, c.Param("slug"), req)
+	result, err := h.service.Answer(c.Request.Context(), userID, c.Param("slug"), req)
 	if err != nil {
 		writeGrammarError(c, err)
 		return

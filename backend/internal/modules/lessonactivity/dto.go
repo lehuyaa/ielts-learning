@@ -93,6 +93,11 @@ type AnswerResult struct {
 	CorrectAnswer any             `json:"correctAnswer"`
 	ExplanationVI string          `json:"explanationVi"`
 	AnsweredAt    time.Time       `json:"answeredAt"`
+	// GradedBy is MATCH or AI; empty for answers loaded from history.
+	GradedBy   string      `json:"gradedBy,omitempty"`
+	AIFeedback *AIFeedback `json:"aiFeedback,omitempty"`
+	// AIStatus is LIMIT_REACHED or UNAVAILABLE when AI grading was skipped.
+	AIStatus string `json:"aiStatus,omitempty"`
 }
 
 type VocabularyCard struct {

@@ -63,13 +63,16 @@ type PracticeAnswerRequest struct {
 }
 
 type PracticeAnswerResponse struct {
-	ExerciseID    uint             `json:"exerciseId"`
-	Attempt       int              `json:"attempt"`
-	IsCorrect     bool             `json:"isCorrect"`
-	ScoreRatio    float64          `json:"scoreRatio"`
-	Answer        json.RawMessage  `json:"answer" swaggertype:"object"`
-	CorrectAnswer any              `json:"correctAnswer"`
-	ExplanationVI string           `json:"explanationVi"`
-	AnsweredAt    time.Time        `json:"answeredAt"`
-	Progress      ProgressResponse `json:"progress"`
+	ExerciseID    uint                       `json:"exerciseId"`
+	Attempt       int                        `json:"attempt"`
+	IsCorrect     bool                       `json:"isCorrect"`
+	ScoreRatio    float64                    `json:"scoreRatio"`
+	Answer        json.RawMessage            `json:"answer" swaggertype:"object"`
+	CorrectAnswer any                        `json:"correctAnswer"`
+	ExplanationVI string                     `json:"explanationVi"`
+	AnsweredAt    time.Time                  `json:"answeredAt"`
+	GradedBy      string                     `json:"gradedBy,omitempty"`
+	AIFeedback    *lessonactivity.AIFeedback `json:"aiFeedback,omitempty"`
+	AIStatus      string                     `json:"aiStatus,omitempty"`
+	Progress      ProgressResponse           `json:"progress"`
 }

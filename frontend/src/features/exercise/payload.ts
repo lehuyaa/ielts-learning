@@ -56,6 +56,13 @@ export function formatCorrectAnswer(exercise: Exercise, correct: unknown): strin
         .map((syllable, i) => (i === index ? syllable.toUpperCase() : syllable))
         .join("-");
     }
+    case "FILL_BLANK": {
+      // "She ___ (work) in a bank." -> "She works in a bank."
+      const sentence = str(exercise.payload, "sentence");
+      return /_{2,}/.test(sentence)
+        ? sentence.replace(/_{2,}(\s*\([^)]*\))?/, String(correct))
+        : String(correct);
+    }
     case "ERROR_CORRECTION": {
       const value = correct as { wrongIndex: number; text: string };
       const tokens = strList(exercise.payload, "tokens");

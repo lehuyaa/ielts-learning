@@ -27,6 +27,7 @@ import (
 	roadmapmodule "ielts-learning/backend/internal/modules/roadmap"
 	topicmodule "ielts-learning/backend/internal/modules/topic"
 	vocabularymodule "ielts-learning/backend/internal/modules/vocabulary"
+	sharedai "ielts-learning/backend/internal/shared/ai"
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
@@ -79,15 +80,17 @@ func main() {
 	coursemodule.RegisterRoutes(api, db, jwtManager)
 	topicmodule.RegisterRoutes(api, db, jwtManager)
 	lessonmodule.RegisterRoutes(api, db, jwtManager)
-	lessonactivitymodule.RegisterRoutes(api, db, jwtManager)
-	grammarmodule.RegisterRoutes(api, db, jwtManager)
+	aiClient := sharedai.New(cfg.OpenAIAPIKey, cfg.OpenAIModel, cfg.OpenAIBaseURL)
+	aiGrader := lessonactivitymodule.NewAIGrader(db, aiClient, cfg.OpenAIModel, cfg.AIShortAnswerDailyLimit)
+	lessonactivitymodule.RegisterRoutes(api, db, jwtManager, aiGrader)
+	grammarmodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	profilemodule.RegisterRoutes(api, db, jwtManager)
 	notificationmodule.RegisterRoutes(api, db, jwtManager)
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)
 	contentimportmodule.RegisterRoutes(api, db, jwtManager)
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
-	aiconversationmodule.RegisterRoutes(api, db, jwtManager, cfg.OpenAIAPIKey, cfg.OpenAIModel)
+	aiconversationmodule.RegisterRoutes(api, db, jwtManager, aiClient)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)

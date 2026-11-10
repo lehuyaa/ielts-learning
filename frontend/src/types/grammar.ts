@@ -1,4 +1,4 @@
-import type { Exercise } from '@/types/activity'
+import type { AnswerResult, Exercise } from '@/types/activity'
 
 export type GrammarExample = { en: string; vi: string; audioUrl?: string }
 export type GrammarMistake = { wrong: string; right: string; noteVi: string }
@@ -58,5 +58,8 @@ export type PracticeAnswerResult = {
   correctAnswer: unknown
   explanationVi: string
   answeredAt: string
+  gradedBy?: AnswerResult['gradedBy']
+  aiFeedback?: AnswerResult['aiFeedback']
+  aiStatus?: AnswerResult['aiStatus']
   progress: GrammarProgress
 }

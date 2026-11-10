@@ -105,6 +105,16 @@ export type AnswerResult = {
   correctAnswer: unknown
   explanationVi: string
   answeredAt: string
+  /** MATCH or AI; absent for answers loaded from history. */
+  gradedBy?: 'MATCH' | 'AI'
+  aiFeedback?: AIFeedback
+  /** Set when AI grading was allowed but skipped. */
+  aiStatus?: 'LIMIT_REACHED' | 'UNAVAILABLE'
+}
+
+export type AIFeedback = {
+  suggested: string
+  explanationVi: string
 }
 
 export type VocabularyCard = {

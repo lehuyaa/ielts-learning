@@ -1959,6 +1959,8 @@ Acceptance criteria:
 - "I don't like coffee" and "I do not like coffee." are both accepted without calling AI.
 - A valid alternative translation not in `reference` is accepted via AI.
 
+Status: done. Shared client `internal/shared/ai` (strict JSON schema, one retry on 5xx, `OPENAI_BASE_URL` optional). AI grading lives in `lessonactivity/ai_grading.go` and is used by the lesson player and grammar practice: verdicts are cached per exercise + normalised answer (`ai_short_answer_gradings`), calls are counted per user per day (`ai_usage_dailies`, `AI_SHORT_ANSWER_DAILY_LIMIT`, default 300). When the limit is reached or AI is not configured the answer keeps the matching result and the response carries `aiStatus` (`LIMIT_REACHED` / `UNAVAILABLE`) instead of failing.
+
 ---
 
 ### Task 56 - Grammar Mastery
