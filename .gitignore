@@ -7,3 +7,6 @@ frontend/public/audio/a1/
 
 # Uploaded media (imported recordings)
 backend/storage/
+
+# Screenshots and scratch files from Claude sessions
+Claude outputs/

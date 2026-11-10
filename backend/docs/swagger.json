@@ -12,6 +12,398 @@
     },
     "basePath": "/api/v1",
     "paths": {
+        "/activities/{activityId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return an activity with its exercises (prompt and public payload only — never the answers) and the answers already given in the current attempt.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Activities"
+                ],
+                "summary": "Get activity",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Activity ID",
+                        "name": "activityId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.ActivityDetailResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/activities/{activityId}/answers": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Grade one exercise answer and return immediate feedback. The answer shape depends on the exercise type (docs/foundation-spec.md §5.1).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Activities"
+                ],
+                "summary": "Answer an exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Activity ID",
+                        "name": "activityId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Answer",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/lessonactivity.SubmitAnswerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.AnswerResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/activities/{activityId}/complete": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Score the current attempt, pass or fail the activity, award XP on the first pass, and complete the lesson when every required activity is passed.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Activities"
+                ],
+                "summary": "Finish an activity attempt",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Activity ID",
+                        "name": "activityId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.CompleteActivityResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/content/import": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Validate a lesson content bundle and write every valid topic, lesson, activity and exercise in one transaction. Invalid items are skipped.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Import a content bundle",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Content bundle (.json, max 5MB)",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/contentimport.ImportResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/content/import/preview": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Validate a lesson content bundle (JSON, multipart field \"file\") and report what would be created, updated or skipped. Does not write to the database.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Preview a content bundle import",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Content bundle (.json, max 5MB)",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/contentimport.ImportResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/vocabularies/import": {
             "post": {
                 "security": [
@@ -795,6 +1187,273 @@
                 }
             }
         },
+        "/grammar-points": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return grammar points with the user's mastery (average of the last 20 answers) and the number of practice exercises available.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Grammar"
+                ],
+                "summary": "List grammar points",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CEFR level, e.g. A1",
+                        "name": "level",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/grammar.ListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/grammar-points/{slug}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return a grammar theory card with the user's mastery.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Grammar"
+                ],
+                "summary": "Get grammar point",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Grammar point slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/grammar.DetailResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/grammar-points/{slug}/practice": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return up to 10 exercises for a grammar point from lessons the user has started: recent mistakes first, then new ones. Answers are not included.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Grammar"
+                ],
+                "summary": "Get grammar practice",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Grammar point slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/grammar.PracticeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/grammar-points/{slug}/practice/answers": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Grade one practice answer, update the user's mastery, and return feedback.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Grammar"
+                ],
+                "summary": "Answer a grammar practice exercise",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Grammar point slug",
+                        "name": "slug",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Answer",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/grammar.PracticeAnswerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/grammar.PracticeAnswerResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/lessons/{lessonId}": {
             "get": {
                 "security": [
@@ -835,6 +1494,85 @@
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/lesson.DetailResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/lessons/{lessonId}/activities": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return a lesson's skill activities in order with the user's progress and lock state. Exercise data is not included.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Activities"
+                ],
+                "summary": "List lesson activities",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Lesson ID",
+                        "name": "lessonId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.LessonActivitiesResponse"
                                         }
                                     }
                                 }
@@ -1620,6 +2358,119 @@
                 }
             }
         },
+        "/phonemes": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return the IPA chart: every phoneme in chart order with its first example word and the user's accuracy.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pronunciation"
+                ],
+                "summary": "List sound cards",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/phoneme.ListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/phonemes/{symbol}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return one sound card (mouth position, example words, minimal pairs, common mistakes), the lessons that teach it and its neighbours on the chart.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pronunciation"
+                ],
+                "summary": "Get sound card",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "IPA symbol, URL-encoded (e.g. i%CB%90 for iː)",
+                        "name": "symbol",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/phoneme.DetailResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/reviews/due": {
             "get": {
                 "security": [
@@ -2218,6 +3069,88 @@
                 }
             }
         },
+        "contentimport.ImportResult": {
+            "type": "object",
+            "properties": {
+                "bundleErrors": {
+                    "description": "Errors that stop the whole bundle (bad course or level).",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "committed": {
+                    "type": "boolean"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/contentimport.ItemResult"
+                    }
+                },
+                "summary": {
+                    "$ref": "#/definitions/contentimport.ImportSummary"
+                },
+                "warnings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "contentimport.ImportSummary": {
+            "type": "object",
+            "properties": {
+                "activities": {
+                    "type": "integer"
+                },
+                "created": {
+                    "type": "integer"
+                },
+                "exercises": {
+                    "type": "integer"
+                },
+                "invalid": {
+                    "type": "integer"
+                },
+                "lessons": {
+                    "type": "integer"
+                },
+                "topics": {
+                    "type": "integer"
+                },
+                "updated": {
+                    "type": "integer"
+                }
+            }
+        },
+        "contentimport.ItemResult": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string"
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "course.CourseResponse": {
             "type": "object",
             "properties": {
@@ -2637,6 +3570,170 @@
                 }
             }
         },
+        "grammar.DetailResponse": {
+            "type": "object",
+            "properties": {
+                "exerciseCount": {
+                    "description": "ExerciseCount counts practice exercises available to the learner.",
+                    "type": "integer"
+                },
+                "grammarPoint": {
+                    "$ref": "#/definitions/lessonactivity.GrammarPointCard"
+                },
+                "progress": {
+                    "$ref": "#/definitions/grammar.ProgressResponse"
+                }
+            }
+        },
+        "grammar.GrammarPointItem": {
+            "type": "object",
+            "properties": {
+                "cefrLevel": {
+                    "type": "string"
+                },
+                "exerciseCount": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "progress": {
+                    "$ref": "#/definitions/grammar.ProgressResponse"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "titleVi": {
+                    "type": "string"
+                }
+            }
+        },
+        "grammar.ListResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/grammar.GrammarPointItem"
+                    }
+                }
+            }
+        },
+        "grammar.PracticeAnswerRequest": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "object"
+                },
+                "exerciseId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "grammar.PracticeAnswerResponse": {
+            "type": "object",
+            "properties": {
+                "aiFeedback": {
+                    "$ref": "#/definitions/lessonactivity.AIFeedback"
+                },
+                "aiStatus": {
+                    "type": "string"
+                },
+                "answer": {
+                    "type": "object"
+                },
+                "answeredAt": {
+                    "type": "string"
+                },
+                "attempt": {
+                    "type": "integer"
+                },
+                "correctAnswer": {},
+                "exerciseId": {
+                    "type": "integer"
+                },
+                "explanationVi": {
+                    "type": "string"
+                },
+                "gradedBy": {
+                    "type": "string"
+                },
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "progress": {
+                    "$ref": "#/definitions/grammar.ProgressResponse"
+                },
+                "scoreRatio": {
+                    "type": "number"
+                }
+            }
+        },
+        "grammar.PracticeExercise": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "lastResult": {
+                    "description": "LastResult is \"WRONG\", \"CORRECT\" or \"NEW\" for the learner's latest answer.",
+                    "type": "string"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "payload": {
+                    "type": "object"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "prompt": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ExerciseType"
+                }
+            }
+        },
+        "grammar.PracticeResponse": {
+            "type": "object",
+            "properties": {
+                "exercises": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/grammar.PracticeExercise"
+                    }
+                }
+            }
+        },
+        "grammar.ProgressResponse": {
+            "type": "object",
+            "properties": {
+                "correctCount": {
+                    "type": "integer"
+                },
+                "lastPracticedAt": {
+                    "type": "string"
+                },
+                "mastery": {
+                    "description": "Mastery is the average score (0-100) of the last 20 answers.",
+                    "type": "integer"
+                },
+                "practised": {
+                    "type": "boolean"
+                },
+                "wrongCount": {
+                    "type": "integer"
+                }
+            }
+        },
         "lesson.BandLevelResponse": {
             "type": "object",
             "properties": {
@@ -2855,6 +3952,501 @@
                 }
             }
         },
+        "lessonactivity.AIFeedback": {
+            "type": "object",
+            "properties": {
+                "explanationVi": {
+                    "type": "string"
+                },
+                "suggested": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.ActivitiesProgress": {
+            "type": "object",
+            "properties": {
+                "nextActivityId": {
+                    "description": "NextActivityID is the first unfinished activity, for resuming.",
+                    "type": "integer"
+                },
+                "passedRequired": {
+                    "type": "integer"
+                },
+                "totalRequired": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.ActivityDetail": {
+            "type": "object",
+            "properties": {
+                "attempts": {
+                    "type": "integer"
+                },
+                "bestScore": {
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "object"
+                },
+                "currentAttempt": {
+                    "type": "integer"
+                },
+                "exerciseCount": {
+                    "type": "integer"
+                },
+                "grammarPointId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "instructionsVi": {
+                    "type": "string"
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "isRequired": {
+                    "type": "boolean"
+                },
+                "lessonId": {
+                    "type": "integer"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "passScore": {
+                    "type": "integer"
+                },
+                "passageId": {
+                    "type": "integer"
+                },
+                "scenarioId": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ActivityType"
+                },
+                "xpReward": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.ActivityDetailResponse": {
+            "type": "object",
+            "properties": {
+                "activity": {
+                    "$ref": "#/definitions/lessonactivity.ActivityDetail"
+                },
+                "answers": {
+                    "description": "Answers already given in the current (unfinished) attempt, for resuming.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lessonactivity.AnswerResult"
+                    }
+                },
+                "exercises": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lessonactivity.ExerciseResponse"
+                    }
+                },
+                "grammarPoint": {
+                    "description": "GrammarPoint is the theory card of a GRAMMAR activity, when linked.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/lessonactivity.GrammarPointCard"
+                        }
+                    ]
+                },
+                "phonemes": {
+                    "description": "Phonemes are the sound cards of a PRONUNCIATION activity (content.phonemes).",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lessonactivity.PhonemeCard"
+                    }
+                },
+                "vocabularies": {
+                    "description": "Vocabularies are the word cards of a VOCABULARY activity, in content order.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lessonactivity.VocabularyCard"
+                    }
+                }
+            }
+        },
+        "lessonactivity.ActivityItem": {
+            "type": "object",
+            "properties": {
+                "attempts": {
+                    "type": "integer"
+                },
+                "bestScore": {
+                    "type": "integer"
+                },
+                "exerciseCount": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "instructionsVi": {
+                    "type": "string"
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "isRequired": {
+                    "type": "boolean"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "passScore": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ActivityType"
+                },
+                "xpReward": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.AnswerResult": {
+            "type": "object",
+            "properties": {
+                "aiFeedback": {
+                    "$ref": "#/definitions/lessonactivity.AIFeedback"
+                },
+                "aiStatus": {
+                    "description": "AIStatus is LIMIT_REACHED or UNAVAILABLE when AI grading was skipped.",
+                    "type": "string"
+                },
+                "answer": {
+                    "type": "object"
+                },
+                "answeredAt": {
+                    "type": "string"
+                },
+                "attempt": {
+                    "type": "integer"
+                },
+                "correctAnswer": {},
+                "exerciseId": {
+                    "type": "integer"
+                },
+                "explanationVi": {
+                    "type": "string"
+                },
+                "gradedBy": {
+                    "description": "GradedBy is MATCH or AI; empty for answers loaded from history.",
+                    "type": "string"
+                },
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "scoreRatio": {
+                    "type": "number"
+                }
+            }
+        },
+        "lessonactivity.CompleteActivityResponse": {
+            "type": "object",
+            "properties": {
+                "activity": {
+                    "$ref": "#/definitions/lessonactivity.ActivityItem"
+                },
+                "answeredCount": {
+                    "type": "integer"
+                },
+                "correctCount": {
+                    "type": "integer"
+                },
+                "lesson": {
+                    "$ref": "#/definitions/lessonactivity.LessonResult"
+                },
+                "nextActivityId": {
+                    "type": "integer"
+                },
+                "passed": {
+                    "type": "boolean"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "totalCount": {
+                    "type": "integer"
+                },
+                "xpAwarded": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.ExerciseResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "payload": {
+                    "type": "object"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "prompt": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ExerciseType"
+                }
+            }
+        },
+        "lessonactivity.GrammarPointCard": {
+            "type": "object",
+            "properties": {
+                "cefrLevel": {
+                    "type": "string"
+                },
+                "commonMistakes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "examples": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "formula": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "summaryVi": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "titleVi": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.LessonActivitiesResponse": {
+            "type": "object",
+            "properties": {
+                "activities": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lessonactivity.ActivityItem"
+                    }
+                },
+                "lesson": {
+                    "$ref": "#/definitions/lessonactivity.LessonSummary"
+                },
+                "progress": {
+                    "$ref": "#/definitions/lessonactivity.ActivitiesProgress"
+                }
+            }
+        },
+        "lessonactivity.LessonResult": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "justCompleted": {
+                    "description": "JustCompleted is true only for the activity that finished the lesson.",
+                    "type": "boolean"
+                },
+                "passedRequired": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.LessonStatus"
+                },
+                "totalRequired": {
+                    "type": "integer"
+                },
+                "xpAwarded": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.LessonSummary": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.LessonStatus"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.PhonemeCard": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "exampleWords": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "minimalPairs": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "mistakesVi": {
+                    "type": "string"
+                },
+                "mouthVi": {
+                    "type": "string"
+                },
+                "nameVi": {
+                    "type": "string"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "voiced": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "lessonactivity.SubmitAnswerRequest": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "object"
+                },
+                "exerciseId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.VocabularyCard": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "exampleMeaningVi": {
+                    "type": "string"
+                },
+                "exampleSentence": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ipa": {
+                    "type": "string"
+                },
+                "meaningEn": {
+                    "type": "string"
+                },
+                "meaningVi": {
+                    "type": "string"
+                },
+                "partOfSpeech": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "word": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ActivityType": {
+            "type": "string",
+            "enum": [
+                "VOCABULARY",
+                "PRONUNCIATION",
+                "GRAMMAR",
+                "LISTENING",
+                "READING",
+                "WRITING",
+                "SPEAKING",
+                "CHECKPOINT"
+            ],
+            "x-enum-varnames": [
+                "ActivityVocabulary",
+                "ActivityPronunciation",
+                "ActivityGrammar",
+                "ActivityListening",
+                "ActivityReading",
+                "ActivityWriting",
+                "ActivitySpeaking",
+                "ActivityCheckpoint"
+            ]
+        },
         "models.CourseKind": {
             "type": "string",
             "enum": [
@@ -2877,6 +4469,47 @@
                 "DifficultyBeginner",
                 "DifficultyIntermediate",
                 "DifficultyAdvanced"
+            ]
+        },
+        "models.ExerciseType": {
+            "type": "string",
+            "enum": [
+                "MULTIPLE_CHOICE",
+                "TRUE_FALSE",
+                "FILL_BLANK",
+                "REORDER",
+                "ERROR_CORRECTION",
+                "TRANSFORM",
+                "TRANSLATE_VI_EN",
+                "DICTATION",
+                "LISTEN_GAP_FILL",
+                "LISTEN_PICK_IMAGE",
+                "LISTEN_NUMBERS",
+                "MINIMAL_PAIR",
+                "IPA_TO_WORD",
+                "WORD_TO_IPA",
+                "ENDING_SOUND",
+                "WORD_STRESS",
+                "SPEAK"
+            ],
+            "x-enum-varnames": [
+                "ExerciseMultipleChoice",
+                "ExerciseTrueFalse",
+                "ExerciseFillBlank",
+                "ExerciseReorder",
+                "ExerciseErrorCorrection",
+                "ExerciseTransform",
+                "ExerciseTranslateViEn",
+                "ExerciseDictation",
+                "ExerciseListenGapFill",
+                "ExerciseListenPickImage",
+                "ExerciseListenNumbers",
+                "ExerciseMinimalPair",
+                "ExerciseIPAToWord",
+                "ExerciseWordToIPA",
+                "ExerciseEndingSound",
+                "ExerciseWordStress",
+                "ExerciseSpeak"
             ]
         },
         "models.FlashcardRating": {
@@ -3030,6 +4663,149 @@
                 },
                 "type": {
                     "$ref": "#/definitions/models.NotificationType"
+                }
+            }
+        },
+        "phoneme.DetailResponse": {
+            "type": "object",
+            "properties": {
+                "lessons": {
+                    "description": "Lessons whose pronunciation activity teaches this sound.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/phoneme.LessonLink"
+                    }
+                },
+                "next": {
+                    "type": "string"
+                },
+                "phoneme": {
+                    "$ref": "#/definitions/lessonactivity.PhonemeCard"
+                },
+                "previous": {
+                    "description": "Previous and Next are neighbours on the chart, for paging.",
+                    "type": "string"
+                },
+                "progress": {
+                    "$ref": "#/definitions/phoneme.ProgressResponse"
+                }
+            }
+        },
+        "phoneme.ExampleWord": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "ipa": {
+                    "type": "string"
+                },
+                "word": {
+                    "type": "string"
+                }
+            }
+        },
+        "phoneme.LessonLink": {
+            "type": "object",
+            "properties": {
+                "activityId": {
+                    "type": "integer"
+                },
+                "activityTitle": {
+                    "type": "string"
+                },
+                "lessonId": {
+                    "type": "integer"
+                },
+                "lessonTitle": {
+                    "type": "string"
+                },
+                "topicTitle": {
+                    "type": "string"
+                }
+            }
+        },
+        "phoneme.ListResponse": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/phoneme.PhonemeItem"
+                    }
+                },
+                "practiceTopics": {
+                    "description": "PracticeTopics are always-open topics with pronunciation practice (Sound Lab).",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/phoneme.PracticeTopic"
+                    }
+                }
+            }
+        },
+        "phoneme.PhonemeItem": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "exampleWord": {
+                    "$ref": "#/definitions/phoneme.ExampleWord"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "nameVi": {
+                    "type": "string"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "progress": {
+                    "$ref": "#/definitions/phoneme.ProgressResponse"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "voiced": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "phoneme.PracticeTopic": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lessonCount": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "phoneme.ProgressResponse": {
+            "type": "object",
+            "properties": {
+                "accuracy": {
+                    "type": "integer"
+                },
+                "attempts": {
+                    "type": "integer"
+                },
+                "lastPracticedAt": {
+                    "type": "string"
+                },
+                "practised": {
+                    "type": "boolean"
                 }
             }
         },
@@ -3810,6 +5586,10 @@
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                },
+                "track": {
+                    "description": "Track is CORE (skill lessons) or VOCABULARY (word-bank lessons).",
                     "type": "string"
                 }
             }

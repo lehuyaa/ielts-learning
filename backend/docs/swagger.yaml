@@ -133,6 +133,60 @@ definitions:
       username:
         type: string
     type: object
+  contentimport.ImportResult:
+    properties:
+      bundleErrors:
+        description: Errors that stop the whole bundle (bad course or level).
+        items:
+          type: string
+        type: array
+      committed:
+        type: boolean
+      items:
+        items:
+          $ref: '#/definitions/contentimport.ItemResult'
+        type: array
+      summary:
+        $ref: '#/definitions/contentimport.ImportSummary'
+      warnings:
+        items:
+          type: string
+        type: array
+    type: object
+  contentimport.ImportSummary:
+    properties:
+      activities:
+        type: integer
+      created:
+        type: integer
+      exercises:
+        type: integer
+      invalid:
+        type: integer
+      lessons:
+        type: integer
+      topics:
+        type: integer
+      updated:
+        type: integer
+    type: object
+  contentimport.ItemResult:
+    properties:
+      action:
+        type: string
+      errors:
+        items:
+          type: string
+        type: array
+      kind:
+        type: string
+      path:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    type: object
   course.CourseResponse:
     properties:
       bandMax:
@@ -406,6 +460,115 @@ definitions:
       total:
         type: integer
     type: object
+  grammar.DetailResponse:
+    properties:
+      exerciseCount:
+        description: ExerciseCount counts practice exercises available to the learner.
+        type: integer
+      grammarPoint:
+        $ref: '#/definitions/lessonactivity.GrammarPointCard'
+      progress:
+        $ref: '#/definitions/grammar.ProgressResponse'
+    type: object
+  grammar.GrammarPointItem:
+    properties:
+      cefrLevel:
+        type: string
+      exerciseCount:
+        type: integer
+      id:
+        type: integer
+      orderIndex:
+        type: integer
+      progress:
+        $ref: '#/definitions/grammar.ProgressResponse'
+      slug:
+        type: string
+      title:
+        type: string
+      titleVi:
+        type: string
+    type: object
+  grammar.ListResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/grammar.GrammarPointItem'
+        type: array
+    type: object
+  grammar.PracticeAnswerRequest:
+    properties:
+      answer:
+        type: object
+      exerciseId:
+        type: integer
+    type: object
+  grammar.PracticeAnswerResponse:
+    properties:
+      aiFeedback:
+        $ref: '#/definitions/lessonactivity.AIFeedback'
+      aiStatus:
+        type: string
+      answer:
+        type: object
+      answeredAt:
+        type: string
+      attempt:
+        type: integer
+      correctAnswer: {}
+      exerciseId:
+        type: integer
+      explanationVi:
+        type: string
+      gradedBy:
+        type: string
+      isCorrect:
+        type: boolean
+      progress:
+        $ref: '#/definitions/grammar.ProgressResponse'
+      scoreRatio:
+        type: number
+    type: object
+  grammar.PracticeExercise:
+    properties:
+      id:
+        type: integer
+      lastResult:
+        description: LastResult is "WRONG", "CORRECT" or "NEW" for the learner's latest
+          answer.
+        type: string
+      orderIndex:
+        type: integer
+      payload:
+        type: object
+      points:
+        type: integer
+      prompt:
+        type: string
+      type:
+        $ref: '#/definitions/models.ExerciseType'
+    type: object
+  grammar.PracticeResponse:
+    properties:
+      exercises:
+        items:
+          $ref: '#/definitions/grammar.PracticeExercise'
+        type: array
+    type: object
+  grammar.ProgressResponse:
+    properties:
+      correctCount:
+        type: integer
+      lastPracticedAt:
+        type: string
+      mastery:
+        description: Mastery is the average score (0-100) of the last 20 answers.
+        type: integer
+      practised:
+        type: boolean
+      wrongCount:
+        type: integer
+    type: object
   lesson.BandLevelResponse:
     properties:
       bandScore:
@@ -549,6 +712,341 @@ definitions:
       wrongCount:
         type: integer
     type: object
+  lessonactivity.AIFeedback:
+    properties:
+      explanationVi:
+        type: string
+      suggested:
+        type: string
+    type: object
+  lessonactivity.ActivitiesProgress:
+    properties:
+      nextActivityId:
+        description: NextActivityID is the first unfinished activity, for resuming.
+        type: integer
+      passedRequired:
+        type: integer
+      totalRequired:
+        type: integer
+    type: object
+  lessonactivity.ActivityDetail:
+    properties:
+      attempts:
+        type: integer
+      bestScore:
+        type: integer
+      content:
+        type: object
+      currentAttempt:
+        type: integer
+      exerciseCount:
+        type: integer
+      grammarPointId:
+        type: integer
+      id:
+        type: integer
+      instructionsVi:
+        type: string
+      isLocked:
+        type: boolean
+      isRequired:
+        type: boolean
+      lessonId:
+        type: integer
+      orderIndex:
+        type: integer
+      passScore:
+        type: integer
+      passageId:
+        type: integer
+      scenarioId:
+        type: integer
+      score:
+        type: integer
+      slug:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/models.ActivityType'
+      xpReward:
+        type: integer
+    type: object
+  lessonactivity.ActivityDetailResponse:
+    properties:
+      activity:
+        $ref: '#/definitions/lessonactivity.ActivityDetail'
+      answers:
+        description: Answers already given in the current (unfinished) attempt, for
+          resuming.
+        items:
+          $ref: '#/definitions/lessonactivity.AnswerResult'
+        type: array
+      exercises:
+        items:
+          $ref: '#/definitions/lessonactivity.ExerciseResponse'
+        type: array
+      grammarPoint:
+        allOf:
+        - $ref: '#/definitions/lessonactivity.GrammarPointCard'
+        description: GrammarPoint is the theory card of a GRAMMAR activity, when linked.
+      phonemes:
+        description: Phonemes are the sound cards of a PRONUNCIATION activity (content.phonemes).
+        items:
+          $ref: '#/definitions/lessonactivity.PhonemeCard'
+        type: array
+      vocabularies:
+        description: Vocabularies are the word cards of a VOCABULARY activity, in
+          content order.
+        items:
+          $ref: '#/definitions/lessonactivity.VocabularyCard'
+        type: array
+    type: object
+  lessonactivity.ActivityItem:
+    properties:
+      attempts:
+        type: integer
+      bestScore:
+        type: integer
+      exerciseCount:
+        type: integer
+      id:
+        type: integer
+      instructionsVi:
+        type: string
+      isLocked:
+        type: boolean
+      isRequired:
+        type: boolean
+      orderIndex:
+        type: integer
+      passScore:
+        type: integer
+      score:
+        type: integer
+      slug:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+      type:
+        $ref: '#/definitions/models.ActivityType'
+      xpReward:
+        type: integer
+    type: object
+  lessonactivity.AnswerResult:
+    properties:
+      aiFeedback:
+        $ref: '#/definitions/lessonactivity.AIFeedback'
+      aiStatus:
+        description: AIStatus is LIMIT_REACHED or UNAVAILABLE when AI grading was
+          skipped.
+        type: string
+      answer:
+        type: object
+      answeredAt:
+        type: string
+      attempt:
+        type: integer
+      correctAnswer: {}
+      exerciseId:
+        type: integer
+      explanationVi:
+        type: string
+      gradedBy:
+        description: GradedBy is MATCH or AI; empty for answers loaded from history.
+        type: string
+      isCorrect:
+        type: boolean
+      scoreRatio:
+        type: number
+    type: object
+  lessonactivity.CompleteActivityResponse:
+    properties:
+      activity:
+        $ref: '#/definitions/lessonactivity.ActivityItem'
+      answeredCount:
+        type: integer
+      correctCount:
+        type: integer
+      lesson:
+        $ref: '#/definitions/lessonactivity.LessonResult'
+      nextActivityId:
+        type: integer
+      passed:
+        type: boolean
+      score:
+        type: integer
+      totalCount:
+        type: integer
+      xpAwarded:
+        type: integer
+    type: object
+  lessonactivity.ExerciseResponse:
+    properties:
+      id:
+        type: integer
+      orderIndex:
+        type: integer
+      payload:
+        type: object
+      points:
+        type: integer
+      prompt:
+        type: string
+      type:
+        $ref: '#/definitions/models.ExerciseType'
+    type: object
+  lessonactivity.GrammarPointCard:
+    properties:
+      cefrLevel:
+        type: string
+      commonMistakes:
+        items:
+          type: object
+        type: array
+      examples:
+        items:
+          type: object
+        type: array
+      formula:
+        type: string
+      id:
+        type: integer
+      slug:
+        type: string
+      summaryVi:
+        type: string
+      title:
+        type: string
+      titleVi:
+        type: string
+    type: object
+  lessonactivity.LessonActivitiesResponse:
+    properties:
+      activities:
+        items:
+          $ref: '#/definitions/lessonactivity.ActivityItem'
+        type: array
+      lesson:
+        $ref: '#/definitions/lessonactivity.LessonSummary'
+      progress:
+        $ref: '#/definitions/lessonactivity.ActivitiesProgress'
+    type: object
+  lessonactivity.LessonResult:
+    properties:
+      id:
+        type: integer
+      justCompleted:
+        description: JustCompleted is true only for the activity that finished the
+          lesson.
+        type: boolean
+      passedRequired:
+        type: integer
+      score:
+        type: integer
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      totalRequired:
+        type: integer
+      xpAwarded:
+        type: integer
+    type: object
+  lessonactivity.LessonSummary:
+    properties:
+      id:
+        type: integer
+      slug:
+        type: string
+      status:
+        $ref: '#/definitions/models.LessonStatus'
+      title:
+        type: string
+    type: object
+  lessonactivity.PhonemeCard:
+    properties:
+      audioUrl:
+        type: string
+      exampleWords:
+        items:
+          type: object
+        type: array
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      kind:
+        type: string
+      minimalPairs:
+        items:
+          type: object
+        type: array
+      mistakesVi:
+        type: string
+      mouthVi:
+        type: string
+      nameVi:
+        type: string
+      orderIndex:
+        type: integer
+      symbol:
+        type: string
+      voiced:
+        type: boolean
+    type: object
+  lessonactivity.SubmitAnswerRequest:
+    properties:
+      answer:
+        type: object
+      exerciseId:
+        type: integer
+    type: object
+  lessonactivity.VocabularyCard:
+    properties:
+      audioUrl:
+        type: string
+      exampleMeaningVi:
+        type: string
+      exampleSentence:
+        type: string
+      id:
+        type: integer
+      ipa:
+        type: string
+      meaningEn:
+        type: string
+      meaningVi:
+        type: string
+      partOfSpeech:
+        type: string
+      slug:
+        type: string
+      word:
+        type: string
+    type: object
+  models.ActivityType:
+    enum:
+    - VOCABULARY
+    - PRONUNCIATION
+    - GRAMMAR
+    - LISTENING
+    - READING
+    - WRITING
+    - SPEAKING
+    - CHECKPOINT
+    type: string
+    x-enum-varnames:
+    - ActivityVocabulary
+    - ActivityPronunciation
+    - ActivityGrammar
+    - ActivityListening
+    - ActivityReading
+    - ActivityWriting
+    - ActivitySpeaking
+    - ActivityCheckpoint
   models.CourseKind:
     enum:
     - IELTS
@@ -567,6 +1065,44 @@ definitions:
     - DifficultyBeginner
     - DifficultyIntermediate
     - DifficultyAdvanced
+  models.ExerciseType:
+    enum:
+    - MULTIPLE_CHOICE
+    - TRUE_FALSE
+    - FILL_BLANK
+    - REORDER
+    - ERROR_CORRECTION
+    - TRANSFORM
+    - TRANSLATE_VI_EN
+    - DICTATION
+    - LISTEN_GAP_FILL
+    - LISTEN_PICK_IMAGE
+    - LISTEN_NUMBERS
+    - MINIMAL_PAIR
+    - IPA_TO_WORD
+    - WORD_TO_IPA
+    - ENDING_SOUND
+    - WORD_STRESS
+    - SPEAK
+    type: string
+    x-enum-varnames:
+    - ExerciseMultipleChoice
+    - ExerciseTrueFalse
+    - ExerciseFillBlank
+    - ExerciseReorder
+    - ExerciseErrorCorrection
+    - ExerciseTransform
+    - ExerciseTranslateViEn
+    - ExerciseDictation
+    - ExerciseListenGapFill
+    - ExerciseListenPickImage
+    - ExerciseListenNumbers
+    - ExerciseMinimalPair
+    - ExerciseIPAToWord
+    - ExerciseWordToIPA
+    - ExerciseEndingSound
+    - ExerciseWordStress
+    - ExerciseSpeak
   models.FlashcardRating:
     enum:
     - AGAIN
@@ -679,6 +1215,101 @@ definitions:
         type: string
       type:
         $ref: '#/definitions/models.NotificationType'
+    type: object
+  phoneme.DetailResponse:
+    properties:
+      lessons:
+        description: Lessons whose pronunciation activity teaches this sound.
+        items:
+          $ref: '#/definitions/phoneme.LessonLink'
+        type: array
+      next:
+        type: string
+      phoneme:
+        $ref: '#/definitions/lessonactivity.PhonemeCard'
+      previous:
+        description: Previous and Next are neighbours on the chart, for paging.
+        type: string
+      progress:
+        $ref: '#/definitions/phoneme.ProgressResponse'
+    type: object
+  phoneme.ExampleWord:
+    properties:
+      audioUrl:
+        type: string
+      ipa:
+        type: string
+      word:
+        type: string
+    type: object
+  phoneme.LessonLink:
+    properties:
+      activityId:
+        type: integer
+      activityTitle:
+        type: string
+      lessonId:
+        type: integer
+      lessonTitle:
+        type: string
+      topicTitle:
+        type: string
+    type: object
+  phoneme.ListResponse:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/phoneme.PhonemeItem'
+        type: array
+      practiceTopics:
+        description: PracticeTopics are always-open topics with pronunciation practice
+          (Sound Lab).
+        items:
+          $ref: '#/definitions/phoneme.PracticeTopic'
+        type: array
+    type: object
+  phoneme.PhonemeItem:
+    properties:
+      audioUrl:
+        type: string
+      exampleWord:
+        $ref: '#/definitions/phoneme.ExampleWord'
+      id:
+        type: integer
+      kind:
+        type: string
+      nameVi:
+        type: string
+      orderIndex:
+        type: integer
+      progress:
+        $ref: '#/definitions/phoneme.ProgressResponse'
+      symbol:
+        type: string
+      voiced:
+        type: boolean
+    type: object
+  phoneme.PracticeTopic:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      lessonCount:
+        type: integer
+      title:
+        type: string
+    type: object
+  phoneme.ProgressResponse:
+    properties:
+      accuracy:
+        type: integer
+      attempts:
+        type: integer
+      lastPracticedAt:
+        type: string
+      practised:
+        type: boolean
     type: object
   profile.ActivitySummaryResponse:
     properties:
@@ -1190,6 +1821,9 @@ definitions:
         type: string
       title:
         type: string
+      track:
+        description: Track is CORE (skill lessons) or VOCABULARY (word-bank lessons).
+        type: string
     type: object
   vocabulary.BandLevelResponse:
     properties:
@@ -1423,6 +2057,251 @@ info:
   title: IELTS Learning API
   version: v1
 paths:
+  /activities/{activityId}:
+    get:
+      consumes:
+      - application/json
+      description: Return an activity with its exercises (prompt and public payload
+        only — never the answers) and the answers already given in the current attempt.
+      parameters:
+      - description: Activity ID
+        in: path
+        name: activityId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/lessonactivity.ActivityDetailResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get activity
+      tags:
+      - Activities
+  /activities/{activityId}/answers:
+    post:
+      consumes:
+      - application/json
+      description: Grade one exercise answer and return immediate feedback. The answer
+        shape depends on the exercise type (docs/foundation-spec.md §5.1).
+      parameters:
+      - description: Activity ID
+        in: path
+        name: activityId
+        required: true
+        type: integer
+      - description: Answer
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/lessonactivity.SubmitAnswerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/lessonactivity.AnswerResult'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Answer an exercise
+      tags:
+      - Activities
+  /activities/{activityId}/complete:
+    post:
+      consumes:
+      - application/json
+      description: Score the current attempt, pass or fail the activity, award XP
+        on the first pass, and complete the lesson when every required activity is
+        passed.
+      parameters:
+      - description: Activity ID
+        in: path
+        name: activityId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/lessonactivity.CompleteActivityResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Finish an activity attempt
+      tags:
+      - Activities
+  /admin/content/import:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Validate a lesson content bundle and write every valid topic, lesson,
+        activity and exercise in one transaction. Invalid items are skipped.
+      parameters:
+      - description: Content bundle (.json, max 5MB)
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/contentimport.ImportResult'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Import a content bundle
+      tags:
+      - Admin
+  /admin/content/import/preview:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Validate a lesson content bundle (JSON, multipart field "file")
+        and report what would be created, updated or skipped. Does not write to the
+        database.
+      parameters:
+      - description: Content bundle (.json, max 5MB)
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/contentimport.ImportResult'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Preview a content bundle import
+      tags:
+      - Admin
   /admin/vocabularies/import:
     post:
       consumes:
@@ -1902,6 +2781,168 @@ paths:
       summary: Save flashcard review
       tags:
       - Flashcards
+  /grammar-points:
+    get:
+      description: Return grammar points with the user's mastery (average of the last
+        20 answers) and the number of practice exercises available.
+      parameters:
+      - description: CEFR level, e.g. A1
+        in: query
+        name: level
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/grammar.ListResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List grammar points
+      tags:
+      - Grammar
+  /grammar-points/{slug}:
+    get:
+      description: Return a grammar theory card with the user's mastery.
+      parameters:
+      - description: Grammar point slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/grammar.DetailResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get grammar point
+      tags:
+      - Grammar
+  /grammar-points/{slug}/practice:
+    get:
+      description: 'Return up to 10 exercises for a grammar point from lessons the
+        user has started: recent mistakes first, then new ones. Answers are not included.'
+      parameters:
+      - description: Grammar point slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/grammar.PracticeResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get grammar practice
+      tags:
+      - Grammar
+  /grammar-points/{slug}/practice/answers:
+    post:
+      consumes:
+      - application/json
+      description: Grade one practice answer, update the user's mastery, and return
+        feedback.
+      parameters:
+      - description: Grammar point slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Answer
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/grammar.PracticeAnswerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/grammar.PracticeAnswerResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Answer a grammar practice exercise
+      tags:
+      - Grammar
   /lessons/{lessonId}:
     get:
       consumes:
@@ -1951,6 +2992,55 @@ paths:
       summary: Get lesson detail
       tags:
       - Lessons
+  /lessons/{lessonId}/activities:
+    get:
+      consumes:
+      - application/json
+      description: Return a lesson's skill activities in order with the user's progress
+        and lock state. Exercise data is not included.
+      parameters:
+      - description: Lesson ID
+        in: path
+        name: lessonId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/lessonactivity.LessonActivitiesResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List lesson activities
+      tags:
+      - Activities
   /lessons/{lessonId}/flashcards:
     get:
       consumes:
@@ -2409,6 +3499,74 @@ paths:
       summary: Mark notification as read
       tags:
       - Notifications
+  /phonemes:
+    get:
+      description: 'Return the IPA chart: every phoneme in chart order with its first
+        example word and the user''s accuracy.'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/phoneme.ListResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: List sound cards
+      tags:
+      - Pronunciation
+  /phonemes/{symbol}:
+    get:
+      description: Return one sound card (mouth position, example words, minimal pairs,
+        common mistakes), the lessons that teach it and its neighbours on the chart.
+      parameters:
+      - description: IPA symbol, URL-encoded (e.g. i%CB%90 for iː)
+        in: path
+        name: symbol
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.SuccessResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/phoneme.DetailResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get sound card
+      tags:
+      - Pronunciation
   /reviews/due:
     get:
       consumes:
