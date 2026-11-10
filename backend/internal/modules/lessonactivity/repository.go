@@ -331,3 +331,11 @@ func (r Repository) FindGrammarPoint(id uint) (models.GrammarPoint, bool, error)
 	}
 	return point, true, nil
 }
+
+func (r Repository) FindPhonemes(symbols []string) ([]models.Phoneme, error) {
+	var phonemes []models.Phoneme
+	if err := r.db.Where("symbol IN ?", symbols).Find(&phonemes).Error; err != nil {
+		return nil, fmt.Errorf("find phonemes: %w", err)
+	}
+	return phonemes, nil
+}

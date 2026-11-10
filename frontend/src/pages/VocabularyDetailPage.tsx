@@ -23,6 +23,7 @@ import { mapVocabularyDetail } from '@/features/vocabulary/mapVocabulary'
 import { cn } from '@/lib/utils'
 import type { VocabularyDetailViewModel } from '@/types/vocabulary'
 import { playPronunciation } from '@/lib/pronunciation'
+import { IpaText } from "@/features/pronunciation/IpaText";
 
 const tabs = [
   'Meaning',
@@ -151,8 +152,8 @@ function WordHero({ vocabulary }: { vocabulary: VocabularyDetailViewModel }) {
           <h2 className="mt-4 text-4xl font-bold tracking-normal md:text-5xl">
             {vocabulary.word}
           </h2>
-          <p className="mt-3 font-mono text-lg font-semibold text-white/75">
-            {vocabulary.ipa}
+          <p className="mt-3 text-lg font-semibold text-white/75">
+            <IpaText ipa={vocabulary.ipa} />
             <span className="ml-4 font-sans text-white/80">
               {vocabulary.partOfSpeech}
             </span>

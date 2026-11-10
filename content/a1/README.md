@@ -5,7 +5,9 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 
 | File | What it is |
 |---|---|
-| `build_grammar.py` → `a1-grammar.json` | The 9 A1 grammar theory cards (G1-G9). **Import this first** |
+| `build_grammar.py` → `a1-grammar.json` | The 9 A1 grammar theory cards (G1-G9). **Import first** |
+| `build_sounds.py` → `a1-sounds.json` | The 40 sound cards (IPA chart) + the always-open "Sound Lab" topic: 178 minimal pairs, ending -s / -ed, 2-syllable stress. **Import first** |
+| `audio_manifest_sounds.tsv` | Words and minimal-pair audio for the sound cards and Sound Lab |
 | `build_week1.py` | Authoring source for Week 1 (edit this, not the JSON) |
 | `week-1.json` | Generated bundle: 1 topic, 9 situation lessons + review, 49 activities, 184 exercises |
 | `audio_manifest_week-1.tsv` | Sentences/words to synthesise (`path<TAB>text`) |
@@ -16,14 +18,18 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 ```bash
 cd content/a1
 python3 build_grammar.py
+python3 build_sounds.py --cmu path/to/cmudict.dict                  # CMU dict: github.com/cmusphinx/cmudict
 python3 build_week1.py --vocab ../a1-vocabulary/out/a1_rows.json   # --vocab optional: checks word slugs
-./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/w1/*.m4a
+./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/{w1,sounds,words}/*.m4a
 ```
 
-Then upload `a1-grammar.json`, then `week-1.json` at **Admin → Import Lessons**
+Then upload `a1-grammar.json` and `a1-sounds.json`, then `week-1.json` at **Admin → Import Lessons**
 (Preview, then Confirm import). GRAMMAR activities link to their theory card
 through `content.grammarPointSlug`; exercises practise a card through the skill
 tag `grammar:<slug>`, which also drives the learner's mastery on `/grammar`.
+PRONUNCIATION activities list their sounds in `content.phonemes` (symbols as on
+the sound cards); the player shows those cards above the exercises and
+`/pronunciation/:symbol` lists the lessons that teach each sound.
 Re-importing updates lessons in place (matched by slug; exercises by position),
 so learner progress is kept. Every exercise is self-checked on import: the
 expected answer must grade as correct, otherwise the item is skipped.
@@ -48,3 +54,12 @@ Prerequisites: `go run ./cmd/seed -only-foundation` and the A1 vocabulary import
 
 Reading and speaking activities are optional; speaking is a read-aloud
 self-check until AI speaking and pronunciation scoring arrive (Tasks 67-72).
+
+## Sound cards and Sound Lab
+
+`build_sounds.py` holds the 40 cards (Vietnamese mouth notes and typical
+mistakes), the minimal pairs and the ending/stress word sets. IPA comes from the
+CMU dictionary converted to our Oxford NAmE style; every minimal pair is checked
+to differ in exactly the two sounds it teaches (the script stops otherwise), and
+`IPA_OVERRIDES` fixes words CMU gets wrong for this style. Minimal-pair audio
+uses neutral file names (`sounds/mp-…`) so the answer is not visible in the URL.

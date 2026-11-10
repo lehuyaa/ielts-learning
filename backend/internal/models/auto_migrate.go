@@ -41,5 +41,7 @@ func AutoMigrateModels() []interface{} {
 		&UserGrammarProgress{},
 		&AIUsageDaily{},
 		&AIShortAnswerGrading{},
+		&Phoneme{},
+		&UserPhonemeProgress{},
 	}
 }

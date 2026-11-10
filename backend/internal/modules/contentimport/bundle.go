@@ -11,9 +11,9 @@ type Bundle struct {
 	Topics     []TopicInput `json:"topics"`
 
 	GrammarPoints []GrammarPointInput `json:"grammarPoints"`
+	Phonemes      []PhonemeInput      `json:"phonemes"`
 
 	// Reserved for later tasks; a bundle that uses them gets a warning.
-	Phonemes  json.RawMessage `json:"phonemes,omitempty" swaggertype:"array,object"`
 	Passages  json.RawMessage `json:"passages,omitempty" swaggertype:"array,object"`
 	Scenarios json.RawMessage `json:"scenarios,omitempty" swaggertype:"array,object"`
 }
@@ -29,6 +29,21 @@ type GrammarPointInput struct {
 	Examples       json.RawMessage `json:"examples" swaggertype:"array,object"`
 	CommonMistakes json.RawMessage `json:"commonMistakes" swaggertype:"array,object"`
 	OrderIndex     int             `json:"orderIndex"`
+}
+
+// PhonemeInput is a sound card (docs/foundation-spec.md §3.3), upserted by symbol.
+type PhonemeInput struct {
+	Symbol       string          `json:"symbol"`
+	Kind         string          `json:"kind"`
+	Voiced       *bool           `json:"voiced"`
+	NameVI       string          `json:"nameVi"`
+	ExampleWords json.RawMessage `json:"exampleWords" swaggertype:"array,object"`
+	MinimalPairs json.RawMessage `json:"minimalPairs" swaggertype:"array,object"`
+	MouthVI      string          `json:"mouthVi"`
+	MistakesVI   string          `json:"mistakesVi"`
+	AudioURL     string          `json:"audioUrl"`
+	ImageURL     *string         `json:"imageUrl"`
+	OrderIndex   int             `json:"orderIndex"`
 }
 
 type TopicInput struct {

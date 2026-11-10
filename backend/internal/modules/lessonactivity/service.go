@@ -140,6 +140,11 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		}
 	}
 
+	phonemes, err := s.phonemeCards(activity)
+	if err != nil {
+		return ActivityDetailResponse{}, err
+	}
+
 	counts := map[uint]int{activity.ID: len(exercises)}
 	locks := activityLocks(ctx.activities, ctx.progress)
 	return ActivityDetailResponse{
@@ -155,6 +160,7 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		Exercises:    exerciseResponses,
 		Vocabularies: vocabularies,
 		GrammarPoint: grammarPoint,
+		Phonemes:     phonemes,
 		Answers:      answerResults,
 	}, nil
 }
@@ -435,4 +441,29 @@ func markLessonStarted(tx Repository, userID uint, lessonID uint, now time.Time)
 	}
 	progress.LastStudiedAt = &now
 	return tx.SaveLessonProgress(&progress)
+}
+
+// phonemeCards returns the sound cards named in content.phonemes, in order.
+func (s Service) phonemeCards(activity models.LessonActivity) ([]PhonemeCard, error) {
+	var content struct {
+		Phonemes []string `json:"phonemes"`
+	}
+	cards := []PhonemeCard{}
+	if len(activity.ContentJSON) == 0 || json.Unmarshal(activity.ContentJSON, &content) != nil || len(content.Phonemes) == 0 {
+		return cards, nil
+	}
+	found, err := s.repository.FindPhonemes(content.Phonemes)
+	if err != nil {
+		return nil, err
+	}
+	bySymbol := make(map[string]models.Phoneme, len(found))
+	for _, phoneme := range found {
+		bySymbol[phoneme.Symbol] = phoneme
+	}
+	for _, symbol := range content.Phonemes {
+		if phoneme, ok := bySymbol[symbol]; ok {
+			cards = append(cards, ToPhonemeCard(phoneme))
+		}
+	}
+	return cards, nil
 }

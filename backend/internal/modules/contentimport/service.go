@@ -53,7 +53,7 @@ func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
 
 	result := ImportResult{BundleErrors: []string{}, Warnings: []string{}, Items: []ItemResult{}}
 	for name, raw := range map[string]json.RawMessage{
-		"phonemes": bundle.Phonemes, "passages": bundle.Passages, "scenarios": bundle.Scenarios,
+		"passages": bundle.Passages, "scenarios": bundle.Scenarios,
 	} {
 		if len(raw) > 0 && string(raw) != "[]" && string(raw) != "null" {
 			result.Warnings = append(result.Warnings, fmt.Sprintf("%s are not imported yet and were ignored", name))
@@ -101,6 +101,12 @@ func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
 }
 
 func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, knownVocabulary map[string]bool, commit bool, result *ImportResult) error {
+	if err := s.applyPhonemes(repo, bundle, commit, result); err != nil {
+		return err
+	}
+	if err := warnUnknownPhonemes(repo, bundle, result); err != nil {
+		return err
+	}
 	grammarIDs, err := s.applyGrammarPoints(repo, bundle, commit, result)
 	if err != nil {
 		return err
@@ -468,4 +474,100 @@ func collectGrammarSlugs(bundle Bundle) []string {
 		}
 	}
 	return slugs
+}
+
+func (s Service) applyPhonemes(repo Repository, bundle Bundle, commit bool, result *ImportResult) error {
+	seen := map[string]bool{}
+	for index, input := range bundle.Phonemes {
+		item := ItemResult{Kind: KindPhoneme, Path: "phoneme:" + input.Symbol, Title: "/" + input.Symbol + "/", Errors: validatePhoneme(input)}
+		if seen[input.Symbol] {
+			item.Errors = append(item.Errors, "duplicate phoneme symbol in this file")
+		}
+		seen[input.Symbol] = true
+
+		phoneme, exists, err := repo.FindPhoneme(input.Symbol)
+		if err != nil {
+			return err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		phoneme.Symbol = input.Symbol
+		phoneme.Kind = models.PhonemeKind(input.Kind)
+		phoneme.Voiced = input.Voiced
+		phoneme.NameVI = input.NameVI
+		phoneme.ExampleWordsJSON = datatypes.JSON(input.ExampleWords)
+		phoneme.MinimalPairsJSON = datatypes.JSON(jsonOrEmptyList(input.MinimalPairs))
+		phoneme.MouthVI = input.MouthVI
+		phoneme.MistakesVI = input.MistakesVI
+		phoneme.AudioURL = input.AudioURL
+		phoneme.ImageURL = input.ImageURL
+		phoneme.OrderIndex = defaultInt(input.OrderIndex, index+1)
+		if commit {
+			if err := repo.Save(&phoneme); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// warnUnknownPhonemes reports PRONUNCIATION activities whose content.phonemes
+// name a sound that is neither in this file nor in the database.
+func warnUnknownPhonemes(repo Repository, bundle Bundle, result *ImportResult) error {
+	symbols := collectPhonemeSymbols(bundle)
+	if len(symbols) == 0 {
+		return nil
+	}
+	known, err := repo.ExistingPhonemeSymbols(symbols)
+	if err != nil {
+		return err
+	}
+	for _, input := range bundle.Phonemes {
+		known[input.Symbol] = true
+	}
+	for _, symbol := range symbols {
+		if !known[symbol] {
+			result.Warnings = append(result.Warnings, fmt.Sprintf(
+				"sound /%s/ is used by a pronunciation activity but has no sound card yet — import a1-sounds.json", symbol))
+			known[symbol] = true
+		}
+	}
+	return nil
+}
+
+func collectPhonemeSymbols(bundle Bundle) []string {
+	var symbols []string
+	seen := map[string]bool{}
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				for _, symbol := range activityPhonemes(activity.Content) {
+					if !seen[symbol] {
+						seen[symbol] = true
+						symbols = append(symbols, symbol)
+					}
+				}
+			}
+		}
+	}
+	return symbols
+}
+
+func activityPhonemes(content json.RawMessage) []string {
+	var parsed struct {
+		Phonemes []string `json:"phonemes"`
+	}
+	if len(content) == 0 || json.Unmarshal(content, &parsed) != nil {
+		return nil
+	}
+	return parsed.Phonemes
+}
+
+func jsonOrEmptyList(raw json.RawMessage) json.RawMessage {
+	if len(raw) == 0 || string(raw) == "null" {
+		return json.RawMessage("[]")
+	}
+	return raw
 }

@@ -46,6 +46,7 @@ export function AdminContentImportPage() {
   const groups = useMemo(() => groupItems(report?.items ?? []), [report])
   const topics =
     report?.items.filter((item) => item.kind === 'TOPIC' || item.kind === 'GRAMMAR_POINT') ?? []
+  const phonemes = report?.items.filter((item) => item.kind === 'PHONEME') ?? []
   const validCount = report ? report.summary.created + report.summary.updated : 0
   const canConfirm =
     report && !report.committed && report.bundleErrors.length === 0 && validCount > 0
@@ -159,6 +160,31 @@ export function AdminContentImportPage() {
                 {warning}
               </p>
             ))}
+
+            {phonemes.length > 0 ? (
+              <p className="mb-3 flex flex-wrap items-center gap-1 text-sm">
+                <span className="mr-1 font-semibold">Sound cards ({phonemes.length}):</span>
+                {phonemes.map((phoneme) => (
+                  <span
+                    className={cn(
+                      'rounded px-1.5 py-0.5 font-mono text-xs',
+                      phoneme.errors.length > 0 ? 'bg-red-100 text-red-700' : 'bg-muted',
+                    )}
+                    key={phoneme.path}
+                    title={phoneme.errors.join('; ') || phoneme.action}
+                  >
+                    {phoneme.title}
+                  </span>
+                ))}
+              </p>
+            ) : null}
+            {phonemes
+              .filter((phoneme) => phoneme.errors.length > 0)
+              .map((phoneme) => (
+                <p className="mb-2 text-sm text-destructive" key={`${phoneme.path}-errors`}>
+                  {phoneme.title}: {phoneme.errors.join('; ')}
+                </p>
+              ))}
 
             {topics.map((topic) => (
               <p className="mb-3 text-sm" key={topic.path}>

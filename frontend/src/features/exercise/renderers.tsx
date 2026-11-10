@@ -117,7 +117,7 @@ function ChoiceExercise({ exercise, result, onChange }: ExerciseRendererProps) {
                   src={option.imageUrl}
                 />
               ) : null}
-              <span>{optionLabel(option)}</span>
+              <span className={cn(isIpaOnly(option) && "font-mono text-xl")}>{optionLabel(option)}</span>
               {option.word && option.ipa ? (
                 <span className="font-mono text-sm font-normal text-muted-foreground">
                   {option.ipa}
@@ -129,6 +129,11 @@ function ChoiceExercise({ exercise, result, onChange }: ExerciseRendererProps) {
       </div>
     </div>
   );
+}
+
+/** WORD_TO_IPA and ENDING_SOUND options are transcriptions. */
+function isIpaOnly(option: { word?: string; text?: string; ipa?: string }) {
+  return (!option.word && Boolean(option.ipa)) || /^\/.*\/$/.test(option.text ?? "");
 }
 
 function TrueFalseExercise({ exercise, result, onChange }: ExerciseRendererProps) {

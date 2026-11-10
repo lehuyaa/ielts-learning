@@ -418,3 +418,60 @@ func grammarPointSlug(activity ActivityInput) string {
 	}
 	return content.GrammarPointSlug
 }
+
+type phonemeWord struct {
+	Word string `json:"word"`
+	IPA  string `json:"ipa"`
+}
+
+type phonemePair struct {
+	A string `json:"a"`
+	B string `json:"b"`
+}
+
+func validatePhoneme(phoneme PhonemeInput) []string {
+	var errs []string
+	if strings.TrimSpace(phoneme.Symbol) == "" || len(phoneme.Symbol) > 10 {
+		errs = append(errs, "symbol is required (max 10 bytes)")
+	}
+	switch models.PhonemeKind(phoneme.Kind) {
+	case models.PhonemeVowel, models.PhonemeDiphthong:
+		if phoneme.Voiced != nil {
+			errs = append(errs, "voiced is only for consonants")
+		}
+	case models.PhonemeConsonant:
+		if phoneme.Voiced == nil {
+			errs = append(errs, "voiced is required for consonants")
+		}
+	default:
+		errs = append(errs, fmt.Sprintf("kind %q must be VOWEL, DIPHTHONG or CONSONANT", phoneme.Kind))
+	}
+	if strings.TrimSpace(phoneme.MouthVI) == "" {
+		errs = append(errs, "mouthVi is required")
+	}
+
+	var words []phonemeWord
+	if err := json.Unmarshal(phoneme.ExampleWords, &words); err != nil || len(words) == 0 {
+		errs = append(errs, "exampleWords must be a non-empty list of {word, ipa}")
+	} else {
+		for i, word := range words {
+			if word.Word == "" || word.IPA == "" {
+				errs = append(errs, fmt.Sprintf("exampleWords[%d] needs word and ipa", i))
+			}
+		}
+	}
+
+	if len(phoneme.MinimalPairs) > 0 && string(phoneme.MinimalPairs) != "null" {
+		var pairs []phonemePair
+		if err := json.Unmarshal(phoneme.MinimalPairs, &pairs); err != nil {
+			errs = append(errs, "minimalPairs must be a list of {a, b}")
+		} else {
+			for i, pair := range pairs {
+				if pair.A == "" || pair.B == "" {
+					errs = append(errs, fmt.Sprintf("minimalPairs[%d] needs a and b", i))
+				}
+			}
+		}
+	}
+	return errs
+}

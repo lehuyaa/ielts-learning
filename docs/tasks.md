@@ -1996,6 +1996,9 @@ Requirements:
 - `/pronunciation`: chart grouped vowels / diphthongs / consonants (voiced vs voiceless); tap to hear.
 - `/pronunciation/:symbol`: mouth description (Vietnamese), example words with audio, minimal pairs, common mistakes.
 
+Status: done. Module `backend/internal/modules/phoneme` (`GET /phonemes` adds `practiceTopics`; `GET /phonemes/:symbol` adds the lessons that teach the sound and chart neighbours). Bundle field `phonemes` (upsert by symbol). Activity detail returns `phonemes` for `content.phonemes`, shown as sound cards in the player. `/pronunciation/:symbol` also has a minimal-pair listening drill (practice only). `user_phoneme_progresses` exists for Task 71.
+
+
 ### Task 58 - Pronunciation Exercises
 
 Requirements:
@@ -2003,16 +2006,24 @@ Requirements:
 - Renderers: `MINIMAL_PAIR`, `IPA_TO_WORD`, `WORD_TO_IPA`, `ENDING_SOUND`, `WORD_STRESS`, `SPEAK` (self-check mode until Task 71).
 - Minimal pairs and ending-sound items can be generated from CMU data by a script.
 
+Status: done. Renderers existed since Task 51 (IPA options now monospace). Generation script: `content/a1/build_sounds.py` (CMU → Oxford NAmE IPA, every minimal pair verified to differ in exactly its two sounds).
+
+
 ### Task 59 - Clickable IPA
 
 Requirements:
 
 - Component that splits an IPA string into phonemes (longest match against the phoneme list) and links each to its sound card; used on flashcards, vocabulary detail and lesson word lists.
 
+Status: done. `src/lib/ipa.ts` (`splitIpa`, aliases for British/dictionary variants; non-IPA text stays plain) and `features/pronunciation/IpaText.tsx`, used on flashcards, vocabulary detail, lesson word lists and lesson vocabulary cards.
+
+
 ### Task D6 - Sound Content
 
 - 40 sound cards (spec §3.3 phoneme set) with Vietnamese mouth notes and typical mistakes.
 - ~150 minimal pairs with audio; ending -s / -ed and 2-syllable stress sets.
+
+Status: done. `content/a1/a1-sounds.json`: 40 sound cards, 178 minimal pairs, topic "Sound Lab" (VOCABULARY track, always open) with 11 lessons / 31 activities / 284 exercises (minimal pairs + IPA reading, ending -s, ending -ed, 2-syllable stress). Audio: `audio_manifest_sounds.tsv` (621 lines) via `generate_lesson_audio.sh`.
 
 ## 17. Milestone 16 - Listening and Reading
 

@@ -2,6 +2,7 @@ package contentimport
 
 const (
 	KindGrammarPoint = "GRAMMAR_POINT"
+	KindPhoneme      = "PHONEME"
 	KindTopic        = "TOPIC"
 	KindLesson       = "LESSON"
 	KindActivity     = "ACTIVITY"

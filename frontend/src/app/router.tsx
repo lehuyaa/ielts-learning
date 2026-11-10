@@ -20,6 +20,8 @@ import { QuizPage } from '@/pages/QuizPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { GrammarDetailPage } from '@/pages/GrammarDetailPage'
 import { GrammarPage } from '@/pages/GrammarPage'
+import { PronunciationDetailPage } from '@/pages/PronunciationDetailPage'
+import { PronunciationPage } from '@/pages/PronunciationPage'
 import { LessonPlayerPage } from '@/pages/LessonPlayerPage'
 import { ReviewsPage } from '@/pages/ReviewsPage'
 import { RoadmapPage } from '@/pages/RoadmapPage'
@@ -91,6 +93,14 @@ export const router = createBrowserRouter([
           {
             path: '/grammar/:slug',
             element: <GrammarDetailPage />,
+          },
+          {
+            path: '/pronunciation',
+            element: <PronunciationPage />,
+          },
+          {
+            path: '/pronunciation/:symbol',
+            element: <PronunciationDetailPage />,
           },
           {
             path: '/reviews',

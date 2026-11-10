@@ -200,3 +200,21 @@ func (r Repository) GrammarPointIDs(slugs []string) (map[string]uint, error) {
 	}
 	return result, nil
 }
+
+func (r Repository) FindPhoneme(symbol string) (models.Phoneme, bool, error) {
+	var phoneme models.Phoneme
+	err := r.db.Where("symbol = ?", symbol).First(&phoneme).Error
+	return phoneme, found(err), ignoreNotFound(err, "find phoneme")
+}
+
+func (r Repository) ExistingPhonemeSymbols(symbols []string) (map[string]bool, error) {
+	result := map[string]bool{}
+	var rows []string
+	if err := r.db.Model(&models.Phoneme{}).Where("symbol IN ?", symbols).Pluck("symbol", &rows).Error; err != nil {
+		return nil, fmt.Errorf("find phonemes: %w", err)
+	}
+	for _, symbol := range rows {
+		result[symbol] = true
+	}
+	return result, nil
+}

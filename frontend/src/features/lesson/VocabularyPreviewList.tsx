@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { LessonVocabularyItem } from "@/types/lesson";
 import { playPronunciation } from "@/lib/pronunciation";
+import { IpaText } from "@/features/pronunciation/IpaText";
 
 type VocabularyPreviewListProps = {
   vocabulary: LessonVocabularyItem[];
@@ -65,8 +66,8 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
               <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
                 {item.word}
               </h2>
-              <span className="font-mono text-sm font-semibold text-[#85889c]">
-                {item.ipa}
+              <span className="text-sm font-semibold text-[#85889c]">
+                <IpaText ipa={item.ipa} />
               </span>
               <span className="text-sm font-semibold text-[#85889c]">
                 {item.partOfSpeech}

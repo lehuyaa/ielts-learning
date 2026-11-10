@@ -161,6 +161,16 @@ Rules:
 - `VOCABULARY` activities list word slugs in `content.vocabularySlugs`; those
   words must already be imported.
 
+Sound cards (IPA):
+
+- Import `content/a1/a1-sounds.json` (built by `content/a1/build_sounds.py`)
+  before the week bundles: 40 phonemes (upserted by symbol) plus the always-open
+  "Sound Lab" practice topic. PRONUNCIATION activities name their sounds in
+  `content.phonemes`; an unknown symbol gives a warning.
+- Learners see the chart at `/pronunciation` and a sound card at
+  `/pronunciation/:symbol` (API `GET /api/v1/phonemes`, module
+  `backend/internal/modules/phoneme/`).
+
 Grammar points:
 
 - Import `content/a1/a1-grammar.json` (built by `content/a1/build_grammar.py`)

@@ -1,3 +1,4 @@
+import type { PhonemeCard } from '@/types/phoneme'
 import type { GrammarPointCard } from '@/types/grammar'
 
 // Lesson activities and exercises (docs/foundation-spec.md §4-§5).
@@ -135,6 +136,8 @@ export type ActivityDetailResponse = {
   exercises: Exercise[]
   vocabularies: VocabularyCard[]
   grammarPoint: GrammarPointCard | null
+  /** Sound cards of a PRONUNCIATION activity (content.phonemes). */
+  phonemes?: PhonemeCard[]
   answers: AnswerResult[]
 }
 

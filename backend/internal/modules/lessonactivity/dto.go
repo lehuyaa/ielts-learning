@@ -55,6 +55,8 @@ type ActivityDetailResponse struct {
 	Vocabularies []VocabularyCard `json:"vocabularies"`
 	// GrammarPoint is the theory card of a GRAMMAR activity, when linked.
 	GrammarPoint *GrammarPointCard `json:"grammarPoint"`
+	// Phonemes are the sound cards of a PRONUNCIATION activity (content.phonemes).
+	Phonemes []PhonemeCard `json:"phonemes"`
 	// Answers already given in the current (unfinished) attempt, for resuming.
 	Answers []AnswerResult `json:"answers"`
 }
@@ -168,4 +170,37 @@ func jsonList(raw []byte) json.RawMessage {
 		return json.RawMessage("[]")
 	}
 	return json.RawMessage(raw)
+}
+
+// PhonemeCard is a sound card (also used by the phoneme module).
+type PhonemeCard struct {
+	ID           uint            `json:"id"`
+	Symbol       string          `json:"symbol"`
+	Kind         string          `json:"kind"`
+	Voiced       *bool           `json:"voiced"`
+	NameVI       string          `json:"nameVi"`
+	ExampleWords json.RawMessage `json:"exampleWords" swaggertype:"array,object"`
+	MinimalPairs json.RawMessage `json:"minimalPairs" swaggertype:"array,object"`
+	MouthVI      string          `json:"mouthVi"`
+	MistakesVI   string          `json:"mistakesVi"`
+	AudioURL     string          `json:"audioUrl"`
+	ImageURL     *string         `json:"imageUrl"`
+	OrderIndex   int             `json:"orderIndex"`
+}
+
+func ToPhonemeCard(phoneme models.Phoneme) PhonemeCard {
+	return PhonemeCard{
+		ID:           phoneme.ID,
+		Symbol:       phoneme.Symbol,
+		Kind:         string(phoneme.Kind),
+		Voiced:       phoneme.Voiced,
+		NameVI:       phoneme.NameVI,
+		ExampleWords: jsonList(phoneme.ExampleWordsJSON),
+		MinimalPairs: jsonList(phoneme.MinimalPairsJSON),
+		MouthVI:      phoneme.MouthVI,
+		MistakesVI:   phoneme.MistakesVI,
+		AudioURL:     phoneme.AudioURL,
+		ImageURL:     phoneme.ImageURL,
+		OrderIndex:   phoneme.OrderIndex,
+	}
 }

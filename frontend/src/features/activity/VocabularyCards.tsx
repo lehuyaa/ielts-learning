@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AudioButton } from "@/features/exercise/AudioButton";
 import { cn } from "@/lib/utils";
 import type { VocabularyCard } from "@/types/activity";
+import { IpaText } from "@/features/pronunciation/IpaText";
 
 type VocabularyCardsProps = {
   cards: VocabularyCard[];
@@ -44,7 +45,7 @@ export function VocabularyCards({ cards, onDone, doneLabel }: VocabularyCardsPro
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="text-xl font-bold tracking-normal">{card.word}</p>
-                  <p className="font-mono text-sm text-primary">{card.ipa}</p>
+                  <p className="text-sm text-primary"><IpaText ipa={card.ipa} /></p>
                 </div>
                 <span onClick={(event) => event.stopPropagation()}>
                   <AudioButton

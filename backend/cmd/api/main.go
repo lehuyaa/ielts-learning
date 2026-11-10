@@ -22,6 +22,7 @@ import (
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
 	lessonactivitymodule "ielts-learning/backend/internal/modules/lessonactivity"
 	notificationmodule "ielts-learning/backend/internal/modules/notification"
+	phonememodule "ielts-learning/backend/internal/modules/phoneme"
 	profilemodule "ielts-learning/backend/internal/modules/profile"
 	quizmodule "ielts-learning/backend/internal/modules/quiz"
 	roadmapmodule "ielts-learning/backend/internal/modules/roadmap"
@@ -84,6 +85,7 @@ func main() {
 	aiGrader := lessonactivitymodule.NewAIGrader(db, aiClient, cfg.OpenAIModel, cfg.AIShortAnswerDailyLimit)
 	lessonactivitymodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	grammarmodule.RegisterRoutes(api, db, jwtManager, aiGrader)
+	phonememodule.RegisterRoutes(api, db, jwtManager)
 	profilemodule.RegisterRoutes(api, db, jwtManager)
 	notificationmodule.RegisterRoutes(api, db, jwtManager)
 	vocabularymodule.RegisterRoutes(api, db, jwtManager)

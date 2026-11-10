@@ -11,6 +11,7 @@ import {
   // Zap,
   FileJson,
   Puzzle,
+  AudioLines,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -37,6 +38,12 @@ const navigationItems = [
     to: "/grammar",
     icon: Puzzle,
     match: (pathname: string) => pathname.startsWith("/grammar"),
+  },
+  {
+    label: "Pronunciation",
+    to: "/pronunciation",
+    icon: AudioLines,
+    match: (pathname: string) => pathname.startsWith("/pronunciation"),
   },
   // {
   //   label: "Lessons",
