@@ -92,7 +92,8 @@ func main() {
 	// Vision extraction of many pages takes longer than a chat turn.
 	contentAIClient := sharedai.New(cfg.OpenAIAPIKey, cfg.OpenAIModel, cfg.OpenAIBaseURL).
 		WithTranscribeModel(cfg.OpenAITranscribeModel).WithTimeout(3 * time.Minute)
-	aiGrader := lessonactivitymodule.NewAIGrader(db, aiClient, cfg.OpenAIModel, cfg.AIShortAnswerDailyLimit)
+	aiGrader := lessonactivitymodule.NewAIGrader(db, aiClient, cfg.OpenAIModel, cfg.AIShortAnswerDailyLimit).
+		WithWritingLimit(cfg.AIWritingDailyLimit)
 	lessonactivitymodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	grammarmodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	phonememodule.RegisterRoutes(api, db, jwtManager)

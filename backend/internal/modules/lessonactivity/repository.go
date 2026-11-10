@@ -351,3 +351,78 @@ func (r Repository) FindPassage(id uint) (models.Passage, bool, error) {
 	}
 	return passage, true, nil
 }
+
+// ---------------------------------------------------------------------------
+// Writing (Task 66)
+
+func (r Repository) SaveWritingSubmission(submission *models.WritingSubmission) error {
+	if err := r.db.Save(submission).Error; err != nil {
+		return fmt.Errorf("save writing submission: %w", err)
+	}
+	return nil
+}
+
+func (r Repository) FindWritingSubmissionForUpdate(userID uint, id uint) (models.WritingSubmission, bool, error) {
+	var submission models.WritingSubmission
+	err := r.db.Clauses(clause.Locking{Strength: "UPDATE"}).
+		Where("id = ? AND user_id = ?", id, userID).Take(&submission).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.WritingSubmission{}, false, nil
+	}
+	if err != nil {
+		return models.WritingSubmission{}, false, fmt.Errorf("find writing submission: %w", err)
+	}
+	return submission, true, nil
+}
+
+// LatestWritingSubmission returns the learner's newest submission for an
+// activity; completedOnly limits it to COMPLETED ones.
+func (r Repository) LatestWritingSubmission(userID uint, activityID uint, completedOnly bool) (models.WritingSubmission, bool, error) {
+	query := r.db.Where("user_id = ? AND activity_id = ?", userID, activityID)
+	if completedOnly {
+		query = query.Where("status = ?", models.WritingCompleted)
+	}
+	var submission models.WritingSubmission
+	err := query.Order("id DESC").Take(&submission).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.WritingSubmission{}, false, nil
+	}
+	if err != nil {
+		return models.WritingSubmission{}, false, fmt.Errorf("find writing submission: %w", err)
+	}
+	return submission, true, nil
+}
+
+// UpsertMistake records a mistake, counting repeats of the same correction.
+func (r Repository) UpsertMistake(mistake models.LearnerMistake) error {
+	err := r.db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "user_id"}, {Name: "skill_tag"}, {Name: "correct_text"}},
+		DoUpdates: clause.Assignments(map[string]any{
+			"occurrences":    gorm.Expr("occurrences + 1"),
+			"wrong_text":     mistake.WrongText,
+			"explanation_vi": mistake.ExplanationVI,
+			"source":         mistake.Source,
+			"status":         models.MistakeOpen,
+			"last_seen_at":   mistake.LastSeenAt,
+			"updated_at":     mistake.LastSeenAt,
+		}),
+	}).Create(&mistake).Error
+	if err != nil {
+		return fmt.Errorf("save learner mistake: %w", err)
+	}
+	return nil
+}
+
+// LevelOfActivity returns the CEFR level of an activity's band (A1 by default).
+func (r Repository) LevelOfActivity(activityID uint) string {
+	var level *string
+	r.db.Raw(`SELECT bl.cefr_level FROM lesson_activities a
+		JOIN lessons l ON l.id = a.lesson_id
+		JOIN topics t ON t.id = l.topic_id
+		JOIN band_levels bl ON bl.id = t.band_level_id
+		WHERE a.id = ?`, activityID).Scan(&level)
+	if level == nil || *level == "" {
+		return "A1"
+	}
+	return *level
+}

@@ -25,6 +25,8 @@ type Config struct {
 	MediaDir string
 	// AIShortAnswerDailyLimit caps AI short-answer gradings per user per day (spec §6.7).
 	AIShortAnswerDailyLimit int
+	// AIWritingDailyLimit caps writing gradings (incl. rewrite checks) per user per day.
+	AIWritingDailyLimit int
 }
 
 func Load() Config {
@@ -43,6 +45,7 @@ func Load() Config {
 		OpenAIModel:             getEnv("OPENAI_MODEL", "gpt-4o-mini"),
 		OpenAIBaseURL:           getEnv("OPENAI_BASE_URL", ""),
 		AIShortAnswerDailyLimit: getEnvInt("AI_SHORT_ANSWER_DAILY_LIMIT", 300),
+		AIWritingDailyLimit:     getEnvInt("AI_WRITING_DAILY_LIMIT", 30),
 		OpenAITranscribeModel:   getEnv("OPENAI_TRANSCRIBE_MODEL", "whisper-1"),
 		MediaDir:                getEnv("MEDIA_DIR", "storage/media"),
 	}

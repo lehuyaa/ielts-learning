@@ -1414,6 +1414,39 @@
               ]
             },
             {
+              "slug": "writing",
+              "type": "WRITING",
+              "title": "Viết: Giới thiệu bản thân",
+              "instructionsVi": "Viết đoạn văn theo đề. AI sẽ chấm điểm, chỉ ra lỗi; sửa lại bài để hoàn thành.",
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 15,
+              "content": {
+                "promptVi": "Giới thiệu bản thân với đồng nghiệp mới: tên, tuổi, quê, nơi sống và công việc.",
+                "promptEn": "Introduce yourself to a new colleague.",
+                "frame": [
+                  "My name is ...",
+                  "I am ... years old.",
+                  "I am from ...",
+                  "I live in ...",
+                  "I am a/an ..."
+                ],
+                "minSentences": 4,
+                "maxSentences": 7,
+                "targetGrammar": [
+                  "g1-to-be",
+                  "g2-nouns-articles"
+                ],
+                "targetVocabulary": [
+                  "a1-name",
+                  "a1-live",
+                  "a1-job"
+                ],
+                "modelAnswer": "Hello! My name is Minh. I am 28 years old. I am from Da Nang, but I live in Hanoi now. I am a designer at a tech company. Nice to meet you!"
+              },
+              "exercises": []
+            },
+            {
               "slug": "speaking",
               "type": "SPEAKING",
               "title": "Luyện nói",
@@ -1951,6 +1984,36 @@
                   "skillTag": "reading"
                 }
               ]
+            },
+            {
+              "slug": "writing",
+              "type": "WRITING",
+              "title": "Viết: Giới thiệu một đồng nghiệp",
+              "instructionsVi": "Viết đoạn văn theo đề. AI sẽ chấm điểm, chỉ ra lỗi; sửa lại bài để hoàn thành.",
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 15,
+              "content": {
+                "promptVi": "Viết một tin nhắn giới thiệu một đồng nghiệp với nhóm: tên, công việc, quê và tính cách.",
+                "promptEn": "Write a message to introduce a colleague to your team.",
+                "frame": [
+                  "This is ...",
+                  "He/She is our new ...",
+                  "He/She is from ...",
+                  "He/She is very ..."
+                ],
+                "minSentences": 4,
+                "maxSentences": 7,
+                "targetGrammar": [
+                  "g1-to-be"
+                ],
+                "targetVocabulary": [
+                  "a1-colleague",
+                  "a1-friendly"
+                ],
+                "modelAnswer": "Hi team! This is Lan. She is our new accountant. She is from Hue. She is very friendly and helpful. Please say hello to her!"
+              },
+              "exercises": []
             },
             {
               "slug": "speaking",
@@ -3038,6 +3101,40 @@
               ]
             },
             {
+              "slug": "writing",
+              "type": "WRITING",
+              "title": "Viết: Gia đình tôi",
+              "instructionsVi": "Viết đoạn văn theo đề. AI sẽ chấm điểm, chỉ ra lỗi; sửa lại bài để hoàn thành.",
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 15,
+              "content": {
+                "promptVi": "Giới thiệu gia đình bạn: có những ai, họ bao nhiêu tuổi và làm nghề gì.",
+                "promptEn": "Write about your family.",
+                "frame": [
+                  "There are ... people in my family.",
+                  "My father is ...",
+                  "My mother is a/an ...",
+                  "I have one/two ..."
+                ],
+                "minSentences": 4,
+                "maxSentences": 7,
+                "targetGrammar": [
+                  "g1-to-be",
+                  "g2-nouns-articles"
+                ],
+                "targetVocabulary": [
+                  "a1-family",
+                  "a1-father",
+                  "a1-mother",
+                  "a1-brother",
+                  "a1-sister"
+                ],
+                "modelAnswer": "There are four people in my family. My father is a doctor. My mother is a teacher. I have one younger sister. Her name is Hoa and she is a student."
+              },
+              "exercises": []
+            },
+            {
               "slug": "speaking",
               "type": "SPEAKING",
               "title": "Luyện nói",
@@ -3569,6 +3666,38 @@
               ]
             },
             {
+              "slug": "writing",
+              "type": "WRITING",
+              "title": "Viết: Sở thích của tôi",
+              "instructionsVi": "Viết đoạn văn theo đề. AI sẽ chấm điểm, chỉ ra lỗi; sửa lại bài để hoàn thành.",
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 15,
+              "content": {
+                "promptVi": "Viết về sở thích của bạn: bạn thích gì, sở thích của bạn là gì và bạn chơi với ai.",
+                "promptEn": "Write about your hobbies.",
+                "frame": [
+                  "My hobby is ...",
+                  "I like ...",
+                  "My favourite ... is ...",
+                  "My friends and I ..."
+                ],
+                "minSentences": 3,
+                "maxSentences": 6,
+                "targetGrammar": [
+                  "g1-to-be",
+                  "g2-nouns-articles"
+                ],
+                "targetVocabulary": [
+                  "a1-hobby",
+                  "a1-music",
+                  "a1-football"
+                ],
+                "modelAnswer": "My hobby is football. I like music and films too. My favourite singer is Den Vau. My friends and I are in a small football team."
+              },
+              "exercises": []
+            },
+            {
               "slug": "speaking",
               "type": "SPEAKING",
               "title": "Luyện nói",
@@ -4087,6 +4216,38 @@
                   "skillTag": "reading"
                 }
               ]
+            },
+            {
+              "slug": "writing",
+              "type": "WRITING",
+              "title": "Viết: Công việc của tôi",
+              "instructionsVi": "Viết đoạn văn theo đề. AI sẽ chấm điểm, chỉ ra lỗi; sửa lại bài để hoàn thành.",
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 15,
+              "content": {
+                "promptVi": "Mô tả công việc của bạn: bạn làm nghề gì, ở công ty nào, văn phòng ở đâu và đồng nghiệp thế nào.",
+                "promptEn": "Describe your job.",
+                "frame": [
+                  "I am a/an ...",
+                  "My company is ...",
+                  "My office is in/on ...",
+                  "My colleagues are ..."
+                ],
+                "minSentences": 4,
+                "maxSentences": 7,
+                "targetGrammar": [
+                  "g1-to-be",
+                  "g2-nouns-articles"
+                ],
+                "targetVocabulary": [
+                  "a1-job",
+                  "a1-company",
+                  "a1-office"
+                ],
+                "modelAnswer": "I am a software developer. My company is a small tech company. My office is on the fifth floor of a big building. My colleagues are young and friendly. My job is hard, but it is interesting."
+              },
+              "exercises": []
             },
             {
               "slug": "speaking",

@@ -156,6 +156,11 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		}
 	}
 
+	writing, err := s.latestWriting(userID, activity)
+	if err != nil {
+		return ActivityDetailResponse{}, err
+	}
+
 	counts := map[uint]int{activity.ID: len(exercises)}
 	locks := activityLocks(ctx.activities, ctx.progress)
 	return ActivityDetailResponse{
@@ -173,6 +178,7 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		GrammarPoint: grammarPoint,
 		Phonemes:     phonemes,
 		Passage:      passage,
+		Writing:      writing,
 		Answers:      answerResults,
 	}, nil
 }

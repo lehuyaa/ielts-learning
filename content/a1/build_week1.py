@@ -12,6 +12,8 @@ import random
 import re
 import sys
 
+from writing_prompts import PROMPTS, writing_activity
+
 WEEK = "w1"
 AUDIO_ROOT = "/audio/a1"
 audio_lines = {}  # audio key -> (text spoken, voice or "")
@@ -644,6 +646,14 @@ lessons.append({
         ],
     }],
 })
+
+# Optional writing tasks (Task D9), placed before the speaking activity.
+for key, prompt in PROMPTS.items():
+    for lesson in lessons:
+        if lesson["slug"] == prompt.get("lesson"):
+            activities = lesson["activities"]
+            position = next((i for i, a in enumerate(activities) if a["type"] == "SPEAKING"), len(activities))
+            activities.insert(position, writing_activity(key))
 
 bundle = {
     "version": 1,

@@ -9,6 +9,7 @@ import (
 // AI usage kinds counted per user per day (docs/foundation-spec.md §6.7).
 const (
 	AIUsageShortAnswer = "SHORT_ANSWER"
+	AIUsageWriting     = "WRITING"
 )
 
 // AIUsageDaily counts AI calls per user, day (YYYY-MM-DD, server time) and kind.

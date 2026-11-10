@@ -18,4 +18,6 @@ func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.M
 	router.GET("/activities/:activityId", auth, handler.GetActivity)
 	router.POST("/activities/:activityId/answers", auth, handler.SubmitAnswer)
 	router.POST("/activities/:activityId/complete", auth, handler.CompleteActivity)
+	router.POST("/writing/submissions", auth, handler.SubmitWriting)
+	router.POST("/writing/submissions/:submissionId/rewrite", auth, handler.RewriteWriting)
 }

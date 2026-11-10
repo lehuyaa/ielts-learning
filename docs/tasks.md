@@ -2099,9 +2099,13 @@ Acceptance criteria:
 
 - A text with one tense mistake is scored, the mistake is highlighted at the right position, and the activity completes after a correct rewrite.
 
+Status: done. `writing_submissions` + `learner_mistakes` (created here). `POST /writing/submissions` grades with a strict JSON schema (overall = 10 × average of 4 scores; mistake offsets computed by the backend as UTF-16 indexes), `POST /writing/submissions/:id/rewrite` completes when no mistakes remain (no AI call when the rewrite equals the corrected text). Completing a WRITING activity uses the latest completed submission's score. Mistakes feed grammar mastery. Daily limit `AI_WRITING_DAILY_LIMIT` (30). UI: `src/features/writing/`.
+
 ### Task D9 - Writing Prompts
 
 - ~20 prompts (spec §4.1 format) spread over the 4 weeks, with model answers.
+
+Status: done for the prompts: 20 prompts with frames and model answers in `content/a1/writing_prompts.py`; the 5 Week 1 prompts are optional WRITING activities in `week-1.json`, weeks 2-4 attach theirs when those lessons are built.
 
 ## 19. Milestone 18 - AI Speaking Upgrade
 

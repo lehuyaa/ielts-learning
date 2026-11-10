@@ -32,19 +32,29 @@ func (s Service) CompleteActivity(userID uint, activityID uint) (CompleteActivit
 
 	progress, hasProgress := ctx.progress[activity.ID]
 	attempt := currentAttempt(progress, hasProgress)
-	if len(exercises) > 0 && attempt == 0 {
-		return CompleteActivityResponse{}, ErrActivityNotStarted
+	var tally attemptTally
+	if activity.Type == models.ActivityWriting {
+		// A WRITING activity is scored by the AI report of its latest
+		// submission whose rewrite is done (spec §4).
+		score, err := s.writingScore(userID, activity.ID)
+		if err != nil {
+			return CompleteActivityResponse{}, err
+		}
+		tally = attemptTally{Score: score}
+	} else {
+		if len(exercises) > 0 && attempt == 0 {
+			return CompleteActivityResponse{}, ErrActivityNotStarted
+		}
+		exerciseIDs := make([]uint, 0, len(exercises))
+		for _, exercise := range exercises {
+			exerciseIDs = append(exerciseIDs, exercise.ID)
+		}
+		answers, err := s.repository.FindAnswers(userID, exerciseIDs, attempt)
+		if err != nil {
+			return CompleteActivityResponse{}, err
+		}
+		tally = scoreAttempt(exercises, answers)
 	}
-
-	exerciseIDs := make([]uint, 0, len(exercises))
-	for _, exercise := range exercises {
-		exerciseIDs = append(exerciseIDs, exercise.ID)
-	}
-	answers, err := s.repository.FindAnswers(userID, exerciseIDs, attempt)
-	if err != nil {
-		return CompleteActivityResponse{}, err
-	}
-	tally := scoreAttempt(exercises, answers)
 	passed := tally.Score >= activity.PassScore
 
 	now := s.now()

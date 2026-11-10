@@ -59,6 +59,8 @@ type ActivityDetailResponse struct {
 	Phonemes []PhonemeCard `json:"phonemes"`
 	// Passage is the text/recording of a LISTENING or READING activity.
 	Passage *PassageCard `json:"passage"`
+	// Writing is the learner's latest submission of a WRITING activity.
+	Writing *WritingSubmissionResponse `json:"writing"`
 	// Answers already given in the current (unfinished) attempt, for resuming.
 	Answers []AnswerResult `json:"answers"`
 }

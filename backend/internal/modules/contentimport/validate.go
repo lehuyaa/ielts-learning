@@ -72,6 +72,10 @@ func validateActivity(activity ActivityInput, knownVocabulary map[string]bool) [
 		errs = append(errs, "content must be a JSON object")
 	}
 
+	if activity.Type == string(models.ActivityWriting) {
+		errs = append(errs, validateWritingContent(activity.Content)...)
+	}
+
 	if activity.Type == string(models.ActivityVocabulary) {
 		slugs := vocabularySlugs(activity.Content)
 		if len(slugs) == 0 {
@@ -563,6 +567,34 @@ func validatePassage(passage PassageInput) []string {
 				}
 			}
 		}
+	}
+	return errs
+}
+
+type writingPrompt struct {
+	PromptVI     string   `json:"promptVi"`
+	PromptEN     string   `json:"promptEn"`
+	Frame        []string `json:"frame"`
+	MinSentences int      `json:"minSentences"`
+	MaxSentences int      `json:"maxSentences"`
+	ModelAnswer  string   `json:"modelAnswer"`
+}
+
+// validateWritingContent checks a WRITING prompt (docs/foundation-spec.md §4.1).
+func validateWritingContent(content json.RawMessage) []string {
+	var prompt writingPrompt
+	if len(content) == 0 || json.Unmarshal(content, &prompt) != nil {
+		return []string{"content must be a writing prompt {promptVi, promptEn, frame, minSentences, maxSentences, modelAnswer}"}
+	}
+	var errs []string
+	if strings.TrimSpace(prompt.PromptVI) == "" {
+		errs = append(errs, "content.promptVi is required")
+	}
+	if prompt.MinSentences < 1 || prompt.MaxSentences < prompt.MinSentences {
+		errs = append(errs, "content needs 1 <= minSentences <= maxSentences")
+	}
+	if strings.TrimSpace(prompt.ModelAnswer) == "" {
+		errs = append(errs, "content.modelAnswer is required")
 	}
 	return errs
 }

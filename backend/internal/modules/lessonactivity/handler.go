@@ -203,6 +203,21 @@ func writeActivityError(c *gin.Context, err error) {
 		response.Error(c, http.StatusBadRequest, "EXERCISE_NOT_IN_ACTIVITY", "This exercise does not belong to the activity")
 	case errors.Is(err, ErrInvalidAnswerShape):
 		response.Error(c, http.StatusBadRequest, "INVALID_ANSWER_SHAPE", "The answer does not match this exercise type")
+	case errors.Is(err, ErrNotWritingActivity):
+		response.Error(c, http.StatusBadRequest, "NOT_WRITING_ACTIVITY", "This activity is not a writing activity")
+	case errors.Is(err, ErrWritingTooShort), errors.Is(err, ErrWritingTooLong):
+		response.ValidationError(c, map[string]string{"text": err.Error()})
+	case errors.Is(err, ErrWritingNotFound):
+		response.Error(c, http.StatusNotFound, "WRITING_NOT_FOUND", "Writing submission was not found")
+	case errors.Is(err, ErrWritingNotRewritable):
+		response.Error(c, http.StatusConflict, "WRITING_NOT_REWRITABLE", "This submission does not need a rewrite")
+	case errors.Is(err, ErrWritingNotCompleted):
+		response.Error(c, http.StatusBadRequest, "WRITING_NOT_COMPLETED", "Submit your text and its rewrite before finishing")
+	case errors.Is(err, ErrAILimitReached):
+		response.Error(c, http.StatusTooManyRequests, "AI_LIMIT_REACHED", "You have used today's AI gradings. Try again tomorrow.")
+	case errors.Is(err, ErrAIUnavailable):
+		log.Printf("lessonactivity ai: %v", err)
+		response.Error(c, http.StatusServiceUnavailable, "AI_UNAVAILABLE", "AI grading is not available right now")
 	case errors.Is(err, ErrInvalidAnswerKey):
 		log.Printf("lessonactivity: %v", err)
 		response.Error(c, http.StatusInternalServerError, "EXERCISE_DATA_INVALID", "This exercise is misconfigured")
@@ -210,4 +225,75 @@ func writeActivityError(c *gin.Context, err error) {
 		log.Printf("lessonactivity: %v", err)
 		response.Error(c, http.StatusInternalServerError, "INTERNAL_ERROR", "Something went wrong")
 	}
+}
+
+// SubmitWriting godoc
+// @Summary Submit a text for a WRITING activity
+// @Description The AI scores the text (task, grammar, vocabulary, coherence; overall = 10 × average) and marks each mistake with its position, correction and a Vietnamese explanation. Mistakes are logged for review. A text with mistakes must be rewritten before the activity can be completed.
+// @Tags Activities
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param request body SubmitWritingRequest true "Activity and text"
+// @Success 200 {object} response.SuccessResponse{data=WritingSubmissionResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 403 {object} response.ErrorResponse
+// @Failure 429 {object} response.ErrorResponse
+// @Failure 503 {object} response.ErrorResponse
+// @Router /writing/submissions [post]
+func (h Handler) SubmitWriting(c *gin.Context) {
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+		return
+	}
+	var req SubmitWritingRequest
+	if err := c.ShouldBindJSON(&req); err != nil || req.ActivityID == 0 {
+		response.ValidationError(c, map[string]string{"request": "activityId and text are required"})
+		return
+	}
+	result, err := h.service.SubmitWriting(c.Request.Context(), userID, req)
+	if err != nil {
+		writeActivityError(c, err)
+		return
+	}
+	response.OK(c, result)
+}
+
+// RewriteWriting godoc
+// @Summary Submit the rewrite of a text
+// @Description Checks the corrected text; the submission is COMPLETED when no mistakes remain (otherwise the remaining ones are returned in rewriteReport).
+// @Tags Activities
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param submissionId path int true "Writing submission ID"
+// @Param request body RewriteWritingRequest true "Rewritten text"
+// @Success 200 {object} response.SuccessResponse{data=WritingSubmissionResponse}
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 404 {object} response.ErrorResponse
+// @Failure 409 {object} response.ErrorResponse
+// @Failure 429 {object} response.ErrorResponse
+// @Router /writing/submissions/{submissionId}/rewrite [post]
+func (h Handler) RewriteWriting(c *gin.Context) {
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		response.Error(c, http.StatusUnauthorized, "UNAUTHORIZED", "Authentication is required")
+		return
+	}
+	submissionID, ok := parseIDParam(c, "submissionId")
+	if !ok {
+		return
+	}
+	var req RewriteWritingRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.ValidationError(c, map[string]string{"request": "text is required"})
+		return
+	}
+	result, err := h.service.RewriteWriting(c.Request.Context(), userID, submissionID, req)
+	if err != nil {
+		writeActivityError(c, err)
+		return
+	}
+	response.OK(c, result)
 }

@@ -22,6 +22,8 @@ import type {
 } from "@/types/activity";
 
 import { GrammarTheoryCard } from "@/features/grammar/GrammarTheoryCard";
+import { WritingTask } from "@/features/writing/WritingTask";
+import type { WritingContent } from "@/types/writing";
 
 import { ActivityContent } from "./ActivityContent";
 import { VocabularyCards } from "./VocabularyCards";
@@ -193,7 +195,22 @@ function ActivitySession({
         />
       ) : null}
 
-      {phase === "exercises" && exercises.length === 0 ? (
+      {phase === "exercises" && activity.type === "WRITING" ? (
+        <WritingTask
+          activityId={activity.id}
+          content={(activity.content ?? {}) as unknown as WritingContent}
+          finishing={complete.isPending}
+          initial={data.writing ?? null}
+          onFinish={finish}
+        />
+      ) : null}
+      {activity.type === "WRITING" && complete.error ? (
+        <p className="mt-3 text-center text-sm text-red-600">
+          {complete.error instanceof APIError ? complete.error.message : "Không hoàn thành được hoạt động."}
+        </p>
+      ) : null}
+
+      {phase === "exercises" && exercises.length === 0 && activity.type !== "WRITING" ? (
         <div className="rounded-2xl border border-dashed p-8 text-center">
           <p className="mb-4 text-muted-foreground">Hoạt động này chưa có bài tập.</p>
           <Button disabled={complete.isPending} onClick={finish}>
@@ -334,7 +351,8 @@ function ActivityResult({
       )}
       <p className="text-5xl font-bold tracking-normal">{completion.score}</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        Đúng {completion.correctCount}/{completion.totalCount} câu · cần {completion.activity.passScore} điểm để qua
+        {completion.totalCount > 0 ? `Đúng ${completion.correctCount}/${completion.totalCount} câu · ` : ""}cần{" "}
+        {completion.activity.passScore} điểm để qua
       </p>
       <h2 className="mt-4 text-xl font-bold tracking-normal">
         {completion.passed ? "Đạt rồi!" : "Chưa đạt, thử lại nhé"}

@@ -1,3 +1,4 @@
+import type { WritingSubmission } from '@/types/writing'
 import type { PassageCard } from '@/types/passage'
 import type { PhonemeCard } from '@/types/phoneme'
 import type { GrammarPointCard } from '@/types/grammar'
@@ -141,6 +142,8 @@ export type ActivityDetailResponse = {
   phonemes?: PhonemeCard[]
   /** Text/recording of a LISTENING or READING activity. */
   passage?: PassageCard | null
+  /** Latest submission of a WRITING activity. */
+  writing?: WritingSubmission | null
   answers: AnswerResult[]
 }
 

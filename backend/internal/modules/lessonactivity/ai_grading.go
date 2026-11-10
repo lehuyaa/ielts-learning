@@ -61,13 +61,21 @@ type AIGrader struct {
 	client     jsonCompleter
 	model      string
 	dailyLimit int
-	timeout    time.Duration
-	now        func() time.Time
+	// writingLimit caps writing gradings (incl. rewrite checks) per user per day.
+	writingLimit int
+	timeout      time.Duration
+	now          func() time.Time
+}
+
+// WithWritingLimit sets the daily limit of AI writing gradings (spec §6.7).
+func (g *AIGrader) WithWritingLimit(limit int) *AIGrader {
+	g.writingLimit = limit
+	return g
 }
 
 // NewAIGrader returns a grader. A nil or unconfigured client disables AI.
 func NewAIGrader(db *gorm.DB, client *ai.Client, model string, dailyLimit int) *AIGrader {
-	grader := &AIGrader{db: db, model: model, dailyLimit: dailyLimit, timeout: 25 * time.Second, now: time.Now}
+	grader := &AIGrader{db: db, model: model, dailyLimit: dailyLimit, writingLimit: 30, timeout: 25 * time.Second, now: time.Now}
 	if client != nil {
 		grader.client = client
 	}
@@ -120,7 +128,7 @@ func (g *AIGrader) Resolve(ctx context.Context, userID uint, exercise models.Exe
 		return applyVerdict(outcome, verdict)
 	}
 
-	allowed, err := g.takeQuota(userID)
+	allowed, err := g.takeQuota(userID, models.AIUsageShortAnswer, g.dailyLimit)
 	if err != nil {
 		log.Printf("ai grading: usage counter: %v", err)
 		outcome.AIStatus = AIStatusUnavailable
@@ -204,24 +212,24 @@ func (g *AIGrader) store(exerciseID uint, hash string, normalized string, verdic
 	}
 }
 
-// takeQuota counts one AI call for today and reports whether it is allowed.
-func (g *AIGrader) takeQuota(userID uint) (bool, error) {
-	if g.dailyLimit <= 0 {
+// takeQuota counts one AI call of a kind for today and reports whether it is allowed.
+func (g *AIGrader) takeQuota(userID uint, kind string, limit int) (bool, error) {
+	if limit <= 0 {
 		return false, nil
 	}
 	day := g.now().Format("2006-01-02")
 	allowed := false
 	err := g.db.Transaction(func(tx *gorm.DB) error {
-		row := models.AIUsageDaily{UserID: userID, Day: day, Kind: models.AIUsageShortAnswer}
+		row := models.AIUsageDaily{UserID: userID, Day: day, Kind: kind}
 		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&row).Error; err != nil {
 			return err
 		}
 		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
-			Where("user_id = ? AND day = ? AND kind = ?", userID, day, models.AIUsageShortAnswer).
+			Where("user_id = ? AND day = ? AND kind = ?", userID, day, kind).
 			Take(&row).Error; err != nil {
 			return err
 		}
-		if row.Count >= g.dailyLimit {
+		if row.Count >= limit {
 			return nil
 		}
 		allowed = true

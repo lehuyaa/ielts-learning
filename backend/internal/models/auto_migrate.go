@@ -44,5 +44,7 @@ func AutoMigrateModels() []interface{} {
 		&Phoneme{},
 		&UserPhonemeProgress{},
 		&Passage{},
+		&WritingSubmission{},
+		&LearnerMistake{},
 	}
 }
