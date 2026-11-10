@@ -1,80 +1,80 @@
-w1/l1-s1	Good morning, Lan.	Alex
-w1/l1-s2	Good morning, Minh. How are you?	Samantha
-w1/l1-s3	I'm fine, thank you. And you?	Alex
-w1/l1-s4	I'm very well, thanks.	Samantha
-w1/l1-s5	See you at the meeting. Bye!	Alex
-w1/l1-s6	Bye!	Samantha
+w1/l1-s1	Good morning, Lan.	male
+w1/l1-s2	Good morning, Minh. How are you?	female
+w1/l1-s3	I'm fine, thank you. And you?	male
+w1/l1-s4	I'm very well, thanks.	female
+w1/l1-s5	See you at the meeting. Bye!	male
+w1/l1-s6	Bye!	female
 w1/l1-stress	hello
 w1/l11-dict	I'm fine, thank you.
 w1/l11-mp	sheep
 w1/l12-mp	live
-w1/l2-s1	Hi, I'm Minh. I'm the new designer.	Alex
-w1/l2-s2	Nice to meet you, Minh. I'm Lan.	Samantha
-w1/l2-s3	Nice to meet you too. Where are you from?	Alex
-w1/l2-s4	I'm from Da Nang, but I live in Hanoi now.	Samantha
+w1/l2-s1	Hi, I'm Minh. I'm the new designer.	male
+w1/l2-s2	Nice to meet you, Minh. I'm Lan.	female
+w1/l2-s3	Nice to meet you too. Where are you from?	male
+w1/l2-s4	I'm from Da Nang, but I live in Hanoi now.	female
 w1/l21-dict	Nice to meet you, Minh.
 w1/l21-mp	man
 w1/l21-w2i	name
 w1/l22-mp	bed
-w1/l3-s1	Lan, this is Peter. He is our new developer.	Alex
-w1/l3-s2	Hi, Peter. Nice to meet you.	Samantha
-w1/l3-s3	Nice to meet you too, Lan.	Alex
-w1/l3-s4	Peter is from Canada. He is very friendly.	Alex
+w1/l3-s1	Lan, this is Peter. He is our new developer.	male
+w1/l3-s2	Hi, Peter. Nice to meet you.	female
+w1/l3-s3	Nice to meet you too, Lan.	male
+w1/l3-s4	Peter is from Canada. He is very friendly.	male
 w1/l3-stress	colleague
 w1/l31-dict	This is Peter.
 w1/l31-mp	cut
 w1/l32-mp	hot
-w1/l4-s1	What's your name, please?	Samantha
-w1/l4-s2	My name is Huy. H-U-Y.	Alex
-w1/l4-s3	And what's your phone number?	Samantha
-w1/l4-s4	It's 0912 345 678.	Alex
-w1/l4-s5	How old are you?	Samantha
-w1/l4-s6	I'm thirty-two.	Alex
+w1/l4-s1	What's your name, please?	female
+w1/l4-s2	My name is Huy. H-U-Y.	male
+w1/l4-s3	And what's your phone number?	female
+w1/l4-s4	It's 0912 345 678.	male
+w1/l4-s5	How old are you?	female
+w1/l4-s6	I'm thirty-two.	male
 w1/l4-stress	address
 w1/l41-mp	fool
 w1/l41-num	It's 0912 345 678.
 w1/l42-mp	look
 w1/l42-num	I'm thirty-two.
-w1/l5-s1	Is this your family?	Samantha
-w1/l5-s2	Yes. This is my father and this is my mother.	Alex
-w1/l5-s3	Who is this?	Samantha
-w1/l5-s4	That's my sister, Hoa. She is a nurse. And these are her two children.	Alex
+w1/l5-s1	Is this your family?	female
+w1/l5-s2	Yes. This is my father and this is my mother.	male
+w1/l5-s3	Who is this?	female
+w1/l5-s4	That's my sister, Hoa. She is a nurse. And these are her two children.	male
 w1/l5-stress	parents
 w1/l51-dict	This is my father.
 w1/l51-mp	bird
 w1/l51-num	These are her two children.
-w1/l6-s1	What do you do in your free time, Lan?	Alex
-w1/l6-s2	I like music. I sing and play the guitar.	Samantha
-w1/l6-s3	Cool! My hobby is fishing. I go fishing with my father on Sunday.	Alex
+w1/l6-s1	What do you do in your free time, Lan?	male
+w1/l6-s2	I like music. I sing and play the guitar.	female
+w1/l6-s3	Cool! My hobby is fishing. I go fishing with my father on Sunday.	male
 w1/l61-end	books
 w1/l61-gap	I go fishing with my father on Sunday.
 w1/l62-end	songs
 w1/l63-end	watches
 w1/l64-end	plays
-w1/l7-s1	What do you do, Hoa?	Alex
-w1/l7-s2	I'm an accountant. I work for a bank.	Samantha
-w1/l7-s3	Is it a big bank?	Alex
-w1/l7-s4	Yes, it is. There are two hundred people in my office.	Samantha
+w1/l7-s1	What do you do, Hoa?	male
+w1/l7-s2	I'm an accountant. I work for a bank.	female
+w1/l7-s3	Is it a big bank?	male
+w1/l7-s4	Yes, it is. There are two hundred people in my office.	female
 w1/l71-dict	I'm an accountant.
 w1/l71-num	There are two hundred people in my office.
 w1/l71-stress	teacher
 w1/l72-stress	doctor
 w1/l73-stress	designer
 w1/l74-stress	engineer
-w1/l8-s1	Excuse me, where is the meeting room?	Samantha
-w1/l8-s2	It's on the thirteenth floor, next to the kitchen.	Alex
-w1/l8-s3	And where are the toilets?	Samantha
-w1/l8-s4	They're near the stairs.	Alex
+w1/l8-s1	Excuse me, where is the meeting room?	female
+w1/l8-s2	It's on the thirteenth floor, next to the kitchen.	male
+w1/l8-s3	And where are the toilets?	female
+w1/l8-s4	They're near the stairs.	male
 w1/l81-gap	It's on the thirteenth floor, next to the kitchen.
 w1/l81-mp	thirteen
 w1/l81-stress	fifteen
 w1/l81-w2i	floor
 w1/l82-mp	forty
-w1/l9-s1	Excuse me, Nam. Can I use your pen, please?	Samantha
-w1/l9-s2	Sure. Here you are.	Alex
-w1/l9-s3	Thanks. And are those your notebooks?	Samantha
-w1/l9-s4	Yes, they are. Do you need one?	Alex
-w1/l9-s5	Yes, please. Thank you so much!	Samantha
+w1/l9-s1	Excuse me, Nam. Can I use your pen, please?	female
+w1/l9-s2	Sure. Here you are.	male
+w1/l9-s3	Thanks. And are those your notebooks?	female
+w1/l9-s4	Yes, they are. Do you need one?	male
+w1/l9-s5	Yes, please. Thank you so much!	female
 w1/l91-dict	Can I use your pen, please?
 w1/l91-end	pens
 w1/l91-mp	these

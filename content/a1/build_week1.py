@@ -17,9 +17,9 @@ AUDIO_ROOT = "/audio/a1"
 audio_lines = {}  # audio key -> (text spoken, voice or "")
 passages = []     # listening/reading texts (docs/foundation-spec.md §3.3)
 
-# macOS voices per speaker gender (generate_lesson_audio.sh falls back to the
-# default voice when one is not installed).
-VOICE = {"F": "Samantha", "M": "Alex"}
+# Speaker voices: generate_lesson_audio.sh maps "female" / "male" to an
+# installed macOS voice (FEMALE_VOICE / MALE_VOICE, or the best one found).
+VOICE = {"F": "female", "M": "male"}
 
 
 def audio(key, text, voice=""):
