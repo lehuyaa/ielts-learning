@@ -9,12 +9,13 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 | `build_sounds.py` → `a1-sounds.json` | The 40 sound cards (IPA chart) + the always-open "Sound Lab" topic: 178 minimal pairs, ending -s / -ed, 2-syllable stress. **Import first** |
 | `audio_manifest_sounds.tsv` | Words and minimal-pair audio for the sound cards and Sound Lab |
 | `lesson_kit.py` | Shared helpers for the week builders: exercise / activity helpers, role-plays, writing tasks, checkpoint pool, output files |
-| `build_week1.py`, `build_week2.py`, `build_week3.py` | Authoring source for each week (edit these, not the JSON) |
+| `build_week1.py` … `build_week4.py` | Authoring source for each week (edit these, not the JSON) |
 | `build_scenarios.py` → `a1-scenarios.json` | The 40 AI role-play scenarios: 9 per week (Task D10) + one per weekly checkpoint (Task 75): role, task, target patterns, max turns, opening line. **Import before the week bundles** |
 | `writing_prompts.py` | The 20 A1 writing prompts with frames and model answers (Task D9); weeks add them with `writing_activity(key)` |
 | `week-1.json` | Generated bundle: 18 passages (9 dialogues, 9 reading texts), 1 topic, 9 situation lessons + review, 69 activities (5 optional writing tasks, 9 optional AI role-plays), 229 exercises |
 | `week-2.json` | Generated bundle: 18 passages, 1 topic, 9 situation lessons + review, 69 activities (5 optional writing tasks, 9 optional AI role-plays), 297 exercises |
 | `week-3.json` | Generated bundle: 18 passages, 1 topic, 9 situation lessons + review, 69 activities, 307 exercises |
+| `week-4.json` | Generated bundle: 18 passages, 1 topic, 9 situation lessons + review, 69 activities, 301 exercises |
 | `audio_manifest_week-N.tsv` | Sentences/words to synthesise (`path<TAB>text[<TAB>voice]`) |
 | `generate_lesson_audio.sh` | Creates the `.m4a` files with macOS text-to-speech |
 
@@ -28,10 +29,11 @@ python3 build_sounds.py --cmu path/to/cmudict.dict                  # CMU dict: 
 python3 build_week1.py --vocab ../a1-vocabulary/out/a1_rows.json   # --vocab optional: checks word slugs
 python3 build_week2.py --vocab ../a1-vocabulary/out/a1_rows.json
 python3 build_week3.py --vocab ../a1-vocabulary/out/a1_rows.json
-./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/{w1,w2,w3,sounds,words}/*.m4a
+python3 build_week4.py --vocab ../a1-vocabulary/out/a1_rows.json
+./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/{w1,w2,w3,w4,sounds,words}/*.m4a
 ```
 
-Then upload `a1-grammar.json`, `a1-sounds.json` and `a1-scenarios.json`, then `week-1.json`, `week-2.json`, `week-3.json`, and `a1-scenarios.json` once more (it links each scenario to its week's dialogue) at **Admin → Import Lessons**
+Then upload `a1-grammar.json`, `a1-sounds.json` and `a1-scenarios.json`, then `week-1.json` … `week-4.json`, and `a1-scenarios.json` once more (it links each scenario to its week's dialogue) at **Admin → Import Lessons**
 (Preview, then Confirm import). GRAMMAR activities link to their theory card
 through `content.grammarPointSlug`; exercises practise a card through the skill
 tag `grammar:<slug>`, which also drives the learner's mastery on `/grammar`.
@@ -97,6 +99,21 @@ completes the scenario task.
 | 8 | Buying medicine | /s/ – /ʃ/ | can / must / should review |
 | 9 | At the bank | Week review | Comparatives + can / must review |
 | R | Week 3 review | | Checkpoint: 15 random items + a role-play without hints (70 to pass; unlocks Week 4) |
+
+## Week 4 · Plans and Problems
+
+| # | Lesson | Sounds | Grammar |
+|---|---|---|---|
+| 1 | Phone messages | /m/ – /n/ at the end of words | will: I'll tell him, I'll call you back |
+| 2 | Invitations | /w/ vs /v/ | be going to (plans) |
+| 3 | Arranging to meet | /h/ and /j/ | will or going to? Let's… |
+| 4 | Changing plans | Past -ed: /t/ /d/ /ɪd/ | won't, not going to, can't |
+| 5 | Weather small talk | Sentence stress | was / were, will (predictions) |
+| 6 | Your weekend | Linking sounds | Past simple: regular and irregular |
+| 7 | Sending a parcel | /n/ vs /ŋ/, -ing | Past simple questions: Did…? |
+| 8 | Reporting a problem | Stress on can't / didn't | Past simple negatives: didn't |
+| 9 | Emergency help | Week review | Past simple + will review |
+| R | Week 4 review | | Checkpoint: 15 random items + a role-play without hints (70 to pass; completes A1) |
 
 ## Sound cards and Sound Lab
 

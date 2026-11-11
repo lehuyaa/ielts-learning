@@ -1,0 +1,103 @@
+w4/l1-s1	Good morning, ABC Company. Lan speaking.	female
+w4/l1-s2	Hello. Can I speak to Mr Nam, please?	male
+w4/l1-s3	Sorry, he's in a meeting. Can I take a message?	female
+w4/l1-s4	Yes, please. This is Tom from Sun Bank. Can he call me back?	male
+w4/l1-s5	Sure. What's your number?	female
+w4/l1-s6	It's zero nine one two, three four five, six seven eight.	male
+w4/l1-s7	OK. I'll tell him.	female
+w4/l11-mp	game
+w4/l11-num	It's zero nine one two, three four five, six seven eight.
+w4/l12-mp	mail
+w4/l13-mp	sun
+w4/l2-s1	Hi Linh! Are you free on Saturday evening?	male
+w4/l2-s2	I think so. Why?	female
+w4/l2-s3	It's my birthday. I'm going to have a party at my house. Would you like to come?	male
+w4/l2-s4	I'd love to! What time?	female
+w4/l2-s5	At seven. We're going to have a barbecue in the garden.	male
+w4/l2-s6	Great. Can I bring anything?	female
+w4/l2-s7	Just bring a drink. See you on Saturday!	male
+w4/l21-mp	west
+w4/l21-num	The party starts at seven.
+w4/l22-mp	vine
+w4/l23-mp	wet
+w4/l3-s1	Are you going to see the new film this weekend?	female
+w4/l3-s2	Yes! Let's go together. What about Saturday?	male
+w4/l3-s3	Saturday is good. What time?	female
+w4/l3-s4	There's a show at eight. Let's meet at the cafe at seven thirty.	male
+w4/l3-s5	OK. I'll book the tickets online.	female
+w4/l3-s6	Great. See you at the cafe.	male
+w4/l31-mp	hat
+w4/l31-num	Let's meet at the cafe at seven thirty.
+w4/l32-mp	hill
+w4/l33-mp	year
+w4/l34-mp	yet
+w4/l4-s1	Hi Tom. I'm really sorry, but I can't meet you on Saturday.	female
+w4/l4-s2	Oh no. What's the problem?	male
+w4/l4-s3	My manager wants me to work on Saturday.	female
+w4/l4-s4	That's OK. Can we meet on Sunday instead?	male
+w4/l4-s5	Sunday is perfect. Is ten o'clock OK?	female
+w4/l4-s6	Yes. I'll see you on Sunday at ten.	male
+w4/l41-end	stopped
+w4/l41-num	Is ten o'clock OK?
+w4/l42-end	called
+w4/l43-end	wanted
+w4/l44-end	changed
+w4/l5-s1	Lovely day today, isn't it?	male
+w4/l5-s2	Yes, it's warm and sunny. Yesterday was so cold!	female
+w4/l5-s3	I know. And it was very windy too.	male
+w4/l5-s4	What's the weather going to be like tomorrow?	female
+w4/l5-s5	The app says it will rain in the afternoon.	male
+w4/l5-s6	Oh no. I'll take my umbrella, then.	female
+w4/l51-stress	weather
+w4/l51-stress-s	It's going to rain tomorrow.
+w4/l52-stress-s	The weather is nice today.
+w4/l53-stress-s	It was cold and windy.
+w4/l6-s1	Hi Nam! Did you have a good weekend?	female
+w4/l6-s2	Yes, thanks. I went to Ha Long Bay with my family.	male
+w4/l6-s3	Wow! How was it?	female
+w4/l6-s4	It was beautiful. We took a boat trip and ate seafood.	male
+w4/l6-s5	Sounds great. I stayed at home and cleaned my apartment.	female
+w4/l6-s6	That's OK. Sometimes we need a quiet weekend!	male
+w4/l61-dict	We went out at eight.
+w4/l61-heard	Turn it off.
+w4/l62-heard	I had an egg.
+w4/l63-heard	Look at it.
+w4/l7-s1	Next, please. How can I help?	female
+w4/l7-s2	I'd like to send this parcel to Ho Chi Minh City.	male
+w4/l7-s3	Please put it on the scale. It's two kilos. Normal or express?	female
+w4/l7-s4	How long does normal take?	male
+w4/l7-s5	Three days. Express takes one day, but it's more expensive.	female
+w4/l7-s6	Normal is fine. How much is it?	male
+w4/l7-s7	Sixty thousand dong.	female
+w4/l71-mp	rang
+w4/l71-num	It's two kilos.
+w4/l72-mp	wing
+w4/l72-num	Sixty thousand dong.
+w4/l73-mp	thin
+w4/l8-s1	Reception. How can I help you?	female
+w4/l8-s2	Hi, this is room three oh five. The air conditioner isn't working.	male
+w4/l8-s3	I'm sorry. When did it stop?	female
+w4/l8-s4	It stopped last night. I turned it off and on, but it didn't help.	male
+w4/l8-s5	OK. I'll send someone to check it in ten minutes.	female
+w4/l8-s6	Thank you. Can you also bring some more towels?	male
+w4/l81-heard	I can't open the door.
+w4/l81-num	This is room three oh five.
+w4/l82-heard	I can come at five.
+w4/l83-heard	It didn't work.
+w4/l84-heard	The light isn't working.
+w4/l9-s1	Emergency services. What's happening?	male
+w4/l9-s2	A man fell off his motorbike. His leg is hurt.	female
+w4/l9-s3	Is he awake?	male
+w4/l9-s4	Yes, he is, but he can't stand up.	female
+w4/l9-s5	Where are you?	male
+w4/l9-s6	On Nguyen Trai Street, near the big supermarket.	female
+w4/l9-s7	OK. Don't move him. The ambulance will be there in ten minutes.	male
+w4/l91-end	helped
+w4/l91-mp	sing
+w4/l91-num	The ambulance will be there in ten minutes.
+w4/l92-mp	wheel
+w4/l93-mp	heat
+w4/rv1-dict	I'll call you back later.
+w4/rv1-end	wanted
+w4/rv1-mp	west
+w4/rv2-num	My number is zero nine eight, seven six five, four three two one.

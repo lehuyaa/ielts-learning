@@ -275,7 +275,7 @@ CHECKPOINTS = {
 
 # Weeks whose lessons exist: their scenarios use the lesson dialogue as the
 # model dialogue (the passage must be imported with the week bundle first).
-BUILT_WEEKS = {1, 2, 3}
+BUILT_WEEKS = {1, 2, 3, 4}
 
 
 def build():

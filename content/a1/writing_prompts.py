@@ -2,8 +2,7 @@
 
 20 prompts over the 4 weeks, each with sentence frames and a model answer.
 A week's builder adds them as optional WRITING activities with
-writing_activity(PROMPTS[key]). Weeks 2-4 are attached when those lessons are
-built (prompts get a "lesson" slug when their week is built).
+writing_activity(PROMPTS[key]). Each prompt names the lesson it is attached to ("lesson").
 """
 
 PROMPTS = {
@@ -190,6 +189,7 @@ PROMPTS = {
 
     # Week 4 · Plans and problems (G8 past simple, G9 will / be going to)
     "w4-last-weekend": {
+        "lesson": "a1-w4-l6-your-weekend",
         "week": 4, "situation": "your weekend",
         "title": "Viết: Cuối tuần trước của tôi",
         "promptVi": "Kể về cuối tuần trước: bạn đã đi đâu, làm gì, với ai và cảm thấy thế nào.",
@@ -197,10 +197,11 @@ PROMPTS = {
         "frame": ["Last weekend, I ...", "On Saturday, I went ...", "On Sunday, I ...", "It was ..."],
         "minSentences": 4, "maxSentences": 8,
         "targetGrammar": ["g8-past-simple"],
-        "targetVocabulary": ["a1-weekend", "a1-went"],
+        "targetVocabulary": ["a1-weekend", "a1-go"],
         "modelAnswer": "Last weekend was great. On Saturday, I went to the cinema with my friends. We watched a funny film. On Sunday, I visited my parents and cooked lunch for them. It was a relaxing weekend.",
     },
     "w4-invitation": {
+        "lesson": "a1-w4-l2-invitations",
         "week": 4, "situation": "invitations",
         "title": "Viết: Mời bạn dự tiệc",
         "promptVi": "Viết lời mời bạn đến dự tiệc sinh nhật: ngày, giờ, địa điểm và hoạt động.",
@@ -212,6 +213,7 @@ PROMPTS = {
         "modelAnswer": "Hi Lan! Would you like to come to my birthday party? It is on Saturday at seven o'clock, at my flat. We are going to have dinner and sing karaoke. Please tell me if you can come!",
     },
     "w4-change-plans": {
+        "lesson": "a1-w4-l4-changing-plans",
         "week": 4, "situation": "changing plans",
         "title": "Viết: Đổi lịch hẹn",
         "promptVi": "Nhắn tin xin đổi lịch hẹn: lịch cũ, lý do và đề nghị thời gian mới.",
@@ -223,6 +225,7 @@ PROMPTS = {
         "modelAnswer": "Hi Peter, I'm sorry, but I can't meet you on Thursday. I have to work late that day. Can we meet on Friday evening instead? I will book a table at the Italian restaurant.",
     },
     "w4-next-year": {
+        "lesson": "a1-w4-l3-arranging-to-meet",
         "week": 4, "situation": "arranging to meet",
         "title": "Viết: Kế hoạch của tôi",
         "promptVi": "Viết về kế hoạch của bạn cho năm tới: học gì, đi đâu, thay đổi điều gì.",
@@ -230,10 +233,11 @@ PROMPTS = {
         "frame": ["Next year, I am going to ...", "I will ...", "I want to ...", "I hope ..."],
         "minSentences": 4, "maxSentences": 7,
         "targetGrammar": ["g9-future"],
-        "targetVocabulary": ["a1-plan", "a1-next", "a1-learn"],
+        "targetVocabulary": ["a1-plan", "a1-future", "a1-learn"],
         "modelAnswer": "Next year, I am going to take an English course. I will practise speaking every day. I want to travel to Japan with my wife. I am going to save money for the trip. I hope I will speak English well.",
     },
     "w4-report-problem": {
+        "lesson": "a1-w4-l8-reporting-a-problem",
         "week": 4, "situation": "reporting a problem",
         "title": "Viết: Báo sự cố",
         "promptVi": "Viết email báo sự cố cho bộ phận IT hoặc chủ nhà: chuyện gì xảy ra, khi nào và bạn cần gì.",

@@ -1983,7 +1983,7 @@ Status: done. Mastery = average score of the last 20 answers tagged `grammar:<sl
 - 9 grammar points (G1-G9, spec §2.3) from *Essential Grammar in Use*: Vietnamese summary, formula, 5 examples, 4-6 common mistakes.
 - ~40 exercises per point across the 5 types, split over the lessons of that week. Reviewed before publishing.
 
-Status: partial. All 9 theory cards written (`content/a1/build_grammar.py`); exercises for G1/G2 (Week 1), G3/G4/G5 (Week 2) and G6/G7 (Week 3). G8/G9 exercises ship with Week 4.
+Status: done. All 9 theory cards (`content/a1/build_grammar.py`) with exercises in the week builders: G1/G2 (Week 1), G3/G4/G5 (Week 2), G6/G7 (Week 3), G8/G9 (Week 4).
 
 ## 16. Milestone 15 - Pronunciation and IPA
 
@@ -2083,7 +2083,7 @@ Status: done. `POST /admin/content/extract` (≤10 images or one PDF) → vision
 - D7: 36 model dialogues (one per situation, from *English File Elementary* audio or generated + TTS) and ~100 dictation sentences.
 - D8: ~30 A1 reading texts (messages, notices, menus, schedules, profiles), each with 4-6 exercises.
 
-Status: partial. Weeks 1-3 done: 27 dialogues as passages (one TTS file per line, a voice per speaker) with dictation / number items, and 27 reading texts (notices, profiles, emails, messages, menus, timetables, articles) with 4 questions each. Week 4 passages are written together with its lessons. Week builders share `content/a1/lesson_kit.py`.
+Status: done. 36 dialogues as passages (one TTS file per line, a voice per speaker) with dictation / number / phone items, and 36 reading texts (notices, profiles, emails, messages, menus, timetables, articles) with 4 questions each, in `content/a1/build_week1.py` … `build_week4.py` (shared helpers: `lesson_kit.py`).
 
 ## 18. Milestone 17 - Writing
 
@@ -2105,7 +2105,7 @@ Status: done. `writing_submissions` + `learner_mistakes` (created here). `POST /
 
 - ~20 prompts (spec §4.1 format) spread over the 4 weeks, with model answers.
 
-Status: done for the prompts: 20 prompts with frames and model answers in `content/a1/writing_prompts.py`; Weeks 1-3 attach theirs as optional WRITING activities (5 per week); Week 4 when its lessons are built.
+Status: done. 20 prompts with frames and model answers in `content/a1/writing_prompts.py`, attached as optional WRITING activities (5 per week).
 
 ## 19. Milestone 18 - AI Speaking Upgrade
 

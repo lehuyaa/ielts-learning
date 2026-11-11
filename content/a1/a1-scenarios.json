@@ -620,7 +620,8 @@
       "openingLine": "Good morning, Green Tech, Mai speaking.",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 31
+      "orderIndex": 31,
+      "passageSlug": "a1-w4-l1-dialogue"
     },
     {
       "slug": "a1-w4-invitations",
@@ -639,7 +640,8 @@
       "openingLine": "Hi! Are you free on Saturday evening? It's my birthday!",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 32
+      "orderIndex": 32,
+      "passageSlug": "a1-w4-l2-dialogue"
     },
     {
       "slug": "a1-w4-arranging-to-meet",
@@ -658,7 +660,8 @@
       "openingLine": "Hey! We haven't met for ages. Let's meet this weekend!",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 33
+      "orderIndex": 33,
+      "passageSlug": "a1-w4-l3-dialogue"
     },
     {
       "slug": "a1-w4-changing-plans",
@@ -677,7 +680,8 @@
       "openingLine": "Hi! See you tomorrow at the cinema, right?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 34
+      "orderIndex": 34,
+      "passageSlug": "a1-w4-l4-dialogue"
     },
     {
       "slug": "a1-w4-weather-small-talk",
@@ -696,7 +700,8 @@
       "openingLine": "Phew, it's so hot today, isn't it?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 35
+      "orderIndex": 35,
+      "passageSlug": "a1-w4-l5-dialogue"
     },
     {
       "slug": "a1-w4-your-weekend",
@@ -715,7 +720,8 @@
       "openingLine": "Good morning! How was your weekend?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 36
+      "orderIndex": 36,
+      "passageSlug": "a1-w4-l6-dialogue"
     },
     {
       "slug": "a1-w4-sending-a-parcel",
@@ -734,7 +740,8 @@
       "openingLine": "Hello! What can I do for you?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 37
+      "orderIndex": 37,
+      "passageSlug": "a1-w4-l7-dialogue"
     },
     {
       "slug": "a1-w4-reporting-a-problem",
@@ -753,7 +760,8 @@
       "openingLine": "IT help desk, this is Kevin. What's the problem?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 38
+      "orderIndex": 38,
+      "passageSlug": "a1-w4-l8-dialogue"
     },
     {
       "slug": "a1-w4-emergency-help",
@@ -772,7 +780,8 @@
       "openingLine": "Emergency services. What's happening?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 39
+      "orderIndex": 39,
+      "passageSlug": "a1-w4-l9-dialogue"
     },
     {
       "slug": "a1-w4-checkpoint",
