@@ -2208,6 +2208,8 @@ Requirements:
 - `GET /foundation/summary?level=A1`: per-skill progress (vocabulary words mastered, grammar mastery average, sounds accuracy, listening/reading/writing/speaking average scores), lessons done, streak.
 - `/foundation` page with the "A1 reached" checklist from spec §1.
 
+Status: done. Module `backend/internal/modules/foundation`: `GET /foundation/summary?level=A1` returns situation lessons done (target 36) and weekly checkpoints passed, streak, the next lesson, 7 skills (vocabulary: words mastered / words of the level's lessons; grammar: average mastery of practised points; sounds: average accuracy; listening / reading / writing / speaking: average best score and activities passed) and, for A1, the checklist of spec §1 with measurable rules: (1) role-plays introducing-yourself, describing-your-job, family, daily-schedule completed; (2) 36 situation lessons completed; (3) 36 of 40 sounds at accuracy ≥ 70 (≥ 3 attempts); (4) every listening and reading activity passed with an average ≥ 70; (5) 3 completed writings of 5+ sentences whose first report had no tense mistake (to be, present simple / continuous, past simple, future). Page `/foundation` (sidebar "A1 Foundation").
+
 ### Task 77 - A1 QA and Study Run
 
 Checklist:

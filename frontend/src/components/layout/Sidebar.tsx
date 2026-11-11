@@ -15,6 +15,7 @@ import {
   FileAudio,
   FileSearch,
   NotebookPen,
+  GraduationCap,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -28,6 +29,12 @@ const navigationItems = [
     to: "/dashboard",
     icon: BarChart3,
     match: (pathname: string) => pathname === "/dashboard",
+  },
+  {
+    label: "A1 Foundation",
+    to: "/foundation",
+    icon: GraduationCap,
+    match: (pathname: string) => pathname === "/foundation",
   },
   {
     label: "Roadmap",

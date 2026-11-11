@@ -12,6 +12,7 @@ import { AIConversationPage } from '@/pages/AIConversationPage'
 import { AIConversationSessionPage } from '@/pages/AIConversationSessionPage'
 import { SpeakingSessionPage } from '@/pages/SpeakingSessionPage'
 import { MistakesPage } from '@/pages/MistakesPage'
+import { FoundationPage } from '@/pages/FoundationPage'
 import { MistakeReviewPage } from '@/pages/MistakeReviewPage'
 import { PracticePage } from '@/pages/PracticePage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -131,6 +132,10 @@ export const router = createBrowserRouter([
           {
             path: '/ai-conversation/create',
             element: <AIConversationCreatePage />,
+          },
+          {
+            path: '/foundation',
+            element: <FoundationPage />,
           },
           {
             path: '/mistakes',

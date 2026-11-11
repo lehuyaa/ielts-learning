@@ -20,6 +20,7 @@ import (
 	coursemodule "ielts-learning/backend/internal/modules/course"
 	dashboardmodule "ielts-learning/backend/internal/modules/dashboard"
 	flashcardmodule "ielts-learning/backend/internal/modules/flashcard"
+	foundationmodule "ielts-learning/backend/internal/modules/foundation"
 	grammarmodule "ielts-learning/backend/internal/modules/grammar"
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
 	lessonactivitymodule "ielts-learning/backend/internal/modules/lessonactivity"
@@ -111,6 +112,7 @@ func main() {
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
 	mistakesmodule.RegisterRoutes(api, db, jwtManager)
+	foundationmodule.RegisterRoutes(api, db, jwtManager)
 	practicemodule.RegisterRoutes(api, db, jwtManager, aiClient, cfg.AIPracticeDailyLimit)
 	aiconversationmodule.RegisterRoutes(api, db, jwtManager, aiClient, cfg.AIChatDailyLimit)
 
