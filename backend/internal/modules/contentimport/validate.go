@@ -598,3 +598,33 @@ func validateWritingContent(content json.RawMessage) []string {
 	}
 	return errs
 }
+
+func scenarioSlug(activity ActivityInput) string {
+	if activity.ScenarioSlug != "" {
+		return activity.ScenarioSlug
+	}
+	var content struct {
+		ScenarioSlug string `json:"scenarioSlug"`
+	}
+	if len(activity.Content) > 0 {
+		_ = json.Unmarshal(activity.Content, &content)
+	}
+	return content.ScenarioSlug
+}
+
+func validateScenario(scenario ScenarioInput) []string {
+	errs := validateSlug(scenario.Slug)
+	if strings.TrimSpace(scenario.Title) == "" {
+		errs = append(errs, "title is required")
+	}
+	if strings.TrimSpace(scenario.Role) == "" || strings.TrimSpace(scenario.Task) == "" {
+		errs = append(errs, "role and task are required")
+	}
+	if strings.TrimSpace(scenario.OpeningLine) == "" {
+		errs = append(errs, "openingLine is required")
+	}
+	if scenario.MaxTurns < 0 || scenario.MaxTurns > 30 {
+		errs = append(errs, "maxTurns must be between 1 and 30")
+	}
+	return errs
+}

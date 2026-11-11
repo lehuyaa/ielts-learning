@@ -46,5 +46,6 @@ func AutoMigrateModels() []interface{} {
 		&Passage{},
 		&WritingSubmission{},
 		&LearnerMistake{},
+		&AIConversationSession{},
 	}
 }

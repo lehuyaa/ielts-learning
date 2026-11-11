@@ -61,13 +61,6 @@ func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
 	}
 
 	result := ImportResult{BundleErrors: []string{}, Warnings: []string{}, Items: []ItemResult{}}
-	for name, raw := range map[string]json.RawMessage{
-		"scenarios": bundle.Scenarios,
-	} {
-		if len(raw) > 0 && string(raw) != "[]" && string(raw) != "null" {
-			result.Warnings = append(result.Warnings, fmt.Sprintf("%s are not imported yet and were ignored", name))
-		}
-	}
 
 	if bundle.CourseSlug == "" || bundle.CEFRLevel == "" {
 		result.BundleErrors = append(result.BundleErrors, "courseSlug and cefrLevel are required")
@@ -143,7 +136,22 @@ func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, kn
 			passageIDs[slug] = id
 		}
 	}
+	scenarioIDs, err := s.applyScenarios(repo, bundle, passageIDs, commit, result)
+	if err != nil {
+		return err
+	}
+	existingScenarios, err := repo.SystemScenarioIDs(collectScenarioSlugs(bundle))
+	if err != nil {
+		return err
+	}
+	for slug, id := range existingScenarios {
+		if _, ok := scenarioIDs[slug]; !ok {
+			scenarioIDs[slug] = id
+		}
+	}
 	links := contentLinks{
+		scenarios: slugLinks{ids: scenarioIDs, warned: map[string]bool{},
+			message: "scenario %q not found — add it to \"scenarios\" or import a1-scenarios.json first; the speaking activity is imported without it"},
 		grammar: slugLinks{ids: grammarIDs, warned: map[string]bool{},
 			message: "grammar point %q not found — import the grammar bundle first; activities are imported without the theory card"},
 		passages: slugLinks{ids: passageIDs, warned: map[string]bool{},
@@ -283,6 +291,7 @@ func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonEx
 		activity.Status = models.ContentStatus(item.Status)
 		activity.GrammarPointID = links.grammar.resolve(grammarPointSlug(input), result)
 		activity.PassageID = links.passages.resolve(passageSlug(input), result)
+		activity.ScenarioID = links.scenarios.resolve(scenarioSlug(input), result)
 		if commit {
 			if err := repo.SaveActivity(&activity); err != nil {
 				return err
@@ -433,8 +442,9 @@ func defaultPtr(value *int, fallback int) int {
 
 // contentLinks resolves the slugs an activity refers to.
 type contentLinks struct {
-	grammar  slugLinks
-	passages slugLinks
+	grammar   slugLinks
+	passages  slugLinks
+	scenarios slugLinks
 }
 
 // slugLinks resolves slugs (grammar points, passages) to IDs for activity links.
@@ -690,4 +700,75 @@ func resolvePayloadPassage(payload json.RawMessage, passageIDs map[string]uint) 
 		return payload, "payload cannot be encoded"
 	}
 	return resolved, ""
+}
+
+func (s Service) applyScenarios(repo Repository, bundle Bundle, passageIDs map[string]uint, commit bool, result *ImportResult) (map[string]uint, error) {
+	ids := map[string]uint{}
+	for index, input := range bundle.Scenarios {
+		item := ItemResult{Kind: KindScenario, Path: "scenario:" + input.Slug, Title: input.Title, Errors: validateScenario(input)}
+		if _, duplicate := ids[input.Slug]; duplicate {
+			item.Errors = append(item.Errors, "duplicate scenario slug in this file")
+		}
+		var passageID *uint
+		if input.PassageSlug != "" {
+			if id, ok := passageIDs[input.PassageSlug]; ok {
+				passageID = &id
+			} else if existing, err := repo.PassageIDs([]string{input.PassageSlug}); err != nil {
+				return nil, err
+			} else if id, ok := existing[input.PassageSlug]; ok {
+				passageID = &id
+			} else {
+				result.Warnings = append(result.Warnings, fmt.Sprintf("scenario %q: model dialogue %q not found", input.Slug, input.PassageSlug))
+			}
+		}
+
+		scenario, exists, err := repo.FindSystemScenario(input.Slug)
+		if err != nil {
+			return nil, err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		level := defaultString(input.CEFRLevel, bundle.CEFRLevel)
+		patterns, _ := json.Marshal(input.TargetPatterns)
+		scenario.UserID = nil
+		scenario.IsSystem = true
+		scenario.Slug = input.Slug
+		scenario.Title = input.Title
+		scenario.Description = input.Description
+		scenario.SituationContext = input.SituationContext
+		scenario.Level = models.DifficultyBeginner
+		scenario.Duration = defaultString(input.Duration, "5 min")
+		scenario.CEFRLevel = &level
+		scenario.Role = input.Role
+		scenario.Task = input.Task
+		scenario.TargetPatternsJSON = datatypes.JSON(patterns)
+		scenario.MaxTurns = defaultInt(input.MaxTurns, 8)
+		scenario.OpeningLine = input.OpeningLine
+		scenario.PassageID = passageID
+		scenario.Group = input.Group
+		scenario.OrderIndex = defaultInt(input.OrderIndex, index+1)
+		if commit {
+			if err := repo.Save(&scenario); err != nil {
+				return nil, err
+			}
+		}
+		ids[input.Slug] = scenario.ID
+	}
+	return ids, nil
+}
+
+func collectScenarioSlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				if slug := scenarioSlug(activity); slug != "" {
+					slugs = append(slugs, slug)
+				}
+			}
+		}
+	}
+	return slugs
 }

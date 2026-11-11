@@ -213,6 +213,8 @@ func writeActivityError(c *gin.Context, err error) {
 		response.Error(c, http.StatusConflict, "WRITING_NOT_REWRITABLE", "This submission does not need a rewrite")
 	case errors.Is(err, ErrWritingNotCompleted):
 		response.Error(c, http.StatusBadRequest, "WRITING_NOT_COMPLETED", "Submit your text and its rewrite before finishing")
+	case errors.Is(err, ErrSpeakingNotCompleted):
+		response.Error(c, http.StatusBadRequest, "SPEAKING_NOT_COMPLETED", "Finish a conversation with the AI before completing this activity")
 	case errors.Is(err, ErrAILimitReached):
 		response.Error(c, http.StatusTooManyRequests, "AI_LIMIT_REACHED", "You have used today's AI gradings. Try again tomorrow.")
 	case errors.Is(err, ErrAIUnavailable):

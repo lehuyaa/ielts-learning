@@ -104,7 +104,7 @@ func main() {
 	contentimportmodule.RegisterRoutes(api, db, jwtManager, contentAIClient, contentimportmodule.MediaStore{Dir: cfg.MediaDir})
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
-	aiconversationmodule.RegisterRoutes(api, db, jwtManager, aiClient)
+	aiconversationmodule.RegisterRoutes(api, db, jwtManager, aiClient, cfg.AIChatDailyLimit)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("failed to start server: %v", err)

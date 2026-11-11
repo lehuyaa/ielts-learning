@@ -7,8 +7,11 @@ import (
 	"math/rand"
 	"regexp"
 	"strings"
+	"time"
 
 	"ielts-learning/backend/internal/models"
+	activitymodule "ielts-learning/backend/internal/modules/activity"
+	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
 var ErrSlugGenerationFailed = errors.New("could not generate a unique scenario slug")
@@ -25,10 +28,28 @@ var slugInvalidChars = regexp.MustCompile(`[^a-z0-9]+`)
 type Service struct {
 	repository   Repository
 	openAIClient *openAIClient
+	xp           xpmodule.Service
+	daily        activitymodule.Service
+	// chatLimit caps AI chat calls (turns, hints, reports) per user per day.
+	chatLimit int
+	now       func() time.Time
 }
 
 func NewService(repository Repository, openAIClient *openAIClient) Service {
-	return Service{repository: repository, openAIClient: openAIClient}
+	return Service{
+		repository:   repository,
+		openAIClient: openAIClient,
+		xp:           xpmodule.NewService(xpmodule.NewRepository(repository.db)),
+		daily:        activitymodule.NewService(activitymodule.NewRepository(repository.db)),
+		chatLimit:    200,
+		now:          time.Now,
+	}
+}
+
+// WithChatLimit sets the daily limit of AI chat calls (spec §6.7).
+func (s Service) WithChatLimit(limit int) Service {
+	s.chatLimit = limit
+	return s
 }
 
 func (s Service) CreateScenario(userID uint, req CreateScenarioRequest) (ScenarioResponse, error) {
@@ -38,7 +59,7 @@ func (s Service) CreateScenario(userID uint, req CreateScenarioRequest) (Scenari
 	}
 
 	scenario := models.AIConversationScenario{
-		UserID:           userID,
+		UserID:           &userID,
 		Slug:             slug,
 		Title:            req.Title,
 		Description:      req.Description,
@@ -60,7 +81,18 @@ func (s Service) ListScenarios(userID uint) (ListScenariosResponse, error) {
 		return ListScenariosResponse{}, err
 	}
 
-	return ListScenariosResponse{Items: toScenarioResponses(scenarios)}, nil
+	stats, err := s.repository.FinishedStats(userID)
+	if err != nil {
+		return ListScenariosResponse{}, err
+	}
+	items := toScenarioResponses(scenarios)
+	for i := range items {
+		if stat, ok := stats[items[i].ID]; ok {
+			items[i].Sessions = stat.Sessions
+			items[i].BestScore = stat.BestScore
+		}
+	}
+	return ListScenariosResponse{Items: items}, nil
 }
 
 // SendChatMessage looks up the caller's scenario, replays its persisted
@@ -78,11 +110,9 @@ func (s Service) SendChatMessage(ctx context.Context, userID uint, scenarioSlug 
 		return ChatResponse{}, err
 	}
 
-	messages := make([]openAIMessage, 0, len(history)+2)
-	if scenario.SituationContext != "" {
-		messages = append(messages, openAIMessage{Role: chatRoleSystem, Content: scenario.SituationContext})
-	}
-	for _, item := range history {
+	messages := make([]openAIMessage, 0, maxHistoryMessages+2)
+	messages = append(messages, openAIMessage{Role: chatRoleSystem, Content: buildSystemPrompt(scenario, len(history)/2+1)})
+	for _, item := range lastMessages(history, maxHistoryMessages) {
 		messages = append(messages, openAIMessage{Role: item.Role, Content: item.Content})
 	}
 	messages = append(messages, openAIMessage{Role: chatRoleUser, Content: userMessage})

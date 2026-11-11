@@ -160,6 +160,10 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 	if err != nil {
 		return ActivityDetailResponse{}, err
 	}
+	scenario, speaking, err := s.speakingDetail(userID, activity)
+	if err != nil {
+		return ActivityDetailResponse{}, err
+	}
 
 	counts := map[uint]int{activity.ID: len(exercises)}
 	locks := activityLocks(ctx.activities, ctx.progress)
@@ -179,6 +183,8 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		Phonemes:     phonemes,
 		Passage:      passage,
 		Writing:      writing,
+		Scenario:     scenario,
+		Speaking:     speaking,
 		Answers:      answerResults,
 	}, nil
 }
@@ -484,4 +490,31 @@ func (s Service) phonemeCards(activity models.LessonActivity) ([]PhonemeCard, er
 		}
 	}
 	return cards, nil
+}
+
+// speakingDetail returns the role-play brief and latest finished session of a
+// SPEAKING activity linked to a scenario.
+func (s Service) speakingDetail(userID uint, activity models.LessonActivity) (*ScenarioCard, *SpeakingSummary, error) {
+	if activity.ScenarioID == nil {
+		return nil, nil, nil
+	}
+	scenario, found, err := s.repository.FindScenario(*activity.ScenarioID)
+	if err != nil || !found {
+		return nil, nil, err
+	}
+	patterns := []string{}
+	_ = json.Unmarshal(scenario.TargetPatternsJSON, &patterns)
+	turns := scenario.MaxTurns
+	if turns <= 0 {
+		turns = 8
+	}
+	card := &ScenarioCard{
+		ID: scenario.ID, Slug: scenario.Slug, Title: scenario.Title, Description: scenario.Description,
+		Role: scenario.Role, Task: scenario.Task, TargetPatterns: patterns, MaxTurns: turns, PassageID: scenario.PassageID,
+	}
+	session, found, err := s.repository.LatestFinishedSession(userID, activity.ID)
+	if err != nil || !found {
+		return card, nil, err
+	}
+	return card, &SpeakingSummary{SessionID: session.ID, Score: session.Score, TaskCompleted: session.TaskDone, FinishedAt: session.FinishedAt}, nil
 }

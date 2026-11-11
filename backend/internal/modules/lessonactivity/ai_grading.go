@@ -17,6 +17,7 @@ import (
 	"gorm.io/gorm/clause"
 
 	"ielts-learning/backend/internal/models"
+	"ielts-learning/backend/internal/modules/aiusage"
 	"ielts-learning/backend/internal/shared/ai"
 )
 
@@ -214,28 +215,7 @@ func (g *AIGrader) store(exerciseID uint, hash string, normalized string, verdic
 
 // takeQuota counts one AI call of a kind for today and reports whether it is allowed.
 func (g *AIGrader) takeQuota(userID uint, kind string, limit int) (bool, error) {
-	if limit <= 0 {
-		return false, nil
-	}
-	day := g.now().Format("2006-01-02")
-	allowed := false
-	err := g.db.Transaction(func(tx *gorm.DB) error {
-		row := models.AIUsageDaily{UserID: userID, Day: day, Kind: kind}
-		if err := tx.Clauses(clause.OnConflict{DoNothing: true}).Create(&row).Error; err != nil {
-			return err
-		}
-		if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
-			Where("user_id = ? AND day = ? AND kind = ?", userID, day, kind).
-			Take(&row).Error; err != nil {
-			return err
-		}
-		if row.Count >= limit {
-			return nil
-		}
-		allowed = true
-		return tx.Model(&row).Update("count", gorm.Expr("count + 1")).Error
-	})
-	return allowed, err
+	return aiusage.Take(g.db, userID, kind, limit, g.now())
 }
 
 func (g *AIGrader) prompt(exercise models.Exercise, answer string) []ai.Message {

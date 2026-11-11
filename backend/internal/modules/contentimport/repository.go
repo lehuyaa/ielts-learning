@@ -95,14 +95,20 @@ func (r Repository) Save(value any) error {
 // default on insert (is_required=false would become true), so those fields
 // are written explicitly afterwards.
 func (r Repository) SaveActivity(activity *models.LessonActivity) error {
-	if err := r.Save(activity); err != nil {
-		return err
-	}
-	err := r.db.Model(&models.LessonActivity{ID: activity.ID}).Updates(map[string]any{
+	// Captured first: on insert GORM fills skipped zero fields with their
+	// tag default in the struct.
+	flags := map[string]any{
 		"is_required": activity.IsRequired,
 		"pass_score":  activity.PassScore,
 		"xp_reward":   activity.XPReward,
-	}).Error
+	}
+	if err := r.Save(activity); err != nil {
+		return err
+	}
+	activity.IsRequired = flags["is_required"].(bool)
+	activity.PassScore = flags["pass_score"].(int)
+	activity.XPReward = flags["xp_reward"].(int)
+	err := r.db.Model(&models.LessonActivity{ID: activity.ID}).Updates(flags).Error
 	if err != nil {
 		return fmt.Errorf("save activity flags: %w", err)
 	}
@@ -236,6 +242,27 @@ func (r Repository) PassageIDs(slugs []string) (map[string]uint, error) {
 	}
 	for _, passage := range passages {
 		result[passage.Slug] = passage.ID
+	}
+	return result, nil
+}
+
+func (r Repository) FindSystemScenario(slug string) (models.AIConversationScenario, bool, error) {
+	var scenario models.AIConversationScenario
+	err := r.db.Where("slug = ? AND is_system = ?", slug, true).First(&scenario).Error
+	return scenario, found(err), ignoreNotFound(err, "find scenario")
+}
+
+func (r Repository) SystemScenarioIDs(slugs []string) (map[string]uint, error) {
+	result := map[string]uint{}
+	if len(slugs) == 0 {
+		return result, nil
+	}
+	var scenarios []models.AIConversationScenario
+	if err := r.db.Select("id", "slug").Where("slug IN ? AND is_system = ?", slugs, true).Find(&scenarios).Error; err != nil {
+		return nil, fmt.Errorf("find scenarios: %w", err)
+	}
+	for _, scenario := range scenarios {
+		result[scenario.Slug] = scenario.ID
 	}
 	return result, nil
 }

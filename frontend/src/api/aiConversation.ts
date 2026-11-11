@@ -7,6 +7,9 @@ import type {
   ScenarioResponse,
   SendChatMessageInput,
   SendChatMessageResponse,
+  SessionTurn,
+  SpeakingHint,
+  SpeakingSession,
 } from '@/types/aiConversation'
 
 export async function createScenario(payload: CreateScenarioInput) {
@@ -44,4 +47,36 @@ export async function sendChatMessage(
   )
 
   return unwrapData<SendChatMessageResponse>(response)
+}
+
+// AI calls can take a few seconds (reports longer).
+const slow = { timeout: 90_000 }
+
+export async function startSession(input: { scenarioSlug: string; activityId?: number; fresh?: boolean }) {
+  const response = await api.post<APIResponse<SpeakingSession>>('/ai-conversations/sessions', input)
+  return unwrapData<SpeakingSession>(response)
+}
+
+export async function getSession(sessionId: number) {
+  const response = await api.get<APIResponse<SpeakingSession>>(`/ai-conversations/sessions/${sessionId}`)
+  return unwrapData<SpeakingSession>(response)
+}
+
+export async function sendSessionMessage(sessionId: number, message: string) {
+  const response = await api.post<APIResponse<SessionTurn>>(
+    `/ai-conversations/sessions/${sessionId}/messages`,
+    { message },
+    slow,
+  )
+  return unwrapData<SessionTurn>(response)
+}
+
+export async function getSessionHint(sessionId: number) {
+  const response = await api.post<APIResponse<SpeakingHint>>(`/ai-conversations/sessions/${sessionId}/hint`, null, slow)
+  return unwrapData<SpeakingHint>(response)
+}
+
+export async function finishSession(sessionId: number) {
+  const response = await api.post<APIResponse<SpeakingSession>>(`/ai-conversations/sessions/${sessionId}/finish`, null, slow)
+  return unwrapData<SpeakingSession>(response)
 }

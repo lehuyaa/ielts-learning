@@ -10,6 +10,7 @@ import { AdminVocabularyImportPage } from '@/pages/AdminVocabularyImportPage'
 import { AIConversationCreatePage } from '@/pages/AIConversationCreatePage'
 import { AIConversationPage } from '@/pages/AIConversationPage'
 import { AIConversationSessionPage } from '@/pages/AIConversationSessionPage'
+import { SpeakingSessionPage } from '@/pages/SpeakingSessionPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { FlashcardPage } from '@/pages/FlashcardPage'
 import { LandingPage } from '@/pages/LandingPage'
@@ -127,6 +128,10 @@ export const router = createBrowserRouter([
           {
             path: '/ai-conversation/create',
             element: <AIConversationCreatePage />,
+          },
+          {
+            path: '/ai-conversation/sessions/:sessionId',
+            element: <SpeakingSessionPage />,
           },
           {
             path: '/ai-conversation/:scenarioSlug',

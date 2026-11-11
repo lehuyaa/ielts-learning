@@ -4,6 +4,7 @@ const (
 	KindGrammarPoint = "GRAMMAR_POINT"
 	KindPhoneme      = "PHONEME"
 	KindPassage      = "PASSAGE"
+	KindScenario     = "SCENARIO"
 	KindTopic        = "TOPIC"
 	KindLesson       = "LESSON"
 	KindActivity     = "ACTIVITY"

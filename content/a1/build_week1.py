@@ -647,6 +647,35 @@ lessons.append({
     }],
 })
 
+# AI role-play (Tasks 67-70, D10): the read-aloud sentences become their own
+# activity and the lesson ends with a conversation with the AI.
+ROLE_PLAYS = {
+    "a1-w1-l1-greetings": "a1-w1-greetings",
+    "a1-w1-l2-introducing-yourself": "a1-w1-introducing-yourself",
+    "a1-w1-l3-introducing-others": "a1-w1-introducing-others",
+    "a1-w1-l4-personal-information": "a1-w1-personal-information",
+    "a1-w1-l5-family": "a1-w1-family",
+    "a1-w1-l6-hobbies": "a1-w1-hobbies",
+    "a1-w1-l7-describing-your-job": "a1-w1-describing-your-job",
+    "a1-w1-l8-places-in-the-building": "a1-w1-places-in-the-building",
+    "a1-w1-l9-borrowing-things": "a1-w1-borrowing-things",
+}
+for lesson in lessons:
+    scenario = ROLE_PLAYS.get(lesson["slug"])
+    if not scenario:
+        continue
+    for activity in lesson["activities"]:
+        if activity["type"] == "SPEAKING":
+            activity["slug"] = "read-aloud"
+            activity["title"] = "Đọc to theo mẫu"
+            activity["instructionsVi"] = "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn."
+    lesson["activities"].append({
+        "slug": "speaking", "type": "SPEAKING", "title": "Nói chuyện với AI",
+        "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+        "scenarioSlug": scenario, "content": {"hintsAllowed": True},
+        "isRequired": False, "passScore": 60, "xpReward": 20, "exercises": [],
+    })
+
 # Optional writing tasks (Task D9), placed before the speaking activity.
 for key, prompt in PROMPTS.items():
     for lesson in lessons:

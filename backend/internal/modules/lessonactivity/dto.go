@@ -61,6 +61,9 @@ type ActivityDetailResponse struct {
 	Passage *PassageCard `json:"passage"`
 	// Writing is the learner's latest submission of a WRITING activity.
 	Writing *WritingSubmissionResponse `json:"writing"`
+	// Scenario is the role-play of a SPEAKING activity; Speaking its latest finished session.
+	Scenario *ScenarioCard    `json:"scenario"`
+	Speaking *SpeakingSummary `json:"speaking"`
 	// Answers already given in the current (unfinished) attempt, for resuming.
 	Answers []AnswerResult `json:"answers"`
 }
@@ -238,4 +241,25 @@ func ToPassageCard(passage models.Passage) PassageCard {
 		Source:    passage.Source,
 		WordCount: passage.WordCount,
 	}
+}
+
+// ScenarioCard is the role-play brief shown in a SPEAKING activity.
+type ScenarioCard struct {
+	ID             uint     `json:"id"`
+	Slug           string   `json:"slug"`
+	Title          string   `json:"title"`
+	Description    string   `json:"description"`
+	Role           string   `json:"role"`
+	Task           string   `json:"task"`
+	TargetPatterns []string `json:"targetPatterns"`
+	MaxTurns       int      `json:"maxTurns"`
+	PassageID      *uint    `json:"passageId"`
+}
+
+// SpeakingSummary is the learner's latest finished role-play of an activity.
+type SpeakingSummary struct {
+	SessionID     uint       `json:"sessionId"`
+	Score         *int       `json:"score"`
+	TaskCompleted bool       `json:"taskCompleted"`
+	FinishedAt    *time.Time `json:"finishedAt"`
 }

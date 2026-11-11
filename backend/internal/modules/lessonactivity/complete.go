@@ -16,6 +16,9 @@ import (
 // must answer at least one exercise first.
 var ErrActivityNotStarted = errors.New("activity not started")
 
+// ErrSpeakingNotCompleted means no role-play session of the activity is finished yet.
+var ErrSpeakingNotCompleted = errors.New("speaking not completed")
+
 // CompleteActivity closes the current attempt: scores it, passes or fails the
 // activity, awards XP on the first pass, and completes the lesson once every
 // required activity has been passed (docs/foundation-spec.md §4).
@@ -33,7 +36,20 @@ func (s Service) CompleteActivity(userID uint, activityID uint) (CompleteActivit
 	progress, hasProgress := ctx.progress[activity.ID]
 	attempt := currentAttempt(progress, hasProgress)
 	var tally attemptTally
-	if activity.Type == models.ActivityWriting {
+	speakingDone := true
+	if activity.Type == models.ActivitySpeaking && activity.ScenarioID != nil {
+		// A role-play is scored by its latest finished session; it passes only
+		// when the AI judged the task completed (spec §4).
+		session, found, err := s.repository.LatestFinishedSession(userID, activity.ID)
+		if err != nil {
+			return CompleteActivityResponse{}, err
+		}
+		if !found || session.Score == nil {
+			return CompleteActivityResponse{}, ErrSpeakingNotCompleted
+		}
+		tally = attemptTally{Score: *session.Score}
+		speakingDone = session.TaskDone
+	} else if activity.Type == models.ActivityWriting {
 		// A WRITING activity is scored by the AI report of its latest
 		// submission whose rewrite is done (spec §4).
 		score, err := s.writingScore(userID, activity.ID)
@@ -55,7 +71,7 @@ func (s Service) CompleteActivity(userID uint, activityID uint) (CompleteActivit
 		}
 		tally = scoreAttempt(exercises, answers)
 	}
-	passed := tally.Score >= activity.PassScore
+	passed := tally.Score >= activity.PassScore && speakingDone
 
 	now := s.now()
 	result := CompleteActivityResponse{

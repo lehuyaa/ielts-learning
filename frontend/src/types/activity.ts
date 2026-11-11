@@ -144,7 +144,30 @@ export type ActivityDetailResponse = {
   passage?: PassageCard | null
   /** Latest submission of a WRITING activity. */
   writing?: WritingSubmission | null
+  /** Role-play brief of a SPEAKING activity with a scenario. */
+  scenario?: ScenarioCard | null
+  /** Latest finished role-play of that activity. */
+  speaking?: SpeakingSummary | null
   answers: AnswerResult[]
+}
+
+export type ScenarioCard = {
+  id: number
+  slug: string
+  title: string
+  description: string
+  role: string
+  task: string
+  targetPatterns: string[]
+  maxTurns: number
+  passageId: number | null
+}
+
+export type SpeakingSummary = {
+  sessionId: number
+  score: number | null
+  taskCompleted: boolean
+  finishedAt: string | null
 }
 
 export type CompleteActivityResponse = {

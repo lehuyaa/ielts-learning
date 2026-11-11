@@ -22,6 +22,7 @@ import type {
 } from "@/types/activity";
 
 import { GrammarTheoryCard } from "@/features/grammar/GrammarTheoryCard";
+import { SpeakingTask } from "@/features/speaking/SpeakingTask";
 import { WritingTask } from "@/features/writing/WritingTask";
 import type { WritingContent } from "@/types/writing";
 
@@ -103,6 +104,7 @@ function ActivitySession({
   onCompleted: (completion: CompleteActivityResponse) => void;
 }) {
   const { activity, exercises, vocabularies, grammarPoint, phonemes, passage } = data;
+  const roleplay = activity.type === "SPEAKING" && Boolean(data.scenario);
   const showTheory = Boolean(grammarPoint) && activity.content?.showTheory !== false;
   const answersById = useMemo(
     () => new Map(data.answers.map((answer) => [answer.exerciseId, answer])),
@@ -204,13 +206,23 @@ function ActivitySession({
           onFinish={finish}
         />
       ) : null}
-      {activity.type === "WRITING" && complete.error ? (
+      {phase === "exercises" && roleplay && data.scenario ? (
+        <SpeakingTask
+          activityId={activity.id}
+          finishing={complete.isPending}
+          latest={data.speaking ?? null}
+          lessonId={lessonId}
+          onFinish={finish}
+          scenario={data.scenario}
+        />
+      ) : null}
+      {(activity.type === "WRITING" || roleplay) && complete.error ? (
         <p className="mt-3 text-center text-sm text-red-600">
           {complete.error instanceof APIError ? complete.error.message : "Không hoàn thành được hoạt động."}
         </p>
       ) : null}
 
-      {phase === "exercises" && exercises.length === 0 && activity.type !== "WRITING" ? (
+      {phase === "exercises" && exercises.length === 0 && activity.type !== "WRITING" && !roleplay ? (
         <div className="rounded-2xl border border-dashed p-8 text-center">
           <p className="mb-4 text-muted-foreground">Hoạt động này chưa có bài tập.</p>
           <Button disabled={complete.isPending} onClick={finish}>

@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "courseSlug": "foundation-english",
+  "cefrLevel": "A1",
+  "scenarios": [
+    {
+      "slug": "a1-w1-greetings",
+      "title": "Chào buổi sáng ở văn phòng",
+      "description": "Morning at the office. You meet a colleague near the lift.",
+      "cefrLevel": "A1",
+      "role": "a friendly colleague called Lan",
+      "task": "greet Lan, ask how she is, answer her questions and say goodbye",
+      "targetPatterns": [
+        "Good morning!",
+        "How are you?",
+        "I'm fine, thanks. And you?",
+        "See you later!"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Good morning! How are you today?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 1,
+      "passageSlug": "a1-w1-l1-dialogue"
+    },
+    {
+      "slug": "a1-w1-introducing-yourself",
+      "title": "Ngày đầu đi làm",
+      "description": "First day at a new company. A colleague comes to say hello.",
+      "cefrLevel": "A1",
+      "role": "a new colleague called Minh",
+      "task": "introduce yourself: your name, job, where you are from and where you live",
+      "targetPatterns": [
+        "My name is ...",
+        "I'm a/an ...",
+        "I'm from ...",
+        "I live in ..."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hi! I'm Minh. Are you new here?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 2,
+      "passageSlug": "a1-w1-l2-dialogue"
+    },
+    {
+      "slug": "a1-w1-introducing-others",
+      "title": "Giới thiệu đồng nghiệp",
+      "description": "You are with your colleague Peter. You meet your manager in the corridor.",
+      "cefrLevel": "A1",
+      "role": "the learner's manager, Ms Hoa",
+      "task": "introduce your colleague Peter to the manager: his name, job and country",
+      "targetPatterns": [
+        "This is ...",
+        "He is our new ...",
+        "He is from ...",
+        "He is very ..."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Oh, hello! Who is this?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 3,
+      "passageSlug": "a1-w1-l3-dialogue"
+    },
+    {
+      "slug": "a1-w1-personal-information",
+      "title": "Điền thông tin ở lễ tân",
+      "description": "At the reception desk of a gym. The receptionist fills in a form for you.",
+      "cefrLevel": "A1",
+      "role": "a polite receptionist",
+      "task": "answer questions about your name (spell it), phone number, age and email",
+      "targetPatterns": [
+        "My name is ...",
+        "It's ... (spelling)",
+        "My phone number is ...",
+        "I'm ... years old."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hello! Welcome to City Gym. What's your name, please?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 4,
+      "passageSlug": "a1-w1-l4-dialogue"
+    },
+    {
+      "slug": "a1-w1-family",
+      "title": "Ảnh gia đình",
+      "description": "At lunch. A colleague sees a family photo on your phone.",
+      "cefrLevel": "A1",
+      "role": "a curious colleague called Sarah",
+      "task": "talk about your family: who is in the photo, their jobs and ages",
+      "targetPatterns": [
+        "This is my ...",
+        "He/She is a/an ...",
+        "I have ... brothers/sisters.",
+        "These are my ..."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Oh, nice photo! Is this your family?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 5,
+      "passageSlug": "a1-w1-l5-dialogue"
+    },
+    {
+      "slug": "a1-w1-hobbies",
+      "title": "Cuối tuần bạn làm gì?",
+      "description": "Coffee break. A colleague asks about your free time.",
+      "cefrLevel": "A1",
+      "role": "a friendly colleague called Nam",
+      "task": "say what you like doing in your free time and ask Nam about his hobbies",
+      "targetPatterns": [
+        "I like ...",
+        "My hobby is ...",
+        "What about you?",
+        "Do you like ...?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "So, what do you do in your free time?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 6,
+      "passageSlug": "a1-w1-l6-dialogue"
+    },
+    {
+      "slug": "a1-w1-describing-your-job",
+      "title": "Bạn làm nghề gì?",
+      "description": "At a friend's party you meet someone new.",
+      "cefrLevel": "A1",
+      "role": "a guest at a party called Anna",
+      "task": "say what you do, where you work and what your office is like",
+      "targetPatterns": [
+        "I'm a/an ...",
+        "I work for ...",
+        "My office is in ...",
+        "It's a big/small company."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hi, I'm Anna. Nice to meet you! What do you do?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 7,
+      "passageSlug": "a1-w1-l7-dialogue"
+    },
+    {
+      "slug": "a1-w1-places-in-the-building",
+      "title": "Hỏi đường trong tòa nhà",
+      "description": "You are a visitor in a big office building. You talk to the security guard.",
+      "cefrLevel": "A1",
+      "role": "a helpful security guard",
+      "task": "ask where the meeting room, the toilets and the cafe are, and say thank you",
+      "targetPatterns": [
+        "Excuse me, where is ...?",
+        "Is there a ...?",
+        "Which floor is it on?",
+        "Thank you very much."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Good morning. Can I help you?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 8,
+      "passageSlug": "a1-w1-l8-dialogue"
+    },
+    {
+      "slug": "a1-w1-borrowing-things",
+      "title": "Mượn đồ đồng nghiệp",
+      "description": "At your desk. You need a pen and a charger.",
+      "cefrLevel": "A1",
+      "role": "a kind colleague called Peter",
+      "task": "ask to borrow a pen and a phone charger, and thank him",
+      "targetPatterns": [
+        "Can I use your ..., please?",
+        "Do you have a ...?",
+        "Here you are.",
+        "Thank you so much!"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hi! You look busy. Do you need something?",
+      "group": "Week 1 · Meeting People",
+      "duration": "5 min",
+      "orderIndex": 9,
+      "passageSlug": "a1-w1-l9-dialogue"
+    },
+    {
+      "slug": "a1-w2-daily-schedule",
+      "title": "Lịch làm việc hằng ngày",
+      "description": "A new colleague asks about a normal working day in the company.",
+      "cefrLevel": "A1",
+      "role": "a new colleague called Tom",
+      "task": "describe your daily work schedule: start time, lunch, meetings and finish time",
+      "targetPatterns": [
+        "I start work at ...",
+        "I usually ...",
+        "I have lunch at ...",
+        "I finish at ..."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hi! I'm new here. What time do you start work?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 10
+    },
+    {
+      "slug": "a1-w2-asking-for-leave",
+      "title": "Xin nghỉ phép",
+      "description": "You go to your manager's office to ask for a day off.",
+      "cefrLevel": "A1",
+      "role": "the learner's manager, Mr Long",
+      "task": "ask for a day off: say the date and the reason, and who can do your work",
+      "targetPatterns": [
+        "Can I take a day off on ...?",
+        "I need to ...",
+        "... can do my work.",
+        "Thank you."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Come in! What can I do for you?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 11
+    },
+    {
+      "slug": "a1-w2-scheduling-a-meeting",
+      "title": "Hẹn lịch họp",
+      "description": "On the phone with a client. You need to arrange a meeting.",
+      "cefrLevel": "A1",
+      "role": "a client called Ms Smith",
+      "task": "agree on a day, a time and a place for a meeting",
+      "targetPatterns": [
+        "Are you free on ...?",
+        "How about ... at ...?",
+        "Let's meet at ...",
+        "See you on ..."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hello, this is Jane Smith. You wanted to meet?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 12
+    },
+    {
+      "slug": "a1-w2-booking-a-table",
+      "title": "Đặt bàn nhà hàng",
+      "description": "You phone a restaurant to book a table for dinner.",
+      "cefrLevel": "A1",
+      "role": "a restaurant waiter on the phone",
+      "task": "book a table: day, time, number of people and your name and phone number",
+      "targetPatterns": [
+        "I'd like to book a table for ...",
+        "At ... o'clock, please.",
+        "For ... people.",
+        "My name is ..."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good afternoon, Saigon Garden restaurant. How can I help you?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 13
+    },
+    {
+      "slug": "a1-w2-ordering-food",
+      "title": "Gọi món",
+      "description": "In a restaurant. The waiter comes to your table.",
+      "cefrLevel": "A1",
+      "role": "a waiter",
+      "task": "order a main dish and a drink, and ask a question about the menu",
+      "targetPatterns": [
+        "I'd like ..., please.",
+        "Can I have ...?",
+        "What is ...?",
+        "That's all, thank you."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hello! Are you ready to order?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 14
+    },
+    {
+      "slug": "a1-w2-paying-the-bill",
+      "title": "Thanh toán hóa đơn",
+      "description": "At the end of the meal you want to pay.",
+      "cefrLevel": "A1",
+      "role": "a waiter",
+      "task": "ask for the bill, check the price and pay by card",
+      "targetPatterns": [
+        "Can I have the bill, please?",
+        "How much is it?",
+        "Can I pay by card?",
+        "Keep the change."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Did you enjoy your meal?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 15
+    },
+    {
+      "slug": "a1-w2-asking-prices",
+      "title": "Hỏi giá",
+      "description": "At a market stall that sells fruit and T-shirts.",
+      "cefrLevel": "A1",
+      "role": "a friendly market seller",
+      "task": "ask the price of two things, ask for a lower price and buy one",
+      "targetPatterns": [
+        "How much is this?",
+        "How much are these?",
+        "That's expensive.",
+        "I'll take it."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hello! Fresh mangoes and nice T-shirts! What do you need?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 16
+    },
+    {
+      "slug": "a1-w2-choosing-a-size",
+      "title": "Chọn cỡ quần áo",
+      "description": "In a clothes shop. You want a shirt.",
+      "cefrLevel": "A1",
+      "role": "a shop assistant",
+      "task": "ask for a shirt in your size and colour, try it on and say if it fits",
+      "targetPatterns": [
+        "Do you have this in ...?",
+        "Can I try it on?",
+        "It's too big/small.",
+        "Do you have a medium?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hi there! Can I help you?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 17
+    },
+    {
+      "slug": "a1-w2-returning-items",
+      "title": "Đổi trả hàng",
+      "description": "You go back to a shop with a jacket you bought yesterday.",
+      "cefrLevel": "A1",
+      "role": "a shop assistant",
+      "task": "return the jacket: say what is wrong, show the receipt and ask for a refund or another one",
+      "targetPatterns": [
+        "I bought this yesterday.",
+        "It's too ...",
+        "Here is the receipt.",
+        "Can I change it / get a refund?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good morning. How can I help you?",
+      "group": "Week 2 · Work and Money",
+      "duration": "5 min",
+      "orderIndex": 18
+    },
+    {
+      "slug": "a1-w3-asking-directions",
+      "title": "Hỏi đường",
+      "description": "You are lost in the city centre and stop a person in the street.",
+      "cefrLevel": "A1",
+      "role": "a local person in the street",
+      "task": "ask the way to the post office, check the directions and say thank you",
+      "targetPatterns": [
+        "Excuse me, how do I get to ...?",
+        "Is it far?",
+        "Go straight / turn left.",
+        "Thanks for your help."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hi! You look lost. Can I help you?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 19
+    },
+    {
+      "slug": "a1-w3-taking-a-taxi",
+      "title": "Đi taxi",
+      "description": "You get into a taxi at the airport.",
+      "cefrLevel": "A1",
+      "role": "a taxi driver",
+      "task": "say where you want to go, ask how long it takes and how much it costs",
+      "targetPatterns": [
+        "To ..., please.",
+        "How long does it take?",
+        "How much is it?",
+        "Can you stop here, please?"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Good evening! Where to?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 20
+    },
+    {
+      "slug": "a1-w3-buying-tickets",
+      "title": "Mua vé",
+      "description": "At the ticket office of a train station.",
+      "cefrLevel": "A1",
+      "role": "a ticket seller",
+      "task": "buy two tickets: destination, day, time, one-way or return",
+      "targetPatterns": [
+        "Two tickets to ..., please.",
+        "One-way / return.",
+        "What time does it leave?",
+        "How much is that?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Next, please! Where are you going?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 21
+    },
+    {
+      "slug": "a1-w3-airport-check-in",
+      "title": "Làm thủ tục sân bay",
+      "description": "At the airport check-in desk.",
+      "cefrLevel": "A1",
+      "role": "an airline check-in agent",
+      "task": "check in: show your passport, say how many bags you have and ask for a window seat",
+      "targetPatterns": [
+        "Here is my passport.",
+        "I have one bag.",
+        "Can I have a window seat?",
+        "What time is boarding?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good morning. Can I see your passport, please?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 22
+    },
+    {
+      "slug": "a1-w3-hotel-check-in",
+      "title": "Nhận phòng khách sạn",
+      "description": "At the reception of a hotel in the evening.",
+      "cefrLevel": "A1",
+      "role": "a hotel receptionist",
+      "task": "check in: give your name and booking, ask about breakfast time and Wi-Fi",
+      "targetPatterns": [
+        "I have a booking for ...",
+        "My name is ...",
+        "What time is breakfast?",
+        "What's the Wi-Fi password?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good evening and welcome! Do you have a booking?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 23
+    },
+    {
+      "slug": "a1-w3-train-bus-times",
+      "title": "Giờ tàu xe",
+      "description": "At the bus station information desk.",
+      "cefrLevel": "A1",
+      "role": "a person at an information desk",
+      "task": "ask when the next bus to the beach leaves, how long it takes and where it leaves from",
+      "targetPatterns": [
+        "When is the next bus to ...?",
+        "How long does it take?",
+        "Which platform/gate?",
+        "Is there a later one?"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hello, how can I help?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 24
+    },
+    {
+      "slug": "a1-w3-describing-symptoms",
+      "title": "Đi khám bệnh",
+      "description": "At the doctor's. You don't feel well.",
+      "cefrLevel": "A1",
+      "role": "a kind doctor",
+      "task": "describe your symptoms, say since when, and ask what you should do",
+      "targetPatterns": [
+        "I have a headache / a cough.",
+        "I feel ...",
+        "Since yesterday.",
+        "What should I do?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hello, please sit down. What's the problem?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 25
+    },
+    {
+      "slug": "a1-w3-buying-medicine",
+      "title": "Mua thuốc",
+      "description": "At a pharmacy.",
+      "cefrLevel": "A1",
+      "role": "a pharmacist",
+      "task": "ask for something for a cold, ask how often to take it and how much it is",
+      "targetPatterns": [
+        "Do you have something for ...?",
+        "How often should I take it?",
+        "Can I take it with food?",
+        "How much is it?"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hi! How can I help you today?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 26
+    },
+    {
+      "slug": "a1-w3-at-the-bank",
+      "title": "Ở ngân hàng",
+      "description": "At a bank counter.",
+      "cefrLevel": "A1",
+      "role": "a bank clerk",
+      "task": "change 100 dollars into dong and ask about opening an account",
+      "targetPatterns": [
+        "I'd like to change ...",
+        "What's the rate today?",
+        "Can I open an account?",
+        "What do I need?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good morning. What can I do for you?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "5 min",
+      "orderIndex": 27
+    },
+    {
+      "slug": "a1-w4-phone-messages",
+      "title": "Nhắn lại qua điện thoại",
+      "description": "You phone a company to speak to Mr Brown, but he is not there.",
+      "cefrLevel": "A1",
+      "role": "a receptionist on the phone",
+      "task": "ask for Mr Brown, leave a message with your name, number and why you called",
+      "targetPatterns": [
+        "Can I speak to ..., please?",
+        "Can I leave a message?",
+        "My number is ...",
+        "Please ask him to call me."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good morning, Green Tech, Mai speaking.",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 28
+    },
+    {
+      "slug": "a1-w4-invitations",
+      "title": "Lời mời",
+      "description": "A friend calls you on Friday.",
+      "cefrLevel": "A1",
+      "role": "a friend called Linh",
+      "task": "accept or politely refuse an invitation to a birthday party, and ask about time and place",
+      "targetPatterns": [
+        "I'd love to.",
+        "Sorry, I can't. I'm ...",
+        "What time does it start?",
+        "Where is it?"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hi! Are you free on Saturday evening? It's my birthday!",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 29
+    },
+    {
+      "slug": "a1-w4-arranging-to-meet",
+      "title": "Hẹn gặp bạn",
+      "description": "Chatting with a friend about meeting this weekend.",
+      "cefrLevel": "A1",
+      "role": "a friend called Huy",
+      "task": "agree on when and where to meet and what to do",
+      "targetPatterns": [
+        "Are you free on ...?",
+        "Let's ...",
+        "How about ...?",
+        "See you at ..."
+      ],
+      "maxTurns": 7,
+      "openingLine": "Hey! We haven't met for ages. Let's meet this weekend!",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 30
+    },
+    {
+      "slug": "a1-w4-changing-plans",
+      "title": "Đổi kế hoạch",
+      "description": "You phone a friend because you can't come to your meeting tomorrow.",
+      "cefrLevel": "A1",
+      "role": "a friend called Sarah",
+      "task": "say you can't come, explain why and suggest a new day and time",
+      "targetPatterns": [
+        "I'm sorry, I can't come tomorrow.",
+        "I have to ...",
+        "Can we meet on ... instead?",
+        "Is that OK?"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hi! See you tomorrow at the cinema, right?",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 31
+    },
+    {
+      "slug": "a1-w4-weather-small-talk",
+      "title": "Nói chuyện thời tiết",
+      "description": "Waiting for the lift with a neighbour.",
+      "cefrLevel": "A1",
+      "role": "a friendly neighbour",
+      "task": "make small talk about the weather today and tomorrow and your plans",
+      "targetPatterns": [
+        "It's hot/cold today.",
+        "I think it will rain.",
+        "I like ... weather.",
+        "Have a nice day!"
+      ],
+      "maxTurns": 6,
+      "openingLine": "Phew, it's so hot today, isn't it?",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 32
+    },
+    {
+      "slug": "a1-w4-your-weekend",
+      "title": "Cuối tuần của bạn",
+      "description": "Monday morning at the office.",
+      "cefrLevel": "A1",
+      "role": "a colleague called Peter",
+      "task": "talk about what you did last weekend and ask about his weekend",
+      "targetPatterns": [
+        "I went to ...",
+        "I visited ...",
+        "It was great/boring.",
+        "What did you do?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "Good morning! How was your weekend?",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 33
+    },
+    {
+      "slug": "a1-w4-sending-a-parcel",
+      "title": "Gửi bưu kiện",
+      "description": "At the post office with a small box.",
+      "cefrLevel": "A1",
+      "role": "a post office clerk",
+      "task": "send a parcel abroad: say where, ask how long it takes and how much it costs",
+      "targetPatterns": [
+        "I'd like to send this to ...",
+        "How long does it take?",
+        "How much is it?",
+        "By express, please."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Hello! What can I do for you?",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 34
+    },
+    {
+      "slug": "a1-w4-reporting-a-problem",
+      "title": "Báo sự cố",
+      "description": "You phone the IT help desk because your laptop doesn't work.",
+      "cefrLevel": "A1",
+      "role": "an IT help desk worker",
+      "task": "describe the problem, say what you tried and when it started, and ask when they can fix it",
+      "targetPatterns": [
+        "My ... doesn't work.",
+        "It stopped working ...",
+        "I tried to ...",
+        "When can you fix it?"
+      ],
+      "maxTurns": 7,
+      "openingLine": "IT help desk, this is Kevin. What's the problem?",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 35
+    },
+    {
+      "slug": "a1-w4-emergency-help",
+      "title": "Gọi trợ giúp khẩn cấp",
+      "description": "Someone fell down in the street and is hurt. You call for help.",
+      "cefrLevel": "A1",
+      "role": "an emergency phone operator",
+      "task": "say what happened, where you are and how the person is",
+      "targetPatterns": [
+        "I need an ambulance.",
+        "A man fell down.",
+        "I'm on ... Street, near ...",
+        "He can't move his leg."
+      ],
+      "maxTurns": 6,
+      "openingLine": "Emergency services. What's happening?",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "5 min",
+      "orderIndex": 36
+    }
+  ]
+}

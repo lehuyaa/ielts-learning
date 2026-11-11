@@ -18,6 +18,7 @@ const (
 	EventLessonCompleted     EventType = "LESSON_COMPLETED"
 	EventAchievementUnlocked EventType = "ACHIEVEMENT_UNLOCKED"
 	EventActivityCompleted   EventType = "ACTIVITY_COMPLETED"
+	EventSpeakingSession     EventType = "SPEAKING_SESSION"
 )
 
 type AwardInput struct {

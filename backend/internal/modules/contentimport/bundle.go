@@ -15,8 +15,7 @@ type Bundle struct {
 
 	Passages []PassageInput `json:"passages"`
 
-	// Reserved for later tasks; a bundle that uses them gets a warning.
-	Scenarios json.RawMessage `json:"scenarios,omitempty" swaggertype:"array,object"`
+	Scenarios []ScenarioInput `json:"scenarios"`
 }
 
 // GrammarPointInput is a grammar theory card (docs/foundation-spec.md §3.3).
@@ -61,6 +60,25 @@ type PassageInput struct {
 	Source    string          `json:"source"`
 }
 
+// ScenarioInput is a system role-play scenario (spec §3.1), upserted by slug.
+type ScenarioInput struct {
+	Slug             string   `json:"slug"`
+	Title            string   `json:"title"`
+	Description      string   `json:"description"`
+	CEFRLevel        string   `json:"cefrLevel"`
+	Role             string   `json:"role"`
+	Task             string   `json:"task"`
+	SituationContext string   `json:"situationContext"`
+	TargetPatterns   []string `json:"targetPatterns"`
+	MaxTurns         int      `json:"maxTurns"`
+	OpeningLine      string   `json:"openingLine"`
+	// PassageSlug is the model dialogue (shared with the listening activity).
+	PassageSlug string `json:"passageSlug"`
+	Group       string `json:"group"`
+	Duration    string `json:"duration"`
+	OrderIndex  int    `json:"orderIndex"`
+}
+
 type TopicInput struct {
 	Slug        string        `json:"slug"`
 	Title       string        `json:"title"`
@@ -95,12 +113,15 @@ type ActivityInput struct {
 	GrammarPointSlug string `json:"grammarPointSlug"`
 	// PassageSlug links a LISTENING / READING activity to its passage; it
 	// may also be given as content.passageSlug.
-	PassageSlug string          `json:"passageSlug"`
-	PassScore   *int            `json:"passScore"`
-	XPReward    *int            `json:"xpReward"`
-	IsRequired  *bool           `json:"isRequired"`
-	Status      string          `json:"status"`
-	Exercises   []ExerciseInput `json:"exercises"`
+	PassageSlug string `json:"passageSlug"`
+	// ScenarioSlug links a SPEAKING activity to its role-play; it may also
+	// be given as content.scenarioSlug.
+	ScenarioSlug string          `json:"scenarioSlug"`
+	PassScore    *int            `json:"passScore"`
+	XPReward     *int            `json:"xpReward"`
+	IsRequired   *bool           `json:"isRequired"`
+	Status       string          `json:"status"`
+	Exercises    []ExerciseInput `json:"exercises"`
 }
 
 type ExerciseInput struct {

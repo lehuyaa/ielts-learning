@@ -12,6 +12,7 @@ import (
 	achievementmodule "ielts-learning/backend/internal/modules/achievement"
 	activitymodule "ielts-learning/backend/internal/modules/activity"
 	"ielts-learning/backend/internal/modules/grammarprogress"
+	"ielts-learning/backend/internal/modules/mistakes"
 	notificationmodule "ielts-learning/backend/internal/modules/notification"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
@@ -395,22 +396,7 @@ func (r Repository) LatestWritingSubmission(userID uint, activityID uint, comple
 
 // UpsertMistake records a mistake, counting repeats of the same correction.
 func (r Repository) UpsertMistake(mistake models.LearnerMistake) error {
-	err := r.db.Clauses(clause.OnConflict{
-		Columns: []clause.Column{{Name: "user_id"}, {Name: "skill_tag"}, {Name: "correct_text"}},
-		DoUpdates: clause.Assignments(map[string]any{
-			"occurrences":    gorm.Expr("occurrences + 1"),
-			"wrong_text":     mistake.WrongText,
-			"explanation_vi": mistake.ExplanationVI,
-			"source":         mistake.Source,
-			"status":         models.MistakeOpen,
-			"last_seen_at":   mistake.LastSeenAt,
-			"updated_at":     mistake.LastSeenAt,
-		}),
-	}).Create(&mistake).Error
-	if err != nil {
-		return fmt.Errorf("save learner mistake: %w", err)
-	}
-	return nil
+	return mistakes.Upsert(r.db, mistake)
 }
 
 // LevelOfActivity returns the CEFR level of an activity's band (A1 by default).
@@ -425,4 +411,32 @@ func (r Repository) LevelOfActivity(activityID uint) string {
 		return "A1"
 	}
 	return *level
+}
+
+// ---------------------------------------------------------------------------
+// Speaking (Task 69)
+
+func (r Repository) LatestFinishedSession(userID uint, activityID uint) (models.AIConversationSession, bool, error) {
+	var session models.AIConversationSession
+	err := r.db.Where("user_id = ? AND activity_id = ? AND status = ?", userID, activityID, models.SessionFinished).
+		Order("id DESC").Take(&session).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.AIConversationSession{}, false, nil
+	}
+	if err != nil {
+		return models.AIConversationSession{}, false, fmt.Errorf("find speaking session: %w", err)
+	}
+	return session, true, nil
+}
+
+func (r Repository) FindScenario(id uint) (models.AIConversationScenario, bool, error) {
+	var scenario models.AIConversationScenario
+	err := r.db.First(&scenario, id).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return models.AIConversationScenario{}, false, nil
+	}
+	if err != nil {
+		return models.AIConversationScenario{}, false, fmt.Errorf("find scenario: %w", err)
+	}
+	return scenario, true, nil
 }

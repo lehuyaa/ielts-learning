@@ -194,5 +194,16 @@ Grammar points:
 - Learners see theory and mastery at `/grammar` and `/grammar/:slug`
   (API `GET /api/v1/grammar-points`, module `backend/internal/modules/grammar/`).
 
+Role-play scenarios:
+
+- Import `content/a1/a1-scenarios.json` (built by `content/a1/build_scenarios.py`)
+  **after** `a1-grammar.json` and **before** the week bundles: 36 system scenarios
+  (upserted by slug), listed for every learner at `/ai-conversation`. A scenario's
+  `passageSlug` must already exist (Week 1 dialogues come with `week-1.json`), so
+  import `a1-scenarios.json` again after `week-1.json` the first time to attach them.
+- A SPEAKING activity links to a scenario with `scenarioSlug`; it completes with the
+  learner's latest finished session (passes only when the task was completed).
+- AI chat quota per learner per day: `AI_CHAT_DAILY_LIMIT` (default 200).
+
 Lesson audio: `content/a1/generate_lesson_audio.sh` (macOS) writes
 `frontend/public/audio/a1/**.m4a` from `audio_manifest_*.tsv`.

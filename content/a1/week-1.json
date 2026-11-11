@@ -872,10 +872,10 @@
               ]
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -915,6 +915,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-greetings",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -1447,10 +1461,10 @@
               "exercises": []
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -1490,6 +1504,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-introducing-yourself",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -2016,10 +2044,10 @@
               "exercises": []
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -2059,6 +2087,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-introducing-others",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -2553,10 +2595,10 @@
               ]
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -2596,6 +2638,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-personal-information",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -3135,10 +3191,10 @@
               "exercises": []
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -3178,6 +3234,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-family",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -3698,10 +3768,10 @@
               "exercises": []
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -3741,6 +3811,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-hobbies",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -4250,10 +4334,10 @@
               "exercises": []
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -4293,6 +4377,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-describing-your-job",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -4795,10 +4893,10 @@
               ]
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -4838,6 +4936,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-places-in-the-building",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },
@@ -5344,10 +5456,10 @@
               ]
             },
             {
-              "slug": "speaking",
+              "slug": "read-aloud",
               "type": "SPEAKING",
-              "title": "Luyện nói",
-              "instructionsVi": "Nghe câu mẫu, đọc to theo. Luyện nói với AI sẽ có ở bản sau.",
+              "title": "Đọc to theo mẫu",
+              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
               "isRequired": false,
               "exercises": [
                 {
@@ -5387,6 +5499,20 @@
                   "skillTag": "speaking"
                 }
               ]
+            },
+            {
+              "slug": "speaking",
+              "type": "SPEAKING",
+              "title": "Nói chuyện với AI",
+              "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",
+              "scenarioSlug": "a1-w1-borrowing-things",
+              "content": {
+                "hintsAllowed": true
+              },
+              "isRequired": false,
+              "passScore": 60,
+              "xpReward": 20,
+              "exercises": []
             }
           ]
         },

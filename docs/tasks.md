@@ -2117,11 +2117,15 @@ Requirements:
 - Beginner scenarios: browser TTS rate 0.85.
 - Send at most the last 20 messages to the model.
 
+Status: done. `aiconversation/prompt.go` builds the role-play prompt from role/situation/task/target patterns with the §6.1 rules for the scenario level (custom scenarios: BEGINNER→A2, INTERMEDIATE→B1, ADVANCED→B2) and appends `SituationContext`; only the last 20 messages are sent. The session page speaks AI replies at rate 0.85 for A1/A2, can blur AI text ("Hiện chữ"), and pattern chips insert into the input. Chat calls share the `AI_CHAT_DAILY_LIMIT` quota (200). Shared helpers `aiusage.Take` and `mistakes.Upsert` were extracted for this.
+
 ### Task 68 - System Scenarios
 
 Requirements:
 
 - Scenario columns in spec §3.1; system scenarios (`is_system`, no `user_id`) imported via the bundle and listed for everyone; user scenarios unchanged.
+
+Status: done. Scenario columns added (`is_system`, nullable `user_id`, `cefr_level`, `role`, `task`, `target_patterns`, `max_turns`, `opening_line`, `passage_id`, `group_label`, `order_index`). Bundle field `scenarios` (upsert by slug) and `activity.scenarioSlug`. `GET /ai-conversations/scenarios` lists system + own scenarios with `sessions`/`bestScore`; `/ai-conversation` groups them by week and every card starts a session. Also fixed: `SaveActivity` kept the GORM default `is_required=1` for new optional activities.
 
 ### Task 69 - Speaking Sessions and Report
 
@@ -2131,15 +2135,21 @@ Requirements:
 - Finish → feedback report (spec §6.2), XP, mistakes → `learner_mistakes`; SPEAKING activity passes per spec §4.
 - Report screen: scores, mistakes with corrections, good phrases, new words (add to flashcards), "Try again".
 
+Status: done. `ai_conversation_sessions` + `ai_conversation_messages.session_id`. Endpoints: `POST /ai-conversations/sessions` (resume open session unless `fresh`), `GET /sessions/:id`, `POST /sessions/:id/messages` (turn limit = `max_turns`), `POST /sessions/:id/finish` (strict JSON report: 4 scores, overall = 10 × average, mistakes → `learner_mistakes` source SPEAKING + grammar mastery, 10 XP when the task is done). A SPEAKING activity with a scenario completes with the latest finished session and passes only when `taskCompleted`. UI: `/ai-conversation/sessions/:id` (`pages/SpeakingSessionPage.tsx`, `features/speaking/`), report with add-to-flashcard for new words, "Nói lại".
+
 ### Task 70 - Hints
 
 Requirements:
 
 - `POST /ai-conversations/sessions/:id/hint` (spec §6.5), hint button in the session page, disabled in checkpoints.
 
+Status: done. `POST /ai-conversations/sessions/:id/hint` returns `hintVi` + `sayThis` from the last 6 messages and counts `hint_count`; 403 `HINTS_NOT_ALLOWED` for CHECKPOINT activities or `content.hintsAllowed: false`. The hint card can play the sentence and put it in the input ("Dùng câu này").
+
 ### Task D10 - Situation Scenarios
 
 - 36 scenarios: role, task, target patterns, max turns; model dialogue shared with D7.
+
+Status: done. `content/a1/build_scenarios.py` → `a1-scenarios.json`: 36 scenarios (9 per week, one per lesson situation) with role, task, target patterns, max turns and opening line; Week 1 scenarios point to the lesson dialogues (`passageSlug`). Week 1 lessons have an optional "Nói chuyện với AI" activity (slug `speaking`); the old read-aloud activity is now slug `read-aloud`. Weeks 2-4 link theirs when those lessons are built.
 
 ## 20. Milestone 19 - Pronunciation Scoring
 
