@@ -3,8 +3,8 @@ plus one longer role-play per week for the week's checkpoint (Task 75).
 
 Builds a1-scenarios.json (a bundle with only "scenarios"), imported at
 /admin/content/import before the week bundles. Each SPEAKING activity links
-to its scenario with "scenarioSlug". Week 1 scenarios use the lesson's
-listening dialogue as the model dialogue (passageSlug).
+to its scenario with "scenarioSlug". Scenarios of built weeks use the lesson's
+listening dialogue as the model dialogue (passageSlug) once the week is built.
 
 Usage (from content/a1):  python3 build_scenarios.py
 """
@@ -273,6 +273,11 @@ CHECKPOINTS = {
 }
 
 
+# Weeks whose lessons exist: their scenarios use the lesson dialogue as the
+# model dialogue (the passage must be imported with the week bundle first).
+BUILT_WEEKS = {1, 2}
+
+
 def build():
     scenarios = []
     order = 0
@@ -285,8 +290,8 @@ def build():
                 "maxTurns": turns, "openingLine": opening, "group": group,
                 "duration": "5 min", "orderIndex": order,
             }
-            if week == 1:
-                scenario["passageSlug"] = f"a1-w1-l{lesson_number}-dialogue"
+            if week in BUILT_WEEKS:
+                scenario["passageSlug"] = f"a1-w{week}-l{lesson_number}-dialogue"
             scenarios.append(scenario)
         title, situation, role, task, patterns, opening, turns = CHECKPOINTS[week]
         order += 1

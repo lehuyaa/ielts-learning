@@ -220,7 +220,8 @@
       "openingLine": "Hi! I'm new here. What time do you start work?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 11
+      "orderIndex": 11,
+      "passageSlug": "a1-w2-l1-dialogue"
     },
     {
       "slug": "a1-w2-asking-for-leave",
@@ -239,7 +240,8 @@
       "openingLine": "Come in! What can I do for you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 12
+      "orderIndex": 12,
+      "passageSlug": "a1-w2-l2-dialogue"
     },
     {
       "slug": "a1-w2-scheduling-a-meeting",
@@ -258,7 +260,8 @@
       "openingLine": "Hello, this is Jane Smith. You wanted to meet?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 13
+      "orderIndex": 13,
+      "passageSlug": "a1-w2-l3-dialogue"
     },
     {
       "slug": "a1-w2-booking-a-table",
@@ -277,7 +280,8 @@
       "openingLine": "Good afternoon, Saigon Garden restaurant. How can I help you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 14
+      "orderIndex": 14,
+      "passageSlug": "a1-w2-l4-dialogue"
     },
     {
       "slug": "a1-w2-ordering-food",
@@ -296,7 +300,8 @@
       "openingLine": "Hello! Are you ready to order?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 15
+      "orderIndex": 15,
+      "passageSlug": "a1-w2-l5-dialogue"
     },
     {
       "slug": "a1-w2-paying-the-bill",
@@ -315,7 +320,8 @@
       "openingLine": "Did you enjoy your meal?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 16
+      "orderIndex": 16,
+      "passageSlug": "a1-w2-l6-dialogue"
     },
     {
       "slug": "a1-w2-asking-prices",
@@ -334,7 +340,8 @@
       "openingLine": "Hello! Fresh mangoes and nice T-shirts! What do you need?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 17
+      "orderIndex": 17,
+      "passageSlug": "a1-w2-l7-dialogue"
     },
     {
       "slug": "a1-w2-choosing-a-size",
@@ -353,7 +360,8 @@
       "openingLine": "Hi there! Can I help you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 18
+      "orderIndex": 18,
+      "passageSlug": "a1-w2-l8-dialogue"
     },
     {
       "slug": "a1-w2-returning-items",
@@ -372,7 +380,8 @@
       "openingLine": "Good morning. How can I help you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 19
+      "orderIndex": 19,
+      "passageSlug": "a1-w2-l9-dialogue"
     },
     {
       "slug": "a1-w2-checkpoint",

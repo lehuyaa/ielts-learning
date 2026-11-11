@@ -1,0 +1,97 @@
+w2/l1-s1	What time do you start work, Nam?	female
+w2/l1-s2	I usually start at eight thirty.	male
+w2/l1-s3	And what time do you finish?	female
+w2/l1-s4	At half past five. Then I go to the gym.	male
+w2/l1-s5	Do you have lunch at the office?	female
+w2/l1-s6	Yes, I always have lunch with my team.	male
+w2/l11-mp	late
+w2/l11-num	I usually start at eight thirty.
+w2/l11-w2i	eight
+w2/l12-mp	die
+w2/l2-s1	Excuse me, Ms Hoa. Do you have a minute?	male
+w2/l2-s2	Sure. What is it?	female
+w2/l2-s3	Can I take a day off on Friday?	male
+w2/l2-s4	On Friday? Why?	female
+w2/l2-s5	My sister is getting married.	male
+w2/l2-s6	OK, no problem. Who does your work on Friday?	female
+w2/l2-s7	Nam does. He knows my project.	male
+w2/l21-mp	know
+w2/l21-w2i	home
+w2/l22-mp	town
+w2/l3-s1	Hi Peter. Are you free on Tuesday afternoon?	female
+w2/l3-s2	Sorry, I'm busy on Tuesday. What about Wednesday?	male
+w2/l3-s3	Wednesday is fine. Does two o'clock work for you?	female
+w2/l3-s4	Yes, two o'clock is good. Where is the meeting?	male
+w2/l3-s5	In Room B on the third floor.	female
+w2/l3-s6	Great. See you on Wednesday.	male
+w2/l31-mp	back
+w2/l31-num	Does two o'clock work for you?
+w2/l32-mp	pay
+w2/l33-mp	cap
+w2/l4-s1	Good evening, Hanoi Kitchen. How can I help you?	female
+w2/l4-s2	Hi. I'd like to book a table for four, please.	male
+w2/l4-s3	For what time?	female
+w2/l4-s4	Tonight at seven thirty.	male
+w2/l4-s5	Sorry, there are no tables at seven thirty. Is eight o'clock OK?	female
+w2/l4-s6	Yes, eight is fine. My name is Tuan.	male
+w2/l4-s7	Thank you, Tuan. See you tonight.	female
+w2/l41-mp	two
+w2/l41-num	Is eight o'clock OK?
+w2/l42-mp	ride
+w2/l43-mp	tie
+w2/l5-s1	Are you ready to order?	male
+w2/l5-s2	Yes. I'd like the chicken with rice, please.	female
+w2/l5-s3	And to drink?	male
+w2/l5-s4	An orange juice, please. Do you have vegetable soup?	female
+w2/l5-s5	Sorry, we don't have soup today.	male
+w2/l5-s6	That's OK. Just the chicken and the juice, then.	female
+w2/l51-mp	goat
+w2/l52-mp	bag
+w2/l53-mp	cold
+w2/l6-s1	Excuse me, can I have the bill, please?	female
+w2/l6-s2	Sure. That's one hundred and fifty thousand dong.	male
+w2/l6-s3	Do you take credit cards?	female
+w2/l6-s4	Sorry, only cash today. Our card machine isn't working.	male
+w2/l6-s5	OK. Here's two hundred thousand.	female
+w2/l6-s6	Thank you. Here's your change, fifty thousand.	male
+w2/l61-mp	buy
+w2/l61-num	That's one hundred and fifty thousand dong.
+w2/l61-w2i	choice
+w2/l62-mp	toy
+w2/l7-s1	Excuse me, how much is this bag?	female
+w2/l7-s2	It's fifty thousand dong.	male
+w2/l7-s3	Fifty or fifteen?	female
+w2/l7-s4	Fifty. Five, zero.	male
+w2/l7-s5	That's expensive. How much are these hats?	female
+w2/l7-s6	They're on sale. Thirty thousand each.	male
+w2/l7-s7	OK, I'll take two hats, please.	female
+w2/l71-mp	thirteen
+w2/l71-num	It's fifty thousand dong.
+w2/l71-stress	fifteen
+w2/l72-mp	sixty
+w2/l72-stress	fifty
+w2/l8-s1	Hello. Are you looking for something?	male
+w2/l8-s2	Yes, I'm looking for a jacket. Do you have this in medium?	female
+w2/l8-s3	Yes, here you are. What colour do you want?	male
+w2/l8-s4	Black, please. Can I try it on?	female
+w2/l8-s5	Sure. The fitting room is over there.	male
+w2/l8-s6	Hmm, it's too small. Do you have a large?	female
+w2/l81-stress	jacket
+w2/l82-stress	trousers
+w2/l83-stress	return
+w2/l84-stress	color
+w2/l9-s1	Hi. I'd like to return these headphones.	female
+w2/l9-s2	What's the problem?	male
+w2/l9-s3	The left side isn't working.	female
+w2/l9-s4	Do you have the receipt?	male
+w2/l9-s5	Yes, here it is. I bought them on Monday.	female
+w2/l9-s6	OK. Do you want new ones or your money back?	male
+w2/l9-s7	New ones, please.	female
+w2/l91-mp	wait
+w2/l91-w2i	broken
+w2/l92-mp	got
+w2/l93-mp	hat
+w2/rv1-dict	Can I have the bill, please?
+w2/rv1-mp	pack
+w2/rv1-stress	fifteen
+w2/rv2-num	The meeting starts at a quarter past nine.

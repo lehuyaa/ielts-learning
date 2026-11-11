@@ -3,7 +3,7 @@
 20 prompts over the 4 weeks, each with sentence frames and a model answer.
 A week's builder adds them as optional WRITING activities with
 writing_activity(PROMPTS[key]). Weeks 2-4 are attached when those lessons are
-built.
+built (prompts get a "lesson" slug when their week is built).
 """
 
 PROMPTS = {
@@ -66,6 +66,7 @@ PROMPTS = {
 
     # Week 2 · Work and money (G3 present simple, G4 present continuous, G5 there is/are)
     "w2-daily-routine": {
+        "lesson": "a1-w2-l1-daily-schedule",
         "week": 2, "situation": "daily work schedule",
         "title": "Viết: Một ngày làm việc của tôi",
         "promptVi": "Kể về một ngày làm việc bình thường của bạn: mấy giờ thức dậy, đi làm, ăn trưa và về nhà.",
@@ -77,6 +78,7 @@ PROMPTS = {
         "modelAnswer": "I get up at half past six. I go to work by motorbike. I start work at eight o'clock. I have lunch with my colleagues at twelve. I finish work at five and go home.",
     },
     "w2-day-off": {
+        "lesson": "a1-w2-l2-asking-for-leave",
         "week": 2, "situation": "asking for leave",
         "title": "Viết: Email xin nghỉ một ngày",
         "promptVi": "Viết email ngắn cho quản lý để xin nghỉ một ngày: ngày nào, vì sao và ai làm thay việc của bạn.",
@@ -84,10 +86,11 @@ PROMPTS = {
         "frame": ["Dear ...,", "Can I take a day off on ...?", "My ... is ...", "... can do my work.", "Best regards,"],
         "minSentences": 3, "maxSentences": 6,
         "targetGrammar": ["g3-present-simple", "g7-can-must-should"],
-        "targetVocabulary": ["a1-day-off", "a1-manager"],
+        "targetVocabulary": ["a1-leave", "a1-manager"],
         "modelAnswer": "Dear Mr Nam, can I take a day off on Friday? My sister is getting married. Lan can do my work that day. Thank you very much. Best regards, Minh",
     },
     "w2-meeting": {
+        "lesson": "a1-w2-l3-scheduling-a-meeting",
         "week": 2, "situation": "scheduling a meeting",
         "title": "Viết: Hẹn lịch họp",
         "promptVi": "Nhắn tin cho đồng nghiệp để hẹn một cuộc họp: ngày, giờ, phòng họp và nội dung.",
@@ -99,6 +102,7 @@ PROMPTS = {
         "modelAnswer": "Hi Peter, are you free on Tuesday afternoon? Let's meet at two o'clock. The meeting is in Room B on the third floor. We need to talk about the new website. See you then!",
     },
     "w2-favourite-restaurant": {
+        "lesson": "a1-w2-l5-ordering-food",
         "week": 2, "situation": "ordering food",
         "title": "Viết: Nhà hàng yêu thích",
         "promptVi": "Giới thiệu một nhà hàng bạn thích: ở đâu, có món gì, giá bao nhiêu và bạn thường gọi món gì.",
@@ -110,6 +114,7 @@ PROMPTS = {
         "modelAnswer": "My favourite restaurant is Pho Thin. It is near my office. There are many tables, but it is always busy. I usually order beef noodle soup. It costs sixty thousand dong.",
     },
     "w2-right-now": {
+        "lesson": "a1-w2-l8-choosing-a-size",
         "week": 2, "situation": "returning items",
         "title": "Viết: Lúc này mọi người đang làm gì?",
         "promptVi": "Nhìn quanh văn phòng hoặc nhà bạn và viết mọi người đang làm gì ngay lúc này.",

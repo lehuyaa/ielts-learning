@@ -8,11 +8,13 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 | `build_grammar.py` → `a1-grammar.json` | The 9 A1 grammar theory cards (G1-G9). **Import first** |
 | `build_sounds.py` → `a1-sounds.json` | The 40 sound cards (IPA chart) + the always-open "Sound Lab" topic: 178 minimal pairs, ending -s / -ed, 2-syllable stress. **Import first** |
 | `audio_manifest_sounds.tsv` | Words and minimal-pair audio for the sound cards and Sound Lab |
-| `build_week1.py` | Authoring source for Week 1 (edit this, not the JSON) |
+| `lesson_kit.py` | Shared helpers for the week builders: exercise / activity helpers, role-plays, writing tasks, checkpoint pool, output files |
+| `build_week1.py`, `build_week2.py` | Authoring source for each week (edit these, not the JSON) |
 | `build_scenarios.py` → `a1-scenarios.json` | The 40 AI role-play scenarios: 9 per week (Task D10) + one per weekly checkpoint (Task 75): role, task, target patterns, max turns, opening line. **Import before the week bundles** |
 | `writing_prompts.py` | The 20 A1 writing prompts with frames and model answers (Task D9); weeks add them with `writing_activity(key)` |
 | `week-1.json` | Generated bundle: 18 passages (9 dialogues, 9 reading texts), 1 topic, 9 situation lessons + review, 69 activities (5 optional writing tasks, 9 optional AI role-plays), 229 exercises |
-| `audio_manifest_week-1.tsv` | Sentences/words to synthesise (`path<TAB>text[<TAB>voice]`) |
+| `week-2.json` | Generated bundle: 18 passages, 1 topic, 9 situation lessons + review, 69 activities (5 optional writing tasks, 9 optional AI role-plays), 297 exercises |
+| `audio_manifest_week-N.tsv` | Sentences/words to synthesise (`path<TAB>text[<TAB>voice]`) |
 | `generate_lesson_audio.sh` | Creates the `.m4a` files with macOS text-to-speech |
 
 ## Workflow
@@ -23,10 +25,11 @@ python3 build_grammar.py
 python3 build_scenarios.py
 python3 build_sounds.py --cmu path/to/cmudict.dict                  # CMU dict: github.com/cmusphinx/cmudict
 python3 build_week1.py --vocab ../a1-vocabulary/out/a1_rows.json   # --vocab optional: checks word slugs
-./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/{w1,sounds,words}/*.m4a
+python3 build_week2.py --vocab ../a1-vocabulary/out/a1_rows.json
+./generate_lesson_audio.sh                                          # → frontend/public/audio/a1/{w1,w2,sounds,words}/*.m4a
 ```
 
-Then upload `a1-grammar.json`, `a1-sounds.json` and `a1-scenarios.json`, then `week-1.json` at **Admin → Import Lessons**
+Then upload `a1-grammar.json`, `a1-sounds.json` and `a1-scenarios.json`, then `week-1.json`, `week-2.json`, and `a1-scenarios.json` once more (it links each scenario to its week's dialogue) at **Admin → Import Lessons**
 (Preview, then Confirm import). GRAMMAR activities link to their theory card
 through `content.grammarPointSlug`; exercises practise a card through the skill
 tag `grammar:<slug>`, which also drives the learner's mastery on `/grammar`.
@@ -62,6 +65,21 @@ Reading and speaking activities are optional. Each lesson has a read-aloud
 activity (slug `read-aloud`, SPEAK items scored by Azure when configured, otherwise a self-check) and an AI role-play "Nói chuyện với AI" (slug
 `speaking`, `scenarioSlug` → `a1-scenarios.json`) that passes when the learner
 completes the scenario task.
+
+## Week 2 · Work and Money
+
+| # | Lesson | Sounds | Grammar |
+|---|---|---|---|
+| 1 | Daily work schedule | /eɪ/ – /aɪ/ | Present simple: I work / she works, always / usually |
+| 2 | Asking for leave | /aʊ/ – /oʊ/ | Present simple: don't / doesn't |
+| 3 | Scheduling a meeting | /p/ – /b/ | Present simple: Do / Does questions; on Monday, at two |
+| 4 | Booking a table | /t/ – /d/ | There is / there are, Is there…? |
+| 5 | Ordering food | /k/ – /ɡ/ | Present simple: like / want / have |
+| 6 | Paying the bill | /ɔɪ/ vs /aɪ/ | Wh- questions: How much does…? Where do…? |
+| 7 | Asking prices | fifteen vs fifty (stress) | Prepositions of place: on, under, next to, between |
+| 8 | Choosing a size | 2-syllable word stress | Present continuous: I'm looking for… |
+| 9 | Returning items | Week review | Present simple or present continuous? |
+| R | Week 2 review | | Checkpoint: 15 random items + a role-play without hints (70 to pass; unlocks Week 3) |
 
 ## Sound cards and Sound Lab
 

@@ -10,3 +10,6 @@ backend/storage/
 
 # Screenshots and scratch files from Claude sessions
 Claude outputs/
+
+# Python bytecode (content builders)
+__pycache__/
