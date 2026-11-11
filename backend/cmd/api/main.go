@@ -27,6 +27,7 @@ import (
 	passagemodule "ielts-learning/backend/internal/modules/passage"
 	phonememodule "ielts-learning/backend/internal/modules/phoneme"
 	profilemodule "ielts-learning/backend/internal/modules/profile"
+	pronunciationmodule "ielts-learning/backend/internal/modules/pronunciation"
 	quizmodule "ielts-learning/backend/internal/modules/quiz"
 	roadmapmodule "ielts-learning/backend/internal/modules/roadmap"
 	topicmodule "ielts-learning/backend/internal/modules/topic"
@@ -97,6 +98,9 @@ func main() {
 	lessonactivitymodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	grammarmodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	phonememodule.RegisterRoutes(api, db, jwtManager)
+	pronunciationmodule.RegisterRoutes(api, db, jwtManager,
+		pronunciationmodule.NewAzureClient(cfg.AzureSpeechKey, cfg.AzureSpeechRegion, cfg.AzureSpeechEndpoint),
+		cfg.PronunciationDailyLimit)
 	passagemodule.RegisterRoutes(api, db, jwtManager)
 	profilemodule.RegisterRoutes(api, db, jwtManager)
 	notificationmodule.RegisterRoutes(api, db, jwtManager)

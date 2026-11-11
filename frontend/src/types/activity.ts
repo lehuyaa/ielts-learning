@@ -98,6 +98,7 @@ export type ExerciseAnswer =
   | { blanks: Record<string, string> }
   | { stressIndex: number }
   | { selfCheck: boolean }
+  | { attemptId: number }
 
 export type AnswerResult = {
   exerciseId: number

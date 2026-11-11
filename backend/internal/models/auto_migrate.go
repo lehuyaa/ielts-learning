@@ -43,6 +43,7 @@ func AutoMigrateModels() []interface{} {
 		&AIShortAnswerGrading{},
 		&Phoneme{},
 		&UserPhonemeProgress{},
+		&PronunciationAttempt{},
 		&Passage{},
 		&WritingSubmission{},
 		&LearnerMistake{},

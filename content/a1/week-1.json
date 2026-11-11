@@ -875,7 +875,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -1464,7 +1464,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -2047,7 +2047,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -2598,7 +2598,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -3194,7 +3194,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -3771,7 +3771,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -4337,7 +4337,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -4896,7 +4896,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {
@@ -5459,7 +5459,7 @@
               "slug": "read-aloud",
               "type": "SPEAKING",
               "title": "Đọc to theo mẫu",
-              "instructionsVi": "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn.",
+              "instructionsVi": "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70).",
               "isRequired": false,
               "exercises": [
                 {

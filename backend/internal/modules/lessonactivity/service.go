@@ -9,6 +9,7 @@ import (
 	"gorm.io/datatypes"
 
 	"ielts-learning/backend/internal/models"
+	"ielts-learning/backend/internal/modules/pronunciation"
 )
 
 var (
@@ -213,6 +214,16 @@ func (s Service) SubmitAnswer(ctx context.Context, userID uint, activityID uint,
 	matched, err := Grade(exercise.Type, exercise.PayloadJSON, exercise.AnswerJSON, req.Answer)
 	if err != nil {
 		return AnswerResult{}, err
+	}
+	if matched.PronunciationAttempt != 0 {
+		attempt, found, err := s.repository.FindPronunciationAttempt(userID, matched.PronunciationAttempt)
+		if err != nil {
+			return AnswerResult{}, err
+		}
+		if !found || attempt.ExerciseID == nil || *attempt.ExerciseID != exercise.ID {
+			return AnswerResult{}, ErrInvalidAnswerShape
+		}
+		matched = gradeSpeak(attempt.Accuracy, pronunciation.MinAccuracy(exercise.AnswerJSON))
 	}
 	// AI runs outside the transaction: it can take seconds.
 	result := s.aiGrader.Resolve(ctx, userID, exercise, req.Answer, matched)

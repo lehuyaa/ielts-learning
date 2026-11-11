@@ -59,7 +59,7 @@ Prerequisites: `go run ./cmd/seed -only-foundation` and the A1 vocabulary import
 | R | Week 1 review | | Checkpoint (70 to pass) |
 
 Reading and speaking activities are optional. Each lesson has a read-aloud
-self-check (slug `read-aloud`) and an AI role-play "Nói chuyện với AI" (slug
+activity (slug `read-aloud`, SPEAK items scored by Azure when configured, otherwise a self-check) and an AI role-play "Nói chuyện với AI" (slug
 `speaking`, `scenarioSlug` → `a1-scenarios.json`) that passes when the learner
 completes the scenario task.
 

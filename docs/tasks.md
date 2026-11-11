@@ -2161,12 +2161,16 @@ Requirements:
 - Recorder component (MediaRecorder, max 15 s, waveform/level indicator).
 - `SPEAK` exercises graded by accuracy.
 
+Status: done. Module `backend/internal/modules/pronunciation`: `GET /pronunciation/status`, `POST /pronunciation/assess` (multipart `audio` 16 kHz mono WAV ≤ 15 s, `referenceText`, optional `exerciseId`, `source`). Azure REST short-audio API (en-US, scripted, phoneme granularity, IPA; Azure phonemes mapped to our Oxford NAmE symbols, SAPI accepted too). Config `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` (`AZURE_SPEECH_ENDPOINT` for tests), `PRONUNCIATION_DAILY_LIMIT` (300). `pronunciation_attempts` stores scores + words; audio is discarded. The browser records with MediaRecorder (level meter, 15 s cap) and converts to WAV before upload (`features/pronunciation/`). SPEAK answers are `{attemptId}`: correct at accuracy ≥ `answer.minAccuracy` (default 70), half credit within 15 points; self-check stays as the fallback when Azure is off or there is no microphone.
+
 ### Task 72 - Shadowing and Phoneme Progress
 
 Requirements:
 
 - Shadowing mode on passages: play a segment → record → coloured result per word/phoneme.
 - `user_phoneme_progresses`; weakest sounds shown on `/pronunciation` with "Practice" links.
+
+Status: done. Every scored phoneme updates `user_phoneme_progresses` (running average weighted to ~the last 30 occurrences); a sound below 60 after ≥ 5 occurrences is logged as a `learner_mistakes` row `sound:<symbol>` (source PRONUNCIATION). Shadowing: "Nói theo" in the passage player records the current line and colours each word (tap a word for its sounds). Sound cards have a "Luyện nói" list for the example words; `/pronunciation` shows the weakest sounds with "Luyện" links.
 
 ## 21. Milestone 20 - Mistake Log and Review
 

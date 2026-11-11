@@ -1,4 +1,4 @@
-import { ArrowRight, AudioLines, Volume2 } from "lucide-react";
+import { ArrowRight, AudioLines, Mic, Volume2 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import { ErrorState } from "@/components/state/ErrorState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IpaText } from "@/features/pronunciation/IpaText";
 import { usePhonemes } from "@/features/pronunciation/hooks/usePhonemes";
+import { scoreBg, scoreTone } from "@/features/pronunciation/scoreColors";
 import { phonemePath } from "@/lib/ipa";
 import { playPronunciation } from "@/lib/pronunciation";
 import { cn } from "@/lib/utils";
@@ -34,6 +35,11 @@ export function PronunciationPage() {
   const vowels = items.filter((item) => item.kind === "VOWEL");
   const diphthongs = items.filter((item) => item.kind === "DIPHTHONG");
   const otherConsonants = items.filter((item) => item.kind === "CONSONANT" && !paired.has(item.symbol));
+  // Weakest sounds (Task 72): practised enough to trust, lowest accuracy first.
+  const weakest = items
+    .filter((item) => item.progress.practised && item.progress.attempts >= 3 && item.progress.accuracy < 80)
+    .sort((a, b) => a.progress.accuracy - b.progress.accuracy)
+    .slice(0, 6);
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 py-2">
@@ -61,6 +67,35 @@ export function PronunciationPage() {
           description="Hãy import file content/a1/a1-sounds.json ở trang Import Lessons."
           title="Chưa có thẻ âm nào"
         />
+      ) : null}
+
+      {weakest.length > 0 ? (
+        <section className="rounded-3xl border border-amber-200 bg-amber-50/50 p-4 sm:p-5">
+          <h2 className="flex items-center gap-2 font-bold">
+            <Mic className="size-4 text-amber-600" /> Âm bạn cần luyện
+          </h2>
+          <p className="mb-3 text-xs text-muted-foreground">Từ các lần bạn nói được chấm điểm (trung bình ~30 lần gần nhất).</p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {weakest.map((item) => (
+              <Link
+                className={cn("flex items-center gap-3 rounded-2xl border bg-white p-3 hover:shadow-sm", scoreBg(item.progress.accuracy))}
+                key={item.symbol}
+                to={phonemePath(item.symbol)}
+              >
+                <span className="font-mono text-2xl font-bold">/{item.symbol}/</span>
+                <span className="min-w-0 flex-1">
+                  <span className={cn("block font-bold", scoreTone(item.progress.accuracy))}>{item.progress.accuracy}/100</span>
+                  <span className="text-xs text-muted-foreground">
+                    {item.progress.attempts} lần{item.exampleWord ? ` · ${item.exampleWord.word}` : ""}
+                  </span>
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-xl bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground">
+                  Luyện <ArrowRight className="size-3.5" />
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
       ) : null}
 
       {items.length > 0 ? (

@@ -3,6 +3,11 @@ import { useState, type ReactNode } from "react";
 
 import { Input } from "@/components/ui/input";
 import { playPronunciation } from "@/lib/pronunciation";
+import { PronunciationRecorder } from "@/features/pronunciation/PronunciationRecorder";
+import { PronunciationScore } from "@/features/pronunciation/ScoredText";
+import { usePronunciationStatus } from "@/features/pronunciation/hooks/usePronunciation";
+import { canRecord } from "@/features/pronunciation/voiceRecorder";
+import type { PronunciationResult } from "@/types/pronunciation";
 import { cn } from "@/lib/utils";
 import type {
   AnswerResult,
@@ -594,7 +599,11 @@ function WordStressExercise({ exercise, result, onChange }: ExerciseRendererProp
 
 function SpeakExercise({ exercise, result, onChange }: ExerciseRendererProps) {
   const text = str(exercise.payload, "text");
-  const [done, setDone] = useState(false);
+  const status = usePronunciationStatus();
+  const [fallback, setFallback] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [scored, setScored] = useState<PronunciationResult | null>(null);
+  const scoring = Boolean(status.data?.enabled) && canRecord() && !fallback;
 
   return (
     <div className="text-center">
@@ -605,24 +614,51 @@ function SpeakExercise({ exercise, result, onChange }: ExerciseRendererProps) {
       <div className="mb-5 flex justify-center">
         <AudioButton audioUrl={str(exercise.payload, "audioUrl")} fallbackText={text} label="Nghe mẫu" />
       </div>
-      <button
-        className={cn(
-          "inline-flex cursor-pointer items-center gap-2 rounded-2xl border-2 px-5 py-3 font-semibold disabled:cursor-default",
-          done || result ? "border-emerald-500 bg-emerald-50 text-emerald-700" : "border-border bg-white hover:border-primary/40",
-        )}
-        disabled={Boolean(result)}
-        onClick={() => {
-          setDone(true);
-          onChange({ selfCheck: true });
-        }}
-        type="button"
-      >
-        <Mic className="size-5" />
-        Tôi đã đọc to câu này
-      </button>
-      <p className="mt-3 text-xs text-muted-foreground">
-        Chấm phát âm tự động sẽ có ở bản sau. Hiện tại bạn tự đánh giá.
-      </p>
+      {status.isLoading ? null : scoring ? (
+        <div className="space-y-3">
+          <PronunciationRecorder
+            disabled={Boolean(result)}
+            exerciseId={exercise.id}
+            hideResult
+            onScored={(next) => {
+              setScored(next);
+              onChange({ attemptId: next.attemptId });
+            }}
+            referenceText={text}
+            source="EXERCISE"
+          />
+          {scored ? <PronunciationScore result={scored} /> : null}
+          {!result && !scored ? (
+            <p className="text-xs text-muted-foreground">
+              Nghe mẫu, bấm nói và đọc to câu trên (tối đa 15 giây), rồi bấm Kiểm tra.{" "}
+              <button className="cursor-pointer underline" onClick={() => setFallback(true)} type="button">
+                Không dùng được micro?
+              </button>
+            </p>
+          ) : null}
+        </div>
+      ) : (
+        <>
+          <button
+            className={cn(
+              "inline-flex cursor-pointer items-center gap-2 rounded-2xl border-2 px-5 py-3 font-semibold disabled:cursor-default",
+              checked || result ? "border-emerald-500 bg-emerald-50 text-emerald-700" : "border-border bg-white hover:border-primary/40",
+            )}
+            disabled={Boolean(result)}
+            onClick={() => {
+              setChecked(true);
+              onChange({ selfCheck: true });
+            }}
+            type="button"
+          >
+            <Mic className="size-5" />
+            Tôi đã đọc to câu này
+          </button>
+          <p className="mt-3 text-xs text-muted-foreground">
+            {status.data?.enabled ? "Bạn tự đánh giá khi không dùng được micro." : "Chấm phát âm tự động chưa được bật (Azure Speech). Hiện tại bạn tự đánh giá."}
+          </p>
+        </>
+      )}
     </div>
   );
 }

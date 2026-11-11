@@ -10,6 +10,8 @@ import (
 const (
 	AIUsageShortAnswer = "SHORT_ANSWER"
 	AIUsageWriting     = "WRITING"
+	// AIUsagePronunciation counts Azure pronunciation assessments (Task 71).
+	AIUsagePronunciation = "PRONUNCIATION"
 )
 
 // AIUsageDaily counts AI calls per user, day (YYYY-MM-DD, server time) and kind.

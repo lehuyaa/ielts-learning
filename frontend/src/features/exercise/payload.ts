@@ -47,6 +47,9 @@ export function formatCorrectAnswer(exercise: Exercise, correct: unknown): strin
   }
 
   switch (exercise.type) {
+    case "SPEAK":
+      // Shown by ExerciseFeedback as the accuracy line.
+      return "";
     case "TRUE_FALSE":
       return correct ? "Đúng (True)" : "Sai (False)";
     case "WORD_STRESS": {

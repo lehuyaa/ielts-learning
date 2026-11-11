@@ -440,3 +440,16 @@ func (r Repository) FindScenario(id uint) (models.AIConversationScenario, bool, 
 	}
 	return scenario, true, nil
 }
+
+// FindPronunciationAttempt returns a learner's scored recording (Task 71).
+func (r Repository) FindPronunciationAttempt(userID, attemptID uint) (models.PronunciationAttempt, bool, error) {
+	var attempt models.PronunciationAttempt
+	err := r.db.Where("id = ? AND user_id = ?", attemptID, userID).Take(&attempt).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return attempt, false, nil
+	}
+	if err != nil {
+		return attempt, false, fmt.Errorf("find pronunciation attempt: %w", err)
+	}
+	return attempt, true, nil
+}

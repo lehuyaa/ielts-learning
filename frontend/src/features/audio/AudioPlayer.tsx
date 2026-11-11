@@ -1,9 +1,15 @@
-import { Eye, Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
+import { Eye, Mic, Pause, Play, RotateCcw, SkipBack, SkipForward } from "lucide-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { TappableText } from "@/features/passage/TappableText";
+import { PronunciationRecorder } from "@/features/pronunciation/PronunciationRecorder";
+import { ScoredText } from "@/features/pronunciation/ScoredText";
+import { scoreTone } from "@/features/pronunciation/scoreColors";
+import { usePronunciationStatus } from "@/features/pronunciation/hooks/usePronunciation";
+import { canRecord } from "@/features/pronunciation/voiceRecorder";
 import { cn } from "@/lib/utils";
 import type { PassageCard, TranscriptMode } from "@/types/passage";
+import type { PronunciationResult } from "@/types/pronunciation";
 
 import { SegmentPlayer } from "./segmentPlayer";
 
@@ -33,6 +39,9 @@ export function AudioPlayer({ passage, speeds = [0.75, 1], transcript = "AFTER_A
   const [speed, setSpeed] = useState(speeds.includes(1) ? 1 : speeds[0] ?? 1);
   const [unblurred, setUnblurred] = useState(false);
   const [player] = useState(() => new SegmentPlayer({ onSegment: setCurrent, onPlaying: setPlaying }));
+  const pronunciation = usePronunciationStatus();
+  const [shadowing, setShadowing] = useState(false);
+  const [shadowScores, setShadowScores] = useState<Record<number, PronunciationResult>>({});
 
   useEffect(() => () => player.stop(), [player]);
 
@@ -51,6 +60,9 @@ export function AudioPlayer({ passage, speeds = [0.75, 1], transcript = "AFTER_A
 
   const showText = passed || (transcript === "AFTER_ANSWER" && answered) || (transcript === "BLURRED" && unblurred);
   const blurred = transcript === "BLURRED" && !showText;
+  // Shadowing (Task 72): play a sentence, say it, see each word scored.
+  const canShadow = Boolean(pronunciation.data?.enabled) && canRecord() && showText;
+  const shadowOn = shadowing && canShadow;
 
   return (
     <div className="space-y-4">
@@ -77,6 +89,20 @@ export function AudioPlayer({ passage, speeds = [0.75, 1], transcript = "AFTER_A
         >
           <RotateCcw className="size-4" /> Nghe lại câu {current + 1}
         </button>
+        {canShadow ? (
+          <button
+            aria-pressed={shadowOn}
+            className={cn(
+              "inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-2 text-sm font-semibold",
+              shadowOn ? "border-primary bg-primary/10 text-primary" : "hover:border-primary/40",
+            )}
+            onClick={() => setShadowing(!shadowing)}
+            title="Nghe từng câu rồi nói theo, AI chấm phát âm từng từ"
+            type="button"
+          >
+            <Mic className="size-4" /> Nói theo
+          </button>
+        ) : null}
         <div className="ml-auto flex rounded-full border p-0.5 text-sm" role="group" aria-label="Tốc độ">
           {speeds.map((value) => (
             <button
@@ -132,10 +158,32 @@ export function AudioPlayer({ passage, speeds = [0.75, 1], transcript = "AFTER_A
                   >
                     <Play className="size-3.5" />
                   </button>
-                  <span>
-                    {segment.speaker ? <span className="mr-1.5 font-bold">{segment.speaker}:</span> : null}
-                    {showText ? <TappableText passageId={passage.id} text={segment.text} /> : segment.text}
-                  </span>
+                  <div className="min-w-0 flex-1">
+                    <span>
+                      {segment.speaker ? <span className="mr-1.5 font-bold">{segment.speaker}:</span> : null}
+                      {showText ? <TappableText passageId={passage.id} text={segment.text} /> : segment.text}
+                    </span>
+                    {shadowOn && shadowScores[index] ? (
+                      <div className="mt-1 flex items-start gap-2 text-sm">
+                        <span className={cn("shrink-0 pt-1 font-bold", scoreTone(shadowScores[index].accuracy))}>
+                          {shadowScores[index].accuracy}
+                        </span>
+                        <ScoredText className="[&>p]:text-base" key={shadowScores[index].attemptId} words={shadowScores[index].words} />
+                      </div>
+                    ) : null}
+                    {shadowOn && index === current ? (
+                      <div className="mt-2">
+                        <PronunciationRecorder
+                          compact
+                          hideResult
+                          key={segment.index}
+                          onScored={(result) => setShadowScores((scores) => ({ ...scores, [index]: result }))}
+                          referenceText={segment.text}
+                          source="SHADOWING"
+                        />
+                      </div>
+                    ) : null}
+                  </div>
                 </li>
               ))}
             </ol>

@@ -131,6 +131,7 @@ type exerciseAnswer struct {
 	WrongIndex  *int                `json:"wrongIndex"`
 	Blanks      map[string][]string `json:"blanks"`
 	StressIndex *int                `json:"stressIndex"`
+	MinAccuracy *int                `json:"minAccuracy"`
 }
 
 var blankPattern = regexp.MustCompile(`\{\{(\w+)\}\}`)
@@ -277,6 +278,9 @@ func validateExercise(exercise ExerciseInput) []string {
 	case models.ExerciseSpeak:
 		if payload.Text == "" {
 			errs = append(errs, "payload.text is required")
+		}
+		if answer.MinAccuracy != nil && (*answer.MinAccuracy < 1 || *answer.MinAccuracy > 100) {
+			errs = append(errs, "answer.minAccuracy must be 1-100")
 		}
 		canonical = map[string]any{"selfCheck": true}
 	default:

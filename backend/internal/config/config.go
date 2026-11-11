@@ -29,6 +29,12 @@ type Config struct {
 	AIWritingDailyLimit int
 	// AIChatDailyLimit caps AI conversation calls (turns, hints, reports) per user per day.
 	AIChatDailyLimit int
+	// Azure Speech pronunciation assessment (Task 71). Empty key disables scoring.
+	AzureSpeechKey      string
+	AzureSpeechRegion   string
+	AzureSpeechEndpoint string
+	// PronunciationDailyLimit caps scored recordings per user per day.
+	PronunciationDailyLimit int
 }
 
 func Load() Config {
@@ -51,6 +57,10 @@ func Load() Config {
 		AIChatDailyLimit:        getEnvInt("AI_CHAT_DAILY_LIMIT", 200),
 		OpenAITranscribeModel:   getEnv("OPENAI_TRANSCRIBE_MODEL", "whisper-1"),
 		MediaDir:                getEnv("MEDIA_DIR", "storage/media"),
+		AzureSpeechKey:          getEnv("AZURE_SPEECH_KEY", ""),
+		AzureSpeechRegion:       getEnv("AZURE_SPEECH_REGION", ""),
+		AzureSpeechEndpoint:     getEnv("AZURE_SPEECH_ENDPOINT", ""),
+		PronunciationDailyLimit: getEnvInt("PRONUNCIATION_DAILY_LIMIT", 300),
 	}
 }
 

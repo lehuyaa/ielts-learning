@@ -668,7 +668,7 @@ for lesson in lessons:
         if activity["type"] == "SPEAKING":
             activity["slug"] = "read-aloud"
             activity["title"] = "Đọc to theo mẫu"
-            activity["instructionsVi"] = "Nghe câu mẫu rồi đọc to theo. Sau này AI sẽ chấm phát âm của bạn."
+            activity["instructionsVi"] = "Nghe câu mẫu rồi bấm nói và đọc to theo. AI chấm phát âm từng từ (cần độ chính xác từ 70)."
     lesson["activities"].append({
         "slug": "speaking", "type": "SPEAKING", "title": "Nói chuyện với AI",
         "instructionsVi": "Đóng vai trong tình huống của bài. AI nói chậm, câu ngắn; bí thì bấm Gợi ý. Kết thúc để xem báo cáo.",

@@ -13,6 +13,7 @@ const aiStatusNote: Record<NonNullable<AnswerResult["aiStatus"]>, string> = {
 /** Result panel shown under an answered exercise (lesson player and practice). */
 export function ExerciseFeedback({ exercise, result }: { exercise: Exercise; result: AnswerResult }) {
   const partial = !result.isCorrect && result.scoreRatio > 0;
+  const speakScore = exercise.type === "SPEAK" ? speakAccuracy(result.correctAnswer) : null;
   const correctText = formatCorrectAnswer(exercise, result.correctAnswer);
   const ai = result.gradedBy === "AI" ? result.aiFeedback : undefined;
   const showSuggested = ai && !result.isCorrect && ai.suggested;
@@ -54,6 +55,11 @@ export function ExerciseFeedback({ exercise, result }: { exercise: Exercise; res
           <span className="font-semibold">{correctText}</span>
         </p>
       ) : null}
+      {speakScore ? (
+        <p className="mt-1">
+          Độ chính xác <span className="font-semibold">{speakScore.accuracy}/100</span> (cần ≥ {speakScore.minAccuracy})
+        </p>
+      ) : null}
       {result.explanationVi ? <p className="mt-1 text-sm text-muted-foreground">{result.explanationVi}</p> : null}
       {result.aiStatus && !result.isCorrect ? (
         <p className="mt-2 text-xs text-muted-foreground">{aiStatusNote[result.aiStatus]}</p>
@@ -65,4 +71,12 @@ export function ExerciseFeedback({ exercise, result }: { exercise: Exercise; res
 function sameText(a: string, b: string) {
   const clean = (value: string) => value.toLowerCase().replace(/[.!?\s]+$/g, "").replace(/\s+/g, " ").trim();
   return clean(a) === clean(b);
+}
+
+function speakAccuracy(value: unknown): { accuracy: number; minAccuracy: number } | null {
+  if (value && typeof value === "object" && "accuracy" in value && "minAccuracy" in value) {
+    const { accuracy, minAccuracy } = value as { accuracy: number; minAccuracy: number };
+    return { accuracy, minAccuracy };
+  }
+  return null;
 }

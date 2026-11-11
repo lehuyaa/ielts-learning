@@ -31,6 +31,9 @@ type GradeResult struct {
 	// NeedsAI is true when matching failed but the key allows AI grading
 	// (TRANSFORM / TRANSLATE_VI_EN, Task 55).
 	NeedsAI bool
+	// PronunciationAttempt is set for a SPEAK answer scored by Azure
+	// ({"attemptId"}); the service grades it from the stored attempt (Task 71).
+	PronunciationAttempt uint
 }
 
 // Submitted is the union of answer shapes from docs/foundation-spec.md §5.1.
@@ -43,6 +46,7 @@ type Submitted struct {
 	Blanks      map[string]string `json:"blanks"`
 	StressIndex *int              `json:"stressIndex"`
 	SelfCheck   *bool             `json:"selfCheck"`
+	AttemptID   *uint             `json:"attemptId"`
 }
 
 type answerKey struct {
@@ -110,7 +114,11 @@ func Grade(exerciseType models.ExerciseType, payloadJSON []byte, answerJSON []by
 		}
 		return exact(*submitted.StressIndex == *key.StressIndex, *key.StressIndex), nil
 	case models.ExerciseSpeak:
-		// Self-check until pronunciation scoring exists (Task 71).
+		// A scored recording is graded from its attempt by the service; a
+		// self-check (no microphone / scoring not configured) counts as done.
+		if submitted.AttemptID != nil && *submitted.AttemptID > 0 {
+			return GradeResult{PronunciationAttempt: *submitted.AttemptID}, nil
+		}
 		if submitted.SelfCheck == nil {
 			return GradeResult{}, ErrInvalidAnswerShape
 		}
@@ -438,4 +446,18 @@ func minOf(values ...int) int {
 
 func roundRatio(value float64) float64 {
 	return float64(int(value*1000+0.5)) / 1000
+}
+
+// gradeSpeak grades a scored recording: correct from minAccuracy, half credit
+// within 15 points of it.
+func gradeSpeak(accuracy, minAccuracy int) GradeResult {
+	correct := map[string]int{"accuracy": accuracy, "minAccuracy": minAccuracy}
+	switch {
+	case accuracy >= minAccuracy:
+		return GradeResult{IsCorrect: true, ScoreRatio: 1, CorrectAnswer: correct}
+	case accuracy >= minAccuracy-15:
+		return GradeResult{ScoreRatio: 0.5, CorrectAnswer: correct}
+	default:
+		return GradeResult{CorrectAnswer: correct}
+	}
 }

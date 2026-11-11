@@ -194,6 +194,15 @@ Grammar points:
 - Learners see theory and mastery at `/grammar` and `/grammar/:slug`
   (API `GET /api/v1/grammar-points`, module `backend/internal/modules/grammar/`).
 
+Pronunciation scoring (Azure Speech):
+
+- Set `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in `backend/.env` (Azure portal →
+  Speech service → Keys and Endpoint) and restart the API. `GET /api/v1/pronunciation/status`
+  then returns `enabled: true`; without a key SPEAK exercises stay a self-check.
+- `PRONUNCIATION_DAILY_LIMIT` (default 300 recordings per learner per day) protects the
+  free tier (F0: 5 audio hours per month).
+- SPEAK exercises can set `answer.minAccuracy` (1-100, default 70).
+
 Role-play scenarios:
 
 - Import `content/a1/a1-scenarios.json` (built by `content/a1/build_scenarios.py`)

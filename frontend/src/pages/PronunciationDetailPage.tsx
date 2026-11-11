@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, Ear, GraduationCap, TriangleAlert, Volume2 } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Ear, GraduationCap, Mic, TriangleAlert, Volume2 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Link, useParams } from "react-router-dom";
 
@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IpaText } from "@/features/pronunciation/IpaText";
 import { PairDrill } from "@/features/pronunciation/PairDrill";
+import { PronunciationRecorder } from "@/features/pronunciation/PronunciationRecorder";
+import { scoreTone } from "@/features/pronunciation/scoreColors";
+import { usePronunciationStatus } from "@/features/pronunciation/hooks/usePronunciation";
+import { cn } from "@/lib/utils";
 import { usePhoneme } from "@/features/pronunciation/hooks/usePhonemes";
 import { phonemePath } from "@/lib/ipa";
 import { playPronunciation } from "@/lib/pronunciation";
@@ -24,6 +28,7 @@ export function PronunciationDetailPage() {
   const { symbol = "" } = useParams();
   const query = usePhoneme(symbol);
   const [drill, setDrill] = useState(0);
+  const pronunciation = usePronunciationStatus();
 
   const data = query.data;
   const phoneme = data?.phoneme;
@@ -98,6 +103,41 @@ export function PronunciationDetailPage() {
               ))}
             </div>
           </Section>
+
+          {pronunciation.data?.enabled && phoneme.exampleWords.length > 0 ? (
+            <Section icon={<Mic className="size-4" />} title="Luyện nói">
+              <p className="mb-3 text-sm text-muted-foreground">
+                {data.progress.practised ? (
+                  <>
+                    Độ chính xác âm /{phoneme.symbol}/ của bạn:{" "}
+                    <span className={cn("font-bold", scoreTone(data.progress.accuracy))}>{data.progress.accuracy}/100</span> ({data.progress.attempts} lần).
+                  </>
+                ) : (
+                  <>Nói từng từ, AI chấm từng âm. Kết quả cập nhật độ chính xác của âm này.</>
+                )}
+              </p>
+              <ul className="divide-y">
+                {phoneme.exampleWords.map((word) => (
+                  <li className="flex flex-wrap items-start gap-3 py-3" key={word.word}>
+                    <button
+                      className="flex w-32 shrink-0 cursor-pointer items-center gap-2 text-left hover:text-primary"
+                      onClick={() => playPronunciation(word.word, word.audioUrl)}
+                      type="button"
+                    >
+                      <Volume2 className="size-4 text-primary" />
+                      <span>
+                        <span className="block font-semibold">{word.word}</span>
+                        <IpaText className="text-xs text-muted-foreground" ipa={word.ipa} linked={false} />
+                      </span>
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <PronunciationRecorder compact referenceText={word.word} source="WORD" />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          ) : null}
 
           {phoneme.minimalPairs.length > 0 ? (
             <Section
