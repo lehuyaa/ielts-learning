@@ -1,0 +1,132 @@
+## a1-free-time | Free Time & Hobbies | Sở thích, thể thao, âm nhạc, phim ảnh và lễ hội | music | cyan
+### Hobbies
+hobby|noun|sở thích|something you do for fun|My hobby is reading.|Sở thích của tôi là đọc sách.
+free time|noun|thời gian rảnh|time when you are not working|What do you do in your free time?|Bạn làm gì lúc rảnh?
+fun|noun|niềm vui|enjoyment|Have fun!|Chơi vui nhé!
+enjoy|verb|thích, tận hưởng|to like doing something|I enjoy cooking.|Tôi thích nấu ăn.
+play|verb|chơi|to do a game or sport; to make music|I play badminton on Sunday.|Tôi chơi cầu lông vào Chủ nhật.
+dance|verb|nhảy múa|to move to music|She loves to dance.|Cô ấy thích nhảy.
+sing|verb|hát|to make music with your voice|We sing karaoke on Friday.|Chúng tôi hát karaoke vào thứ Sáu.
+draw|verb|vẽ (bằng bút)|to make a picture with a pen or pencil|My daughter likes to draw.|Con gái tôi thích vẽ.
+paint|verb|vẽ, sơn|to make a picture with paint|I paint in my free time.|Tôi vẽ tranh lúc rảnh.
+fishing|noun|câu cá|catching fish as a hobby|My father likes fishing.|Bố tôi thích câu cá.
+camping|noun|cắm trại|staying outdoors in a tent|We go camping in the mountains.|Chúng tôi đi cắm trại trên núi.
+picnic|noun|chuyến dã ngoại|a meal you eat outside|Let's have a picnic in the park.|Đi dã ngoại ở công viên nhé.
+### Sports
+sport|noun|thể thao|a game like football or tennis|What sports do you like?|Bạn thích môn thể thao nào?
+football|noun|bóng đá|a game where players kick a ball|I watch football on TV.|Tôi xem bóng đá trên tivi.
+soccer|noun|bóng đá (Mỹ)|football|My son plays soccer.|Con trai tôi chơi bóng đá.
+tennis|noun|quần vợt|a game with rackets and a small ball|I play tennis on Saturday.|Tôi chơi tennis vào thứ Bảy.
+badminton|noun|cầu lông|a game with rackets and a shuttlecock|Badminton is popular in Vietnam.|Cầu lông phổ biến ở Việt Nam.
+basketball|noun|bóng rổ|a game where you throw a ball into a net|He is a basketball player.|Anh ấy là cầu thủ bóng rổ.
+volleyball|noun|bóng chuyền|a game where you hit a ball over a net|We play volleyball on the beach.|Chúng tôi chơi bóng chuyền trên bãi biển.
+swimming|noun|bơi lội|the sport of swimming|Swimming is good exercise.|Bơi lội là bài tập tốt.
+swim|verb|bơi|to move through water|Can you swim?|Bạn biết bơi không?
+game|noun|trò chơi; trận đấu|an activity with rules; a match|Let's play a game.|Chơi một trò nhé.
+team|noun|đội|a group that plays together|Which team do you like?|Bạn thích đội nào?
+player|noun|cầu thủ, người chơi|a person who plays a sport|He is a good player.|Anh ấy là một cầu thủ giỏi.
+win|verb|thắng|to be the best in a game|Our team wins!|Đội chúng tôi thắng!
+lose|verb|thua; mất|to not win; to not find|We lost the game.|Chúng tôi thua trận.
+### Music & Movies
+music|noun|âm nhạc|sounds like songs|I listen to music on the bus.|Tôi nghe nhạc trên xe buýt.
+song|noun|bài hát|a piece of music with words|This is my favorite song.|Đây là bài hát yêu thích của tôi.
+band|noun|ban nhạc|a group of musicians|I like this band.|Tôi thích ban nhạc này.
+concert|noun|buổi hòa nhạc|a music show|We go to a concert tonight.|Tối nay chúng tôi đi xem hòa nhạc.
+guitar|noun|đàn ghi-ta|a music instrument with strings|I play the guitar.|Tôi chơi ghi-ta.
+piano|noun|đàn piano|a large music instrument with keys|She plays the piano very well.|Cô ấy chơi piano rất giỏi.
+movie|noun|bộ phim|a story shown on a screen|Let's watch a movie tonight.|Tối nay xem phim nhé.
+film|noun|phim|a movie|This film is very funny.|Bộ phim này rất hài.
+video|noun|video|moving pictures you watch|I watch English videos on YouTube.|Tôi xem video tiếng Anh trên YouTube.
+cartoon|noun|phim hoạt hình|a film with drawn pictures|Kids love cartoons.|Trẻ con thích phim hoạt hình.
+show|noun|chương trình|a program on TV or on stage|I like this TV show.|Tôi thích chương trình truyền hình này.
+favorite|adjective|yêu thích nhất|liked more than others|What is your favorite food?|Món ăn yêu thích của bạn là gì?
+### Reading & Media
+book|noun|cuốn sách|pages with words bound together|I read a book every month.|Tôi đọc một cuốn sách mỗi tháng.
+story|noun|câu chuyện|words about events, real or not|Tell me a story.|Kể cho tôi nghe một câu chuyện.
+magazine|noun|tạp chí|a thin book with pictures, published often|I read a magazine on the plane.|Tôi đọc tạp chí trên máy bay.
+newspaper|noun|tờ báo|printed pages with news|My father reads the newspaper.|Bố tôi đọc báo.
+news|noun|tin tức|information about recent events|I watch the news at seven.|Tôi xem thời sự lúc bảy giờ.
+internet|noun|mạng internet|the network of computers around the world|I use the internet every day.|Tôi dùng internet mỗi ngày.
+website|noun|trang web|a place on the internet|Visit our website.|Hãy truy cập trang web của chúng tôi.
+photo|noun|ảnh|a picture from a camera|Let's take a photo.|Chụp ảnh nào.
+art|noun|nghệ thuật|paintings, music and other creative things|I like modern art.|Tôi thích nghệ thuật hiện đại.
+### Parties & Celebrations
+party|noun|bữa tiệc|a social event with food and music|Come to my party on Saturday.|Đến dự tiệc của tôi vào thứ Bảy nhé.
+celebrate|verb|ăn mừng, kỷ niệm|to do something special for an event|We celebrate Tet with our family.|Chúng tôi đón Tết cùng gia đình.
+festival|noun|lễ hội|a special event with music, food or culture|The Mid-Autumn Festival is fun for kids.|Tết Trung thu rất vui với trẻ em.
+invite|verb|mời|to ask someone to come to an event|I invite you to my wedding.|Tôi mời bạn đến đám cưới của tôi.
+wedding|noun|đám cưới|a marriage ceremony|My cousin's wedding is next month.|Đám cưới anh họ tôi vào tháng sau.
+event|noun|sự kiện|something important that happens|The company event is on Friday.|Sự kiện công ty vào thứ Sáu.
+card|noun|thiệp; thẻ|a piece of thick paper with a message|I send her a birthday card.|Tôi gửi cô ấy một tấm thiệp sinh nhật.
+surprise|noun|sự bất ngờ|something you did not expect|It's a surprise!|Bất ngờ chưa!
+laugh|verb|cười (thành tiếng)|to make a sound when something is funny|We laugh a lot together.|Chúng tôi cười rất nhiều cùng nhau.
+smile|verb|mỉm cười|to make a happy face|She always smiles.|Cô ấy luôn mỉm cười.
+## a1-nature-and-weather | Nature, Weather & Animals | Thời tiết, thiên nhiên và động vật | leaf | green
+### Weather
+weather|noun|thời tiết|the condition of the air: sun, rain, wind|How is the weather today?|Hôm nay thời tiết thế nào?
+sunny|adjective|nắng|with a lot of sun|It is sunny today.|Hôm nay trời nắng.
+rainy|adjective|có mưa|with a lot of rain|It is rainy in Hue.|Ở Huế trời mưa.
+cloudy|adjective|nhiều mây|with a lot of clouds|It is cloudy this morning.|Sáng nay trời nhiều mây.
+windy|adjective|nhiều gió|with a lot of wind|It is windy at the beach.|Ở bãi biển gió nhiều.
+foggy|adjective|có sương mù|with fog in the air|It is foggy in Da Lat.|Ở Đà Lạt có sương mù.
+snowy|adjective|có tuyết|with snow|It is snowy in Japan.|Ở Nhật Bản có tuyết.
+hot|adjective|nóng|very warm|It is very hot in summer.|Mùa hè trời rất nóng.
+warm|adjective|ấm áp|a little hot|It is warm in spring.|Mùa xuân trời ấm áp.
+cool|adjective|mát mẻ|a little cold|It is cool in the evening.|Buổi tối trời mát.
+cold|adjective|lạnh|having a low temperature|It is cold in Hanoi in winter.|Hà Nội lạnh vào mùa đông.
+dry|adjective|khô|without water or rain|The weather is dry today.|Hôm nay thời tiết khô ráo.
+### Sky & Nature
+sun|noun|mặt trời|the star that gives us light|The sun is hot today.|Hôm nay nắng gắt.
+rain|noun|mưa|water that falls from clouds|I don't like the rain.|Tôi không thích mưa.
+wind|noun|gió|moving air|The wind is strong today.|Hôm nay gió mạnh.
+cloud|noun|mây|a white or gray thing in the sky|There are no clouds today.|Hôm nay không có mây.
+snow|noun|tuyết|soft white ice that falls from the sky|I want to see snow.|Tôi muốn nhìn thấy tuyết.
+sky|noun|bầu trời|the space above the earth|The sky is blue.|Bầu trời xanh.
+moon|noun|mặt trăng|the round thing in the sky at night|The moon is beautiful tonight.|Đêm nay trăng đẹp.
+star|noun|ngôi sao|a bright point in the night sky|I can see many stars.|Tôi có thể thấy nhiều ngôi sao.
+fire|noun|lửa|heat and flames|Be careful with fire.|Cẩn thận với lửa.
+air|noun|không khí|what we breathe|The air is fresh here.|Không khí ở đây trong lành.
+### Places in Nature
+sea|noun|biển|a large area of salt water|I love swimming in the sea.|Tôi thích bơi ở biển.
+beach|noun|bãi biển|land with sand next to the sea|We go to the beach in summer.|Chúng tôi đi biển vào mùa hè.
+river|noun|sông|a long line of water that flows|The Red River is long.|Sông Hồng dài.
+lake|noun|hồ|a large area of water with land around it|We walk around the lake.|Chúng tôi đi dạo quanh hồ.
+mountain|noun|núi|a very high hill|We climb a mountain in Sapa.|Chúng tôi leo núi ở Sa Pa.
+hill|noun|đồi|a small mountain|There is a house on the hill.|Có một ngôi nhà trên đồi.
+island|noun|hòn đảo|land with water all around it|Phu Quoc is a beautiful island.|Phú Quốc là một hòn đảo đẹp.
+forest|noun|rừng|a large area with many trees|There are many birds in the forest.|Có nhiều chim trong rừng.
+field|noun|cánh đồng|an area of land for crops or animals|The rice fields are green.|Những cánh đồng lúa xanh mướt.
+farm|noun|trang trại|land for growing food or keeping animals|My uncle has a farm.|Chú tôi có một trang trại.
+### Plants
+tree|noun|cây|a tall plant with a trunk|There is a big tree in front of my house.|Có một cây lớn trước nhà tôi.
+flower|noun|hoa|the colorful part of a plant|I buy flowers for my mother.|Tôi mua hoa tặng mẹ.
+grass|noun|cỏ|short green plants|Don't walk on the grass.|Đừng đi trên cỏ.
+leaf|noun|lá cây|a flat green part of a plant|The leaves fall in autumn.|Lá rụng vào mùa thu.
+plant|noun|cây cối, thực vật|a living thing that grows in soil|I have a plant on my desk.|Tôi có một chậu cây trên bàn làm việc.
+rose|noun|hoa hồng|a flower with a sweet smell|He gives her a red rose.|Anh ấy tặng cô ấy một bông hồng đỏ.
+grow|verb|trồng; lớn lên|to make plants live; to get bigger|We grow vegetables in the garden.|Chúng tôi trồng rau trong vườn.
+stone|noun|đá, hòn đá|a small piece of rock|The wall is made of stone.|Bức tường được làm bằng đá.
+ground|noun|mặt đất|the surface of the earth|Sit on the ground.|Ngồi xuống đất.
+### Pets & Farm Animals
+animal|noun|động vật|a living thing that can move, like a dog|I love animals.|Tôi yêu động vật.
+pet|noun|thú cưng|an animal you keep at home|Do you have a pet?|Bạn có nuôi thú cưng không?
+dog|noun|con chó|an animal people keep as a pet|My dog is very friendly.|Con chó của tôi rất thân thiện.
+cat|noun|con mèo|a small animal people keep as a pet|The cat is sleeping.|Con mèo đang ngủ.
+bird|noun|con chim|an animal with wings that can fly|The bird is singing.|Con chim đang hót.
+cow|noun|con bò|a large farm animal that gives milk|The cows are in the field.|Những con bò đang ở trên cánh đồng.
+pig|noun|con lợn|a pink farm animal|They keep pigs on the farm.|Họ nuôi lợn ở trang trại.
+horse|noun|con ngựa|a large animal you can ride|Can you ride a horse?|Bạn có biết cưỡi ngựa không?
+sheep|noun|con cừu|a farm animal with wool|There are many sheep on the hill.|Có nhiều cừu trên đồi.
+rabbit|noun|con thỏ|a small animal with long ears|My daughter has a white rabbit.|Con gái tôi có một con thỏ trắng.
+mouse|noun|con chuột; chuột máy tính|a small animal with a long tail; a computer tool|There is a mouse in the kitchen.|Có một con chuột trong bếp.
+### Wild Animals
+lion|noun|sư tử|a big wild cat from Africa|The lion is sleeping.|Con sư tử đang ngủ.
+tiger|noun|con hổ|a big wild cat with stripes|Tigers are dangerous.|Hổ rất nguy hiểm.
+monkey|noun|con khỉ|an animal that climbs trees|The monkey is eating a banana.|Con khỉ đang ăn chuối.
+bear|noun|con gấu|a large wild animal with thick fur|Bears live in the forest.|Gấu sống trong rừng.
+elephant|noun|con voi|a very large gray animal with a long nose|The elephant is very big.|Con voi rất to.
+snake|noun|con rắn|a long animal with no legs|I am afraid of snakes.|Tôi sợ rắn.
+frog|noun|con ếch|a small green animal that jumps|The frog is in the water.|Con ếch ở dưới nước.
+butterfly|noun|con bướm|an insect with colorful wings|Look at that butterfly!|Nhìn con bướm kìa!
+bee|noun|con ong|an insect that makes honey|A bee is on the flower.|Có một con ong trên bông hoa.
+duck|noun|con vịt|a bird that swims|The ducks are on the lake.|Những con vịt ở trên hồ.

@@ -1,0 +1,715 @@
+{
+  "bandLevel": {
+    "bandScore": 1.0,
+    "cefrLevel": "A1",
+    "title": "A1 Foundation"
+  },
+  "topics": [
+    {
+      "slug": "a1-me-and-my-family",
+      "title": "Me & My Family",
+      "description": "Chào hỏi, thông tin cá nhân, gia đình và người xung quanh",
+      "icon": "users-round",
+      "color": "indigo",
+      "orderIndex": 1,
+      "emoji": "👪",
+      "lessons": [
+        {
+          "slug": "a1-greetings-introductions",
+          "title": "Greetings & Introductions",
+          "orderIndex": 1,
+          "wordCount": 14
+        },
+        {
+          "slug": "a1-personal-information",
+          "title": "Personal Information",
+          "orderIndex": 2,
+          "wordCount": 14
+        },
+        {
+          "slug": "a1-family",
+          "title": "Family",
+          "orderIndex": 3,
+          "wordCount": 13
+        },
+        {
+          "slug": "a1-relatives-other-people",
+          "title": "Relatives & Other People",
+          "orderIndex": 4,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-people-around-us",
+          "title": "People Around Us",
+          "orderIndex": 5,
+          "wordCount": 12
+        }
+      ]
+    },
+    {
+      "slug": "a1-numbers-and-time",
+      "title": "Numbers, Dates & Time",
+      "description": "Số đếm, giờ giấc, ngày tháng và thời gian",
+      "icon": "clock",
+      "color": "sky",
+      "orderIndex": 2,
+      "emoji": "🕒",
+      "lessons": [
+        {
+          "slug": "a1-numbers-1-12",
+          "title": "Numbers 1-12",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-numbers-13-100-1",
+          "title": "Numbers 13-100 (1)",
+          "orderIndex": 2,
+          "wordCount": 8
+        },
+        {
+          "slug": "a1-numbers-13-100-2",
+          "title": "Numbers 13-100 (2)",
+          "orderIndex": 3,
+          "wordCount": 8
+        },
+        {
+          "slug": "a1-counting-amounts",
+          "title": "Counting & Amounts",
+          "orderIndex": 4,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-telling-the-time",
+          "title": "Telling the Time",
+          "orderIndex": 5,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-parts-of-the-day",
+          "title": "Parts of the Day",
+          "orderIndex": 6,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-days-of-the-week",
+          "title": "Days of the Week",
+          "orderIndex": 7,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-months-seasons-1",
+          "title": "Months & Seasons (1)",
+          "orderIndex": 8,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-months-seasons-2",
+          "title": "Months & Seasons (2)",
+          "orderIndex": 9,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-how-often-when",
+          "title": "How Often & When",
+          "orderIndex": 10,
+          "wordCount": 15
+        }
+      ]
+    },
+    {
+      "slug": "a1-grammar-words",
+      "title": "Essential Grammar Words",
+      "description": "Đại từ, mạo từ, giới từ, từ để hỏi, liên từ và động từ cơ bản",
+      "icon": "puzzle",
+      "color": "violet",
+      "orderIndex": 3,
+      "emoji": "🧩",
+      "lessons": [
+        {
+          "slug": "a1-subject-object-pronouns",
+          "title": "Subject & Object Pronouns",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-possessives",
+          "title": "Possessives",
+          "orderIndex": 2,
+          "wordCount": 13
+        },
+        {
+          "slug": "a1-articles-pointing-words",
+          "title": "Articles & Pointing Words",
+          "orderIndex": 3,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-quantity-words",
+          "title": "Quantity Words",
+          "orderIndex": 4,
+          "wordCount": 15
+        },
+        {
+          "slug": "a1-everyone-everything",
+          "title": "Everyone & Everything",
+          "orderIndex": 5,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-prepositions-of-place",
+          "title": "Prepositions of Place",
+          "orderIndex": 6,
+          "wordCount": 13
+        },
+        {
+          "slug": "a1-prepositions-of-movement-time-1",
+          "title": "Prepositions of Movement & Time (1)",
+          "orderIndex": 7,
+          "wordCount": 8
+        },
+        {
+          "slug": "a1-prepositions-of-movement-time-2",
+          "title": "Prepositions of Movement & Time (2)",
+          "orderIndex": 8,
+          "wordCount": 8
+        },
+        {
+          "slug": "a1-other-prepositions",
+          "title": "Other Prepositions",
+          "orderIndex": 9,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-question-words",
+          "title": "Question Words",
+          "orderIndex": 10,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-linking-words-short-answers-1",
+          "title": "Linking Words & Short Answers (1)",
+          "orderIndex": 11,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-linking-words-short-answers-2",
+          "title": "Linking Words & Short Answers (2)",
+          "orderIndex": 12,
+          "wordCount": 8
+        },
+        {
+          "slug": "a1-be-have-do",
+          "title": "Be, Have & Do",
+          "orderIndex": 13,
+          "wordCount": 13
+        }
+      ]
+    },
+    {
+      "slug": "a1-work-and-study",
+      "title": "Work & Study",
+      "description": "Nghề nghiệp, văn phòng, công việc hằng ngày và học tập",
+      "icon": "briefcase-business",
+      "color": "amber",
+      "orderIndex": 4,
+      "emoji": "💼",
+      "lessons": [
+        {
+          "slug": "a1-jobs-1",
+          "title": "Jobs 1",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-jobs-2",
+          "title": "Jobs 2",
+          "orderIndex": 2,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-the-workplace",
+          "title": "The Workplace",
+          "orderIndex": 3,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-at-the-office",
+          "title": "At the Office",
+          "orderIndex": 4,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-work-tasks",
+          "title": "Work Tasks",
+          "orderIndex": 5,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-school-learning",
+          "title": "School & Learning",
+          "orderIndex": 6,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-studying-english",
+          "title": "Studying English",
+          "orderIndex": 7,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-learning-verbs",
+          "title": "Learning Verbs",
+          "orderIndex": 8,
+          "wordCount": 14
+        }
+      ]
+    },
+    {
+      "slug": "a1-daily-life",
+      "title": "Daily Life & Common Verbs",
+      "description": "Thói quen hằng ngày và các động từ thông dụng nhất",
+      "icon": "sun",
+      "color": "orange",
+      "orderIndex": 5,
+      "emoji": "☀️",
+      "lessons": [
+        {
+          "slug": "a1-my-morning",
+          "title": "My Morning",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-my-evening",
+          "title": "My Evening",
+          "orderIndex": 2,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-most-common-verbs-1",
+          "title": "Most Common Verbs 1",
+          "orderIndex": 3,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-most-common-verbs-2",
+          "title": "Most Common Verbs 2",
+          "orderIndex": 4,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-most-common-verbs-3",
+          "title": "Most Common Verbs 3",
+          "orderIndex": 5,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-action-verbs",
+          "title": "Action Verbs",
+          "orderIndex": 6,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-doing-things",
+          "title": "Doing Things",
+          "orderIndex": 7,
+          "wordCount": 12
+        }
+      ]
+    },
+    {
+      "slug": "a1-home",
+      "title": "Home & Things",
+      "description": "Nhà cửa, phòng ốc và đồ dùng trong nhà",
+      "icon": "house",
+      "color": "emerald",
+      "orderIndex": 6,
+      "emoji": "🏠",
+      "lessons": [
+        {
+          "slug": "a1-rooms-in-a-house",
+          "title": "Rooms in a House",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-parts-of-a-house",
+          "title": "Parts of a House",
+          "orderIndex": 2,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-furniture",
+          "title": "Furniture",
+          "orderIndex": 3,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-things-at-home",
+          "title": "Things at Home",
+          "orderIndex": 4,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-kitchen-things",
+          "title": "Kitchen Things",
+          "orderIndex": 5,
+          "wordCount": 13
+        }
+      ]
+    },
+    {
+      "slug": "a1-food-and-drink",
+      "title": "Food & Drink",
+      "description": "Đồ ăn, thức uống và đi ăn nhà hàng",
+      "icon": "utensils",
+      "color": "rose",
+      "orderIndex": 7,
+      "emoji": "🍜",
+      "lessons": [
+        {
+          "slug": "a1-meals-eating",
+          "title": "Meals & Eating",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-drinks",
+          "title": "Drinks",
+          "orderIndex": 2,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-main-foods",
+          "title": "Main Foods",
+          "orderIndex": 3,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-fruit-vegetables",
+          "title": "Fruit & Vegetables",
+          "orderIndex": 4,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-snacks-sweet-things",
+          "title": "Snacks & Sweet Things",
+          "orderIndex": 5,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-at-a-restaurant",
+          "title": "At a Restaurant",
+          "orderIndex": 6,
+          "wordCount": 8
+        }
+      ]
+    },
+    {
+      "slug": "a1-shopping-and-money",
+      "title": "Shopping, Money & Clothes",
+      "description": "Mua sắm, tiền bạc, quần áo và màu sắc",
+      "icon": "shopping-bag",
+      "color": "pink",
+      "orderIndex": 8,
+      "emoji": "🛍️",
+      "lessons": [
+        {
+          "slug": "a1-shopping",
+          "title": "Shopping",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-money",
+          "title": "Money",
+          "orderIndex": 2,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-clothes-1",
+          "title": "Clothes 1",
+          "orderIndex": 3,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-clothes-2",
+          "title": "Clothes 2",
+          "orderIndex": 4,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-colors",
+          "title": "Colors",
+          "orderIndex": 5,
+          "wordCount": 13
+        }
+      ]
+    },
+    {
+      "slug": "a1-city-and-travel",
+      "title": "City, Transport & Travel",
+      "description": "Thành phố, chỉ đường, phương tiện và du lịch",
+      "icon": "map",
+      "color": "blue",
+      "orderIndex": 9,
+      "emoji": "🗺️",
+      "lessons": [
+        {
+          "slug": "a1-places-in-town",
+          "title": "Places in Town",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-more-places",
+          "title": "More Places",
+          "orderIndex": 2,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-directions",
+          "title": "Directions",
+          "orderIndex": 3,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-transport",
+          "title": "Transport",
+          "orderIndex": 4,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-travel-verbs",
+          "title": "Travel Verbs",
+          "orderIndex": 5,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-trips-holidays",
+          "title": "Trips & Holidays",
+          "orderIndex": 6,
+          "wordCount": 11
+        }
+      ]
+    },
+    {
+      "slug": "a1-body-and-health",
+      "title": "Body & Health",
+      "description": "Cơ thể, sức khỏe và đi khám bệnh",
+      "icon": "heart-pulse",
+      "color": "red",
+      "orderIndex": 10,
+      "emoji": "🏥",
+      "lessons": [
+        {
+          "slug": "a1-the-body-1",
+          "title": "The Body 1",
+          "orderIndex": 1,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-the-body-2",
+          "title": "The Body 2",
+          "orderIndex": 2,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-feeling-sick",
+          "title": "Feeling Sick",
+          "orderIndex": 3,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-seeing-a-doctor",
+          "title": "Seeing a Doctor",
+          "orderIndex": 4,
+          "wordCount": 12
+        }
+      ]
+    },
+    {
+      "slug": "a1-describing-people-and-things",
+      "title": "Describing People & Things",
+      "description": "Tính từ miêu tả ngoại hình, tính cách, cảm xúc và đồ vật",
+      "icon": "sparkles",
+      "color": "purple",
+      "orderIndex": 11,
+      "emoji": "✨",
+      "lessons": [
+        {
+          "slug": "a1-appearance",
+          "title": "Appearance",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-personality",
+          "title": "Personality",
+          "orderIndex": 2,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-feelings",
+          "title": "Feelings",
+          "orderIndex": 3,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-describing-things-1",
+          "title": "Describing Things 1",
+          "orderIndex": 4,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-describing-things-2",
+          "title": "Describing Things 2",
+          "orderIndex": 5,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-describing-things-3",
+          "title": "Describing Things 3",
+          "orderIndex": 6,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-right-wrong",
+          "title": "Right & Wrong",
+          "orderIndex": 7,
+          "wordCount": 12
+        }
+      ]
+    },
+    {
+      "slug": "a1-free-time",
+      "title": "Free Time & Hobbies",
+      "description": "Sở thích, thể thao, âm nhạc, phim ảnh và lễ hội",
+      "icon": "music",
+      "color": "cyan",
+      "orderIndex": 12,
+      "emoji": "🎵",
+      "lessons": [
+        {
+          "slug": "a1-hobbies",
+          "title": "Hobbies",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-sports",
+          "title": "Sports",
+          "orderIndex": 2,
+          "wordCount": 13
+        },
+        {
+          "slug": "a1-music-movies",
+          "title": "Music & Movies",
+          "orderIndex": 3,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-reading-media",
+          "title": "Reading & Media",
+          "orderIndex": 4,
+          "wordCount": 8
+        },
+        {
+          "slug": "a1-parties-celebrations",
+          "title": "Parties & Celebrations",
+          "orderIndex": 5,
+          "wordCount": 10
+        }
+      ]
+    },
+    {
+      "slug": "a1-nature-and-weather",
+      "title": "Nature, Weather & Animals",
+      "description": "Thời tiết, thiên nhiên và động vật",
+      "icon": "leaf",
+      "color": "green",
+      "orderIndex": 13,
+      "emoji": "🌿",
+      "lessons": [
+        {
+          "slug": "a1-weather",
+          "title": "Weather",
+          "orderIndex": 1,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-sky-nature",
+          "title": "Sky & Nature",
+          "orderIndex": 2,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-places-in-nature",
+          "title": "Places in Nature",
+          "orderIndex": 3,
+          "wordCount": 10
+        },
+        {
+          "slug": "a1-plants",
+          "title": "Plants",
+          "orderIndex": 4,
+          "wordCount": 9
+        },
+        {
+          "slug": "a1-pets-farm-animals",
+          "title": "Pets & Farm Animals",
+          "orderIndex": 5,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-wild-animals",
+          "title": "Wild Animals",
+          "orderIndex": 6,
+          "wordCount": 10
+        }
+      ]
+    },
+    {
+      "slug": "a1-communication",
+      "title": "Communication & Everyday Ideas",
+      "description": "Gọi điện, tin nhắn, giấy tờ và các danh từ trừu tượng thông dụng",
+      "icon": "message-circle",
+      "color": "slate",
+      "orderIndex": 14,
+      "emoji": "💬",
+      "lessons": [
+        {
+          "slug": "a1-phone-messages",
+          "title": "Phone & Messages",
+          "orderIndex": 1,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-talking-with-people",
+          "title": "Talking with People",
+          "orderIndex": 2,
+          "wordCount": 12
+        },
+        {
+          "slug": "a1-forms-information",
+          "title": "Forms & Information",
+          "orderIndex": 3,
+          "wordCount": 11
+        },
+        {
+          "slug": "a1-life-ideas",
+          "title": "Life & Ideas",
+          "orderIndex": 4,
+          "wordCount": 13
+        },
+        {
+          "slug": "a1-useful-adverbs",
+          "title": "Useful Adverbs",
+          "orderIndex": 5,
+          "wordCount": 10
+        }
+      ]
+    }
+  ]
+}

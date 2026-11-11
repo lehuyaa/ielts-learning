@@ -1,0 +1,137 @@
+## a1-shopping-and-money | Shopping, Money & Clothes | Mua sắm, tiền bạc, quần áo và màu sắc | shopping-bag | pink
+### Shopping
+shop|noun|cửa hàng|a place where you buy things|The shop opens at nine.|Cửa hàng mở cửa lúc chín giờ.
+store|noun|cửa hàng|a shop|I buy milk at the store.|Tôi mua sữa ở cửa hàng.
+supermarket|noun|siêu thị|a large shop that sells food and other things|I go to the supermarket on Saturday.|Tôi đi siêu thị vào thứ Bảy.
+market|noun|chợ|a place where people buy and sell food and goods|My mother goes to the market every morning.|Mẹ tôi đi chợ mỗi sáng.
+shopping|noun|việc mua sắm|buying things in shops|I go shopping at the weekend.|Tôi đi mua sắm vào cuối tuần.
+buy|verb|mua|to get something by paying money|I want to buy a new phone.|Tôi muốn mua điện thoại mới.
+sell|verb|bán|to give something for money|They sell fruit at the market.|Họ bán trái cây ở chợ.
+pay|verb|trả tiền|to give money for something|Can I pay by card?|Tôi trả bằng thẻ được không?
+sale|noun|đợt giảm giá; việc bán|a time when things are cheaper|There is a big sale today.|Hôm nay có đợt giảm giá lớn.
+gift|noun|quà tặng|something you give to someone|This gift is for my wife.|Món quà này cho vợ tôi.
+present|noun|quà|a gift|Thank you for the present.|Cảm ơn bạn vì món quà.
+bag|noun|cái túi|a container to carry things|Do you need a bag?|Bạn có cần túi không?
+### Money
+money|noun|tiền|what you use to buy things|I don't have much money.|Tôi không có nhiều tiền.
+price|noun|giá|how much money something costs|What is the price of this bag?|Giá của cái túi này là bao nhiêu?
+cost|verb|có giá|to have a price|It costs ten dollars.|Nó có giá mười đô la.
+dollar|noun|đô la|money used in the USA and other countries|It is five dollars.|Nó giá năm đô la.
+cash|noun|tiền mặt|money in coins or notes|Do you pay in cash?|Bạn trả tiền mặt à?
+credit card|noun|thẻ tín dụng|a plastic card used to pay|Can I pay by credit card?|Tôi trả bằng thẻ tín dụng được không?
+bank|noun|ngân hàng|a place that keeps money for people|I go to the bank on Monday.|Tôi đến ngân hàng vào thứ Hai.
+expensive|adjective|đắt|costing a lot of money|This phone is very expensive.|Điện thoại này rất đắt.
+cheap|adjective|rẻ|not costing much money|The food here is cheap.|Đồ ăn ở đây rẻ.
+rich|adjective|giàu|having a lot of money|He is a rich man.|Ông ấy là người giàu có.
+poor|adjective|nghèo|having little money|They are poor but happy.|Họ nghèo nhưng hạnh phúc.
+spend|verb|tiêu (tiền); dành (thời gian)|to use money or time|I spend a lot on food.|Tôi tiêu nhiều tiền cho ăn uống.
+### Clothes 1
+clothes|noun|quần áo|things you wear|I buy new clothes.|Tôi mua quần áo mới.
+shirt|noun|áo sơ mi|a piece of clothing for the top of your body|He wears a white shirt.|Anh ấy mặc áo sơ mi trắng.
+T-shirt|noun|áo phông|a simple cotton shirt with short sleeves|I wear a T-shirt at home.|Tôi mặc áo phông ở nhà.
+pants|noun|quần dài|clothing for your legs|These pants are too long.|Cái quần này dài quá.
+trousers|noun|quần dài|pants|I need black trousers for work.|Tôi cần quần dài đen để đi làm.
+jeans|noun|quần bò|pants made of strong blue cloth|I wear jeans on Friday.|Tôi mặc quần bò vào thứ Sáu.
+dress|noun|váy liền|a piece of clothing for women from top to legs|She wears a red dress.|Cô ấy mặc váy đỏ.
+skirt|noun|chân váy|clothing for women that hangs from the waist|This skirt is pretty.|Chân váy này đẹp.
+jacket|noun|áo khoác ngắn|a short coat|Take a jacket, it is cold.|Mang áo khoác đi, trời lạnh.
+coat|noun|áo khoác dài|a long piece of clothing to keep you warm|My coat is in the car.|Áo khoác của tôi ở trong xe.
+### Clothes 2
+shoe|noun|giày|something you wear on your foot|I need new shoes.|Tôi cần giày mới.
+hat|noun|mũ|something you wear on your head|I wear a hat in the sun.|Tôi đội mũ khi trời nắng.
+cap|noun|mũ lưỡi trai|a soft hat with a hard front part|He always wears a cap.|Anh ấy luôn đội mũ lưỡi trai.
+glasses|noun|kính mắt|two pieces of glass you wear to see better|I wear glasses for reading.|Tôi đeo kính để đọc.
+pocket|noun|túi quần, túi áo|a small bag in your clothes|My phone is in my pocket.|Điện thoại ở trong túi tôi.
+button|noun|cúc áo; nút bấm|a small round thing on clothes; a part you press|Press the green button.|Nhấn nút màu xanh.
+umbrella|noun|cái ô|a thing that keeps you dry in the rain|Take an umbrella with you.|Mang theo ô nhé.
+jewelry|noun|đồ trang sức|rings and necklaces|She likes gold jewelry.|Cô ấy thích trang sức vàng.
+size|noun|kích cỡ|how big something is|What size do you wear?|Bạn mặc cỡ nào?
+try on|verb|mặc thử|to put on clothes to see if they fit|Can I try this on?|Tôi mặc thử cái này được không?
+### Colors
+color|noun|màu sắc|red, blue, green and so on|What color is your car?|Xe của bạn màu gì?
+red|adjective|màu đỏ|the color of blood|I have a red bag.|Tôi có một cái túi đỏ.
+blue|adjective|màu xanh dương|the color of the sky|The sky is blue.|Bầu trời màu xanh.
+green|adjective|màu xanh lá|the color of grass|I like green tea.|Tôi thích trà xanh.
+yellow|adjective|màu vàng|the color of a banana|The taxi is yellow.|Chiếc taxi màu vàng.
+black|adjective|màu đen|the darkest color|He wears a black jacket.|Anh ấy mặc áo khoác đen.
+white|adjective|màu trắng|the color of snow|My shirt is white.|Áo sơ mi của tôi màu trắng.
+brown|adjective|màu nâu|the color of coffee|She has brown eyes.|Cô ấy có đôi mắt nâu.
+gray|adjective|màu xám|between black and white|The sky is gray today.|Hôm nay bầu trời xám xịt.
+pink|adjective|màu hồng|light red|My daughter likes pink.|Con gái tôi thích màu hồng.
+purple|adjective|màu tím|a mix of red and blue|She has a purple dress.|Cô ấy có một chiếc váy tím.
+orange|adjective|màu cam|the color of an orange|The leaves are orange in autumn.|Lá cây màu cam vào mùa thu.
+gold|adjective|màu vàng kim|the color of gold|She has a gold ring.|Cô ấy có một chiếc nhẫn vàng.
+## a1-city-and-travel | City, Transport & Travel | Thành phố, chỉ đường, phương tiện và du lịch | map | blue
+### Places in Town
+city|noun|thành phố|a big town|Ho Chi Minh City is very big.|Thành phố Hồ Chí Minh rất lớn.
+town|noun|thị trấn|a place with many houses, smaller than a city|I live in a small town.|Tôi sống ở một thị trấn nhỏ.
+village|noun|làng|a very small town in the country|My grandparents live in a village.|Ông bà tôi sống ở một ngôi làng.
+street|noun|đường phố|a road in a town|My office is on Le Loi Street.|Văn phòng tôi ở đường Lê Lợi.
+road|noun|con đường|a way for cars|This road is busy.|Con đường này đông xe.
+building|noun|tòa nhà|a structure with walls and a roof|Our office is in that building.|Văn phòng chúng tôi ở tòa nhà đó.
+park|noun|công viên|a public garden in a town|I walk in the park.|Tôi đi dạo trong công viên.
+hospital|noun|bệnh viện|a place where sick people get help|The hospital is near here.|Bệnh viện gần đây.
+library|noun|thư viện|a place where you can borrow books|I study at the library.|Tôi học ở thư viện.
+post office|noun|bưu điện|a place where you send letters and parcels|Where is the post office?|Bưu điện ở đâu?
+cinema|noun|rạp chiếu phim|a place to watch films|Let's go to the cinema.|Đi xem phim nhé.
+museum|noun|bảo tàng|a building with old or interesting things|The museum opens at eight.|Bảo tàng mở cửa lúc tám giờ.
+### More Places
+hotel|noun|khách sạn|a building where you pay to stay|I stay at a hotel near the beach.|Tôi ở khách sạn gần bãi biển.
+station|noun|nhà ga, bến|a place where trains or buses stop|The train station is far.|Ga tàu ở xa.
+airport|noun|sân bay|a place where planes land|I go to the airport by taxi.|Tôi đến sân bay bằng taxi.
+church|noun|nhà thờ|a building for Christian religion|There is an old church in the city.|Có một nhà thờ cổ trong thành phố.
+temple|noun|chùa, đền|a building for religion|We visit a temple on Tet.|Chúng tôi đi chùa vào dịp Tết.
+bridge|noun|cây cầu|a road over a river|The bridge is very long.|Cây cầu rất dài.
+tower|noun|tòa tháp|a tall narrow building|We can see the tower from here.|Chúng ta có thể thấy tòa tháp từ đây.
+palace|noun|cung điện|a large house for a king or queen|The palace is beautiful.|Cung điện rất đẹp.
+pool|noun|bể bơi|a place filled with water for swimming|The hotel has a pool.|Khách sạn có bể bơi.
+zoo|noun|sở thú|a place where people can see animals|The kids love the zoo.|Bọn trẻ thích sở thú.
+gym|noun|phòng tập thể dục|a place to do exercise|I go to the gym after work.|Tôi đến phòng gym sau giờ làm.
+### Directions
+left|adjective|bên trái|on the side of the body where the heart is|Turn left at the corner.|Rẽ trái ở góc đường.
+right|adjective|bên phải; đúng|the opposite of left; correct|The bank is on the right.|Ngân hàng ở bên phải.
+straight|adverb|thẳng|not turning|Go straight ahead.|Đi thẳng về phía trước.
+corner|noun|góc|the place where two streets meet|The cafe is on the corner.|Quán cà phê ở góc đường.
+way|noun|đường đi; cách|the road to a place; a method|Can you tell me the way to the station?|Bạn chỉ đường tới nhà ga được không?
+map|noun|bản đồ|a picture showing streets and places|Look at the map on your phone.|Xem bản đồ trên điện thoại.
+far|adjective|xa|a long way away|Is the airport far from here?|Sân bay có xa đây không?
+side|noun|phía, bên|the left or right part of something|The shop is on this side of the street.|Cửa hàng ở bên này đường.
+sign|noun|biển báo|a board with words or pictures|Look at the sign.|Nhìn biển báo kìa.
+cross|verb|băng qua|to go from one side to the other|Cross the road carefully.|Băng qua đường cẩn thận.
+### Transport
+car|noun|xe hơi|a vehicle with four wheels|I drive my car to work.|Tôi lái xe hơi đi làm.
+bus|noun|xe buýt|a big vehicle that carries many people|I take the bus every day.|Tôi đi xe buýt mỗi ngày.
+taxi|noun|xe taxi|a car you pay to ride in|Let's take a taxi.|Đi taxi đi.
+train|noun|tàu hỏa|a long vehicle on rails|The train leaves at seven.|Tàu khởi hành lúc bảy giờ.
+plane|noun|máy bay|a vehicle that flies|The plane arrives at ten.|Máy bay đến lúc mười giờ.
+bicycle|noun|xe đạp|a vehicle with two wheels you ride with your legs|I ride a bicycle to school.|Tôi đạp xe đến trường.
+bike|noun|xe đạp|a bicycle|My son has a new bike.|Con trai tôi có xe đạp mới.
+motorbike|noun|xe máy|a vehicle with two wheels and an engine|Most people here ride motorbikes.|Hầu hết mọi người ở đây đi xe máy.
+boat|noun|thuyền|a small vehicle on water|We take a boat on the river.|Chúng tôi đi thuyền trên sông.
+ship|noun|tàu thủy|a large boat|The ship is very big.|Con tàu rất lớn.
+subway|noun|tàu điện ngầm|a train under the ground|I take the subway to work.|Tôi đi tàu điện ngầm đến chỗ làm.
+truck|noun|xe tải|a big vehicle that carries goods|The truck is full of boxes.|Xe tải chở đầy hộp.
+### Travel Verbs
+drive|verb|lái xe|to control a car|Can you drive?|Bạn biết lái xe không?
+ride|verb|đi, cưỡi (xe máy, xe đạp)|to sit on and control a bike or horse|I ride my motorbike to work.|Tôi đi xe máy đến chỗ làm.
+fly|verb|bay|to travel by plane|We fly to Da Nang tomorrow.|Ngày mai chúng tôi bay đi Đà Nẵng.
+travel|verb|đi du lịch, di chuyển|to go from one place to another|I love to travel.|Tôi thích đi du lịch.
+visit|verb|thăm|to go and see a person or place|I visit my parents every month.|Tôi thăm bố mẹ mỗi tháng.
+return|verb|trở về|to come or go back|I return home on Sunday.|Tôi về nhà vào Chủ nhật.
+book|verb|đặt (chỗ)|to arrange to have a room or seat|I want to book a room.|Tôi muốn đặt một phòng.
+check in|verb|làm thủ tục nhận phòng, lên máy bay|to tell a hotel or airport you have arrived|Where can I check in?|Tôi làm thủ tục ở đâu?
+miss|verb|lỡ; nhớ|to be too late for; to feel sad without someone|I missed the bus.|Tôi bị lỡ xe buýt.
+get on|verb|lên (xe)|to go into a bus or train|Get on the bus here.|Lên xe buýt ở đây.
+get off|verb|xuống (xe)|to leave a bus or train|Get off at the next stop.|Xuống ở trạm tiếp theo.
+### Trips & Holidays
+trip|noun|chuyến đi|a journey to a place and back|We have a business trip next week.|Tuần sau chúng tôi có chuyến công tác.
+vacation|noun|kỳ nghỉ|time to rest away from work|We go on vacation in summer.|Chúng tôi đi nghỉ vào mùa hè.
+ticket|noun|vé|a paper that lets you travel or enter|I buy two tickets.|Tôi mua hai vé.
+passport|noun|hộ chiếu|an official book you need to travel abroad|Show me your passport, please.|Vui lòng cho tôi xem hộ chiếu.
+suitcase|noun|vali|a large bag for carrying clothes when you travel|My suitcase is very heavy.|Vali của tôi rất nặng.
+tourist|noun|khách du lịch|a person who travels for fun|Many tourists visit Hoi An.|Nhiều khách du lịch đến Hội An.
+foreign|adjective|thuộc nước ngoài|from another country|I want to learn a foreign language.|Tôi muốn học một ngoại ngữ.
+country|noun|đất nước; nông thôn|a nation; land outside cities|Vietnam is a beautiful country.|Việt Nam là một đất nước xinh đẹp.
+world|noun|thế giới|the earth and all its people|I want to travel around the world.|Tôi muốn đi du lịch vòng quanh thế giới.
+place|noun|nơi, địa điểm|an area or a building|This is a nice place.|Đây là một nơi đẹp.
+seat|noun|chỗ ngồi|a place to sit|Is this seat free?|Chỗ này có ai ngồi chưa?

@@ -11,6 +11,8 @@ import type {
   FlashcardRating,
   FlashcardSessionCard,
 } from "@/types/flashcard";
+import { playPronunciation } from "@/lib/pronunciation";
+import { IpaText } from "@/features/pronunciation/IpaText";
 
 type RatingCounts = Record<FlashcardRating, number>;
 
@@ -375,8 +377,8 @@ function FlashcardFront({
       role="button"
       tabIndex={0}
     >
-      <p className="font-mono text-base font-semibold text-white/75">
-        {card.ipa}
+      <p className="text-base font-semibold text-white/75">
+        <IpaText ipa={card.ipa} />
       </p>
       <h1 className="mt-4 text-3xl font-bold leading-tight tracking-normal md:text-4xl">
         {card.word}
@@ -384,8 +386,20 @@ function FlashcardFront({
       <p className="mt-4 text-base font-medium text-white/85">
         {card.partOfSpeech}
       </p>
-      <p className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white/80">
-        <Volume2 className="size-3.5" aria-hidden="true" />
+      <button
+        aria-label={`Listen to ${card.word}`}
+        className="mt-5 grid size-11 cursor-pointer place-items-center rounded-full bg-white/20 transition-colors hover:bg-white/30"
+        onClick={(event) => {
+          // Listening must not flip the card.
+          event.stopPropagation();
+          playPronunciation(card.word, card.audioUrl);
+        }}
+        onKeyDown={(event) => event.stopPropagation()}
+        type="button"
+      >
+        <Volume2 className="size-5" aria-hidden="true" />
+      </button>
+      <p className="mt-4 text-sm font-medium text-white/80">
         Tap to reveal meaning
       </p>
     </div>
@@ -411,8 +425,8 @@ function FlashcardBack({
         <h1 className="text-xl font-bold tracking-normal text-[#10111f] md:text-2xl">
           {card.word}
         </h1>
-        <p className="mt-2 font-mono text-base font-semibold text-[#85889c]">
-          {card.ipa}
+        <p className="mt-2 text-base font-semibold text-[#85889c]">
+          <IpaText ipa={card.ipa} />
         </p>
       </div>
 

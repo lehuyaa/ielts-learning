@@ -19,6 +19,7 @@ type User struct {
 	StartingBand         *float64       `gorm:"type:decimal(3,1)" json:"startingBand"`
 	RecommendedBand      *float64       `gorm:"type:decimal(3,1)" json:"recommendedBand"`
 	PlacementCompletedAt *time.Time     `json:"placementCompletedAt"`
+	ActiveCourseID       *uint          `gorm:"index" json:"activeCourseId"`
 	TotalXP              int            `gorm:"default:0" json:"totalXp"`
 	Level                int            `gorm:"default:1" json:"level"`
 	CurrentStreak        int            `gorm:"default:0" json:"currentStreak"`

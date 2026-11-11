@@ -15,6 +15,7 @@ import (
 
 func main() {
 	promoteAdminEmail := flag.String("promote-admin", "", "Email of an existing user to promote to ADMIN role, instead of running the seed")
+	onlyFoundation := flag.Bool("only-foundation", false, "Seed only the A1 Foundation band level (topics, lessons, quizzes from imported words), without demo data")
 	flag.Parse()
 
 	cfg := config.Load()
@@ -33,6 +34,14 @@ func main() {
 			log.Fatalf("failed to promote user: %v", err)
 		}
 		log.Printf("promoted %s to ADMIN", *promoteAdminEmail)
+		return
+	}
+
+	if *onlyFoundation {
+		if err := seeds.RunFoundation(db); err != nil {
+			log.Fatalf("failed to seed A1 foundation: %v", err)
+		}
+		log.Println("A1 foundation seed completed")
 		return
 	}
 

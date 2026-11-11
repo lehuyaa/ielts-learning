@@ -1,0 +1,140 @@
+## a1-body-and-health | Body & Health | Cơ thể, sức khỏe và đi khám bệnh | heart-pulse | red
+### The Body 1
+body|noun|cơ thể|all of a person|Exercise is good for your body.|Tập thể dục tốt cho cơ thể.
+head|noun|đầu|the top part of your body|My head hurts.|Tôi bị đau đầu.
+face|noun|khuôn mặt|the front of your head|She has a beautiful face.|Cô ấy có khuôn mặt xinh đẹp.
+hair|noun|tóc|what grows on your head|She has long black hair.|Cô ấy có mái tóc đen dài.
+eye|noun|mắt|the part of the body you see with|He has blue eyes.|Anh ấy có mắt xanh.
+ear|noun|tai|the part of the body you hear with|My ear hurts.|Tôi bị đau tai.
+nose|noun|mũi|the part of the face you smell with|I have a red nose.|Mũi tôi đỏ.
+mouth|noun|miệng|the part of the face you eat with|Open your mouth, please.|Vui lòng há miệng.
+tooth|noun|răng|one of the white things in your mouth|I have a bad tooth.|Tôi bị một cái răng sâu.
+neck|noun|cổ|the part between your head and body|My neck hurts after work.|Tôi đau cổ sau giờ làm.
+### The Body 2
+arm|noun|cánh tay|the part from your shoulder to your hand|I broke my arm.|Tôi bị gãy tay.
+hand|noun|bàn tay|the part at the end of your arm|Wash your hands.|Rửa tay đi.
+finger|noun|ngón tay|one of the five parts of your hand|I cut my finger.|Tôi bị đứt ngón tay.
+leg|noun|chân (cả cẳng chân)|the part you walk with|My legs are tired.|Chân tôi mỏi.
+foot|noun|bàn chân|the part at the end of your leg|My foot hurts.|Bàn chân tôi bị đau.
+knee|noun|đầu gối|the middle part of your leg|I hurt my knee.|Tôi bị đau đầu gối.
+shoulder|noun|vai|the part between your neck and arm|My shoulder hurts.|Vai tôi bị đau.
+back|noun|lưng|the part behind your body|I have back pain.|Tôi bị đau lưng.
+stomach|noun|bụng, dạ dày|the part inside your body where food goes|I have a stomachache.|Tôi bị đau bụng.
+heart|noun|tim|the organ that pumps blood|Her heart is strong.|Tim cô ấy khỏe.
+brain|noun|não|the organ inside your head that thinks|The brain needs sleep.|Não cần được ngủ.
+bone|noun|xương|a hard part inside your body|He broke a bone in his leg.|Anh ấy bị gãy xương chân.
+### Feeling Sick
+sick|adjective|ốm, bệnh|not well|I am sick today.|Hôm nay tôi bị ốm.
+ill|adjective|ốm|sick|She is ill and can't come.|Cô ấy bị ốm nên không đến được.
+fever|noun|sốt|a high body temperature|My son has a fever.|Con trai tôi bị sốt.
+headache|noun|đau đầu|a pain in your head|I have a headache.|Tôi bị đau đầu.
+cold|noun|cảm lạnh|a common illness with a runny nose|I have a cold.|Tôi bị cảm lạnh.
+cough|noun|ho|the sound when air comes out of your throat|I have a bad cough.|Tôi bị ho nặng.
+pain|noun|cơn đau|the feeling when part of your body hurts|I have a pain in my back.|Tôi bị đau lưng.
+hurt|verb|đau; làm đau|to feel pain; to cause pain|My leg hurts.|Chân tôi đau.
+tired|adjective|mệt|needing rest|You look tired.|Trông bạn mệt mỏi.
+breathe|verb|thở|to take air in and out|Breathe slowly.|Hãy thở chậm.
+### Seeing a Doctor
+medicine|noun|thuốc|something you take when you are sick|Take this medicine after meals.|Uống thuốc này sau bữa ăn.
+pharmacy|noun|hiệu thuốc|a shop that sells medicine|Is there a pharmacy near here?|Gần đây có hiệu thuốc không?
+appointment|noun|cuộc hẹn|a time to meet someone, like a doctor|I have a doctor's appointment at three.|Tôi có hẹn với bác sĩ lúc ba giờ.
+health|noun|sức khỏe|how well your body is|Health is very important.|Sức khỏe rất quan trọng.
+healthy|adjective|khỏe mạnh; tốt cho sức khỏe|well; good for your body|Eat healthy food.|Ăn đồ ăn lành mạnh.
+fine|adjective|khỏe, ổn|well; OK|I am fine, thank you.|Tôi khỏe, cảm ơn.
+well|adjective|khỏe|healthy|I don't feel well.|Tôi thấy không khỏe.
+rest|verb|nghỉ ngơi|to relax or sleep|You should rest at home.|Bạn nên nghỉ ngơi ở nhà.
+exercise|verb|tập thể dục|to move your body to stay healthy|I exercise three times a week.|Tôi tập thể dục ba lần một tuần.
+smoking|noun|việc hút thuốc|breathing smoke from cigarettes|Smoking is bad for you.|Hút thuốc có hại cho bạn.
+careful|adjective|cẩn thận|thinking about what you do to avoid danger|Be careful on the road.|Hãy cẩn thận trên đường.
+help|noun|sự giúp đỡ|support or assistance|I need help!|Tôi cần giúp đỡ!
+## a1-describing-people-and-things | Describing People & Things | Tính từ miêu tả ngoại hình, tính cách, cảm xúc và đồ vật | sparkles | purple
+### Appearance
+tall|adjective|cao|of more than average height|My brother is very tall.|Anh trai tôi rất cao.
+short|adjective|thấp; ngắn|not tall; not long|She has short hair.|Cô ấy có tóc ngắn.
+big|adjective|to, lớn|large in size|We have a big house.|Chúng tôi có một ngôi nhà lớn.
+small|adjective|nhỏ|little in size|My room is small.|Phòng tôi nhỏ.
+fat|adjective|béo|having too much weight|The cat is fat.|Con mèo béo.
+thin|adjective|gầy; mỏng|not fat; not thick|He is tall and thin.|Anh ấy cao và gầy.
+young|adjective|trẻ|not old|My boss is young.|Sếp tôi còn trẻ.
+beautiful|adjective|đẹp|very nice to look at|Hoi An is a beautiful town.|Hội An là một thị trấn đẹp.
+pretty|adjective|xinh xắn|nice to look at|She is very pretty.|Cô ấy rất xinh.
+handsome|adjective|đẹp trai|good-looking (for a man)|Her husband is handsome.|Chồng cô ấy đẹp trai.
+cute|adjective|dễ thương|nice and pretty|What a cute baby!|Em bé dễ thương quá!
+ugly|adjective|xấu xí|not nice to look at|This building is ugly.|Tòa nhà này xấu.
+### Personality
+nice|adjective|tốt, dễ chịu|pleasant; kind|My neighbors are nice.|Hàng xóm của tôi rất tốt.
+kind|adjective|tốt bụng|caring about others|She is kind to everyone.|Cô ấy tốt bụng với mọi người.
+friendly|adjective|thân thiện|kind and pleasant to others|My colleagues are friendly.|Đồng nghiệp tôi thân thiện.
+funny|adjective|hài hước|making you laugh|My friend is very funny.|Bạn tôi rất hài hước.
+clever|adjective|thông minh, lanh lợi|quick to learn and understand|She is a clever student.|Cô ấy là học sinh thông minh.
+smart|adjective|thông minh|intelligent|He is smart and hard-working.|Anh ấy thông minh và chăm chỉ.
+lazy|adjective|lười biếng|not wanting to work|Don't be lazy!|Đừng lười biếng!
+shy|adjective|nhút nhát|nervous with other people|My son is shy.|Con trai tôi nhút nhát.
+quiet|adjective|yên lặng, trầm tính|not making much noise|He is a quiet person.|Anh ấy là người trầm tính.
+rude|adjective|thô lỗ|not polite|Don't be rude to customers.|Đừng thô lỗ với khách hàng.
+strict|adjective|nghiêm khắc|making people obey rules|My teacher is strict.|Thầy giáo tôi nghiêm khắc.
+polite|adjective|lịch sự|having good manners|Please be polite.|Hãy lịch sự nhé.
+### Feelings
+happy|adjective|vui vẻ, hạnh phúc|feeling good|I am happy today.|Hôm nay tôi vui.
+sad|adjective|buồn|not happy|Why are you sad?|Sao bạn buồn vậy?
+angry|adjective|tức giận|feeling strong emotion when something is wrong|My boss is angry.|Sếp tôi đang giận.
+afraid|adjective|sợ|feeling fear|I am afraid of dogs.|Tôi sợ chó.
+excited|adjective|hào hứng|very happy about something|I am excited about the trip.|Tôi háo hức về chuyến đi.
+glad|adjective|vui mừng|pleased|I am glad to see you.|Tôi rất vui được gặp bạn.
+lonely|adjective|cô đơn|sad because you are alone|I feel lonely in a new city.|Tôi thấy cô đơn ở thành phố mới.
+worried|adjective|lo lắng|thinking about problems|I am worried about the test.|Tôi lo lắng về bài kiểm tra.
+bored|adjective|chán|not interested|I am bored at home.|Tôi chán khi ở nhà.
+interested|adjective|quan tâm, thích thú|wanting to know more|I am interested in music.|Tôi thích âm nhạc.
+surprised|adjective|ngạc nhiên|feeling something unexpected|I am surprised to see you here.|Tôi ngạc nhiên khi gặp bạn ở đây.
+feeling|noun|cảm xúc|an emotion|It is a good feeling.|Đó là một cảm giác tốt.
+### Describing Things 1
+good|adjective|tốt|of high quality|This is a good book.|Đây là một cuốn sách hay.
+bad|adjective|xấu, tệ|not good|The weather is bad today.|Hôm nay thời tiết xấu.
+great|adjective|tuyệt vời|very good|That's great!|Tuyệt quá!
+wonderful|adjective|tuyệt diệu|very good|We had a wonderful time.|Chúng tôi đã có khoảng thời gian tuyệt vời.
+excellent|adjective|xuất sắc|very good|Your English is excellent.|Tiếng Anh của bạn xuất sắc.
+terrible|adjective|tồi tệ|very bad|The traffic is terrible.|Giao thông thật tồi tệ.
+new|adjective|mới|not old|I have a new job.|Tôi có công việc mới.
+long|adjective|dài|measuring a lot from end to end|It is a long day.|Hôm nay là một ngày dài.
+large|adjective|lớn|big|I want a large coffee.|Tôi muốn một cốc cà phê cỡ lớn.
+heavy|adjective|nặng|weighing a lot|This box is heavy.|Cái hộp này nặng.
+light|adjective|nhẹ; sáng|not heavy; bright|This laptop is very light.|Laptop này rất nhẹ.
+### Describing Things 2
+easy|adjective|dễ|not difficult|This exercise is easy.|Bài tập này dễ.
+difficult|adjective|khó|not easy|English is not difficult.|Tiếng Anh không khó.
+hard|adjective|khó; cứng|difficult; not soft|The test is hard.|Bài kiểm tra khó.
+important|adjective|quan trọng|having great value|This meeting is important.|Cuộc họp này quan trọng.
+interesting|adjective|thú vị|making you want to know more|This book is interesting.|Cuốn sách này thú vị.
+boring|adjective|nhàm chán|not interesting|The movie is boring.|Bộ phim chán.
+exciting|adjective|hấp dẫn, sôi động|making you feel excited|Football is exciting.|Bóng đá rất sôi động.
+famous|adjective|nổi tiếng|known by many people|He is a famous singer.|Anh ấy là ca sĩ nổi tiếng.
+special|adjective|đặc biệt|different and better than usual|Today is a special day.|Hôm nay là một ngày đặc biệt.
+different|adjective|khác|not the same|We have different ideas.|Chúng tôi có ý kiến khác nhau.
+same|adjective|giống nhau, như nhau|not different|We work in the same office.|Chúng tôi làm cùng văn phòng.
+strange|adjective|lạ|unusual|That is strange.|Thật là lạ.
+### Describing Things 3
+fast|adjective|nhanh|quick|This car is very fast.|Chiếc xe này rất nhanh.
+slow|adjective|chậm|not fast|The internet is slow today.|Hôm nay mạng chậm.
+quick|adjective|nhanh|done in a short time|Can I ask a quick question?|Tôi hỏi nhanh một câu được không?
+clean|adjective|sạch|not dirty|The room is clean.|Căn phòng sạch sẽ.
+dirty|adjective|bẩn|not clean|My shoes are dirty.|Giày tôi bẩn.
+quiet|adjective|yên tĩnh|with little noise|The library is quiet.|Thư viện yên tĩnh.
+noisy|adjective|ồn ào|making a lot of noise|The street is noisy.|Đường phố ồn ào.
+busy|adjective|đông đúc, nhộn nhịp|full of people or traffic|The market is very busy.|Chợ rất đông.
+open|adjective|mở cửa|not closed|The shop is open until ten.|Cửa hàng mở đến mười giờ.
+closed|adjective|đóng cửa|not open|The bank is closed on Sunday.|Ngân hàng đóng cửa vào Chủ nhật.
+broken|adjective|bị hỏng, vỡ|not working; in pieces|My phone is broken.|Điện thoại tôi bị hỏng.
+ready|adjective|sẵn sàng|prepared|Dinner is ready.|Bữa tối đã sẵn sàng.
+### Right & Wrong
+correct|adjective|đúng, chính xác|right; with no mistakes|Your answer is correct.|Câu trả lời của bạn đúng.
+wrong|adjective|sai|not correct|Sorry, wrong number.|Xin lỗi, nhầm số.
+true|adjective|đúng, thật|real; not false|Is it true?|Có thật không?
+false|adjective|sai|not true|True or false?|Đúng hay sai?
+real|adjective|thật|not imaginary|Is this a real diamond?|Đây là kim cương thật à?
+sure|adjective|chắc chắn|certain|Are you sure?|Bạn chắc chứ?
+possible|adjective|có thể|able to happen|Is it possible to change the date?|Có thể đổi ngày được không?
+better|adjective|tốt hơn|more good|This one is better.|Cái này tốt hơn.
+best|adjective|tốt nhất|the most good|She is my best friend.|Cô ấy là bạn thân nhất của tôi.
+lucky|adjective|may mắn|having good luck|You are lucky!|Bạn thật may mắn!
+safe|adjective|an toàn|not in danger|This area is safe.|Khu vực này an toàn.
+dangerous|adjective|nguy hiểm|able to hurt you|Driving fast is dangerous.|Lái xe nhanh rất nguy hiểm.

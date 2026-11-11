@@ -1,0 +1,15 @@
+.env
+# Generated pronunciation audio (content/a1-vocabulary/generate_audio.sh)
+frontend/public/audio/vocab/
+.DS_Store
+# Generated lesson audio (content/a1/generate_lesson_audio.sh)
+frontend/public/audio/a1/
+
+# Uploaded media (imported recordings)
+backend/storage/
+
+# Screenshots and scratch files from Claude sessions
+Claude outputs/
+
+# Python bytecode (content builders)
+__pycache__/

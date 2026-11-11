@@ -28,8 +28,8 @@ func (r Repository) Create(scenario *models.AIConversationScenario) error {
 func (r Repository) FindByUser(userID uint) ([]models.AIConversationScenario, error) {
 	var scenarios []models.AIConversationScenario
 	if err := r.db.
-		Where("user_id = ?", userID).
-		Order("created_at ASC, id ASC").
+		Where("user_id = ? OR is_system = ?", userID, true).
+		Order("is_system DESC, order_index ASC, created_at ASC, id ASC").
 		Find(&scenarios).Error; err != nil {
 		return nil, fmt.Errorf("find ai conversation scenarios by user: %w", err)
 	}
@@ -79,7 +79,7 @@ func (r Repository) CreateMessages(messages []models.AIConversationMessage) erro
 func (r Repository) FindMessagesByScenario(scenarioID uint) ([]models.AIConversationMessage, error) {
 	var messages []models.AIConversationMessage
 	if err := r.db.
-		Where("scenario_id = ?", scenarioID).
+		Where("scenario_id = ? AND session_id IS NULL", scenarioID).
 		Order("created_at ASC, id ASC").
 		Find(&messages).Error; err != nil {
 		return nil, fmt.Errorf("find ai conversation messages by scenario: %w", err)

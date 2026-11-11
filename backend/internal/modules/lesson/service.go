@@ -110,7 +110,18 @@ func (s Service) loadContext(userID uint, lessonID uint) (detailContext, error) 
 	}
 
 	progress, hasProgress := lessonProgressByID[lesson.ID]
-	status := lessonStatus(lesson.ID, topicLessons, lessonProgressByID)
+	status := lessonStatus(lesson.ID, topicLessons, lessonProgressByID, lesson.Topic.IsAlwaysUnlocked())
+	if _, started := lessonProgressByID[lesson.ID]; status == models.LessonStatusUnlocked && !started &&
+		len(topicLessons) > 0 && topicLessons[0].ID == lesson.ID {
+		// A week's first lesson waits for the previous week's checkpoint (Task 75).
+		done, err := s.repository.PreviousWeekDone(userID, lesson.Topic)
+		if err != nil {
+			return detailContext{}, err
+		}
+		if !done {
+			status = models.LessonStatusLocked
+		}
+	}
 
 	return detailContext{
 		lesson:             lesson,
@@ -176,9 +187,13 @@ func lessonStatus(
 	lessonID uint,
 	topicLessons []models.Lesson,
 	progressByLesson map[uint]models.UserLessonProgress,
+	alwaysUnlocked bool,
 ) models.LessonStatus {
 	if progress, ok := progressByLesson[lessonID]; ok {
 		return progress.Status
+	}
+	if alwaysUnlocked {
+		return models.LessonStatusUnlocked
 	}
 
 	previousLessonCompleted := true

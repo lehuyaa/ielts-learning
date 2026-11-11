@@ -5,6 +5,7 @@ import { CardSkeleton } from "@/components/state/CardSkeleton";
 import { EmptyState } from "@/components/state/EmptyState";
 import { ErrorState } from "@/components/state/ErrorState";
 import { Skeleton } from "@/components/ui/skeleton";
+import { CourseSwitcher } from "@/features/roadmap/CourseSwitcher";
 import { RoadmapBandSection } from "@/features/roadmap/RoadmapBandSection";
 import { RoadmapHeader } from "@/features/roadmap/RoadmapHeader";
 import { useRoadmap } from "@/features/roadmap/hooks/useRoadmap";
@@ -12,6 +13,7 @@ import { mapRoadmapToViewModel } from "@/features/roadmap/mapRoadmap";
 import type { RoadmapViewModel } from "@/features/roadmap/types";
 
 const loadingRoadmap: RoadmapViewModel = {
+  kind: "IELTS",
   title: "Vocabulary Roadmap",
   subtitle: "Band 5.0 → 8.5",
   topicsCompleted: 0,
@@ -50,6 +52,8 @@ export function RoadmapPage() {
           aria-hidden="true"
         />
 
+        <CourseSwitcher />
+
         {roadmapQuery.isLoading ? (
           <RoadmapLoadingSkeleton />
         ) : null}
@@ -85,7 +89,10 @@ export function RoadmapPage() {
             ))
           : null}
 
-        {!roadmapQuery.isLoading && !errorMessage && !isEmpty ? (
+        {!roadmapQuery.isLoading &&
+        !errorMessage &&
+        !isEmpty &&
+        viewModel.kind === "IELTS" ? (
           <RoadmapMasterCard />
         ) : null}
       </div>

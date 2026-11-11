@@ -16,13 +16,13 @@ func NewService(repository Repository) Service {
 	return Service{repository: repository}
 }
 
-func (s Service) Get(userID uint) (Response, error) {
+func (s Service) Get(userID uint, courseSlug string) (Response, error) {
 	user, err := s.repository.FindUser(userID)
 	if err != nil {
 		return Response{}, err
 	}
 
-	course, err := s.repository.FindPublishedCourse()
+	course, err := s.repository.FindCourse(courseSlug, user.ActiveCourseID)
 	if err != nil {
 		return Response{}, err
 	}
@@ -85,7 +85,9 @@ func (s Service) toResponse(
 
 	totalTopics := 0
 	topicsCompleted := 0
-	previousLessonCompleted := true
+	// Lessons unlock one after another within each track of the course
+	// (CORE path, VOCABULARY library); a track starts unlocked.
+	previousCompletedByTrack := make(map[models.TopicTrack]bool)
 
 	bandResponses := make([]BandLevelResponse, 0, len(bands))
 	for _, band := range bands {
@@ -102,12 +104,12 @@ func (s Service) toResponse(
 
 			for _, lesson := range topicLessons {
 				progress, hasProgress := progressByLesson[lesson.ID]
-				status := lessonStatus(hasProgress, progress, previousLessonCompleted)
+				previousCompleted, seen := previousCompletedByTrack[topic.Track]
+				unlocked := !seen || previousCompleted || topic.IsAlwaysUnlocked()
+				status := lessonStatus(hasProgress, progress, unlocked)
+				previousCompletedByTrack[topic.Track] = status == models.LessonStatusCompleted
 				if status == models.LessonStatusCompleted {
 					topicCompletedLessons++
-					previousLessonCompleted = true
-				} else {
-					previousLessonCompleted = false
 				}
 				if status == models.LessonStatusInProgress {
 					topicStartedLessons++
@@ -140,6 +142,7 @@ func (s Service) toResponse(
 				ID:                 topic.ID,
 				Title:              topic.Title,
 				Slug:               topic.Slug,
+				Track:              topic.Track,
 				Emoji:              topic.Emoji,
 				Color:              topic.Color,
 				Status:             topicStatus,
@@ -155,6 +158,7 @@ func (s Service) toResponse(
 		bandResponses = append(bandResponses, BandLevelResponse{
 			ID:                 band.ID,
 			BandScore:          band.BandScore,
+			CEFRLevel:          band.CEFRLevel,
 			Title:              band.Title,
 			Description:        band.Description,
 			Status:             aggregateBandStatus(len(bandTopics), bandCompletedTopics, topicResponses),
@@ -170,6 +174,7 @@ func (s Service) toResponse(
 			ID:           course.ID,
 			Title:        course.Title,
 			Slug:         course.Slug,
+			Kind:         course.Kind,
 			BandMin:      course.BandMin,
 			BandMax:      course.BandMax,
 			TotalWords:   course.TotalWords,
@@ -211,11 +216,11 @@ func mapProgressByLesson(progressRows []models.UserLessonProgress) map[uint]mode
 	return result
 }
 
-func lessonStatus(hasProgress bool, progress models.UserLessonProgress, previousLessonCompleted bool) models.LessonStatus {
+func lessonStatus(hasProgress bool, progress models.UserLessonProgress, unlocked bool) models.LessonStatus {
 	if hasProgress {
 		return progress.Status
 	}
-	if previousLessonCompleted {
+	if unlocked {
 		return models.LessonStatusUnlocked
 	}
 	return models.LessonStatusLocked

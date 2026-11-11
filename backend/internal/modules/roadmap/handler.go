@@ -20,11 +20,12 @@ func NewHandler(service Service) Handler {
 
 // Get godoc
 // @Summary Get roadmap
-// @Description Return the IELTS vocabulary roadmap with course, band levels, topics, lessons, and authenticated user progress.
+// @Description Return a course roadmap (IELTS or Foundation English) with band/CEFR levels, topics, lessons, and authenticated user progress. Defaults to the user's active course.
 // @Tags Roadmap
 // @Accept json
 // @Produce json
 // @Security BearerAuth
+// @Param courseSlug query string false "Course slug, e.g. foundation-english"
 // @Success 200 {object} response.SuccessResponse{data=Response}
 // @Failure 401 {object} response.ErrorResponse
 // @Failure 404 {object} response.ErrorResponse
@@ -37,7 +38,7 @@ func (h Handler) Get(c *gin.Context) {
 		return
 	}
 
-	result, err := h.service.Get(userID)
+	result, err := h.service.Get(userID, c.Query("courseSlug"))
 	if err != nil {
 		writeRoadmapError(c, err)
 		return

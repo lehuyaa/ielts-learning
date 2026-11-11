@@ -1,3 +1,5 @@
+import type { CourseKind } from '@/types/course'
+
 export type RoadmapStatus =
   | 'LOCKED'
   | 'UNLOCKED'
@@ -8,6 +10,7 @@ export type RoadmapCourse = {
   id: number
   title: string
   slug: string
+  kind: CourseKind
   bandMin: number
   bandMax: number
   totalWords: number
@@ -35,10 +38,13 @@ export type RoadmapLesson = {
   bestScore: number | null
 }
 
+export type RoadmapTopicTrack = 'CORE' | 'VOCABULARY'
+
 export type RoadmapTopic = {
   id: number
   title: string
   slug: string
+  track: RoadmapTopicTrack
   icon?: string
   emoji: string
   color: string
@@ -52,6 +58,7 @@ export type RoadmapTopic = {
 export type RoadmapBandLevel = {
   id: number
   bandScore: number
+  cefrLevel: string | null
   title: string
   description: string
   status: RoadmapStatus

@@ -1,0 +1,151 @@
+## a1-grammar-words | Essential Grammar Words | Đại từ, mạo từ, giới từ, từ để hỏi, liên từ và động từ cơ bản | puzzle | violet
+### Subject & Object Pronouns
+I|pronoun|tôi|the person who is speaking|I am a designer.|Tôi là nhà thiết kế.
+you|pronoun|bạn, các bạn|the person or people you are talking to|You are very kind.|Bạn rất tốt bụng.
+he|pronoun|anh ấy, ông ấy|a man or boy already mentioned|He is my manager.|Anh ấy là quản lý của tôi.
+she|pronoun|cô ấy, bà ấy|a woman or girl already mentioned|She works in marketing.|Cô ấy làm ở bộ phận marketing.
+it|pronoun|nó|a thing or animal already mentioned|It is a good idea.|Đó là một ý hay.
+we|pronoun|chúng tôi, chúng ta|the speaker and other people|We are a team.|Chúng ta là một đội.
+they|pronoun|họ, chúng nó|more than one person or thing|They are my colleagues.|Họ là đồng nghiệp của tôi.
+me|pronoun|tôi (tân ngữ)|the object form of "I"|Please call me.|Hãy gọi cho tôi.
+him|pronoun|anh ấy (tân ngữ)|the object form of "he"|I know him.|Tôi biết anh ấy.
+her|pronoun|cô ấy (tân ngữ); của cô ấy|the object form of "she"; belonging to her|I like her.|Tôi quý cô ấy.
+us|pronoun|chúng tôi (tân ngữ)|the object form of "we"|Join us for lunch.|Ăn trưa cùng chúng tôi nhé.
+them|pronoun|họ (tân ngữ)|the object form of "they"|I see them every day.|Tôi gặp họ mỗi ngày.
+### Possessives
+my|determiner|của tôi|belonging to me|This is my desk.|Đây là bàn của tôi.
+your|determiner|của bạn|belonging to you|What is your name?|Tên bạn là gì?
+his|determiner|của anh ấy|belonging to him|His car is red.|Xe của anh ấy màu đỏ.
+its|determiner|của nó|belonging to it|The cat is eating its food.|Con mèo đang ăn thức ăn của nó.
+our|determiner|của chúng tôi|belonging to us|Our office is on the fifth floor.|Văn phòng của chúng tôi ở tầng năm.
+their|determiner|của họ|belonging to them|Their house is big.|Nhà của họ rộng.
+mine|pronoun|của tôi (đại từ)|the one that belongs to me|This bag is mine.|Cái túi này là của tôi.
+yours|pronoun|của bạn (đại từ)|the one that belongs to you|Is this phone yours?|Điện thoại này của bạn à?
+hers|pronoun|của cô ấy (đại từ)|the one that belongs to her|The blue cup is hers.|Cái cốc xanh là của cô ấy.
+ours|pronoun|của chúng tôi (đại từ)|the one that belongs to us|The white car is ours.|Chiếc xe trắng là của chúng tôi.
+own|adjective|của riêng|belonging to a person and no one else|I have my own room.|Tôi có phòng riêng.
+yourself|pronoun|chính bạn|you, used when you do something to you|Take care of yourself.|Hãy giữ gìn sức khỏe nhé.
+whose|pronoun|của ai|used to ask who something belongs to|Whose bag is this?|Cái túi này của ai?
+### Articles & Pointing Words
+a|determiner|một (trước phụ âm)|one, used before a noun starting with a consonant sound|I have a car.|Tôi có một chiếc xe hơi.
+an|determiner|một (trước nguyên âm)|one, used before a vowel sound|I eat an apple every day.|Tôi ăn một quả táo mỗi ngày.
+the|determiner|cái, những (xác định)|used for a thing we already know|The meeting is at nine.|Cuộc họp lúc chín giờ.
+this|determiner|này, cái này|the thing near you|This is my phone.|Đây là điện thoại của tôi.
+that|determiner|kia, cái đó|the thing far from you|That building is our office.|Tòa nhà kia là văn phòng chúng tôi.
+these|determiner|những cái này|the things near you|These shoes are new.|Đôi giày này mới.
+those|determiner|những cái kia|the things far from you|Those people are tourists.|Những người kia là khách du lịch.
+here|adverb|ở đây|in this place|Come here, please.|Lại đây nào.
+there|adverb|ở đó; có (there is/are)|in that place; used to say something exists|There is a bank near my house.|Có một ngân hàng gần nhà tôi.
+### Quantity Words
+some|determiner|một vài, một ít|a number or amount of something|I want some water.|Tôi muốn một ít nước.
+any|determiner|bất kỳ; nào (câu hỏi, phủ định)|used in questions and negatives|Do you have any questions?|Bạn có câu hỏi nào không?
+many|determiner|nhiều (đếm được)|a large number of|I have many friends.|Tôi có nhiều bạn.
+much|determiner|nhiều (không đếm được)|a large amount of|I don't have much time.|Tôi không có nhiều thời gian.
+a lot|pronoun|rất nhiều|a large number or amount|Thanks a lot!|Cảm ơn rất nhiều!
+more|determiner|nhiều hơn, thêm|a larger number or amount|Can I have more rice?|Cho tôi thêm cơm được không?
+most|determiner|hầu hết, nhiều nhất|almost all|Most people like music.|Hầu hết mọi người thích âm nhạc.
+all|determiner|tất cả|every one of a group|All my friends are here.|Tất cả bạn tôi đều ở đây.
+both|determiner|cả hai|the two together|Both my parents are teachers.|Cả bố và mẹ tôi đều là giáo viên.
+each|determiner|mỗi|every one, seen separately|Each room has a TV.|Mỗi phòng có một tivi.
+other|determiner|khác|different from the one you talked about|Where are the other people?|Những người khác đâu?
+another|determiner|một cái khác|one more; a different one|Can I have another coffee?|Cho tôi thêm một cốc cà phê nữa.
+no|determiner|không có|not any|I have no money.|Tôi không có tiền.
+only|adverb|chỉ|no more than|I only have five minutes.|Tôi chỉ có năm phút.
+little|adjective|nhỏ; ít|small; not much|I speak a little English.|Tôi nói được một chút tiếng Anh.
+### Everyone & Everything
+everyone|pronoun|mọi người|every person|Hello, everyone!|Xin chào mọi người!
+everybody|pronoun|mọi người|every person|Everybody likes him.|Mọi người đều quý anh ấy.
+everything|pronoun|mọi thứ|all things|Everything is OK.|Mọi thứ đều ổn.
+everywhere|adverb|khắp mọi nơi|in all places|I look everywhere for my keys.|Tôi tìm chìa khóa khắp nơi.
+someone|pronoun|ai đó|a person, but you do not know who|Someone is at the door.|Có ai đó ở cửa.
+something|pronoun|cái gì đó|a thing, but you do not know what|I want to eat something.|Tôi muốn ăn gì đó.
+anyone|pronoun|bất kỳ ai|any person|Is anyone here?|Có ai ở đây không?
+anything|pronoun|bất cứ thứ gì|any thing|Do you need anything?|Bạn có cần gì không?
+nothing|pronoun|không có gì|not anything|There is nothing in the box.|Không có gì trong hộp.
+each other|pronoun|lẫn nhau|used when two people do the same to the other|We help each other.|Chúng tôi giúp đỡ lẫn nhau.
+together|adverb|cùng nhau|with each other|Let's have lunch together.|Cùng ăn trưa nhé.
+alone|adverb|một mình|without other people|I live alone.|Tôi sống một mình.
+### Prepositions of Place
+in|preposition|trong, ở|inside a place|The keys are in my bag.|Chìa khóa ở trong túi tôi.
+on|preposition|trên|touching the top of something|The book is on the table.|Cuốn sách ở trên bàn.
+at|preposition|ở, tại|in a particular place or time|I am at work.|Tôi đang ở chỗ làm.
+under|preposition|dưới|below something|The cat is under the bed.|Con mèo ở dưới gầm giường.
+near|preposition|gần|not far from|I live near the office.|Tôi sống gần văn phòng.
+next to|preposition|bên cạnh|very close to, at the side of|The bank is next to the hotel.|Ngân hàng ở cạnh khách sạn.
+behind|preposition|phía sau|at the back of|The car park is behind the building.|Bãi đỗ xe ở phía sau tòa nhà.
+in front of|preposition|phía trước|at the front of|Wait in front of the station.|Đợi ở trước nhà ga nhé.
+between|preposition|ở giữa (hai vật)|in the space that separates two things|The shop is between the bank and the cafe.|Cửa hàng ở giữa ngân hàng và quán cà phê.
+above|preposition|phía trên|higher than|The clock is above the door.|Đồng hồ ở phía trên cửa.
+below|preposition|phía dưới|lower than|Write your name below the line.|Viết tên bạn bên dưới dòng kẻ.
+inside|preposition|bên trong|in something|It is warm inside the house.|Trong nhà ấm áp.
+outside|adverb|bên ngoài|not in a building|Let's eat outside.|Ăn ở ngoài nhé.
+### Prepositions of Movement & Time
+to|preposition|đến, tới|in the direction of|I go to work by bus.|Tôi đi làm bằng xe buýt.
+into|preposition|vào trong|moving to the inside of|Come into my office.|Mời vào văn phòng tôi.
+out|adverb|ra ngoài|away from the inside|Let's go out tonight.|Tối nay đi chơi nhé.
+up|preposition|lên|to a higher place|Go up the stairs.|Đi lên cầu thang.
+down|adverb|xuống|to a lower place|Please sit down.|Mời ngồi xuống.
+around|preposition|xung quanh|on every side of|We walk around the lake.|Chúng tôi đi dạo quanh hồ.
+across|preposition|băng qua|from one side to the other|Walk across the street.|Đi băng qua đường.
+along|preposition|dọc theo|from one end towards the other|Walk along this road.|Đi dọc con đường này.
+through|preposition|xuyên qua|from one side to the other of|The train goes through the city.|Tàu chạy xuyên qua thành phố.
+over|preposition|qua, phía trên|above or across|The plane flies over the city.|Máy bay bay qua thành phố.
+off|adverb|tắt; rời khỏi|not working; away from|Turn off the light.|Tắt đèn đi.
+away|adverb|đi xa, cách xa|to or at a distance|The station is two kilometers away.|Nhà ga cách đây hai cây số.
+back|adverb|trở lại|to the place you came from|I will be back soon.|Tôi sẽ quay lại sớm.
+before|preposition|trước (khi)|earlier than|Wash your hands before dinner.|Rửa tay trước bữa tối.
+after|preposition|sau (khi)|later than|We go home after work.|Chúng tôi về nhà sau giờ làm.
+until|preposition|cho đến khi|up to a time|I work until six.|Tôi làm việc đến sáu giờ.
+### Other Prepositions
+of|preposition|của|belonging to; part of|The name of the company is Teko.|Tên của công ty là Teko.
+for|preposition|cho, dành cho|meant to be given to; during|This gift is for you.|Món quà này dành cho bạn.
+with|preposition|với, cùng với|together with|I live with my family.|Tôi sống cùng gia đình.
+without|preposition|không có|not having|I drink coffee without sugar.|Tôi uống cà phê không đường.
+by|preposition|bằng; bởi|using; done by|I go to work by bus.|Tôi đi làm bằng xe buýt.
+about|preposition|về|on the subject of|This book is about history.|Cuốn sách này nói về lịch sử.
+like|preposition|giống như|similar to|She looks like her mother.|Cô ấy trông giống mẹ.
+as|preposition|như, với tư cách là|in the job or role of|I work as a developer.|Tôi làm lập trình viên.
+than|preposition|hơn (so sánh)|used to compare two things|He is taller than me.|Anh ấy cao hơn tôi.
+### Question Words
+what|pronoun|cái gì|used to ask about things|What is your job?|Bạn làm nghề gì?
+who|pronoun|ai|used to ask about people|Who is that man?|Người đàn ông đó là ai?
+where|adverb|ở đâu|used to ask about places|Where do you live?|Bạn sống ở đâu?
+when|adverb|khi nào|used to ask about time|When is the meeting?|Khi nào họp?
+why|adverb|tại sao|used to ask for a reason|Why are you sad?|Tại sao bạn buồn?
+how|adverb|như thế nào|used to ask about the way or condition|How are you?|Bạn khỏe không?
+which|determiner|cái nào|used to ask about one thing from a group|Which color do you like?|Bạn thích màu nào?
+how much|adverb|bao nhiêu (tiền, không đếm được)|used to ask about price or amount|How much is this shirt?|Cái áo này bao nhiêu tiền?
+how many|adverb|bao nhiêu (đếm được)|used to ask about a number|How many people are in your team?|Nhóm bạn có bao nhiêu người?
+how old|adverb|bao nhiêu tuổi|used to ask about age|How old are you?|Bạn bao nhiêu tuổi?
+### Linking Words & Short Answers
+and|conjunction|và|used to join words or ideas|I like tea and coffee.|Tôi thích trà và cà phê.
+but|conjunction|nhưng|used to show a different idea|The room is small but nice.|Căn phòng nhỏ nhưng đẹp.
+or|conjunction|hoặc, hay|used to show a choice|Tea or coffee?|Trà hay cà phê?
+so|conjunction|vì vậy, nên|for this reason|I am tired, so I go to bed.|Tôi mệt nên đi ngủ.
+because|conjunction|bởi vì|for the reason that|I am happy because it is Friday.|Tôi vui vì hôm nay là thứ Sáu.
+if|conjunction|nếu|used to talk about a possible situation|Call me if you are free.|Gọi cho tôi nếu bạn rảnh.
+yes|adverb|vâng, có|used to agree or say something is true|Yes, I am ready.|Vâng, tôi sẵn sàng.
+not|adverb|không|used to make a sentence negative|I am not tired.|Tôi không mệt.
+OK|adjective|được, ổn|all right; acceptable|Is it OK to sit here?|Ngồi đây được không?
+all right|adjective|ổn, được|good enough; not hurt|Are you all right?|Bạn ổn chứ?
+also|adverb|cũng|in addition|I also speak French.|Tôi cũng nói tiếng Pháp.
+too|adverb|cũng; quá|also; more than needed|I like it too.|Tôi cũng thích nó.
+very|adverb|rất|used to make a word stronger|It is very hot today.|Hôm nay trời rất nóng.
+really|adverb|thật sự|very; in fact|I really like this song.|Tôi thật sự thích bài hát này.
+maybe|adverb|có lẽ|possibly|Maybe it will rain.|Có lẽ trời sẽ mưa.
+almost|adverb|gần như|nearly|I am almost ready.|Tôi gần như sẵn sàng rồi.
+else|adverb|khác, nữa|other; more|Anything else?|Còn gì nữa không?
+### Be, Have & Do
+be|verb|thì, là, ở|used to say who or what something is|I want to be a teacher.|Tôi muốn trở thành giáo viên.
+have|verb|có|to own or hold something|I have a meeting at ten.|Tôi có cuộc họp lúc mười giờ.
+do|verb|làm|to perform an action|What do you do?|Bạn làm nghề gì?
+can|modal auxiliary|có thể|to be able to|I can speak English.|Tôi có thể nói tiếng Anh.
+could|modal auxiliary|có thể (lịch sự; quá khứ)|a polite way to ask; past of can|Could you help me?|Bạn có thể giúp tôi không?
+will|modal auxiliary|sẽ|used to talk about the future|I will call you tomorrow.|Tôi sẽ gọi bạn vào ngày mai.
+would|modal auxiliary|sẽ (lịch sự)|used in polite offers and requests|Would you like some tea?|Bạn có muốn uống trà không?
+must|modal auxiliary|phải|it is necessary|You must wear a helmet.|Bạn phải đội mũ bảo hiểm.
+should|modal auxiliary|nên|it is a good idea|You should drink more water.|Bạn nên uống nhiều nước hơn.
+may|modal auxiliary|có thể (xin phép)|used to ask for permission politely|May I come in?|Tôi vào được không?
+have to|modal auxiliary|phải|it is necessary|I have to work on Saturday.|Tôi phải làm việc vào thứ Bảy.
+need|verb|cần|to have to have something|I need a new laptop.|Tôi cần một chiếc laptop mới.
+let|verb|để, cho phép|to allow|Let me help you.|Để tôi giúp bạn.

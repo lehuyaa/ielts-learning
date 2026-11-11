@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"ielts-learning/backend/internal/models"
+	"ielts-learning/backend/internal/modules/weekgate"
 )
 
 var (
@@ -156,4 +157,9 @@ func (r Repository) StartLesson(userID uint, lesson models.Lesson, wordCount int
 	}
 
 	return progress, nil
+}
+
+// PreviousWeekDone reports whether the previous topic of the track is finished.
+func (r Repository) PreviousWeekDone(userID uint, topic models.Topic) (bool, error) {
+	return weekgate.PreviousWeekDone(r.db, userID, topic)
 }

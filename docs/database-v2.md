@@ -1127,3 +1127,44 @@ Implement in this order:
 5. Add subscription tables only when pricing is not static.
 6. Add AI example request table only when AI generation is implemented.
 7. Add landing CMS tables only when admin editing is required.
+
+---
+
+## 14. Part 2 - Foundation English (CEFR)
+
+Full definitions, column lists and rules: `docs/foundation-spec.md` §3. Summary:
+
+### 14.1 Changed tables
+
+```txt
+courses                    + kind (IELTS | CEFR)
+band_levels                + cefr_level (A1..C2, null for IELTS)
+topics                     + track (CORE | VOCABULARY)
+users                      + active_course_id
+ai_conversation_scenarios  user_id nullable, + is_system, cefr_level, role, task, target_patterns_json, max_turns
+ai_conversation_messages   + session_id
+```
+
+### 14.2 New tables
+
+| Table | Purpose | Task |
+|---|---|---|
+| `lesson_activities` | ordered skill steps of a CORE lesson | 50 |
+| `user_activity_progresses` | status / best score per user and activity | 50 |
+| `exercises` | scored items; `payload_json` public, `answer_json` private | 51 |
+| `user_exercise_answers` | every answered item | 51 |
+| `grammar_points` | theory cards | 54 |
+| `user_grammar_progresses` | mastery per grammar point | 56 |
+| `phonemes` | IPA sound cards | 57 |
+| `user_phoneme_progresses` | accuracy per sound | 72 |
+| `passages` | listening / reading texts with timed segments | 60 |
+| `writing_submissions` | writing attempts and AI reports | 66 |
+| `ai_conversation_sessions` | one speaking attempt with report | 69 |
+| `pronunciation_attempts` | Azure scores (audio not stored) | 71 |
+| `learner_mistakes` | deduplicated mistakes from all skills | 66 / 73 |
+
+### 14.3 Rules
+
+- Never serialise `exercises.answer_json` before the learner answers that item.
+- Lessons with activities complete when every required activity is `PASSED`; other lessons keep the quiz-pass rule.
+- Unlocking is computed per course and per track; `VOCABULARY` lessons are always unlocked.

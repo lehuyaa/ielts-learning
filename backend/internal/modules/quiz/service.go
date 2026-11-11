@@ -146,7 +146,7 @@ func (s Service) loadContext(userID uint, lessonID uint) (quizContext, error) {
 	return quizContext{
 		lesson:    lesson,
 		questions: questions,
-		status:    lessonStatus(lesson.ID, topicLessons, mapLessonProgressByID(progressRows)),
+		status:    lessonStatus(lesson.ID, topicLessons, mapLessonProgressByID(progressRows), lesson.Topic.IsAlwaysUnlocked()),
 	}, nil
 }
 
@@ -269,9 +269,13 @@ func lessonStatus(
 	lessonID uint,
 	topicLessons []models.Lesson,
 	progressByLesson map[uint]models.UserLessonProgress,
+	alwaysUnlocked bool,
 ) models.LessonStatus {
 	if progress, ok := progressByLesson[lessonID]; ok {
 		return progress.Status
+	}
+	if alwaysUnlocked {
+		return models.LessonStatusUnlocked
 	}
 
 	previousLessonCompleted := true

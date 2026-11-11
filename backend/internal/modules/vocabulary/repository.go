@@ -239,6 +239,7 @@ func upsertVocabulary(tx *gorm.DB, row ImportRow) (models.Vocabulary, string, er
 	case err == nil:
 		vocabulary.Word = row.Word
 		vocabulary.IPA = row.IPA
+		vocabulary.AudioURL = row.AudioURL
 		vocabulary.PartOfSpeech = row.PartOfSpeech
 		vocabulary.MeaningVI = row.MeaningVI
 		vocabulary.MeaningEN = row.MeaningEN
@@ -261,6 +262,7 @@ func upsertVocabulary(tx *gorm.DB, row ImportRow) (models.Vocabulary, string, er
 			Word:             row.Word,
 			Slug:             row.Slug,
 			IPA:              row.IPA,
+			AudioURL:         row.AudioURL,
 			PartOfSpeech:     row.PartOfSpeech,
 			MeaningVI:        row.MeaningVI,
 			MeaningEN:        row.MeaningEN,

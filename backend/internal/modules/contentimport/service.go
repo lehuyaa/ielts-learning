@@ -1,0 +1,774 @@
+package contentimport
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"strings"
+
+	"gorm.io/datatypes"
+	"gorm.io/gorm"
+
+	"ielts-learning/backend/internal/models"
+)
+
+var ErrInvalidBundle = errors.New("invalid content bundle")
+
+const (
+	defaultLessonXP       = 50
+	defaultLessonMinutes  = 20
+	defaultRequiredScore  = 70
+	defaultPassScore      = 70
+	defaultActivityXP     = 10
+	defaultExercisePoints = 10
+)
+
+type Service struct {
+	repository Repository
+	ai         aiClient
+	media      MediaStore
+}
+
+func NewService(repository Repository) Service {
+	return Service{repository: repository}
+}
+
+// WithAI enables the Whisper audio import and the PDF/image extraction.
+func (s Service) WithAI(client aiClient, media MediaStore) Service {
+	s.ai = client
+	s.media = media
+	return s
+}
+
+// ParseBundle decodes a bundle file, rejecting unknown fields so typos in
+// field names are caught instead of silently ignored.
+func ParseBundle(data []byte) (Bundle, error) {
+	decoder := json.NewDecoder(strings.NewReader(string(data)))
+	decoder.DisallowUnknownFields()
+	var bundle Bundle
+	if err := decoder.Decode(&bundle); err != nil {
+		return Bundle{}, fmt.Errorf("%w: %v", ErrInvalidBundle, err)
+	}
+	return bundle, nil
+}
+
+// Import validates a bundle and, when commit is true, writes every valid item
+// in one transaction. Invalid items (and their children) are skipped.
+func (s Service) Import(data []byte, commit bool) (ImportResult, error) {
+	bundle, err := ParseBundle(data)
+	if err != nil {
+		return ImportResult{}, err
+	}
+
+	result := ImportResult{BundleErrors: []string{}, Warnings: []string{}, Items: []ItemResult{}}
+
+	if bundle.CourseSlug == "" || bundle.CEFRLevel == "" {
+		result.BundleErrors = append(result.BundleErrors, "courseSlug and cefrLevel are required")
+		return result, nil
+	}
+	band, err := s.repository.FindBandLevel(bundle.CourseSlug, bundle.CEFRLevel)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		result.BundleErrors = append(result.BundleErrors, fmt.Sprintf(
+			"level %s of course %q not found — run `go run ./cmd/seed -only-foundation` first", bundle.CEFRLevel, bundle.CourseSlug))
+		return result, nil
+	}
+	if err != nil {
+		return ImportResult{}, err
+	}
+
+	knownVocabulary, err := s.repository.ExistingVocabularySlugs(collectVocabularySlugs(bundle))
+	if err != nil {
+		return ImportResult{}, err
+	}
+
+	run := func(repository Repository) error {
+		return s.apply(repository, band, bundle, knownVocabulary, commit, &result)
+	}
+	if commit {
+		err = s.repository.Transaction(func(tx Repository) error {
+			if err := run(tx); err != nil {
+				return err
+			}
+			return tx.UpdateCourseTotals(band.CourseID)
+		})
+	} else {
+		err = run(s.repository)
+	}
+	if err != nil {
+		return ImportResult{}, err
+	}
+
+	result.Committed = commit
+	return result, nil
+}
+
+func (s Service) apply(repo Repository, band models.BandLevel, bundle Bundle, knownVocabulary map[string]bool, commit bool, result *ImportResult) error {
+	if err := s.applyPhonemes(repo, bundle, commit, result); err != nil {
+		return err
+	}
+	if err := warnUnknownPhonemes(repo, bundle, result); err != nil {
+		return err
+	}
+	grammarIDs, err := s.applyGrammarPoints(repo, bundle, commit, result)
+	if err != nil {
+		return err
+	}
+	// Grammar points already in the database can be linked too.
+	existing, err := repo.GrammarPointIDs(collectGrammarSlugs(bundle))
+	if err != nil {
+		return err
+	}
+	for slug, id := range existing {
+		if _, ok := grammarIDs[slug]; !ok {
+			grammarIDs[slug] = id
+		}
+	}
+	passageIDs, err := s.applyPassages(repo, bundle, commit, result)
+	if err != nil {
+		return err
+	}
+	existingPassages, err := repo.PassageIDs(collectPassageSlugs(bundle))
+	if err != nil {
+		return err
+	}
+	for slug, id := range existingPassages {
+		if _, ok := passageIDs[slug]; !ok {
+			passageIDs[slug] = id
+		}
+	}
+	scenarioIDs, err := s.applyScenarios(repo, bundle, passageIDs, commit, result)
+	if err != nil {
+		return err
+	}
+	existingScenarios, err := repo.SystemScenarioIDs(collectScenarioSlugs(bundle))
+	if err != nil {
+		return err
+	}
+	for slug, id := range existingScenarios {
+		if _, ok := scenarioIDs[slug]; !ok {
+			scenarioIDs[slug] = id
+		}
+	}
+	links := contentLinks{
+		scenarios: slugLinks{ids: scenarioIDs, warned: map[string]bool{},
+			message: "scenario %q not found — add it to \"scenarios\" or import a1-scenarios.json first; the speaking activity is imported without it"},
+		grammar: slugLinks{ids: grammarIDs, warned: map[string]bool{},
+			message: "grammar point %q not found — import the grammar bundle first; activities are imported without the theory card"},
+		passages: slugLinks{ids: passageIDs, warned: map[string]bool{},
+			message: "passage %q not found — add it to \"passages\" or import its bundle first; activities are imported without it"},
+	}
+
+	topicSlugs := map[string]bool{}
+	for topicIndex, topicInput := range bundle.Topics {
+		item := ItemResult{Kind: KindTopic, Path: topicInput.Slug, Title: topicInput.Title, Errors: validateTopic(topicInput)}
+		if topicSlugs[topicInput.Slug] {
+			item.Errors = append(item.Errors, "duplicate topic slug in this file")
+		}
+		topicSlugs[topicInput.Slug] = true
+
+		topic, exists, err := repo.FindTopic(band.ID, topicInput.Slug)
+		if err != nil {
+			return err
+		}
+		if !s.record(result, &item, exists) {
+			s.skipChildren(result, topicInput.Slug, topicInput.Lessons)
+			continue
+		}
+		result.Summary.Topics++
+
+		topic.BandLevelID = band.ID
+		topic.Slug = topicInput.Slug
+		topic.Title = topicInput.Title
+		topic.Description = topicInput.Description
+		topic.Icon = topicInput.Icon
+		topic.Emoji = topicInput.Emoji
+		topic.Color = topicInput.Color
+		topic.Track = models.TopicTrack(defaultString(topicInput.Track, string(models.TopicTrackCore)))
+		topic.OrderIndex = defaultInt(topicInput.OrderIndex, topicIndex+1)
+		if commit {
+			if err := repo.Save(&topic); err != nil {
+				return err
+			}
+		}
+
+		if err := s.applyLessons(repo, topic, exists, topicInput, knownVocabulary, &links, commit, result); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s Service) applyLessons(repo Repository, topic models.Topic, topicExists bool, topicInput TopicInput, knownVocabulary map[string]bool, links *contentLinks, commit bool, result *ImportResult) error {
+	lessonSlugs := map[string]bool{}
+	for lessonIndex, lessonInput := range topicInput.Lessons {
+		path := topicInput.Slug + "/" + lessonInput.Slug
+		item := ItemResult{Kind: KindLesson, Path: path, Title: lessonInput.Title, Errors: validateLesson(lessonInput)}
+		if lessonSlugs[lessonInput.Slug] {
+			item.Errors = append(item.Errors, "duplicate lesson slug in this topic")
+		}
+		lessonSlugs[lessonInput.Slug] = true
+
+		var lesson models.Lesson
+		exists := false
+		if topicExists || commit {
+			var err error
+			lesson, exists, err = repo.FindLesson(topic.ID, lessonInput.Slug)
+			if err != nil {
+				return err
+			}
+		}
+		if !s.record(result, &item, exists) {
+			s.skipActivities(result, path, lessonInput.Activities)
+			continue
+		}
+		result.Summary.Lessons++
+
+		bandMin, bandMax := 1.0, 1.5
+		lesson.TopicID = topic.ID
+		lesson.Slug = lessonInput.Slug
+		lesson.Title = lessonInput.Title
+		lesson.Description = lessonInput.Description
+		lesson.RequiredScore = defaultInt(lessonInput.RequiredScore, defaultRequiredScore)
+		lesson.EstimatedMinutes = defaultInt(lessonInput.EstimatedMinutes, defaultLessonMinutes)
+		lesson.XPReward = defaultInt(lessonInput.XPReward, defaultLessonXP)
+		lesson.OrderIndex = defaultInt(lessonInput.OrderIndex, lessonIndex+1)
+		lesson.IsPublished = true
+		if lesson.BandMin == nil {
+			lesson.BandMin, lesson.BandMax = &bandMin, &bandMax
+		}
+		if commit {
+			if err := repo.Save(&lesson); err != nil {
+				return err
+			}
+		}
+
+		if err := s.applyActivities(repo, lesson, exists, path, lessonInput.Activities, knownVocabulary, links, commit, result); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s Service) applyActivities(repo Repository, lesson models.Lesson, lessonExists bool, lessonPath string, activities []ActivityInput, knownVocabulary map[string]bool, links *contentLinks, commit bool, result *ImportResult) error {
+	activitySlugs := map[string]bool{}
+	for activityIndex, input := range activities {
+		path := lessonPath + "/" + input.Slug
+		item := ItemResult{Kind: KindActivity, Path: path, Title: input.Title, Errors: validateActivity(input, knownVocabulary)}
+		item.Status = defaultString(input.Status, string(models.ContentPublished))
+		if activitySlugs[input.Slug] {
+			item.Errors = append(item.Errors, "duplicate activity slug in this lesson")
+		}
+		activitySlugs[input.Slug] = true
+
+		var activity models.LessonActivity
+		exists := false
+		if lessonExists || commit {
+			var err error
+			activity, exists, err = repo.FindActivity(lesson.ID, input.Slug)
+			if err != nil {
+				return err
+			}
+		}
+		if !s.record(result, &item, exists) {
+			s.skipExercises(result, path, input.Exercises)
+			continue
+		}
+		result.Summary.Activities++
+
+		activity.LessonID = lesson.ID
+		activity.Slug = input.Slug
+		activity.Type = models.ActivityType(input.Type)
+		activity.Title = input.Title
+		activity.InstructionsVI = input.InstructionsVI
+		activity.ContentJSON = nil
+		if len(input.Content) > 0 {
+			activity.ContentJSON = datatypes.JSON(input.Content)
+		}
+		activity.PassScore = defaultPtr(input.PassScore, defaultPassScore)
+		activity.XPReward = defaultPtr(input.XPReward, defaultActivityXP)
+		activity.IsRequired = input.IsRequired == nil || *input.IsRequired
+		activity.OrderIndex = activityIndex + 1
+		activity.Status = models.ContentStatus(item.Status)
+		activity.GrammarPointID = links.grammar.resolve(grammarPointSlug(input), result)
+		activity.PassageID = links.passages.resolve(passageSlug(input), result)
+		activity.ScenarioID = links.scenarios.resolve(scenarioSlug(input), result)
+		if commit {
+			if err := repo.SaveActivity(&activity); err != nil {
+				return err
+			}
+		}
+
+		if err := s.applyExercises(repo, activity, exists, path, input.Exercises, links, commit, result); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s Service) applyExercises(repo Repository, activity models.LessonActivity, activityExists bool, activityPath string, exercises []ExerciseInput, links *contentLinks, commit bool, result *ImportResult) error {
+	existing := map[int]uint{}
+	if activityExists {
+		var err error
+		existing, err = repo.ExerciseOrderIndexes(activity.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	for index, input := range exercises {
+		orderIndex := index + 1
+		item := ItemResult{
+			Kind:   KindExercise,
+			Path:   fmt.Sprintf("%s#%d", activityPath, orderIndex),
+			Title:  fmt.Sprintf("%s · %s", input.Type, input.Prompt),
+			Errors: validateExercise(input),
+		}
+		payload, payloadErr := resolvePayloadPassage(input.Payload, links.passages.ids)
+		if payloadErr != "" {
+			item.Errors = append(item.Errors, payloadErr)
+		}
+		existingID, exists := existing[orderIndex]
+		if !s.record(result, &item, exists) {
+			continue
+		}
+		result.Summary.Exercises++
+		if !commit {
+			continue
+		}
+
+		exercise := models.Exercise{
+			ID:            existingID,
+			ActivityID:    activity.ID,
+			Type:          models.ExerciseType(input.Type),
+			Prompt:        input.Prompt,
+			PayloadJSON:   datatypes.JSON(payload),
+			AnswerJSON:    datatypes.JSON(input.Answer),
+			ExplanationVI: input.ExplanationVI,
+			SkillTag:      input.SkillTag,
+			Points:        defaultInt(input.Points, defaultExercisePoints),
+			OrderIndex:    orderIndex,
+		}
+		if err := repo.SaveExercise(&exercise); err != nil {
+			return err
+		}
+	}
+
+	if commit && activityExists {
+		return repo.DeleteExercisesAfter(activity.ID, len(exercises))
+	}
+	return nil
+}
+
+// record adds an item to the result and reports whether it is valid.
+func (s Service) record(result *ImportResult, item *ItemResult, exists bool) bool {
+	if item.Errors == nil {
+		item.Errors = []string{}
+	}
+	switch {
+	case len(item.Errors) > 0:
+		item.Action = ActionSkip
+		result.Summary.Invalid++
+	case exists:
+		item.Action = ActionUpdate
+		result.Summary.Updated++
+	default:
+		item.Action = ActionCreate
+		result.Summary.Created++
+	}
+	result.Items = append(result.Items, *item)
+	return len(item.Errors) == 0
+}
+
+func (s Service) skipChildren(result *ImportResult, topicPath string, lessons []LessonInput) {
+	for _, lesson := range lessons {
+		path := topicPath + "/" + lesson.Slug
+		s.addSkipped(result, KindLesson, path, lesson.Title, "parent topic is invalid")
+		s.skipActivities(result, path, lesson.Activities)
+	}
+}
+
+func (s Service) skipActivities(result *ImportResult, lessonPath string, activities []ActivityInput) {
+	for _, activity := range activities {
+		path := lessonPath + "/" + activity.Slug
+		s.addSkipped(result, KindActivity, path, activity.Title, "parent lesson is invalid")
+		s.skipExercises(result, path, activity.Exercises)
+	}
+}
+
+func (s Service) skipExercises(result *ImportResult, activityPath string, exercises []ExerciseInput) {
+	for index, exercise := range exercises {
+		s.addSkipped(result, KindExercise, fmt.Sprintf("%s#%d", activityPath, index+1),
+			fmt.Sprintf("%s · %s", exercise.Type, exercise.Prompt), "parent activity is invalid")
+	}
+}
+
+func (s Service) addSkipped(result *ImportResult, kind string, path string, title string, reason string) {
+	result.Summary.Invalid++
+	result.Items = append(result.Items, ItemResult{Kind: kind, Path: path, Title: title, Action: ActionSkip, Errors: []string{reason}})
+}
+
+func collectVocabularySlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				slugs = append(slugs, vocabularySlugs(activity.Content)...)
+			}
+		}
+	}
+	return slugs
+}
+
+func defaultString(value string, fallback string) string {
+	if value == "" {
+		return fallback
+	}
+	return value
+}
+
+func defaultInt(value int, fallback int) int {
+	if value == 0 {
+		return fallback
+	}
+	return value
+}
+
+func defaultPtr(value *int, fallback int) int {
+	if value == nil {
+		return fallback
+	}
+	return *value
+}
+
+// contentLinks resolves the slugs an activity refers to.
+type contentLinks struct {
+	grammar   slugLinks
+	passages  slugLinks
+	scenarios slugLinks
+}
+
+// slugLinks resolves slugs (grammar points, passages) to IDs for activity links.
+type slugLinks struct {
+	ids     map[string]uint
+	warned  map[string]bool
+	message string
+}
+
+// resolve returns the ID for slug, or nil (with a one-time warning) when the
+// item does not exist. In a preview of a new item the ID is still 0, which
+// is fine since nothing is written.
+func (l *slugLinks) resolve(slug string, result *ImportResult) *uint {
+	if slug == "" {
+		return nil
+	}
+	id, ok := l.ids[slug]
+	if !ok {
+		if !l.warned[slug] {
+			l.warned[slug] = true
+			result.Warnings = append(result.Warnings, fmt.Sprintf(l.message, slug))
+		}
+		return nil
+	}
+	return &id
+}
+
+func (s Service) applyGrammarPoints(repo Repository, bundle Bundle, commit bool, result *ImportResult) (map[string]uint, error) {
+	ids := map[string]uint{}
+	for index, input := range bundle.GrammarPoints {
+		item := ItemResult{Kind: KindGrammarPoint, Path: input.Slug, Title: input.Title, Errors: validateGrammarPoint(input)}
+		if _, duplicate := ids[input.Slug]; duplicate {
+			item.Errors = append(item.Errors, "duplicate grammar point slug in this file")
+		}
+
+		point, exists, err := repo.FindGrammarPoint(input.Slug)
+		if err != nil {
+			return nil, err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		point.Slug = input.Slug
+		point.CEFRLevel = defaultString(input.CEFRLevel, bundle.CEFRLevel)
+		point.Title = input.Title
+		point.TitleVI = input.TitleVI
+		point.SummaryVI = input.SummaryVI
+		point.Formula = input.Formula
+		point.ExamplesJSON = datatypes.JSON(input.Examples)
+		point.CommonMistakesJSON = nil
+		if len(input.CommonMistakes) > 0 {
+			point.CommonMistakesJSON = datatypes.JSON(input.CommonMistakes)
+		}
+		point.OrderIndex = defaultInt(input.OrderIndex, index+1)
+		if commit {
+			if err := repo.Save(&point); err != nil {
+				return nil, err
+			}
+		}
+		ids[input.Slug] = point.ID
+	}
+	return ids, nil
+}
+
+func collectGrammarSlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				if slug := grammarPointSlug(activity); slug != "" {
+					slugs = append(slugs, slug)
+				}
+			}
+		}
+	}
+	return slugs
+}
+
+func (s Service) applyPhonemes(repo Repository, bundle Bundle, commit bool, result *ImportResult) error {
+	seen := map[string]bool{}
+	for index, input := range bundle.Phonemes {
+		item := ItemResult{Kind: KindPhoneme, Path: "phoneme:" + input.Symbol, Title: "/" + input.Symbol + "/", Errors: validatePhoneme(input)}
+		if seen[input.Symbol] {
+			item.Errors = append(item.Errors, "duplicate phoneme symbol in this file")
+		}
+		seen[input.Symbol] = true
+
+		phoneme, exists, err := repo.FindPhoneme(input.Symbol)
+		if err != nil {
+			return err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		phoneme.Symbol = input.Symbol
+		phoneme.Kind = models.PhonemeKind(input.Kind)
+		phoneme.Voiced = input.Voiced
+		phoneme.NameVI = input.NameVI
+		phoneme.ExampleWordsJSON = datatypes.JSON(input.ExampleWords)
+		phoneme.MinimalPairsJSON = datatypes.JSON(jsonOrEmptyList(input.MinimalPairs))
+		phoneme.MouthVI = input.MouthVI
+		phoneme.MistakesVI = input.MistakesVI
+		phoneme.AudioURL = input.AudioURL
+		phoneme.ImageURL = input.ImageURL
+		phoneme.OrderIndex = defaultInt(input.OrderIndex, index+1)
+		if commit {
+			if err := repo.Save(&phoneme); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// warnUnknownPhonemes reports PRONUNCIATION activities whose content.phonemes
+// name a sound that is neither in this file nor in the database.
+func warnUnknownPhonemes(repo Repository, bundle Bundle, result *ImportResult) error {
+	symbols := collectPhonemeSymbols(bundle)
+	if len(symbols) == 0 {
+		return nil
+	}
+	known, err := repo.ExistingPhonemeSymbols(symbols)
+	if err != nil {
+		return err
+	}
+	for _, input := range bundle.Phonemes {
+		known[input.Symbol] = true
+	}
+	for _, symbol := range symbols {
+		if !known[symbol] {
+			result.Warnings = append(result.Warnings, fmt.Sprintf(
+				"sound /%s/ is used by a pronunciation activity but has no sound card yet — import a1-sounds.json", symbol))
+			known[symbol] = true
+		}
+	}
+	return nil
+}
+
+func collectPhonemeSymbols(bundle Bundle) []string {
+	var symbols []string
+	seen := map[string]bool{}
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				for _, symbol := range activityPhonemes(activity.Content) {
+					if !seen[symbol] {
+						seen[symbol] = true
+						symbols = append(symbols, symbol)
+					}
+				}
+			}
+		}
+	}
+	return symbols
+}
+
+func activityPhonemes(content json.RawMessage) []string {
+	var parsed struct {
+		Phonemes []string `json:"phonemes"`
+	}
+	if len(content) == 0 || json.Unmarshal(content, &parsed) != nil {
+		return nil
+	}
+	return parsed.Phonemes
+}
+
+func jsonOrEmptyList(raw json.RawMessage) json.RawMessage {
+	if len(raw) == 0 || string(raw) == "null" {
+		return json.RawMessage("[]")
+	}
+	return raw
+}
+
+func (s Service) applyPassages(repo Repository, bundle Bundle, commit bool, result *ImportResult) (map[string]uint, error) {
+	ids := map[string]uint{}
+	for _, input := range bundle.Passages {
+		item := ItemResult{Kind: KindPassage, Path: "passage:" + input.Slug, Title: input.Title, Errors: validatePassage(input)}
+		if _, duplicate := ids[input.Slug]; duplicate {
+			item.Errors = append(item.Errors, "duplicate passage slug in this file")
+		}
+
+		passage, exists, err := repo.FindPassage(input.Slug)
+		if err != nil {
+			return nil, err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		passage.Slug = input.Slug
+		passage.CEFRLevel = defaultString(input.CEFRLevel, bundle.CEFRLevel)
+		passage.Genre = models.PassageGenre(input.Genre)
+		passage.Title = input.Title
+		passage.BodyText = strings.TrimSpace(input.BodyText)
+		passage.AudioURL = nil
+		if input.AudioURL != "" {
+			audioURL := input.AudioURL
+			passage.AudioURL = &audioURL
+		}
+		passage.SegmentsJSON = datatypes.JSON(jsonOrEmptyList(input.Segments))
+		passage.GlossaryJSON = datatypes.JSON(jsonOrEmptyList(input.Glossary))
+		passage.Source = input.Source
+		passage.WordCount = len(strings.Fields(passage.BodyText))
+		if commit {
+			if err := repo.Save(&passage); err != nil {
+				return nil, err
+			}
+		}
+		ids[input.Slug] = passage.ID
+	}
+	return ids, nil
+}
+
+func collectPassageSlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				if slug := passageSlug(activity); slug != "" {
+					slugs = append(slugs, slug)
+				}
+			}
+		}
+	}
+	return slugs
+}
+
+// resolvePayloadPassage replaces payload.passageSlug (e.g. a DICTATION item
+// that plays one segment of a passage) with payload.passageId.
+func resolvePayloadPassage(payload json.RawMessage, passageIDs map[string]uint) (json.RawMessage, string) {
+	var fields map[string]json.RawMessage
+	if len(payload) == 0 || json.Unmarshal(payload, &fields) != nil {
+		return payload, ""
+	}
+	raw, ok := fields["passageSlug"]
+	if !ok {
+		return payload, ""
+	}
+	var slug string
+	if json.Unmarshal(raw, &slug) != nil || slug == "" {
+		return payload, "payload.passageSlug must be a string"
+	}
+	id, ok := passageIDs[slug]
+	if !ok {
+		return payload, fmt.Sprintf("payload.passageSlug %q not found", slug)
+	}
+	delete(fields, "passageSlug")
+	fields["passageId"], _ = json.Marshal(id)
+	resolved, err := json.Marshal(fields)
+	if err != nil {
+		return payload, "payload cannot be encoded"
+	}
+	return resolved, ""
+}
+
+func (s Service) applyScenarios(repo Repository, bundle Bundle, passageIDs map[string]uint, commit bool, result *ImportResult) (map[string]uint, error) {
+	ids := map[string]uint{}
+	for index, input := range bundle.Scenarios {
+		item := ItemResult{Kind: KindScenario, Path: "scenario:" + input.Slug, Title: input.Title, Errors: validateScenario(input)}
+		if _, duplicate := ids[input.Slug]; duplicate {
+			item.Errors = append(item.Errors, "duplicate scenario slug in this file")
+		}
+		var passageID *uint
+		if input.PassageSlug != "" {
+			if id, ok := passageIDs[input.PassageSlug]; ok {
+				passageID = &id
+			} else if existing, err := repo.PassageIDs([]string{input.PassageSlug}); err != nil {
+				return nil, err
+			} else if id, ok := existing[input.PassageSlug]; ok {
+				passageID = &id
+			} else {
+				result.Warnings = append(result.Warnings, fmt.Sprintf("scenario %q: model dialogue %q not found", input.Slug, input.PassageSlug))
+			}
+		}
+
+		scenario, exists, err := repo.FindSystemScenario(input.Slug)
+		if err != nil {
+			return nil, err
+		}
+		if !s.record(result, &item, exists) {
+			continue
+		}
+
+		level := defaultString(input.CEFRLevel, bundle.CEFRLevel)
+		patterns, _ := json.Marshal(input.TargetPatterns)
+		scenario.UserID = nil
+		scenario.IsSystem = true
+		scenario.Slug = input.Slug
+		scenario.Title = input.Title
+		scenario.Description = input.Description
+		scenario.SituationContext = input.SituationContext
+		scenario.Level = models.DifficultyBeginner
+		scenario.Duration = defaultString(input.Duration, "5 min")
+		scenario.CEFRLevel = &level
+		scenario.Role = input.Role
+		scenario.Task = input.Task
+		scenario.TargetPatternsJSON = datatypes.JSON(patterns)
+		scenario.MaxTurns = defaultInt(input.MaxTurns, 8)
+		scenario.OpeningLine = input.OpeningLine
+		scenario.PassageID = passageID
+		scenario.Group = input.Group
+		scenario.OrderIndex = defaultInt(input.OrderIndex, index+1)
+		if commit {
+			if err := repo.Save(&scenario); err != nil {
+				return nil, err
+			}
+		}
+		ids[input.Slug] = scenario.ID
+	}
+	return ids, nil
+}
+
+func collectScenarioSlugs(bundle Bundle) []string {
+	var slugs []string
+	for _, topic := range bundle.Topics {
+		for _, lesson := range topic.Lessons {
+			for _, activity := range lesson.Activities {
+				if slug := scenarioSlug(activity); slug != "" {
+					slugs = append(slugs, slug)
+				}
+			}
+		}
+	}
+	return slugs
+}

@@ -121,7 +121,9 @@ function LessonCard({ lesson }: LessonCardProps) {
           ) : null}
 
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-bold text-[#77798e]">
-            <LessonMeta icon={BookOpen} label={`${lesson.wordCount} words`} />
+            {lesson.wordCount > 0 ? (
+              <LessonMeta icon={BookOpen} label={`${lesson.wordCount} words`} />
+            ) : null}
             <LessonMeta
               icon={Clock3}
               label={`~${lesson.estimatedMinutes} min`}

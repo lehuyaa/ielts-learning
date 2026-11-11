@@ -4,6 +4,7 @@ import (
 	"errors"
 
 	"ielts-learning/backend/internal/models"
+	"ielts-learning/backend/internal/modules/weekgate"
 )
 
 var ErrUserNotFound = errors.New("user not found")
@@ -46,7 +47,12 @@ func (s Service) Get(userID uint, topicID uint) (Response, error) {
 		return Response{}, err
 	}
 
-	return s.toResponse(topic, lessons, progressRows, wordCounts), nil
+	// A week's first lesson waits for the previous week's checkpoint (Task 75).
+	previousWeekDone, err := s.repository.PreviousWeekDone(userID, topic)
+	if err != nil {
+		return Response{}, err
+	}
+	return s.toResponse(topic, lessons, progressRows, wordCounts, previousWeekDone), nil
 }
 
 func (s Service) toResponse(
@@ -54,17 +60,18 @@ func (s Service) toResponse(
 	lessons []models.Lesson,
 	progressRows []models.UserLessonProgress,
 	wordCounts map[uint]int,
+	previousWeekDone bool,
 ) Response {
 	progressByLesson := mapProgressByLesson(progressRows)
 
 	totalXP := 0
 	completedLessons := 0
-	previousLessonCompleted := true
+	previousLessonCompleted := previousWeekDone
 	lessonResponses := make([]LessonResponse, 0, len(lessons))
 
 	for _, lesson := range lessons {
 		progress, hasProgress := progressByLesson[lesson.ID]
-		status := lessonStatus(hasProgress, progress, previousLessonCompleted)
+		status := lessonStatus(hasProgress, progress, previousLessonCompleted || topic.IsAlwaysUnlocked())
 		if status == models.LessonStatusCompleted {
 			completedLessons++
 		}
@@ -81,7 +88,7 @@ func (s Service) toResponse(
 			XPReward:           lesson.XPReward,
 			Status:             status,
 			ProgressPercentage: lessonProgressPercentage(status, progress),
-			LockedReason:       lockedReason(status),
+			LockedReason:       lockedReason(status, len(lessonResponses) == 0 && !previousWeekDone),
 		})
 
 		previousLessonCompleted = status == models.LessonStatusCompleted
@@ -96,6 +103,7 @@ func (s Service) toResponse(
 			Emoji:       topic.Emoji,
 			Color:       topic.Color,
 			Description: topic.Description,
+			Track:       string(topic.Track),
 		},
 		BandLevel: BandLevelResponse{
 			ID:        topic.BandLevel.ID,
@@ -149,9 +157,13 @@ func lessonProgressPercentage(status models.LessonStatus, progress models.UserLe
 	return 0
 }
 
-func lockedReason(status models.LessonStatus) *string {
+func lockedReason(status models.LessonStatus, waitsForPreviousWeek bool) *string {
 	if status != models.LessonStatusLocked {
 		return nil
+	}
+	if waitsForPreviousWeek {
+		reason := weekgate.LockedReason
+		return &reason
 	}
 
 	reason := "Complete previous lessons to unlock this lesson."

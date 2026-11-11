@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strconv"
+)
 
 type Config struct {
 	AppEnv              string
@@ -15,22 +18,55 @@ type Config struct {
 	JWTAccessTTLMinutes string
 	OpenAIAPIKey        string
 	OpenAIModel         string
+	OpenAIBaseURL       string
+	// OpenAITranscribeModel is the speech-to-text model for audio import (Task 64).
+	OpenAITranscribeModel string
+	// MediaDir stores uploaded files (imported recordings), served at /media.
+	MediaDir string
+	// AIShortAnswerDailyLimit caps AI short-answer gradings per user per day (spec §6.7).
+	AIShortAnswerDailyLimit int
+	// AIWritingDailyLimit caps writing gradings (incl. rewrite checks) per user per day.
+	AIWritingDailyLimit int
+	// AIChatDailyLimit caps AI conversation calls (turns, hints, reports) per user per day.
+	AIChatDailyLimit int
+	// Azure Speech pronunciation assessment (Task 71). Empty key disables scoring.
+	AzureSpeechKey      string
+	AzureSpeechRegion   string
+	AzureSpeechEndpoint string
+	// PronunciationProvider: azure | openai | auto (Azure if configured, else OpenAI).
+	PronunciationProvider string
+	// PronunciationDailyLimit caps scored recordings per user per day.
+	PronunciationDailyLimit int
+	// AIPracticeDailyLimit caps AI-generated practice sets per user per day (Task 74).
+	AIPracticeDailyLimit int
 }
 
 func Load() Config {
 	return Config{
-		AppEnv:              getEnv("APP_ENV", "development"),
-		AppPort:             getEnv("APP_PORT", "8081"),
-		FrontendURL:         getEnv("FRONTEND_URL", "http://localhost:5175"),
-		DBHost:              getEnv("DB_HOST", "localhost"),
-		DBPort:              getEnv("DB_PORT", "3308"),
-		DBUser:              getEnv("DB_USER", "root"),
-		DBPassword:          getEnv("DB_PASSWORD", "password"),
-		DBName:              getEnv("DB_NAME", "ielts_vocab"),
-		JWTSecret:           getEnv("JWT_SECRET", "dev-secret-change-me"),
-		JWTAccessTTLMinutes: getEnv("JWT_ACCESS_TTL_MINUTES", "1440"),
-		OpenAIAPIKey:        getEnv("OPENAI_API_KEY", ""),
-		OpenAIModel:         getEnv("OPENAI_MODEL", "gpt-4o-mini"),
+		AppEnv:                  getEnv("APP_ENV", "development"),
+		AppPort:                 getEnv("APP_PORT", "8081"),
+		FrontendURL:             getEnv("FRONTEND_URL", "http://localhost:5175"),
+		DBHost:                  getEnv("DB_HOST", "localhost"),
+		DBPort:                  getEnv("DB_PORT", "3308"),
+		DBUser:                  getEnv("DB_USER", "root"),
+		DBPassword:              getEnv("DB_PASSWORD", "password"),
+		DBName:                  getEnv("DB_NAME", "ielts_vocab"),
+		JWTSecret:               getEnv("JWT_SECRET", "dev-secret-change-me"),
+		JWTAccessTTLMinutes:     getEnv("JWT_ACCESS_TTL_MINUTES", "1440"),
+		OpenAIAPIKey:            getEnv("OPENAI_API_KEY", ""),
+		OpenAIModel:             getEnv("OPENAI_MODEL", "gpt-4o-mini"),
+		OpenAIBaseURL:           getEnv("OPENAI_BASE_URL", ""),
+		AIShortAnswerDailyLimit: getEnvInt("AI_SHORT_ANSWER_DAILY_LIMIT", 300),
+		AIWritingDailyLimit:     getEnvInt("AI_WRITING_DAILY_LIMIT", 30),
+		AIChatDailyLimit:        getEnvInt("AI_CHAT_DAILY_LIMIT", 200),
+		OpenAITranscribeModel:   getEnv("OPENAI_TRANSCRIBE_MODEL", "whisper-1"),
+		MediaDir:                getEnv("MEDIA_DIR", "storage/media"),
+		AzureSpeechKey:          getEnv("AZURE_SPEECH_KEY", ""),
+		AzureSpeechRegion:       getEnv("AZURE_SPEECH_REGION", ""),
+		AzureSpeechEndpoint:     getEnv("AZURE_SPEECH_ENDPOINT", ""),
+		PronunciationProvider:   getEnv("PRONUNCIATION_PROVIDER", "auto"),
+		PronunciationDailyLimit: getEnvInt("PRONUNCIATION_DAILY_LIMIT", 300),
+		AIPracticeDailyLimit:    getEnvInt("AI_PRACTICE_DAILY_LIMIT", 10),
 	}
 }
 
@@ -40,5 +76,13 @@ func getEnv(key string, fallback string) string {
 		return fallback
 	}
 
+	return value
+}
+
+func getEnvInt(key string, fallback int) int {
+	value, err := strconv.Atoi(os.Getenv(key))
+	if err != nil {
+		return fallback
+	}
 	return value
 }

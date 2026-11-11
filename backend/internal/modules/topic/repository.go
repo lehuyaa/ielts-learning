@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 
 	"ielts-learning/backend/internal/models"
+	"ielts-learning/backend/internal/modules/weekgate"
 )
 
 var ErrTopicNotFound = errors.New("topic not found")
@@ -103,4 +104,9 @@ func (r Repository) CountVocabularyByLesson(lessonIDs []uint) (map[uint]int, err
 	}
 
 	return counts, nil
+}
+
+// PreviousWeekDone reports whether the previous topic of the track is finished.
+func (r Repository) PreviousWeekDone(userID uint, topic models.Topic) (bool, error) {
+	return weekgate.PreviousWeekDone(r.db, userID, topic)
 }

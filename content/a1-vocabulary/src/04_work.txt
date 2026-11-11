@@ -1,0 +1,106 @@
+## a1-work-and-study | Work & Study | Nghề nghiệp, văn phòng, công việc hằng ngày và học tập | briefcase-business | amber
+### Jobs 1
+job|noun|công việc, nghề nghiệp|the work you do to get money|I like my job.|Tôi thích công việc của mình.
+work|noun|công việc; chỗ làm|a job; the place where you do your job|I go to work at eight.|Tôi đi làm lúc tám giờ.
+worker|noun|công nhân, người lao động|a person who works|He is a factory worker.|Anh ấy là công nhân nhà máy.
+teacher|noun|giáo viên|a person who teaches|My mother is a teacher.|Mẹ tôi là giáo viên.
+doctor|noun|bác sĩ|a person who helps sick people|I need to see a doctor.|Tôi cần đi khám bác sĩ.
+nurse|noun|y tá|a person who looks after sick people in a hospital|She is a nurse at Bach Mai Hospital.|Cô ấy là y tá ở bệnh viện Bạch Mai.
+engineer|noun|kỹ sư|a person who designs machines or buildings|My husband is an engineer.|Chồng tôi là kỹ sư.
+driver|noun|tài xế|a person who drives a car, bus or taxi|The driver is waiting.|Tài xế đang đợi.
+farmer|noun|nông dân|a person who works on a farm|My grandfather is a farmer.|Ông tôi là nông dân.
+cook|noun|đầu bếp|a person who makes food|He is a good cook.|Anh ấy là một đầu bếp giỏi.
+waiter|noun|bồi bàn (nam)|a man who brings food in a restaurant|The waiter brings the menu.|Người phục vụ mang thực đơn tới.
+waitress|noun|bồi bàn (nữ)|a woman who brings food in a restaurant|The waitress is very friendly.|Cô phục vụ rất thân thiện.
+### Jobs 2
+singer|noun|ca sĩ|a person who sings|She is a famous singer.|Cô ấy là ca sĩ nổi tiếng.
+musician|noun|nhạc sĩ, nhạc công|a person who plays music|My friend is a musician.|Bạn tôi là nhạc công.
+writer|noun|nhà văn|a person who writes books or stories|He wants to be a writer.|Anh ấy muốn trở thành nhà văn.
+reporter|noun|phóng viên|a person who writes news|The reporter asks many questions.|Phóng viên hỏi nhiều câu.
+scientist|noun|nhà khoa học|a person who works in science|She is a scientist.|Cô ấy là nhà khoa học.
+police officer|noun|cảnh sát|a person whose job is to protect people|Ask the police officer.|Hỏi anh cảnh sát đi.
+actor|noun|diễn viên|a person who acts in films or plays|He is a famous actor.|Anh ấy là diễn viên nổi tiếng.
+sailor|noun|thủy thủ|a person who works on a ship|My uncle was a sailor.|Chú tôi từng là thủy thủ.
+developer|noun|lập trình viên|a person who writes computer programs|I am a software developer.|Tôi là lập trình viên phần mềm.
+designer|noun|nhà thiết kế|a person who plans how things look|She is a graphic designer.|Cô ấy là nhà thiết kế đồ họa.
+accountant|noun|kế toán|a person who keeps money records|The accountant checks the numbers.|Kế toán kiểm tra số liệu.
+salesperson|noun|nhân viên bán hàng|a person whose job is selling|He is a good salesperson.|Anh ấy là nhân viên bán hàng giỏi.
+### The Workplace
+office|noun|văn phòng|a room or building where people work|Our office is in District 1.|Văn phòng chúng tôi ở Quận 1.
+company|noun|công ty|a business|I work for a tech company.|Tôi làm cho một công ty công nghệ.
+business|noun|kinh doanh, doanh nghiệp|buying and selling; a company|My father has a small business.|Bố tôi có một doanh nghiệp nhỏ.
+factory|noun|nhà máy|a building where things are made|The factory is near the river.|Nhà máy ở gần sông.
+boss|noun|sếp|the person who is in charge of you at work|My boss is very nice.|Sếp tôi rất tốt.
+manager|noun|quản lý|a person who controls a team or business|She is the sales manager.|Cô ấy là trưởng phòng kinh doanh.
+colleague|noun|đồng nghiệp|a person you work with|My colleagues are friendly.|Đồng nghiệp của tôi rất thân thiện.
+team|noun|đội, nhóm|a group of people who work together|Our team has six people.|Nhóm chúng tôi có sáu người.
+leader|noun|trưởng nhóm, người lãnh đạo|a person who leads a group|He is our team leader.|Anh ấy là trưởng nhóm của chúng tôi.
+customer|noun|khách hàng|a person who buys something|The customer is always right.|Khách hàng luôn đúng.
+owner|noun|chủ sở hữu|a person who owns something|He is the owner of this cafe.|Anh ấy là chủ quán cà phê này.
+### At the Office
+desk|noun|bàn làm việc|a table you work at|My desk is near the window.|Bàn làm việc của tôi gần cửa sổ.
+computer|noun|máy tính|a machine for working with information|I use a computer every day.|Tôi dùng máy tính mỗi ngày.
+laptop|noun|máy tính xách tay|a small computer you can carry|My laptop is new.|Laptop của tôi mới.
+printer|noun|máy in|a machine that prints on paper|The printer is not working.|Máy in không hoạt động.
+file|noun|tập tin, hồ sơ|a set of documents or computer data|Please send me the file.|Vui lòng gửi tôi tập tin.
+paper|noun|giấy|thin material for writing on|I need some paper.|Tôi cần ít giấy.
+pen|noun|bút mực|a thing you write with ink|Can I borrow your pen?|Cho tôi mượn bút được không?
+pencil|noun|bút chì|a thing you write with, made of wood|Write your name with a pencil.|Viết tên bằng bút chì.
+notebook|noun|sổ tay|a small book for writing notes|I write new words in my notebook.|Tôi ghi từ mới vào sổ tay.
+meeting|noun|cuộc họp|when people come together to talk|The meeting starts at nine.|Cuộc họp bắt đầu lúc chín giờ.
+message|noun|tin nhắn|written or spoken words you send to someone|I have a message for you.|Tôi có tin nhắn cho bạn.
+information|noun|thông tin|facts about something|I need more information.|Tôi cần thêm thông tin.
+### Work Tasks
+plan|noun|kế hoạch|an idea of what you will do|What is the plan for today?|Kế hoạch hôm nay là gì?
+project|noun|dự án|a piece of planned work|We have a new project.|Chúng tôi có một dự án mới.
+report|noun|báo cáo|a written document about a subject|I finish the report today.|Tôi hoàn thành báo cáo hôm nay.
+problem|noun|vấn đề|something that is difficult|We have a problem.|Chúng ta có một vấn đề.
+idea|noun|ý tưởng|a thought or plan|That is a great idea!|Ý tưởng tuyệt vời!
+result|noun|kết quả|what happens at the end|The results are good.|Kết quả tốt.
+interview|noun|phỏng vấn|a meeting to ask someone questions for a job|I have a job interview tomorrow.|Ngày mai tôi có buổi phỏng vấn xin việc.
+busy|adjective|bận rộn|having a lot to do|I am very busy today.|Hôm nay tôi rất bận.
+free|adjective|rảnh; miễn phí|not busy; costing no money|Are you free this evening?|Tối nay bạn rảnh không?
+finish|verb|hoàn thành, kết thúc|to complete something|I finish work at six.|Tôi xong việc lúc sáu giờ.
+start|verb|bắt đầu|to begin|We start at nine.|Chúng tôi bắt đầu lúc chín giờ.
+begin|verb|bắt đầu|to start|The class begins at seven.|Lớp học bắt đầu lúc bảy giờ.
+### School & Learning
+school|noun|trường học|a place where children learn|My son goes to school by bike.|Con trai tôi đi học bằng xe đạp.
+college|noun|trường cao đẳng, đại học|a place where adults study|She studies at college.|Cô ấy học cao đẳng.
+class|noun|lớp học|a group of students; a lesson|My English class is on Monday.|Lớp tiếng Anh của tôi vào thứ Hai.
+classroom|noun|phòng học|a room where students learn|The classroom is big.|Phòng học rộng.
+student|noun|học sinh, sinh viên|a person who studies|I am a student.|Tôi là học viên.
+classmate|noun|bạn cùng lớp|a person in the same class|My classmates are friendly.|Các bạn cùng lớp thân thiện.
+lesson|noun|bài học|a time when you learn something|Today's lesson is easy.|Bài học hôm nay dễ.
+course|noun|khóa học|a set of lessons|I take an English course.|Tôi tham gia một khóa học tiếng Anh.
+homework|noun|bài tập về nhà|school work you do at home|I do my homework every evening.|Tôi làm bài tập mỗi tối.
+test|noun|bài kiểm tra|a set of questions to check what you know|I have a test on Friday.|Tôi có bài kiểm tra vào thứ Sáu.
+grade|noun|điểm số|a mark for school work|She gets good grades.|Cô ấy được điểm tốt.
+subject|noun|môn học|something you study at school|Math is my favorite subject.|Toán là môn học yêu thích của tôi.
+### Studying English
+language|noun|ngôn ngữ|the words people use to speak and write|English is an important language.|Tiếng Anh là một ngôn ngữ quan trọng.
+English|noun|tiếng Anh|the language of the UK, the USA and other countries|I study English every day.|Tôi học tiếng Anh mỗi ngày.
+word|noun|từ|a single unit of language|What does this word mean?|Từ này nghĩa là gì?
+sentence|noun|câu|a group of words with a complete meaning|Write five sentences.|Viết năm câu.
+grammar|noun|ngữ pháp|the rules of a language|English grammar is not difficult.|Ngữ pháp tiếng Anh không khó.
+dictionary|noun|từ điển|a book that tells you what words mean|Check the word in a dictionary.|Tra từ trong từ điển.
+question|noun|câu hỏi|what you ask|Can I ask a question?|Tôi hỏi một câu được không?
+answer|noun|câu trả lời|what you say or write back to a question|What is the answer?|Câu trả lời là gì?
+example|noun|ví dụ|something that shows what you mean|Can you give me an example?|Bạn cho tôi một ví dụ được không?
+page|noun|trang|one side of a sheet of paper in a book|Open your book to page ten.|Mở sách trang mười.
+list|noun|danh sách|a set of things written one below the other|Make a list of new words.|Lập danh sách từ mới.
+mistake|noun|lỗi sai|something that is not correct|I make many mistakes.|Tôi mắc nhiều lỗi.
+### Learning Verbs
+learn|verb|học, học hỏi|to get knowledge or a skill|I want to learn English.|Tôi muốn học tiếng Anh.
+study|verb|học (tập trung)|to spend time learning|I study in the evening.|Tôi học vào buổi tối.
+teach|verb|dạy|to help someone learn|She teaches English.|Cô ấy dạy tiếng Anh.
+practice|verb|luyện tập|to do something many times to get better|I practice speaking every day.|Tôi luyện nói mỗi ngày.
+read|verb|đọc|to look at words and understand them|I read the news every morning.|Tôi đọc tin tức mỗi sáng.
+write|verb|viết|to put words on paper or a screen|Write your name here.|Viết tên bạn ở đây.
+listen|verb|nghe|to pay attention to sounds|Listen to the teacher.|Hãy nghe giáo viên.
+speak|verb|nói (một ngôn ngữ)|to say words; to use a language|Do you speak English?|Bạn có nói tiếng Anh không?
+spell|verb|đánh vần|to say the letters of a word in order|How do you spell your name?|Tên bạn đánh vần thế nào?
+repeat|verb|lặp lại|to say or do something again|Can you repeat that, please?|Bạn nhắc lại được không?
+remember|verb|nhớ|to keep something in your mind|I can't remember his name.|Tôi không nhớ tên anh ấy.
+forget|verb|quên|to not remember|Don't forget your keys.|Đừng quên chìa khóa.
+understand|verb|hiểu|to know the meaning of something|I don't understand.|Tôi không hiểu.
+mean|verb|có nghĩa là|to have a meaning|What does "busy" mean?|"Busy" nghĩa là gì?

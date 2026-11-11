@@ -22,6 +22,7 @@ type ImportRow struct {
 	Word             string
 	Slug             string
 	IPA              string
+	AudioURL         string
 	PartOfSpeech     string
 	MeaningVI        string
 	MeaningEN        string
@@ -137,6 +138,7 @@ func parseImportRow(rowNumber int, raw []string, columnIndex map[string]int) Imp
 		RowNumber:        rowNumber,
 		Word:             importCell(raw, columnIndex, "word"),
 		IPA:              importCell(raw, columnIndex, "ipa"),
+		AudioURL:         importCell(raw, columnIndex, "audiourl"),
 		PartOfSpeech:     importCell(raw, columnIndex, "partofspeech"),
 		MeaningVI:        importCell(raw, columnIndex, "meaningvi"),
 		MeaningEN:        importCell(raw, columnIndex, "meaningen"),
@@ -158,6 +160,9 @@ func parseImportRow(rowNumber int, raw []string, columnIndex map[string]int) Imp
 	}
 	if row.MeaningVI == "" {
 		row.addError("meaningVi is required")
+	}
+	if len(row.AudioURL) > 500 {
+		row.addError("audioUrl must be at most 500 characters")
 	}
 	if row.TopicSlug == "" {
 		row.addError("topicSlug is required")
@@ -231,7 +236,8 @@ func parseDifficultyValue(value string) (models.DifficultyLevel, bool) {
 
 func splitImportList(value string) []string {
 	if value == "" {
-		return nil
+		// An empty list (not nil) so it is stored as JSON [] instead of null.
+		return []string{}
 	}
 
 	parts := strings.Split(value, ",")

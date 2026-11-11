@@ -9,14 +9,15 @@ type Response struct {
 }
 
 type CourseResponse struct {
-	ID           uint    `json:"id"`
-	Title        string  `json:"title"`
-	Slug         string  `json:"slug"`
-	BandMin      float64 `json:"bandMin"`
-	BandMax      float64 `json:"bandMax"`
-	TotalWords   int     `json:"totalWords"`
-	TotalLessons int     `json:"totalLessons"`
-	TotalTopics  int     `json:"totalTopics"`
+	ID           uint              `json:"id"`
+	Title        string            `json:"title"`
+	Slug         string            `json:"slug"`
+	Kind         models.CourseKind `json:"kind"`
+	BandMin      float64           `json:"bandMin"`
+	BandMax      float64           `json:"bandMax"`
+	TotalWords   int               `json:"totalWords"`
+	TotalLessons int               `json:"totalLessons"`
+	TotalTopics  int               `json:"totalTopics"`
 }
 
 type SummaryResponse struct {
@@ -30,6 +31,7 @@ type SummaryResponse struct {
 type BandLevelResponse struct {
 	ID                 uint                `json:"id"`
 	BandScore          float64             `json:"bandScore"`
+	CEFRLevel          *string             `json:"cefrLevel"`
 	Title              string              `json:"title"`
 	Description        string              `json:"description"`
 	Status             models.LessonStatus `json:"status"`
@@ -43,6 +45,7 @@ type TopicResponse struct {
 	ID                 uint                `json:"id"`
 	Title              string              `json:"title"`
 	Slug               string              `json:"slug"`
+	Track              models.TopicTrack   `json:"track"`
 	Emoji              string              `json:"emoji"`
 	Color              string              `json:"color"`
 	Status             models.LessonStatus `json:"status"`

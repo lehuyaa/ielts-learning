@@ -1645,3 +1645,35 @@ MVP may make placement protected to simplify attaching results to users.
 - Ensure question belongs to the active quiz session.
 - Ensure lesson, flashcard, quiz, profile, challenge, and notification reads are scoped to the current user.
 - Rate limit AI generation and auth endpoints.
+
+---
+
+## 23. Part 2 - Foundation English (CEFR) APIs
+
+Request/response details: `docs/foundation-spec.md` §5 (answer shapes), §6 (AI report shapes) and §9 (endpoint list). Summary:
+
+| Method | Path | Task |
+|---|---|---|
+| GET | `/api/v1/courses` | 49 |
+| PATCH | `/api/v1/me/active-course` | 49 |
+| GET | `/api/v1/roadmap?courseSlug=` | 49 |
+| GET | `/api/v1/lessons/:lessonId/activities` | 50 |
+| GET | `/api/v1/activities/:activityId` | 51 |
+| POST | `/api/v1/activities/:activityId/answers` | 51 |
+| POST | `/api/v1/activities/:activityId/complete` | 52 |
+| GET | `/api/v1/grammar-points`, `/api/v1/grammar-points/:slug` | 54, 56 |
+| GET | `/api/v1/phonemes`, `/api/v1/phonemes/:symbol` | 57 |
+| GET | `/api/v1/passages/:passageId` | 60 |
+| POST | `/api/v1/writing/submissions`, `/api/v1/writing/submissions/:id/rewrite` | 66 |
+| POST | `/api/v1/ai-conversations/sessions`, `.../:id/messages`, `.../:id/hint`, `.../:id/finish` | 69, 70 |
+| POST | `/api/v1/pronunciation/assess` | 71 |
+| GET / PATCH | `/api/v1/mistakes`, `/api/v1/mistakes/:id` | 73 |
+| POST | `/api/v1/practice/generate` | 74 |
+| GET | `/api/v1/foundation/summary?level=A1` | 76 |
+| POST | `/api/v1/admin/content/import/preview`, `/api/v1/admin/content/import` | 53 |
+| POST | `/api/v1/admin/passages/transcribe` | 64 |
+| POST | `/api/v1/admin/content/extract` | 65 |
+
+New error codes: `ACTIVITY_LOCKED`, `EXERCISE_NOT_IN_ACTIVITY`, `INVALID_ANSWER_SHAPE`, `AI_UNAVAILABLE`, `AI_LIMIT_REACHED`, `SESSION_FINISHED`, `AUDIO_INVALID`.
+
+Security: exercise answers, AI keys and Azure keys never reach the client; AI and pronunciation endpoints are rate-limited per user (spec §6.7).

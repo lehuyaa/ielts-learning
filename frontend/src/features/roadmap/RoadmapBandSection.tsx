@@ -1,4 +1,4 @@
-import { CheckCircle2, Lock } from "lucide-react";
+import { BookOpen, CheckCircle2, Lock } from "lucide-react";
 
 import { RoadmapTopicCard } from "@/features/roadmap/RoadmapTopicCard";
 import type {
@@ -14,21 +14,49 @@ type RoadmapBandSectionProps = {
 
 export function RoadmapBandSection({ band, isLast }: RoadmapBandSectionProps) {
   const isLocked = band.status === "locked";
+  const coreTopics = band.topics.filter((topic) => topic.track !== "VOCABULARY");
+  const vocabularyTopics = band.topics.filter(
+    (topic) => topic.track === "VOCABULARY",
+  );
 
   return (
     <section className="relative z-10 py-2">
       <BandNode
         band={band.band}
+        cefrLevel={band.cefrLevel ?? null}
+        title={band.title}
         status={bandStatusLabel(band.status)}
         statusVariant={band.status}
         topicCount={band.topicCount}
       />
 
-      <div className="mx-auto mb-2 mt-4 grid max-w-2xl gap-3 md:grid-cols-2">
-        {band.topics.map((topic) => (
-          <RoadmapTopicCard isLocked={isLocked} key={topic.id} topic={topic} />
-        ))}
-      </div>
+      {coreTopics.length > 0 ? (
+        <div className="mx-auto mb-2 mt-4 grid max-w-2xl gap-3 md:grid-cols-2">
+          {coreTopics.map((topic) => (
+            <RoadmapTopicCard isLocked={isLocked} key={topic.id} topic={topic} />
+          ))}
+        </div>
+      ) : null}
+
+      {vocabularyTopics.length > 0 ? (
+        <div className="mx-auto mb-2 mt-6 max-w-2xl">
+          <div className="mb-3 flex items-center justify-center gap-2 rounded-xl bg-white/80 px-3 py-2 text-center">
+            <BookOpen className="size-4 text-emerald-600" aria-hidden="true" />
+            <h3 className="text-sm font-bold text-foreground">
+              Vocabulary library
+            </h3>
+            <span className="text-xs text-muted-foreground">
+              · học tự do theo chủ đề, luôn mở
+            </span>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            {vocabularyTopics.map((topic) => (
+              // Library topics are never locked, even when the level is.
+              <RoadmapTopicCard isLocked={false} key={topic.id} topic={topic} />
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       {!isLast ? <ConnectorDots isActive={!isLocked} /> : null}
     </section>
@@ -50,15 +78,24 @@ function bandStatusLabel(status: RoadmapLessonStatus) {
 
 type BandNodeProps = {
   band: string;
+  cefrLevel: string | null;
+  title: string;
   status: string;
   statusVariant: RoadmapLessonStatus;
   topicCount: number;
 };
 
-function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
+function BandNode({
+  band,
+  cefrLevel,
+  title,
+  status,
+  statusVariant,
+  topicCount,
+}: BandNodeProps) {
   const isLocked = statusVariant === "locked";
   const isComplete = statusVariant === "completed";
-  const color = getBandColor(band);
+  const color = getBandColor(band, cefrLevel);
 
   return (
     <div className="flex justify-center">
@@ -88,7 +125,7 @@ function BandNode({ band, status, statusVariant, topicCount }: BandNodeProps) {
               isLocked ? "text-muted-foreground" : "text-foreground",
             )}
           >
-            Band {band}
+            {cefrLevel ? title : `Band ${band}`}
           </h2>
           <p className="text-xs text-muted-foreground">
             {isLocked ? "Complete previous band" : `${topicCount} topics`}
@@ -126,8 +163,19 @@ function ConnectorDots({ isActive }: { isActive: boolean }) {
   );
 }
 
-function getBandColor(band: string) {
+// CEFR levels (e.g. "A1 Foundation") are labelled by their title and use the
+// green palette; IELTS bands are coloured by score.
+function getBandColor(band: string, cefrLevel: string | null) {
   const numericBand = Number.parseFloat(band);
+
+  if (cefrLevel) {
+    return {
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      dot: "from-emerald-400 to-teal-500",
+      badge: "bg-emerald-100 text-emerald-700",
+    };
+  }
 
   if (numericBand < 6) {
     return {

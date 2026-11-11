@@ -27,9 +27,23 @@ type ScenarioResponse struct {
 	Level            models.DifficultyLevel `json:"level"`
 	Duration         string                 `json:"duration"`
 	CreatedAt        time.Time              `json:"createdAt"`
+
+	IsSystem       bool     `json:"isSystem"`
+	CEFRLevel      string   `json:"cefrLevel"`
+	Role           string   `json:"role"`
+	Task           string   `json:"task"`
+	TargetPatterns []string `json:"targetPatterns"`
+	MaxTurns       int      `json:"maxTurns"`
+	OpeningLine    string   `json:"openingLine"`
+	Group          string   `json:"group"`
+	PassageID      *uint    `json:"passageId"`
+	// Sessions and BestScore summarise the learner's finished role-plays.
+	Sessions  int  `json:"sessions"`
+	BestScore *int `json:"bestScore"`
 }
 
 func toScenarioResponse(scenario models.AIConversationScenario) ScenarioResponse {
+	brief := toScenarioBrief(scenario)
 	return ScenarioResponse{
 		ID:               scenario.ID,
 		Slug:             scenario.Slug,
@@ -39,6 +53,15 @@ func toScenarioResponse(scenario models.AIConversationScenario) ScenarioResponse
 		Level:            scenario.Level,
 		Duration:         scenario.Duration,
 		CreatedAt:        scenario.CreatedAt,
+		IsSystem:         scenario.IsSystem,
+		CEFRLevel:        brief.CEFRLevel,
+		Role:             scenario.Role,
+		Task:             scenario.Task,
+		TargetPatterns:   brief.TargetPatterns,
+		MaxTurns:         brief.MaxTurns,
+		OpeningLine:      brief.OpeningLine,
+		Group:            scenario.Group,
+		PassageID:        scenario.PassageID,
 	}
 }
 

@@ -1,0 +1,71 @@
+## a1-me-and-my-family | Me & My Family | Chào hỏi, thông tin cá nhân, gia đình và người xung quanh | users-round | indigo
+### Greetings & Introductions
+hello|interjection|xin chào|a word you say when you meet someone|Hello, my name is Huy.|Xin chào, tên tôi là Huy.
+hi|interjection|chào (thân mật)|an informal way to say hello|Hi, Lan! How are you?|Chào Lan! Bạn khỏe không?
+good morning|interjection|chào buổi sáng|a greeting before 12 o'clock|Good morning, everyone.|Chào buổi sáng mọi người.
+good afternoon|interjection|chào buổi chiều|a greeting after 12 o'clock|Good afternoon, Mr. Nam.|Chào buổi chiều, anh Nam.
+good night|interjection|chúc ngủ ngon|what you say before going to bed|Good night, Mom.|Chúc mẹ ngủ ngon.
+bye|interjection|tạm biệt|a word you say when you leave|Bye! See you tomorrow.|Tạm biệt! Hẹn gặp lại ngày mai.
+welcome|interjection|chào mừng|a word to greet a new guest|Welcome to our office.|Chào mừng đến văn phòng của chúng tôi.
+please|adverb|làm ơn, vui lòng|a polite word when you ask for something|Please sit down.|Mời bạn ngồi.
+thank|verb|cảm ơn|to say you are happy about what someone did|Thank you for your help.|Cảm ơn bạn đã giúp đỡ.
+sorry|adjective|xin lỗi|a word you say when you do something wrong|Sorry, I am late.|Xin lỗi, tôi đến muộn.
+excuse|noun|xin lỗi (để gây chú ý)|used in "excuse me" to get attention politely|Excuse me, where is the toilet?|Xin lỗi, nhà vệ sinh ở đâu?
+introduce|verb|giới thiệu|to tell people someone's name when they first meet|Let me introduce my friend.|Để tôi giới thiệu bạn tôi.
+meet|verb|gặp|to see and talk to someone|Nice to meet you.|Rất vui được gặp bạn.
+greet|verb|chào hỏi|to say hello to someone|We greet our boss every morning.|Chúng tôi chào sếp mỗi sáng.
+### Personal Information
+name|noun|tên|the word people call you|My name is Minh.|Tên tôi là Minh.
+last name|noun|họ|your family name|My last name is Nguyen.|Họ của tôi là Nguyễn.
+age|noun|tuổi|how old you are|What is your age?|Bạn bao nhiêu tuổi?
+old|adjective|già, cũ; (bao nhiêu) tuổi|having lived for many years; used to talk about age|I am thirty years old.|Tôi ba mươi tuổi.
+address|noun|địa chỉ|the place where you live|What is your address?|Địa chỉ của bạn là gì?
+phone|noun|điện thoại|a machine you use to call people|What is your phone number?|Số điện thoại của bạn là gì?
+email|noun|thư điện tử, email|a message you send on the internet|Please send me an email.|Hãy gửi email cho tôi.
+nationality|noun|quốc tịch|the country you belong to|My nationality is Vietnamese.|Quốc tịch của tôi là Việt Nam.
+hometown|noun|quê hương|the town where you were born|My hometown is Hue.|Quê tôi ở Huế.
+live|verb|sống|to have your home in a place|I live in Hanoi.|Tôi sống ở Hà Nội.
+married|adjective|đã kết hôn|having a husband or wife|My brother is married.|Anh trai tôi đã lập gia đình.
+single|adjective|độc thân|not married|She is single.|Cô ấy độc thân.
+from|preposition|từ, đến từ|used to say where someone was born or lives|I am from Vietnam.|Tôi đến từ Việt Nam.
+foreigner|noun|người nước ngoài|a person from another country|He is a foreigner.|Anh ấy là người nước ngoài.
+### Family
+family|noun|gia đình|parents, children and other relatives|I love my family.|Tôi yêu gia đình mình.
+father|noun|bố, cha|your male parent|My father is a teacher.|Bố tôi là giáo viên.
+mother|noun|mẹ|your female parent|My mother cooks very well.|Mẹ tôi nấu ăn rất ngon.
+parent|noun|bố hoặc mẹ|a father or a mother|My parents live in Da Nang.|Bố mẹ tôi sống ở Đà Nẵng.
+brother|noun|anh trai, em trai|a boy or man with the same parents as you|I have one brother.|Tôi có một anh/em trai.
+sister|noun|chị gái, em gái|a girl or woman with the same parents as you|My sister is a nurse.|Chị/em gái tôi là y tá.
+son|noun|con trai|your male child|Their son is five.|Con trai họ năm tuổi.
+daughter|noun|con gái|your female child|My daughter likes music.|Con gái tôi thích âm nhạc.
+husband|noun|chồng|the man you are married to|Her husband is an engineer.|Chồng cô ấy là kỹ sư.
+wife|noun|vợ|the woman you are married to|My wife works in a bank.|Vợ tôi làm ở ngân hàng.
+child|noun|đứa trẻ, con|a young boy or girl|They have one child.|Họ có một đứa con.
+baby|noun|em bé|a very young child|The baby is sleeping.|Em bé đang ngủ.
+kid|noun|đứa trẻ (thân mật)|a child|My kids go to school.|Các con tôi đi học.
+### Relatives & Other People
+grandfather|noun|ông|the father of your father or mother|My grandfather is eighty.|Ông tôi tám mươi tuổi.
+grandmother|noun|bà|the mother of your father or mother|My grandmother lives with us.|Bà tôi sống cùng chúng tôi.
+grandparent|noun|ông hoặc bà|a grandfather or grandmother|I visit my grandparents on Sunday.|Tôi thăm ông bà vào Chủ nhật.
+uncle|noun|chú, bác, cậu|the brother of your father or mother|My uncle has a farm.|Chú tôi có một trang trại.
+aunt|noun|cô, dì, bác gái|the sister of your father or mother|My aunt is very kind.|Dì tôi rất tốt bụng.
+cousin|noun|anh chị em họ|the child of your uncle or aunt|My cousin is my best friend.|Anh họ tôi là bạn thân nhất của tôi.
+friend|noun|bạn bè|a person you like and know well|Lan is my friend.|Lan là bạn tôi.
+boyfriend|noun|bạn trai|a man you love and go out with|Her boyfriend is tall.|Bạn trai cô ấy cao.
+girlfriend|noun|bạn gái|a woman you love and go out with|His girlfriend is a doctor.|Bạn gái anh ấy là bác sĩ.
+neighbor|noun|hàng xóm|a person who lives near you|My neighbor is friendly.|Hàng xóm của tôi thân thiện.
+guest|noun|khách|a person you invite to your home or event|We have two guests tonight.|Tối nay chúng tôi có hai vị khách.
+partner|noun|đối tác; bạn đời|a person you work with or live with|He is my business partner.|Anh ấy là đối tác kinh doanh của tôi.
+### People Around Us
+man|noun|đàn ông|an adult male person|That man is my boss.|Người đàn ông đó là sếp tôi.
+woman|noun|phụ nữ|an adult female person|The woman is a manager.|Người phụ nữ đó là quản lý.
+boy|noun|cậu bé|a male child|The boy is playing football.|Cậu bé đang chơi bóng đá.
+girl|noun|cô bé|a female child|The girl has long hair.|Cô bé có mái tóc dài.
+person|noun|người|a man, woman or child|She is a nice person.|Cô ấy là người tốt.
+people|noun|mọi người, người ta|more than one person|Many people live here.|Nhiều người sống ở đây.
+lady|noun|quý bà, quý cô|a polite word for a woman|That lady is my teacher.|Quý cô kia là cô giáo tôi.
+guy|noun|anh chàng|an informal word for a man|He is a nice guy.|Anh ấy là một anh chàng dễ mến.
+Mr.|noun|ông, anh (trước họ tên nam)|a title before a man's name|Good morning, Mr. Smith.|Chào ông Smith.
+Mrs.|noun|bà (trước tên phụ nữ đã có chồng)|a title before a married woman's name|Mrs. Hoa is our manager.|Bà Hoa là quản lý của chúng tôi.
+Miss|noun|cô (trước tên phụ nữ chưa chồng)|a title before a young or single woman's name|Miss Lan is a new teacher.|Cô Lan là giáo viên mới.
+sir|noun|thưa ông, thưa ngài|a polite word to speak to a man|Can I help you, sir?|Tôi có thể giúp gì cho ông?

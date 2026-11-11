@@ -1,0 +1,114 @@
+## a1-numbers-and-time | Numbers, Dates & Time | Số đếm, giờ giấc, ngày tháng và thời gian | clock | sky
+### Numbers 1-12
+one|number|một|the number 1|I have one sister.|Tôi có một chị gái.
+two|number|hai|the number 2|I have two cats.|Tôi có hai con mèo.
+three|number|ba|the number 3|We work three days a week.|Chúng tôi làm ba ngày một tuần.
+four|number|bốn|the number 4|There are four people in my family.|Gia đình tôi có bốn người.
+five|number|năm|the number 5|I start work at five.|Tôi bắt đầu làm lúc năm giờ.
+six|number|sáu|the number 6|My son is six.|Con trai tôi sáu tuổi.
+seven|number|bảy|the number 7|A week has seven days.|Một tuần có bảy ngày.
+eight|number|tám|the number 8|I get up at eight.|Tôi dậy lúc tám giờ.
+nine|number|chín|the number 9|The shop opens at nine.|Cửa hàng mở cửa lúc chín giờ.
+ten|number|mười|the number 10|I have ten minutes.|Tôi có mười phút.
+eleven|number|mười một|the number 11|Lunch is at eleven.|Bữa trưa lúc mười một giờ.
+twelve|number|mười hai|the number 12|A year has twelve months.|Một năm có mười hai tháng.
+### Numbers 13-100
+thirteen|number|mười ba|the number 13|She is thirteen.|Cô bé mười ba tuổi.
+fourteen|number|mười bốn|the number 14|Room fourteen is on the left.|Phòng mười bốn ở bên trái.
+fifteen|number|mười lăm|the number 15|Wait fifteen minutes, please.|Vui lòng đợi mười lăm phút.
+sixteen|number|mười sáu|the number 16|The bus number is sixteen.|Xe buýt số mười sáu.
+seventeen|number|mười bảy|the number 17|It is seventeen dollars.|Nó giá mười bảy đô la.
+eighteen|number|mười tám|the number 18|He is eighteen years old.|Cậu ấy mười tám tuổi.
+nineteen|number|mười chín|the number 19|There are nineteen students.|Có mười chín học viên.
+twenty|number|hai mươi|the number 20|I am twenty-five.|Tôi hai mươi lăm tuổi.
+thirty|number|ba mươi|the number 30|The class has thirty people.|Lớp có ba mươi người.
+forty|number|bốn mươi|the number 40|My father is forty.|Bố tôi bốn mươi tuổi.
+fifty|number|năm mươi|the number 50|It costs fifty dollars.|Nó giá năm mươi đô la.
+sixty|number|sáu mươi|the number 60|An hour has sixty minutes.|Một giờ có sáu mươi phút.
+seventy|number|bảy mươi|the number 70|My grandmother is seventy.|Bà tôi bảy mươi tuổi.
+eighty|number|tám mươi|the number 80|The room is eighty dollars a night.|Phòng giá tám mươi đô một đêm.
+ninety|number|chín mươi|the number 90|I got ninety points.|Tôi được chín mươi điểm.
+hundred|number|một trăm|the number 100|There are a hundred people here.|Có một trăm người ở đây.
+### Counting & Amounts
+number|noun|số|a word or sign like 1, 2 or 3|What is your room number?|Số phòng của bạn là gì?
+first|adjective|thứ nhất, đầu tiên|coming before all others|This is my first day at work.|Đây là ngày làm việc đầu tiên của tôi.
+second|adjective|thứ hai|coming after the first|The office is on the second floor.|Văn phòng ở tầng hai.
+half|noun|một nửa|one of two equal parts|Half of the cake is for you.|Một nửa cái bánh là của bạn.
+quarter|noun|một phần tư; 15 phút|one of four equal parts|It is a quarter past nine.|Bây giờ là chín giờ mười lăm.
+pair|noun|một đôi|two things of the same kind|I need a pair of shoes.|Tôi cần một đôi giày.
+once|adverb|một lần|one time|I go to the gym once a week.|Tôi đến phòng gym một lần mỗi tuần.
+sum|noun|tổng|the number you get when you add numbers|The sum of two and three is five.|Tổng của hai và ba là năm.
+add|verb|cộng, thêm vào|to put numbers or things together|Add some sugar to the tea.|Thêm chút đường vào trà.
+### Telling the Time
+time|noun|thời gian; giờ|what you measure in hours and minutes|What time is it?|Mấy giờ rồi?
+hour|noun|giờ, tiếng đồng hồ|sixty minutes|I work eight hours a day.|Tôi làm việc tám tiếng một ngày.
+minute|noun|phút|sixty seconds|Wait a minute, please.|Vui lòng đợi một phút.
+o'clock|adverb|giờ (đúng)|used after numbers to say the exact hour|The meeting is at ten o'clock.|Cuộc họp lúc mười giờ đúng.
+a.m.|adverb|giờ sáng|before 12 noon|I wake up at 6 a.m.|Tôi thức dậy lúc 6 giờ sáng.
+p.m.|adverb|giờ chiều, tối|after 12 noon|I finish work at 5 p.m.|Tôi tan làm lúc 5 giờ chiều.
+clock|noun|đồng hồ (treo tường)|a machine on a wall that shows the time|The clock is on the wall.|Đồng hồ ở trên tường.
+watch|noun|đồng hồ đeo tay|a small clock you wear on your arm|This is a nice watch.|Đây là một chiếc đồng hồ đẹp.
+moment|noun|khoảnh khắc, chốc lát|a very short time|Just a moment, please.|Xin đợi một chút.
+early|adverb|sớm|before the usual time|I get up early.|Tôi dậy sớm.
+late|adjective|muộn, trễ|after the usual or right time|Sorry, I am late.|Xin lỗi, tôi đến muộn.
+soon|adverb|sớm, chẳng bao lâu nữa|in a short time from now|See you soon.|Hẹn sớm gặp lại.
+### Parts of the Day
+day|noun|ngày|a period of 24 hours|Have a nice day!|Chúc một ngày tốt lành!
+morning|noun|buổi sáng|the time from early day to 12 noon|I drink coffee in the morning.|Tôi uống cà phê vào buổi sáng.
+afternoon|noun|buổi chiều|the time from 12 noon to evening|I have a meeting this afternoon.|Chiều nay tôi có cuộc họp.
+evening|noun|buổi tối|the time between afternoon and night|I study English in the evening.|Tôi học tiếng Anh vào buổi tối.
+night|noun|ban đêm|the time when it is dark and people sleep|I sleep eight hours a night.|Tôi ngủ tám tiếng mỗi đêm.
+today|noun|hôm nay|this day|Today is Monday.|Hôm nay là thứ Hai.
+tomorrow|noun|ngày mai|the day after today|See you tomorrow.|Hẹn gặp ngày mai.
+yesterday|adverb|hôm qua|the day before today|I was at home yesterday.|Hôm qua tôi ở nhà.
+tonight|adverb|tối nay|this evening or night|What are you doing tonight?|Tối nay bạn làm gì?
+now|adverb|bây giờ|at this time|I am busy now.|Bây giờ tôi đang bận.
+then|adverb|sau đó; lúc đó|after that; at that time|I eat breakfast, then I go to work.|Tôi ăn sáng, sau đó đi làm.
+later|adverb|sau, lát nữa|after now|Call me later.|Gọi cho tôi sau nhé.
+### Days of the Week
+Monday|noun|thứ Hai|the day after Sunday|I have a meeting on Monday.|Tôi có cuộc họp vào thứ Hai.
+Tuesday|noun|thứ Ba|the day after Monday|The class is on Tuesday.|Lớp học vào thứ Ba.
+Wednesday|noun|thứ Tư|the day after Tuesday|I play tennis on Wednesday.|Tôi chơi tennis vào thứ Tư.
+Thursday|noun|thứ Năm|the day after Wednesday|We have lunch together on Thursday.|Chúng tôi ăn trưa cùng nhau vào thứ Năm.
+Friday|noun|thứ Sáu|the day after Thursday|I love Friday evening.|Tôi thích tối thứ Sáu.
+Saturday|noun|thứ Bảy|the day after Friday|I clean my house on Saturday.|Tôi dọn nhà vào thứ Bảy.
+Sunday|noun|Chủ nhật|the day after Saturday|I visit my parents on Sunday.|Tôi thăm bố mẹ vào Chủ nhật.
+week|noun|tuần|seven days|I work five days a week.|Tôi làm việc năm ngày một tuần.
+weekend|noun|cuối tuần|Saturday and Sunday|What do you do at the weekend?|Bạn làm gì vào cuối tuần?
+date|noun|ngày tháng|the day, month and year|What is the date today?|Hôm nay là ngày bao nhiêu?
+calendar|noun|lịch|a page that shows the days and months|Check the calendar for the meeting.|Xem lịch để biết cuộc họp.
+### Months & Seasons
+January|noun|tháng Một|the first month of the year|My birthday is in January.|Sinh nhật tôi vào tháng Một.
+February|noun|tháng Hai|the second month of the year|Tet is often in February.|Tết thường vào tháng Hai.
+March|noun|tháng Ba|the third month of the year|The project starts in March.|Dự án bắt đầu vào tháng Ba.
+April|noun|tháng Tư|the fourth month of the year|It is hot in April.|Tháng Tư trời nóng.
+May|noun|tháng Năm|the fifth month of the year|We go on holiday in May.|Chúng tôi đi nghỉ vào tháng Năm.
+June|noun|tháng Sáu|the sixth month of the year|School ends in June.|Năm học kết thúc vào tháng Sáu.
+July|noun|tháng Bảy|the seventh month of the year|It rains a lot in July.|Tháng Bảy mưa nhiều.
+August|noun|tháng Tám|the eighth month of the year|I start my new job in August.|Tôi bắt đầu công việc mới vào tháng Tám.
+September|noun|tháng Chín|the ninth month of the year|Children go back to school in September.|Trẻ em đi học lại vào tháng Chín.
+October|noun|tháng Mười|the tenth month of the year|The weather is nice in October.|Thời tiết đẹp vào tháng Mười.
+November|noun|tháng Mười Một|the eleventh month of the year|Today is November tenth.|Hôm nay là ngày mười tháng Mười Một.
+December|noun|tháng Mười Hai|the twelfth month of the year|Christmas is in December.|Giáng sinh vào tháng Mười Hai.
+month|noun|tháng|one of the twelve parts of a year|I pay rent every month.|Tôi trả tiền nhà mỗi tháng.
+year|noun|năm|twelve months|I have worked here for two years.|Tôi đã làm ở đây hai năm.
+spring|noun|mùa xuân|the season after winter|Flowers grow in spring.|Hoa nở vào mùa xuân.
+summer|noun|mùa hè|the hottest season of the year|We go to the beach in summer.|Chúng tôi đi biển vào mùa hè.
+autumn|noun|mùa thu|the season after summer|Hanoi is beautiful in autumn.|Hà Nội đẹp vào mùa thu.
+winter|noun|mùa đông|the coldest season of the year|It is cold in winter.|Mùa đông trời lạnh.
+### How Often & When
+always|adverb|luôn luôn|every time|I always drink coffee in the morning.|Tôi luôn uống cà phê vào buổi sáng.
+usually|adverb|thường thường|most of the time|I usually take the bus.|Tôi thường đi xe buýt.
+often|adverb|thường xuyên|many times|I often work late.|Tôi thường làm việc muộn.
+never|adverb|không bao giờ|not at any time|I never smoke.|Tôi không bao giờ hút thuốc.
+every|determiner|mỗi, mọi|each one of a group|I run every morning.|Tôi chạy bộ mỗi sáng.
+again|adverb|lại, một lần nữa|one more time|Please say it again.|Vui lòng nói lại lần nữa.
+ago|adverb|cách đây, trước đây|before now|I came here two years ago.|Tôi đến đây hai năm trước.
+already|adverb|đã, rồi|before now or sooner than expected|I already had lunch.|Tôi ăn trưa rồi.
+yet|adverb|chưa (trong câu phủ định/hỏi)|until now|I haven't finished yet.|Tôi vẫn chưa xong.
+still|adverb|vẫn còn|continuing until now|He is still at the office.|Anh ấy vẫn còn ở văn phòng.
+just|adverb|vừa mới; chỉ|a very short time ago; only|I just arrived.|Tôi vừa mới đến.
+past|noun|quá khứ|the time before now|Don't think about the past.|Đừng nghĩ về quá khứ.
+future|noun|tương lai|the time after now|What are your plans for the future?|Kế hoạch tương lai của bạn là gì?
+birthday|noun|sinh nhật|the day you were born each year|Happy birthday!|Chúc mừng sinh nhật!
+holiday|noun|kỳ nghỉ, ngày lễ|a day or time when you do not work|I am on holiday next week.|Tuần sau tôi đi nghỉ.

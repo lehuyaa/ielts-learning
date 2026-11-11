@@ -22,6 +22,8 @@ import { useVocabularyDetail } from '@/features/vocabulary/hooks/useVocabularyDe
 import { mapVocabularyDetail } from '@/features/vocabulary/mapVocabulary'
 import { cn } from '@/lib/utils'
 import type { VocabularyDetailViewModel } from '@/types/vocabulary'
+import { playPronunciation } from '@/lib/pronunciation'
+import { IpaText } from "@/features/pronunciation/IpaText";
 
 const tabs = [
   'Meaning',
@@ -150,8 +152,8 @@ function WordHero({ vocabulary }: { vocabulary: VocabularyDetailViewModel }) {
           <h2 className="mt-4 text-4xl font-bold tracking-normal md:text-5xl">
             {vocabulary.word}
           </h2>
-          <p className="mt-3 font-mono text-lg font-semibold text-white/75">
-            {vocabulary.ipa}
+          <p className="mt-3 text-lg font-semibold text-white/75">
+            <IpaText ipa={vocabulary.ipa} />
             <span className="ml-4 font-sans text-white/80">
               {vocabulary.partOfSpeech}
             </span>
@@ -163,7 +165,13 @@ function WordHero({ vocabulary }: { vocabulary: VocabularyDetailViewModel }) {
         </div>
 
         <div className="grid justify-items-start gap-4 md:justify-items-end">
-          <Button className="h-10 rounded-full bg-white/20 px-5 text-sm text-white hover:bg-white/25">
+          <Button
+            className="h-10 rounded-full bg-white/20 px-5 text-sm text-white hover:bg-white/25"
+            onClick={() =>
+              playPronunciation(vocabulary.word, vocabulary.audioUrl)
+            }
+            type="button"
+          >
             <Volume2 aria-hidden="true" />
             Listen
           </Button>

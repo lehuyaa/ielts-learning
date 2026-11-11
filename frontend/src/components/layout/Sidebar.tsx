@@ -9,6 +9,13 @@ import {
   Target,
   Trophy,
   // Zap,
+  FileJson,
+  Puzzle,
+  AudioLines,
+  FileAudio,
+  FileSearch,
+  NotebookPen,
+  GraduationCap,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -24,11 +31,29 @@ const navigationItems = [
     match: (pathname: string) => pathname === "/dashboard",
   },
   {
+    label: "A1 Foundation",
+    to: "/foundation",
+    icon: GraduationCap,
+    match: (pathname: string) => pathname === "/foundation",
+  },
+  {
     label: "Roadmap",
     to: "/roadmap",
     icon: Target,
     match: (pathname: string) =>
       pathname === "/roadmap" || pathname.startsWith("/topics/"),
+  },
+  {
+    label: "Grammar",
+    to: "/grammar",
+    icon: Puzzle,
+    match: (pathname: string) => pathname.startsWith("/grammar"),
+  },
+  {
+    label: "Pronunciation",
+    to: "/pronunciation",
+    icon: AudioLines,
+    match: (pathname: string) => pathname.startsWith("/pronunciation"),
   },
   // {
   //   label: "Lessons",
@@ -53,6 +78,12 @@ const navigationItems = [
   //   match: (pathname: string) => pathname.endsWith('/quiz'),
   // },
   {
+    label: "Mistakes",
+    to: "/mistakes",
+    icon: NotebookPen,
+    match: (pathname: string) => pathname.startsWith("/mistakes") || pathname.startsWith("/practice/"),
+  },
+  {
     label: "Profile",
     to: "/profile",
     icon: Trophy,
@@ -63,7 +94,7 @@ const navigationItems = [
     to: "/ai-conversation",
     icon: MessageSquare,
     badge: "New",
-    match: (pathname: string) => pathname === "/ai-conversation",
+    match: (pathname: string) => pathname.startsWith("/ai-conversation"),
   },
 ];
 
@@ -73,6 +104,24 @@ const adminNavigationItems = [
     to: "/admin/vocabularies/import",
     icon: FileSpreadsheet,
     match: (pathname: string) => pathname === "/admin/vocabularies/import",
+  },
+  {
+    label: "Import Lessons",
+    to: "/admin/content/import",
+    icon: FileJson,
+    match: (pathname: string) => pathname === "/admin/content/import",
+  },
+  {
+    label: "Import Audio",
+    to: "/admin/passages/import",
+    icon: FileAudio,
+    match: (pathname: string) => pathname === "/admin/passages/import",
+  },
+  {
+    label: "Extract from PDF",
+    to: "/admin/content/extract",
+    icon: FileSearch,
+    match: (pathname: string) => pathname === "/admin/content/extract",
   },
 ];
 

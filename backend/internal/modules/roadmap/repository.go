@@ -19,12 +19,25 @@ func NewRepository(db *gorm.DB) Repository {
 	return Repository{db: db}
 }
 
-func (r Repository) FindPublishedCourse() (models.Course, error) {
+// FindCourse returns the published course to show: the one named by slug,
+// otherwise the user's active course, otherwise the first published course.
+func (r Repository) FindCourse(slug string, activeCourseID *uint) (models.Course, error) {
 	var course models.Course
-	err := r.db.
-		Where("is_published = ?", true).
-		Order("order_index ASC, id ASC").
-		First(&course).Error
+	query := r.db.Where("is_published = ?", true)
+
+	var err error
+	switch {
+	case slug != "":
+		err = query.Where("slug = ?", slug).First(&course).Error
+	case activeCourseID != nil:
+		err = query.Where("id = ?", *activeCourseID).First(&course).Error
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return r.FindCourse("", nil)
+		}
+	default:
+		err = query.Order("order_index ASC, id ASC").First(&course).Error
+	}
+
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return models.Course{}, ErrRoadmapNotFound

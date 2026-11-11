@@ -1719,3 +1719,503 @@ Acceptance criteria:
 - No hardcoded user ID.
 - Backend does not expose password hash.
 - Quiz correct answers are not exposed before submit.
+
+---
+
+# Part 2 - A1 Foundation (General English, CEFR)
+
+Goal of Part 2: turn the platform into a complete A1 course for an adult beginner who has lost their English foundation — vocabulary, grammar, pronunciation/IPA, listening, reading, writing and AI speaking practice. The full roadmap (A1 → B2) and the A1 syllabus (9 grammar points, 36 everyday situations) are summarised in `docs/foundation-spec.md` (Task 47).
+
+Conventions for Part 2:
+
+- Same rules as Part 1 (`AGENTS.md`): one task at a time, module pattern, React Query, axios only, validation contracts on both sides, Swagger regenerated after endpoint changes.
+- Tasks prefixed `D` are content/data tasks, not code.
+- Content is for private, personal study only.
+
+## 12. Milestone 11 - A1 Vocabulary on the Existing Roadmap (temporary)
+
+### Task 44 - Seed A1 Foundation Structure
+
+Goal:
+
+Create an "A1 Foundation" band level with vocabulary topics and lessons inside the existing published course, so A1 words can be imported with the current Excel importer.
+
+Requirements:
+
+- New seed function, idempotent (`FirstOrCreate` / `Assign`), runnable on its own: `go run ./cmd/seed -only-foundation`.
+- Band level: `bandScore = 3.0`, title `A1 Foundation`, ordered before band 5.0.
+- Topic and lesson slugs are prefixed `a1-` so they never collide with IELTS slugs.
+- Lessons hold ~12-15 words each and are ordered in study order (week 1 → week 4).
+- Running `-only-foundation` must not touch demo users/progress.
+- Update course totals after seeding.
+
+Acceptance criteria:
+
+- Roadmap shows "A1 Foundation" first with its topics and lessons.
+- Re-running the command does not create duplicates.
+
+---
+
+### Task 45 - Vocabulary Import Supports `audioUrl`
+
+Goal:
+
+Allow the Excel importer to set `vocabularies.audio_url`.
+
+Requirements:
+
+- Optional column `audioUrl` (relative path such as `/audio/vocab/apple.mp3` or absolute URL).
+- Upsert overwrites `audio_url` like other fields.
+- Update `docs/admin-guide.md`.
+
+Acceptance criteria:
+
+- Preview and commit accept the column; existing files without it still import.
+
+---
+
+### Task 46 - Play Vocabulary Audio
+
+Goal:
+
+Make the existing speaker buttons play pronunciation.
+
+Requirements:
+
+- Shared helper/hook: play `audioUrl` if present, otherwise fall back to browser `speechSynthesis` (`en-US`, rate 0.85).
+- Wire: flashcard front, lesson vocabulary preview list, vocabulary detail page.
+- Clicking the flashcard speaker must not flip the card.
+
+Acceptance criteria:
+
+- Each speaker button produces sound with or without `audioUrl`.
+
+---
+
+### Task D1-D4 - A1 Vocabulary Data
+
+- D1: A1 word list (CEFR-J Wordlist A1 entries), grouped into study topics/lessons matching Task 44.
+- D2: IPA (US) from CMU Pronouncing Dictionary; audio generated with macOS text-to-speech (`content/a1-vocabulary/generate_audio.sh`) into `frontend/public/audio/vocab/`.
+- D3: Vietnamese meaning, simple English definition, A1 example sentence + Vietnamese translation; automatic checks (missing IPA, example contains the word).
+- D4: Generate `.xlsx` in the import format, preview + import via `/admin/vocabularies/import`, study-test with flashcards.
+
+## 13. Milestone 12 - Specification
+
+### Task 47 - Foundation Spec
+
+Done: `docs/foundation-spec.md`. CEFR course structure, `LessonActivity` model, JSON schema per activity type (grammar, pronunciation, listening, reading, writing, speaking), AI prompts, scoring rules, content import pipeline.
+
+### Task 48 - Update Database/API Docs
+
+Done: `docs/database-v2.md` §14, `docs/api-v2.md` §23, Tasks 49-77 below.
+
+## 14. Milestone 13 - Learning Framework
+
+Spec: `docs/foundation-spec.md` §2-§5, §9-§10.
+
+### Task 49 - Foundation English Course and Course Switcher
+
+Status: done.
+
+Goal:
+
+Separate the CEFR course from the IELTS course and let the learner switch between them on the roadmap.
+
+Requirements:
+
+- Add `courses.kind`, `band_levels.cefr_level`, `topics.track`, `users.active_course_id` (spec §3.1).
+- Seed course `foundation-english` (`kind = CEFR`) with band level A1 (`band_score = 1.0`, `cefr_level = A1`).
+- One-off, idempotent migration in `-only-foundation`: move the Task 44 "A1 Foundation" band level to the new course, set `cefr_level = A1`, `band_score = 1.0`, and set its 14 topics to `track = VOCABULARY`. Existing IDs and progress are kept.
+- `GET /courses`, `PATCH /me/active-course`, `GET /roadmap?courseSlug=` (defaults to the active course).
+- Unlock chain computed per course and per track; VOCABULARY lessons always unlocked.
+- Roadmap UI: course switcher, CEFR label instead of band number, CORE weeks first and a "Vocabulary library" section.
+
+Acceptance criteria:
+
+- IELTS roadmap looks and behaves exactly as before.
+- Foundation roadmap shows A1 with the 14 vocabulary topics in the library, all unlocked.
+- Progress made on A1 vocabulary lessons before the migration is still there.
+
+---
+
+### Task 50 - Lesson Activities
+
+Status: done.
+
+Goal:
+
+Store a CORE lesson as an ordered list of skill activities.
+
+Requirements:
+
+- Models `lesson_activities`, `user_activity_progresses` (spec §3.2).
+- New module `lessonactivity` (`activity` already holds daily activity/streak): `GET /lessons/:lessonId/activities` returns activities with type, title, instructions, status, best score, `isLocked` (an activity is locked until the previous required one is passed).
+- Lesson locked → `ACTIVITY_LOCKED`.
+
+Acceptance criteria:
+
+- A lesson with activities returns them in `order_index` order with the user's progress.
+- No exercise data is returned by this endpoint.
+
+---
+
+### Task 51 - Exercise Engine
+
+Status: done. Answers are stored per attempt (`user_exercise_answers` unique on user + exercise + attempt, latest answer wins); retrying a passed activity never re-locks later ones (`passed_at`).
+
+Goal:
+
+Serve and grade exercises of every type in spec §5.
+
+Requirements:
+
+- Models `exercises`, `user_exercise_answers`.
+- `GET /activities/:activityId` returns exercises with `prompt` and `payload` only; `answer_json` is never serialised (`json:"-"`).
+- `POST /activities/:activityId/answers` validates the answer shape per type (`INVALID_ANSWER_SHAPE`), grades with the normalisation rules in §5.2, stores the answer, and returns `isCorrect`, `scoreRatio`, `correctAnswer`, `explanationVi`.
+- Grading lives in pure functions (one per type) with table-driven `_test.go` tests — the first tests in this repo.
+- `TRANSFORM` / `TRANSLATE_VI_EN` AI fallback is stubbed to "incorrect" until Task 55.
+
+Acceptance criteria:
+
+- Every exercise type in §5 can be answered; contractions, case and final punctuation do not cause false negatives.
+- Correct answers are not visible in any response before the item is answered.
+- `go test ./...` passes.
+
+---
+
+### Task 52 - Lesson Player
+
+Status: done. All exercise types already have a basic renderer (`src/features/exercise/renderers.tsx`); later tasks polish them. A failed retry never removes an earlier pass.
+
+Goal:
+
+One page that walks the learner through a lesson's activities.
+
+Requirements:
+
+- `POST /activities/:activityId/complete` computes the score (spec §4), updates `user_activity_progresses`, awards activity XP on first pass (`ACTIVITY_COMPLETED` XP event), and completes the lesson when all required activities passed (sets `user_lesson_progresses`, `LESSON_COMPLETED` XP once).
+- Route `/lessons/:lessonId/learn`: stepper with activity icons, resumes at the first unfinished activity, result screen per activity (score, retry, continue), lesson summary at the end.
+- Exercise renderers registered by type in `src/features/exercise/`; unknown types show a safe fallback.
+- `VOCABULARY` activity reuses the flashcard UI for its word list, then a mini quiz.
+- Lesson detail page: "Start lesson" goes to the player when the lesson has activities.
+
+Acceptance criteria:
+
+- A lesson made only of VOCABULARY + MULTIPLE_CHOICE activities can be completed end-to-end and unlocks the next lesson.
+- Reloading mid-lesson resumes at the same activity.
+
+---
+
+### Task 53 - Content Bundle Import
+
+Status: done, with Week 1 content (`content/a1/`: 9 situation lessons + review, 184 exercises). Grammar points, phonemes, passages and scenarios in a bundle are reported as "not imported yet" until Tasks 54, 57, 60 and 68. Listening/reading text lives in `activity.content` (`audioUrl`, `transcript`, `text`) until passages exist.
+
+Goal:
+
+Load lessons, activities and exercises from JSON files instead of code.
+
+Requirements:
+
+- `POST /admin/content/import/preview` and `POST /admin/content/import` (multipart field `file`, JSON, max 5 MB) with the bundle format and validation in spec §8.2. Upsert by slug, one transaction on commit.
+- `status` on activities: imported as `DRAFT` unless the bundle says `PUBLISHED`; learners only see `PUBLISHED`.
+- Admin page `/admin/content/import` (same look as the vocabulary import page): preview table grouped by lesson, errors per item, publish toggle.
+- Update `docs/admin-guide.md`.
+
+Acceptance criteria:
+
+- Importing the same bundle twice changes nothing.
+- A bundle with one invalid exercise shows the error in preview and imports the valid items on commit.
+
+---
+
+## 15. Milestone 14 - Grammar
+
+### Task 54 - Grammar Points and Theory Card
+
+Requirements:
+
+- Model `grammar_points`; bundle import supports `grammarPoints`.
+- `GET /grammar-points/:slug`.
+- Theory card component: Vietnamese summary, formula, examples with audio, "common mistakes" (wrong → right with note). Shown at the start of a GRAMMAR activity when `showTheory` is true, and on `/grammar/:slug`.
+
+Acceptance criteria:
+
+- All 9 A1 grammar points render from imported data, with audio playing for each example.
+
+Status: done. Grammar points come from `content/a1/a1-grammar.json` (import before the week bundles); activities link via `grammarPointSlug` (or `content.grammarPointSlug`). Example audio uses the static file when present, otherwise browser TTS. Theory card shows on `/grammar/:slug` and before the first attempt of a linked activity ("Xem lại lý thuyết" during exercises).
+
+---
+
+### Task 55 - Grammar Exercise UI and AI Fallback
+
+Requirements:
+
+- Renderers: `FILL_BLANK` (inline input), `REORDER` (tap tokens to build the sentence, tap again to remove), `ERROR_CORRECTION` (tap the wrong word, then type the fix), `TRANSFORM`, `TRANSLATE_VI_EN`.
+- Shared AI client `internal/shared/ai` (extract from `aiconversation/openai_client.go`, add JSON-schema responses).
+- AI short-answer grading (spec §6.4) for `TRANSFORM` / `TRANSLATE_VI_EN` when matching fails; daily limit (§6.7).
+
+Acceptance criteria:
+
+- "I don't like coffee" and "I do not like coffee." are both accepted without calling AI.
+- A valid alternative translation not in `reference` is accepted via AI.
+
+Status: done. Shared client `internal/shared/ai` (strict JSON schema, one retry on 5xx, `OPENAI_BASE_URL` optional). AI grading lives in `lessonactivity/ai_grading.go` and is used by the lesson player and grammar practice: verdicts are cached per exercise + normalised answer (`ai_short_answer_gradings`), calls are counted per user per day (`ai_usage_dailies`, `AI_SHORT_ANSWER_DAILY_LIMIT`, default 300). When the limit is reached or AI is not configured the answer keeps the matching result and the response carries `aiStatus` (`LIMIT_REACHED` / `UNAVAILABLE`) instead of failing.
+
+---
+
+### Task 56 - Grammar Mastery
+
+Requirements:
+
+- Model `user_grammar_progresses`; update after every answer tagged `grammar:<slug>` (rolling last 20).
+- `GET /grammar-points` with mastery; `/grammar` page sorted by weakest, "Practice" opens a review activity built from that point's exercises the learner got wrong first.
+
+Acceptance criteria:
+
+- Mastery changes after answering grammar exercises and is visible on `/grammar`.
+
+Status: done. Mastery = average score of the last 20 answers tagged `grammar:<slug>` (lesson activities and practice). Practice: `GET /grammar-points/:slug/practice` (up to 10 exercises from lessons the learner has started: wrong first, then new, then correct) and `POST .../practice/answers` (stored as attempt 0, no XP).
+
+---
+
+### Task D5 - A1 Grammar Content
+
+- 9 grammar points (G1-G9, spec §2.3) from *Essential Grammar in Use*: Vietnamese summary, formula, 5 examples, 4-6 common mistakes.
+- ~40 exercises per point across the 5 types, split over the lessons of that week. Reviewed before publishing.
+
+Status: done. All 9 theory cards (`content/a1/build_grammar.py`) with exercises in the week builders: G1/G2 (Week 1), G3/G4/G5 (Week 2), G6/G7 (Week 3), G8/G9 (Week 4).
+
+## 16. Milestone 15 - Pronunciation and IPA
+
+### Task 57 - IPA Chart and Sound Cards
+
+Requirements:
+
+- Model `phonemes`; bundle import supports `phonemes`.
+- `GET /phonemes`, `GET /phonemes/:symbol`.
+- `/pronunciation`: chart grouped vowels / diphthongs / consonants (voiced vs voiceless); tap to hear.
+- `/pronunciation/:symbol`: mouth description (Vietnamese), example words with audio, minimal pairs, common mistakes.
+
+Status: done. Module `backend/internal/modules/phoneme` (`GET /phonemes` adds `practiceTopics`; `GET /phonemes/:symbol` adds the lessons that teach the sound and chart neighbours). Bundle field `phonemes` (upsert by symbol). Activity detail returns `phonemes` for `content.phonemes`, shown as sound cards in the player. `/pronunciation/:symbol` also has a minimal-pair listening drill (practice only). `user_phoneme_progresses` exists for Task 71.
+
+
+### Task 58 - Pronunciation Exercises
+
+Requirements:
+
+- Renderers: `MINIMAL_PAIR`, `IPA_TO_WORD`, `WORD_TO_IPA`, `ENDING_SOUND`, `WORD_STRESS`, `SPEAK` (self-check mode until Task 71).
+- Minimal pairs and ending-sound items can be generated from CMU data by a script.
+
+Status: done. Renderers existed since Task 51 (IPA options now monospace). Generation script: `content/a1/build_sounds.py` (CMU → Oxford NAmE IPA, every minimal pair verified to differ in exactly its two sounds).
+
+
+### Task 59 - Clickable IPA
+
+Requirements:
+
+- Component that splits an IPA string into phonemes (longest match against the phoneme list) and links each to its sound card; used on flashcards, vocabulary detail and lesson word lists.
+
+Status: done. `src/lib/ipa.ts` (`splitIpa`, aliases for British/dictionary variants; non-IPA text stays plain) and `features/pronunciation/IpaText.tsx`, used on flashcards, vocabulary detail, lesson word lists and lesson vocabulary cards.
+
+
+### Task D6 - Sound Content
+
+- 40 sound cards (spec §3.3 phoneme set) with Vietnamese mouth notes and typical mistakes.
+- ~150 minimal pairs with audio; ending -s / -ed and 2-syllable stress sets.
+
+Status: done. `content/a1/a1-sounds.json`: 40 sound cards, 178 minimal pairs, topic "Sound Lab" (VOCABULARY track, always open) with 11 lessons / 31 activities / 284 exercises (minimal pairs + IPA reading, ending -s, ending -ed, 2-syllable stress). Audio: `audio_manifest_sounds.tsv` (621 lines) via `generate_lesson_audio.sh`.
+
+## 17. Milestone 16 - Listening and Reading
+
+### Task 60 - Passages
+
+Requirements:
+
+- Model `passages`; bundle import supports `passages`; activities reference them via `passageSlug`.
+- `GET /passages/:passageId`.
+
+Status: done. `passages` model; bundle `passages` (upsert by slug), activities link with `passageSlug` (or `content.passageSlug`), exercise payloads may use `passageSlug` (resolved to `passageId` on import). Activity detail returns `passage`. Module `backend/internal/modules/passage`: `GET /passages/:passageId`. Segments carry either their own `audioUrl` (generated dialogues, one file per line) or `start`/`end` inside the passage audio (Whisper imports).
+
+### Task 61 - Audio Player
+
+Requirements:
+
+- Play/pause, speed 0.75 / 1.0, previous/next sentence and "replay sentence" using `segments_json`, transcript mode `HIDDEN` / `BLURRED` / `AFTER_ANSWER`, highlight of the current sentence.
+- Works on desktop Chrome and mobile Safari.
+
+Status: done. `src/features/audio/AudioPlayer.tsx` + `segmentPlayer.ts` (one reused audio element; browser voice when a file is missing). Modes HIDDEN / BLURRED / AFTER_ANSWER; the transcript is always shown once the activity is passed.
+
+### Task 62 - Listening Exercises
+
+Requirements:
+
+- Renderers: `DICTATION` (one segment at a time, word-level diff feedback), `LISTEN_GAP_FILL`, `LISTEN_PICK_IMAGE`, `LISTEN_NUMBERS`, `TRUE_FALSE`.
+
+Status: done. New `DictationExercise` (normal/slow play, own file or passage segment, word-level diff via `wordDiff.ts`); all audio exercises got a "Nghe chậm" (0.75x) button. LISTEN_GAP_FILL / PICK_IMAGE / NUMBERS / TRUE_FALSE renderers existed since Task 51.
+
+### Task 63 - Reading with Tap-to-Translate
+
+Requirements:
+
+- Reading view with tokenised text; tapping a word shows IPA, Vietnamese meaning, audio (lookup by `glossary_json`, then vocabulary by word) and "Add to flashcards".
+- "Add to flashcards" creates `user_vocabulary_progresses` for that word (status NEW) so it appears in reviews.
+
+Status: done. `TappableText` + `WordSheet` (also used in listening transcripts). `GET /words/lookup?word=&passageId=` checks the passage glossary (`{word, vocabularySlug?, meaningVi?, ipa?}`) then the vocabulary by base forms (plural, -ed, -ing; A1 words first). `POST /words/:vocabularyId/flashcard` adds a NEW progress row due now (no-op if present).
+
+### Task 64 - Audio Import (Whisper)
+
+Requirements:
+
+- Admin uploads an mp3 (+ optional title/source) → backend calls Whisper with segment timestamps → returns a passage draft (body, segments) to edit and save.
+
+Status: done. `POST /admin/passages/transcribe` (multipart, max 25MB; file kept under `MEDIA_DIR`, served at `/media`) → draft; `POST /admin/passages` saves it. Page `/admin/passages/import` (sidebar "Import Audio"): edit sentences/speakers, preview in the player, save or download JSON. Errors `AI_UNAVAILABLE`, `AUDIO_INVALID`.
+
+### Task 65 - PDF / Image Import
+
+Requirements:
+
+- Admin uploads up to 10 page images or a PDF → vision model extracts theory/exercises into a bundle draft (spec §8.2) → reviewed in the content import preview.
+
+Status: done. `POST /admin/content/extract` (≤10 images or one PDF) → vision model with a strict JSON schema → bundle draft (activities DRAFT unless `publish=true`; warns when a grammar point would be replaced). Page `/admin/content/extract` (sidebar "Extract from PDF") hands the draft to Import Lessons, which previews it automatically.
+
+### Task D7 / D8 - Listening and Reading Content
+
+- D7: 36 model dialogues (one per situation, from *English File Elementary* audio or generated + TTS) and ~100 dictation sentences.
+- D8: ~30 A1 reading texts (messages, notices, menus, schedules, profiles), each with 4-6 exercises.
+
+Status: done. 36 dialogues as passages (one TTS file per line, a voice per speaker) with dictation / number / phone items, and 36 reading texts (notices, profiles, emails, messages, menus, timetables, articles) with 4 questions each, in `content/a1/build_week1.py` … `build_week4.py` (shared helpers: `lesson_kit.py`).
+
+## 18. Milestone 17 - Writing
+
+### Task 66 - Writing Activity
+
+Requirements:
+
+- Model `writing_submissions`; `POST /writing/submissions`, `POST /writing/submissions/:id/rewrite` (spec §6.3).
+- Writing UI: prompt (Vietnamese), sentence frame chips, sentence counter, submit → score + diff view (red wrong, green fix, Vietnamese explanation on tap) → rewrite box → completion.
+- Mistakes upserted into `learner_mistakes` (table created here if Task 73 not done yet).
+
+Acceptance criteria:
+
+- A text with one tense mistake is scored, the mistake is highlighted at the right position, and the activity completes after a correct rewrite.
+
+Status: done. `writing_submissions` + `learner_mistakes` (created here). `POST /writing/submissions` grades with a strict JSON schema (overall = 10 × average of 4 scores; mistake offsets computed by the backend as UTF-16 indexes), `POST /writing/submissions/:id/rewrite` completes when no mistakes remain (no AI call when the rewrite equals the corrected text). Completing a WRITING activity uses the latest completed submission's score. Mistakes feed grammar mastery. Daily limit `AI_WRITING_DAILY_LIMIT` (30). UI: `src/features/writing/`.
+
+### Task D9 - Writing Prompts
+
+- ~20 prompts (spec §4.1 format) spread over the 4 weeks, with model answers.
+
+Status: done. 20 prompts with frames and model answers in `content/a1/writing_prompts.py`, attached as optional WRITING activities (5 per week).
+
+## 19. Milestone 18 - AI Speaking Upgrade
+
+### Task 67 - Speaking Quick Wins
+
+Requirements:
+
+- Level-aware system prompt (spec §6.1) built in the service from scenario fields; user `SituationContext` appended.
+- Beginner scenarios: browser TTS rate 0.85.
+- Send at most the last 20 messages to the model.
+
+Status: done. `aiconversation/prompt.go` builds the role-play prompt from role/situation/task/target patterns with the §6.1 rules for the scenario level (custom scenarios: BEGINNER→A2, INTERMEDIATE→B1, ADVANCED→B2) and appends `SituationContext`; only the last 20 messages are sent. The session page speaks AI replies at rate 0.85 for A1/A2, can blur AI text ("Hiện chữ"), and pattern chips insert into the input. Chat calls share the `AI_CHAT_DAILY_LIMIT` quota (200). Shared helpers `aiusage.Take` and `mistakes.Upsert` were extracted for this.
+
+### Task 68 - System Scenarios
+
+Requirements:
+
+- Scenario columns in spec §3.1; system scenarios (`is_system`, no `user_id`) imported via the bundle and listed for everyone; user scenarios unchanged.
+
+Status: done. Scenario columns added (`is_system`, nullable `user_id`, `cefr_level`, `role`, `task`, `target_patterns`, `max_turns`, `opening_line`, `passage_id`, `group_label`, `order_index`). Bundle field `scenarios` (upsert by slug) and `activity.scenarioSlug`. `GET /ai-conversations/scenarios` lists system + own scenarios with `sessions`/`bestScore`; `/ai-conversation` groups them by week and every card starts a session. Also fixed: `SaveActivity` kept the GORM default `is_required=1` for new optional activities.
+
+### Task 69 - Speaking Sessions and Report
+
+Requirements:
+
+- Model `ai_conversation_sessions`; endpoints in spec §9; each session has its own messages (`session_id`).
+- Finish → feedback report (spec §6.2), XP, mistakes → `learner_mistakes`; SPEAKING activity passes per spec §4.
+- Report screen: scores, mistakes with corrections, good phrases, new words (add to flashcards), "Try again".
+
+Status: done. `ai_conversation_sessions` + `ai_conversation_messages.session_id`. Endpoints: `POST /ai-conversations/sessions` (resume open session unless `fresh`), `GET /sessions/:id`, `POST /sessions/:id/messages` (turn limit = `max_turns`), `POST /sessions/:id/finish` (strict JSON report: 4 scores, overall = 10 × average, mistakes → `learner_mistakes` source SPEAKING + grammar mastery, 10 XP when the task is done). A SPEAKING activity with a scenario completes with the latest finished session and passes only when `taskCompleted`. UI: `/ai-conversation/sessions/:id` (`pages/SpeakingSessionPage.tsx`, `features/speaking/`), report with add-to-flashcard for new words, "Nói lại".
+
+### Task 70 - Hints
+
+Requirements:
+
+- `POST /ai-conversations/sessions/:id/hint` (spec §6.5), hint button in the session page, disabled in checkpoints.
+
+Status: done. `POST /ai-conversations/sessions/:id/hint` returns `hintVi` + `sayThis` from the last 6 messages and counts `hint_count`; 403 `HINTS_NOT_ALLOWED` for CHECKPOINT activities or `content.hintsAllowed: false`. The hint card can play the sentence and put it in the input ("Dùng câu này").
+
+### Task D10 - Situation Scenarios
+
+- 36 scenarios: role, task, target patterns, max turns; model dialogue shared with D7.
+
+Status: done. `content/a1/build_scenarios.py` → `a1-scenarios.json`: 36 scenarios (9 per week, one per lesson situation) with role, task, target patterns, max turns and opening line; Week 1 scenarios point to the lesson dialogues (`passageSlug`). Week 1 lessons have an optional "Nói chuyện với AI" activity (slug `speaking`); the old read-aloud activity is now slug `read-aloud`. Weeks 2-4 link theirs when those lessons are built.
+
+## 20. Milestone 19 - Pronunciation Scoring
+
+### Task 71 - Pronunciation Assessment
+
+Requirements:
+
+- `POST /pronunciation/assess` (multipart `audio`, `referenceText`, optional `exerciseId`), Azure per spec §7, config `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`; model `pronunciation_attempts`.
+- Recorder component (MediaRecorder, max 15 s, waveform/level indicator).
+- `SPEAK` exercises graded by accuracy.
+
+Status: done. Module `backend/internal/modules/pronunciation`: `GET /pronunciation/status`, `POST /pronunciation/assess` (multipart `audio` 16 kHz mono WAV ≤ 15 s, `referenceText`, optional `exerciseId`, `source`). Azure REST short-audio API (en-US, scripted, phoneme granularity, IPA; Azure phonemes mapped to our Oxford NAmE symbols, SAPI accepted too). Config `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` (`AZURE_SPEECH_ENDPOINT` for tests), `PRONUNCIATION_DAILY_LIMIT` (300). `pronunciation_attempts` stores scores + words; audio is discarded. The browser records with MediaRecorder (level meter, 15 s cap) and converts to WAV before upload (`features/pronunciation/`). SPEAK answers are `{attemptId}`: correct at accuracy ≥ `answer.minAccuracy` (default 70), half credit within 15 points; self-check stays as the fallback when Azure is off or there is no microphone.
+
+Update: OpenAI fallback (no Azure account). `PRONUNCIATION_PROVIDER` = auto | azure | openai (`provider.go`). `OpenAIScorer` (`openai.go`) transcribes with Whisper and aligns words (word-level edit distance; numbers and times spelled out): heard 100, other word ≤ 60 by spelling, missing 0; accuracy = mean, completeness = words said, fluency = speaking rate on 4+ words. No phonemes, so phoneme progress is Azure-only. Status adds `provider`, `phonemes`; the UI shows "Chấm theo từ" with the transcript.
+
+### Task 72 - Shadowing and Phoneme Progress
+
+Requirements:
+
+- Shadowing mode on passages: play a segment → record → coloured result per word/phoneme.
+- `user_phoneme_progresses`; weakest sounds shown on `/pronunciation` with "Practice" links.
+
+Status: done. Every scored phoneme updates `user_phoneme_progresses` (running average weighted to ~the last 30 occurrences); a sound below 60 after ≥ 5 occurrences is logged as a `learner_mistakes` row `sound:<symbol>` (source PRONUNCIATION). Shadowing: "Nói theo" in the passage player records the current line and colours each word (tap a word for its sounds). Sound cards have a "Luyện nói" list for the example words; `/pronunciation` shows the weakest sounds with "Luyện" links.
+
+## 21. Milestone 20 - Mistake Log and Review
+
+### Task 73 - Mistake Log
+
+Requirements:
+
+- Model `learner_mistakes` (if not created in Task 66); written by exercises, writing, speaking, pronunciation.
+- `/mistakes` page grouped by skill tag with counts; "Add to review" creates a flashcard-style card (wrong → right) in the SRS queue; repeated correct reviews mark the mistake `FIXED`.
+
+Status: done. Wrong lesson / grammar-practice / AI-practice answers are now logged too (`mistakes.DescribeExercise` turns each exercise type into a wrong → right pair; AI feedback wins when present). Module `backend/internal/modules/mistakes`: `GET /mistakes?status=open|fixed|all` (grouped by skill tag with Vietnamese labels, counts, `practiceable`), `PATCH /mistakes/:id` (`REVIEWING` = add to review, `FIXED`, `OPEN`), `GET /mistakes/review` (due cards), `POST /mistakes/:id/review` (AGAIN/HARD/GOOD/EASY; 3 GOOD/EASY in a row → FIXED). Review fields on `learner_mistakes`: `review_streak`, `interval_days`, `next_review_at`, `fixed_at`; a repeated mistake reopens (or, while reviewing, restarts its streak). UI: `/mistakes` (sidebar "Mistakes") and `/mistakes/review` (type the correction, reveal, rate; sound mistakes show the word to say again and link to the sound card). The queue is separate from the vocabulary flashcards.
+
+### Task 74 - Personalised Practice
+
+Requirements:
+
+- `POST /practice/generate { skillTag }` → AI generates 10 exercises (spec §6.6, validated) for that weakness; cached per user per skill tag per day; played in the Lesson Player as a temporary activity.
+
+Status: done. Module `backend/internal/modules/practice`: `POST /practice/generate { skillTag }`, `GET /practice/sets/:id`, `POST /practice/sets/:id/answers`; table `practice_sets` (unique user + skill tag + day, items and results as JSON). Grammar / vocabulary tags: one AI call (strict schema) for 12 items of MULTIPLE_CHOICE / FILL_BLANK / REORDER / ERROR_CORRECTION using the grammar card and the learner's own mistakes; each item must pass the importer validation (`contentimport.ValidateExercise`), the A1 ≤ 12-word limit and type checks (shuffled tokens = answer words, one wrong token…), 10 kept, at least 5 required. The second AI validation call of spec §6.6 is replaced by these deterministic checks. Sound / stress / dictation / number tags reuse published lesson exercises (they carry audio), last answered wrong first; reading / listening comprehension and speaking are practised in lessons. Quota `AI_PRACTICE_DAILY_LIMIT` (10). Answers update grammar mastery and the mistake log. UI: `/practice/:setId` (played like an activity), started from "Luyện 10 câu" on `/mistakes` and "Bài luyện AI" on a grammar card. MULTIPLE_CHOICE now shows `payload.sentence`.
+
+## 22. Milestone 21 - Progress and Completion
+
+### Task 75 - Weekly Checkpoints
+
+Requirements:
+
+- `CHECKPOINT` activity (spec §4): random items from the week's exercises + one speaking session without hints; pass to unlock the next week's first lesson.
+
+Status: done. A CHECKPOINT activity with `content.itemCount` draws that many items per attempt from its own exercises (same draw for the same user + attempt, spread round-robin over skills: grammar, listening, sounds, vocabulary). The week builder copies the week's self-contained GRAMMAR / LISTENING / READING items into the checkpoint pool (Week 1: 86 items, 15 per attempt); reading / listening comprehension questions are left out because they need their passage. With `scenarioSlug` the checkpoint ends with a role-play (hints are refused); it passes only when the exercise score ≥ pass_score and the latest finished session completed the task with 0 hints. 4 checkpoint scenarios `a1-w{n}-checkpoint` added (40 in `a1-scenarios.json`). Week gate (`modules/weekgate`): a CORE topic's first lesson stays locked until the previous topic of the same course and track has its last lesson completed; completing that lesson unlocks the next week's first lesson. Applied in the lesson player, topic page and lesson detail (the roadmap already chained lessons across topics).
+
+### Task 76 - Foundation Dashboard
+
+Requirements:
+
+- `GET /foundation/summary?level=A1`: per-skill progress (vocabulary words mastered, grammar mastery average, sounds accuracy, listening/reading/writing/speaking average scores), lessons done, streak.
+- `/foundation` page with the "A1 reached" checklist from spec §1.
+
+Status: done. Module `backend/internal/modules/foundation`: `GET /foundation/summary?level=A1` returns situation lessons done (target 36) and weekly checkpoints passed, streak, the next lesson, 7 skills (vocabulary: words mastered / words of the level's lessons; grammar: average mastery of practised points; sounds: average accuracy; listening / reading / writing / speaking: average best score and activities passed) and, for A1, the checklist of spec §1 with measurable rules: (1) role-plays introducing-yourself, describing-your-job, family, daily-schedule completed; (2) 36 situation lessons completed; (3) 36 of 40 sounds at accuracy ≥ 70 (≥ 3 attempts); (4) every listening and reading activity passed with an average ≥ 70; (5) 3 completed writings of 5+ sentences whose first report had no tense mistake (to be, present simple / continuous, past simple, future). Page `/foundation` (sidebar "A1 Foundation").
+
+### Task 77 - A1 QA and Study Run
+
+Checklist:
+
+- Every A1 lesson can be completed end-to-end; each exercise type renders and grades correctly.
+- AI failures show a friendly retry message, never a blank page.
+- Full study run of A1 by the learner; content fixes logged and applied.

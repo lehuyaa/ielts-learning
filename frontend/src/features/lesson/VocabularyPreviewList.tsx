@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { LessonVocabularyItem } from "@/types/lesson";
+import { playPronunciation } from "@/lib/pronunciation";
+import { IpaText } from "@/features/pronunciation/IpaText";
 
 type VocabularyPreviewListProps = {
   vocabulary: LessonVocabularyItem[];
@@ -64,8 +66,8 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
               <h2 className="text-xl font-bold tracking-normal text-[#10111f]">
                 {item.word}
               </h2>
-              <span className="font-mono text-sm font-semibold text-[#85889c]">
-                {item.ipa}
+              <span className="text-sm font-semibold text-[#85889c]">
+                <IpaText ipa={item.ipa} />
               </span>
               <span className="text-sm font-semibold text-[#85889c]">
                 {item.partOfSpeech}
@@ -84,7 +86,9 @@ function VocabularyCard({ item, expanded, onToggle }: VocabularyCardProps) {
           </span>
           <Button
             aria-label={`Listen to ${item.word}`}
+            onClick={() => playPronunciation(item.word, item.audioUrl)}
             size="icon"
+            type="button"
             variant="ghost"
           >
             <Volume2 className="size-5 text-[#6d7088]" aria-hidden="true" />

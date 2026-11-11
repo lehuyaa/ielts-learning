@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 
 import { APIError } from '@/api/api'
 import { CardSkeleton } from '@/components/state/CardSkeleton'
@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/state/EmptyState'
 import { ErrorState } from '@/components/state/ErrorState'
 import { ListSkeleton } from '@/components/state/ListSkeleton'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useLessonActivities } from '@/features/activity/hooks/useLessonActivities'
 import { LessonHeader } from '@/features/lesson/LessonHeader'
 import { LessonSidebar } from '@/features/lesson/LessonSidebar'
 import { VocabularyPreviewList } from '@/features/lesson/VocabularyPreviewList'
@@ -39,6 +40,8 @@ export function LessonDetailPage() {
   const { lessonId } = useParams()
   const navigate = useNavigate()
   const lessonQuery = useLessonDetail(lessonId)
+  // Skill lessons (made of activities) are studied in the Lesson Player.
+  const activitiesQuery = useLessonActivities(lessonId)
   const lesson = lessonQuery.data
     ? mapLessonDetailToViewModel(lessonQuery.data)
     : loadingLesson
@@ -74,6 +77,11 @@ export function LessonDetailPage() {
     } catch {
       // React Query exposes the mutation error for the page-level message.
     }
+  }
+
+
+  if (lessonId && (activitiesQuery.data?.activities.length ?? 0) > 0) {
+    return <Navigate replace to={`/lessons/${lessonId}/learn`} />
   }
 
   return (
@@ -199,6 +207,7 @@ function mapLessonDetailToViewModel(
       id: String(vocabulary.id),
       word: vocabulary.word,
       ipa: vocabulary.ipa,
+      audioUrl: vocabulary.audioUrl,
       partOfSpeech: vocabulary.partOfSpeech,
       shortDefinition:
         vocabulary.shortDefinition ||
