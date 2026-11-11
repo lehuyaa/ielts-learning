@@ -261,6 +261,103 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/content/extract": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload up to 10 page images or one PDF (multipart \"files\"). A vision model extracts grammar explanations and exercises into a content bundle draft (activities are DRAFT unless publish=true) to review in the import preview. Nothing is written to the database.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Extract lesson content from pages",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Page images or one PDF",
+                        "name": "files",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Default foundation-english",
+                        "name": "courseSlug",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Default A1",
+                        "name": "cefrLevel",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Topic slug for the extracted lesson",
+                        "name": "topicSlug",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Topic title",
+                        "name": "topicTitle",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Extra instructions for the AI",
+                        "name": "notes",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Publish activities right away",
+                        "name": "publish",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/contentimport.ExtractResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/content/import": {
             "post": {
                 "security": [
@@ -400,6 +497,148 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/passages": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Validate a passage (e.g. an edited transcription draft) and create or update it by slug.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Save a passage",
+                "parameters": [
+                    {
+                        "description": "Passage",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contentimport.PassageInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.PassageCard"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/passages/transcribe": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Upload an audio file (multipart \"file\", max 25MB, mp3/m4a/wav/webm/ogg). It is stored under /media/passages and sent to Whisper; the reply is a passage draft (text + sentence segments with times) to edit and save. Nothing is written to the database.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Transcribe a recording into a passage draft",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Audio file",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Passage title",
+                        "name": "title",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Passage slug (default: from the title)",
+                        "name": "slug",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "DIALOGUE, MONOLOGUE, ...",
+                        "name": "genre",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Book / unit / page",
+                        "name": "source",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/contentimport.PassageDraft"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -825,6 +1064,319 @@ const docTemplate = `{
                 }
             }
         },
+        "/ai-conversations/sessions": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Start a session for a scenario (system or own). With activityId it counts for that lesson's SPEAKING activity. An unfinished session of the same scenario is resumed unless fresh=true, which abandons it.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AI Conversation"
+                ],
+                "summary": "Start (or resume) a role-play session",
+                "parameters": [
+                    {
+                        "description": "Scenario slug and optional activity",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/aiconversation.StartSessionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/aiconversation.SessionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ai-conversations/sessions/{sessionId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Session with its scenario brief, messages and (when finished) the feedback report.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AI Conversation"
+                ],
+                "summary": "Get a session",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Session ID",
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/aiconversation.SessionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ai-conversations/sessions/{sessionId}/finish": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "The AI writes the feedback report (spec §6.2): 4 scores, overall, mistakes (logged), good phrases, new words, tip. XP when the task was completed.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AI Conversation"
+                ],
+                "summary": "Finish a session",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Session ID",
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/aiconversation.SessionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ai-conversations/sessions/{sessionId}/hint": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "A Vietnamese hint and one English sentence to say next (spec §6.5). Not allowed in checkpoints.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AI Conversation"
+                ],
+                "summary": "Get a hint",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Session ID",
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/aiconversation.HintResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/ai-conversations/sessions/{sessionId}/messages": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "The AI replies in role with the level-aware prompt (spec §6.1), seeing the last 20 messages. Rejected once every turn is used (finish the session then).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "AI Conversation"
+                ],
+                "summary": "Send one turn in a session",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Session ID",
+                        "name": "sessionId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Learner message",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/aiconversation.SessionMessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/aiconversation.SessionTurnResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "description": "Authenticate a user with email and password and return an access token.",
@@ -1183,6 +1735,57 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/foundation/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Progress through a foundation level: per-skill progress (vocabulary words mastered, grammar mastery, sound accuracy, listening/reading/writing/speaking scores), situation lessons and weekly checkpoints done, streak, the next lesson and — for A1 — the \"A1 reached\" checklist (spec §1).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Foundation"
+                ],
+                "summary": "Foundation level summary",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "CEFR level (default A1)",
+                        "name": "level",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/foundation.SummaryResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
                         }
@@ -2228,6 +2831,248 @@ const docTemplate = `{
                 }
             }
         },
+        "/mistakes": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "The learner's mistakes from exercises, writing, speaking and pronunciation, grouped by skill tag (most frequent first), with counts and how many review cards are due.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mistakes"
+                ],
+                "summary": "Mistake log",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "open (default: OPEN + REVIEWING) | fixed | all",
+                        "name": "status",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/mistakes.ListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/mistakes/review": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mistakes in the review queue (status REVIEWING) that are due now, oldest first.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mistakes"
+                ],
+                "summary": "Due mistake cards",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Max cards (default 20, max 50)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/mistakes.ReviewQueueResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/mistakes/{mistakeId}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "REVIEWING adds the mistake to the review queue (a wrong → right card), FIXED marks it learnt, OPEN takes it out of the queue.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mistakes"
+                ],
+                "summary": "Change a mistake's status",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mistake ID",
+                        "name": "mistakeId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "New status",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mistakes.UpdateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/mistakes.Item"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/mistakes/{mistakeId}/review": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Rate a due card (AGAIN, HARD, GOOD, EASY). Three GOOD/EASY reviews in a row mark the mistake FIXED.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Mistakes"
+                ],
+                "summary": "Review a mistake card",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mistake ID",
+                        "name": "mistakeId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Rating",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mistakes.ReviewRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/mistakes.ReviewResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/notifications": {
             "get": {
                 "security": [
@@ -2361,6 +3206,64 @@ const docTemplate = `{
                 }
             }
         },
+        "/passages/{passageId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Return a listening/reading passage: text, audio, sentence segments and glossary.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passages"
+                ],
+                "summary": "Get passage",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Passage ID",
+                        "name": "passageId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.PassageCard"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/phonemes": {
             "get": {
                 "security": [
@@ -2469,6 +3372,337 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/practice/generate": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Returns today's practice set for a skill tag (cached per user, tag and day). Grammar / vocabulary tags: 10 AI-generated exercises, each validated like an import (answer key grades as correct, A1 sentences ≤ 12 words). Sound, stress, dictation and number tags: 10 lesson exercises, last answered wrong first. Reading / listening comprehension and speaking are practised in lessons (400).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practice"
+                ],
+                "summary": "Practice a weakness",
+                "parameters": [
+                    {
+                        "description": "Skill tag, e.g. grammar:g1-to-be",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/practice.GenerateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/practice.SetResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/practice/sets/{setId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Exercises (numbered 1..n) and the answers given so far.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practice"
+                ],
+                "summary": "Get a practice set",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Practice set ID",
+                        "name": "setId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/practice.SetResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/practice/sets/{setId}/answers": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Grades one exercise of the set (exerciseId = its number). Updates grammar mastery and the mistake log; each exercise is answered once.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Practice"
+                ],
+                "summary": "Answer a practice exercise",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Practice set ID",
+                        "name": "setId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Exercise number and answer",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/practice.AnswerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/practice.AnswerResult"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pronunciation/assess": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Scores a 16 kHz mono WAV (max 15 s) against referenceText with Azure pronunciation assessment: accuracy, fluency, completeness and per-word / per-phoneme scores (IPA). With exerciseId (a SPEAK exercise) the exercise sentence is used and passed is returned; submit {\"attemptId\"} as the exercise answer. Updates the learner's sound progress. The audio is not stored.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pronunciation"
+                ],
+                "summary": "Score a recording",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "WAV recording (16 kHz, mono, 16-bit)",
+                        "name": "audio",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Text the learner read (required without exerciseId)",
+                        "name": "referenceText",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "SPEAK exercise ID",
+                        "name": "exerciseId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "WORD | SHADOWING | READ_ALOUD | EXERCISE",
+                        "name": "source",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/pronunciation.AssessResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/pronunciation/status": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Whether Azure pronunciation scoring is configured, the longest recording and the daily limit.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Pronunciation"
+                ],
+                "summary": "Pronunciation scoring status",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/pronunciation.StatusResponse"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -2864,6 +4098,285 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/words/lookup": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Tap-to-translate: meaning, IPA and audio of a word from a text, using the passage glossary first and then the vocabulary (base forms of plurals, -ed, -ing).",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passages"
+                ],
+                "summary": "Look up a tapped word",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Word as written in the text",
+                        "name": "word",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Passage whose glossary is checked first",
+                        "name": "passageId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/passage.WordLookupResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/words/{vocabularyId}/flashcard": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Put a vocabulary word into the learner's reviews (status NEW, due now). Adding a word that is already there changes nothing.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Passages"
+                ],
+                "summary": "Add a word to flashcards",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Vocabulary ID",
+                        "name": "vocabularyId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/passage.AddFlashcardResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/writing/submissions": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "The AI scores the text (task, grammar, vocabulary, coherence; overall = 10 × average) and marks each mistake with its position, correction and a Vietnamese explanation. Mistakes are logged for review. A text with mistakes must be rewritten before the activity can be completed.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Activities"
+                ],
+                "summary": "Submit a text for a WRITING activity",
+                "parameters": [
+                    {
+                        "description": "Activity and text",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/lessonactivity.SubmitWritingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.WritingSubmissionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "503": {
+                        "description": "Service Unavailable",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/writing/submissions/{submissionId}/rewrite": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Checks the corrected text; the submission is COMPLETED when no mistakes remain (otherwise the remaining ones are returned in rewriteReport).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Activities"
+                ],
+                "summary": "Submit the rewrite of a text",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Writing submission ID",
+                        "name": "submissionId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Rewritten text",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/lessonactivity.RewriteWritingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.SuccessResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/lessonactivity.WritingSubmissionResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -2899,6 +4412,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "aiconversation.HintResponse": {
+            "type": "object",
+            "properties": {
+                "hintCount": {
+                    "type": "integer"
+                },
+                "hintVi": {
+                    "type": "string"
+                },
+                "sayThis": {
                     "type": "string"
                 }
             }
@@ -2942,9 +4469,62 @@ const docTemplate = `{
                 }
             }
         },
+        "aiconversation.ScenarioBrief": {
+            "type": "object",
+            "properties": {
+                "cefrLevel": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "group": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isSystem": {
+                    "type": "boolean"
+                },
+                "maxTurns": {
+                    "type": "integer"
+                },
+                "openingLine": {
+                    "type": "string"
+                },
+                "passageId": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "targetPatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "task": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "aiconversation.ScenarioResponse": {
             "type": "object",
             "properties": {
+                "bestScore": {
+                    "type": "integer"
+                },
+                "cefrLevel": {
+                    "type": "string"
+                },
                 "createdAt": {
                     "type": "string"
                 },
@@ -2954,11 +4534,33 @@ const docTemplate = `{
                 "duration": {
                     "type": "string"
                 },
+                "group": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
+                "isSystem": {
+                    "type": "boolean"
+                },
                 "level": {
                     "$ref": "#/definitions/models.DifficultyLevel"
+                },
+                "maxTurns": {
+                    "type": "integer"
+                },
+                "openingLine": {
+                    "type": "string"
+                },
+                "passageId": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "sessions": {
+                    "description": "Sessions and BestScore summarise the learner's finished role-plays.",
+                    "type": "integer"
                 },
                 "situationContext": {
                     "type": "string"
@@ -2966,7 +4568,197 @@ const docTemplate = `{
                 "slug": {
                     "type": "string"
                 },
+                "targetPatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "task": {
+                    "type": "string"
+                },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "aiconversation.SessionMessage": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "aiconversation.SessionMessageRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "aiconversation.SessionReport": {
+            "type": "object",
+            "properties": {
+                "goodPhrases": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "mistakes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/aiconversation.SpeakingMistake"
+                    }
+                },
+                "newWords": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "overall": {
+                    "type": "integer"
+                },
+                "scores": {
+                    "$ref": "#/definitions/aiconversation.SpeakingScores"
+                },
+                "taskCompleted": {
+                    "type": "boolean"
+                },
+                "tipVi": {
+                    "type": "string"
+                },
+                "xpAwarded": {
+                    "type": "integer"
+                }
+            }
+        },
+        "aiconversation.SessionResponse": {
+            "type": "object",
+            "properties": {
+                "activityId": {
+                    "type": "integer"
+                },
+                "finishedAt": {
+                    "type": "string"
+                },
+                "hintCount": {
+                    "type": "integer"
+                },
+                "hintsAllowed": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "maxTurns": {
+                    "type": "integer"
+                },
+                "messages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/aiconversation.SessionMessage"
+                    }
+                },
+                "report": {
+                    "$ref": "#/definitions/aiconversation.SessionReport"
+                },
+                "scenario": {
+                    "$ref": "#/definitions/aiconversation.ScenarioBrief"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "startedAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "taskCompleted": {
+                    "type": "boolean"
+                },
+                "turnCount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "aiconversation.SessionTurnResponse": {
+            "type": "object",
+            "properties": {
+                "maxTurns": {
+                    "type": "integer"
+                },
+                "reply": {
+                    "$ref": "#/definitions/aiconversation.SessionMessage"
+                },
+                "shouldFinish": {
+                    "description": "ShouldFinish is true once the learner has used every turn.",
+                    "type": "boolean"
+                },
+                "turnCount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "aiconversation.SpeakingMistake": {
+            "type": "object",
+            "properties": {
+                "correct": {
+                    "type": "string"
+                },
+                "explanationVi": {
+                    "type": "string"
+                },
+                "said": {
+                    "type": "string"
+                },
+                "skillTag": {
+                    "type": "string"
+                }
+            }
+        },
+        "aiconversation.SpeakingScores": {
+            "type": "object",
+            "properties": {
+                "fluency": {
+                    "type": "integer"
+                },
+                "grammar": {
+                    "type": "integer"
+                },
+                "taskAchievement": {
+                    "type": "integer"
+                },
+                "vocabulary": {
+                    "type": "integer"
+                }
+            }
+        },
+        "aiconversation.StartSessionRequest": {
+            "type": "object",
+            "properties": {
+                "activityId": {
+                    "description": "ActivityID is set when the session is started from a lesson's SPEAKING activity.",
+                    "type": "integer"
+                },
+                "fresh": {
+                    "description": "Fresh abandons an unfinished session and starts a new one.",
+                    "type": "boolean"
+                },
+                "scenarioSlug": {
                     "type": "string"
                 }
             }
@@ -3072,6 +4864,23 @@ const docTemplate = `{
                 }
             }
         },
+        "contentimport.ExtractResult": {
+            "type": "object",
+            "properties": {
+                "bundle": {
+                    "type": "object"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "warnings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "contentimport.ImportResult": {
             "type": "object",
             "properties": {
@@ -3147,6 +4956,85 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "status": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "contentimport.PassageDraft": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "bodyText": {
+                    "type": "string"
+                },
+                "cefrLevel": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "number"
+                },
+                "genre": {
+                    "type": "string"
+                },
+                "glossary": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "segments": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "contentimport.PassageInput": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "bodyText": {
+                    "type": "string"
+                },
+                "cefrLevel": {
+                    "type": "string"
+                },
+                "genre": {
+                    "type": "string"
+                },
+                "glossary": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "segments": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "source": {
                     "type": "string"
                 },
                 "title": {
@@ -3570,6 +5458,143 @@ const docTemplate = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "foundation.Goal": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string"
+                },
+                "done": {
+                    "type": "boolean"
+                },
+                "hint": {
+                    "type": "string"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "progress": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "foundation.LessonLink": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "topicTitle": {
+                    "type": "string"
+                }
+            }
+        },
+        "foundation.LessonsSummary": {
+            "type": "object",
+            "properties": {
+                "checkpointsPassed": {
+                    "type": "integer"
+                },
+                "checkpointsTotal": {
+                    "type": "integer"
+                },
+                "completed": {
+                    "description": "Situation lessons (CORE, without the weekly checkpoints).",
+                    "type": "integer"
+                },
+                "target": {
+                    "description": "Target is the planned number of situation lessons for the level.",
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "foundation.Skill": {
+            "type": "object",
+            "properties": {
+                "detail": {
+                    "type": "string"
+                },
+                "done": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "link": {
+                    "type": "string"
+                },
+                "practised": {
+                    "type": "boolean"
+                },
+                "total": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            }
+        },
+        "foundation.StreakSummary": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "type": "integer"
+                },
+                "longest": {
+                    "type": "integer"
+                }
+            }
+        },
+        "foundation.SummaryResponse": {
+            "type": "object",
+            "properties": {
+                "checklist": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/foundation.Goal"
+                    }
+                },
+                "goalsDone": {
+                    "type": "integer"
+                },
+                "lessons": {
+                    "$ref": "#/definitions/foundation.LessonsSummary"
+                },
+                "level": {
+                    "type": "string"
+                },
+                "nextLesson": {
+                    "$ref": "#/definitions/foundation.LessonLink"
+                },
+                "skills": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/foundation.Skill"
+                    }
+                },
+                "streak": {
+                    "$ref": "#/definitions/foundation.StreakSummary"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
@@ -4076,6 +6101,14 @@ const docTemplate = `{
                         }
                     ]
                 },
+                "passage": {
+                    "description": "Passage is the text/recording of a LISTENING or READING activity.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/lessonactivity.PassageCard"
+                        }
+                    ]
+                },
                 "phonemes": {
                     "description": "Phonemes are the sound cards of a PRONUNCIATION activity (content.phonemes).",
                     "type": "array",
@@ -4083,12 +6116,31 @@ const docTemplate = `{
                         "$ref": "#/definitions/lessonactivity.PhonemeCard"
                     }
                 },
+                "scenario": {
+                    "description": "Scenario is the role-play of a SPEAKING activity; Speaking its latest finished session.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/lessonactivity.ScenarioCard"
+                        }
+                    ]
+                },
+                "speaking": {
+                    "$ref": "#/definitions/lessonactivity.SpeakingSummary"
+                },
                 "vocabularies": {
                     "description": "Vocabularies are the word cards of a VOCABULARY activity, in content order.",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/lessonactivity.VocabularyCard"
                     }
+                },
+                "writing": {
+                    "description": "Writing is the learner's latest submission of a WRITING activity.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/lessonactivity.WritingSubmissionResponse"
+                        }
+                    ]
                 }
             }
         },
@@ -4334,6 +6386,50 @@ const docTemplate = `{
                 }
             }
         },
+        "lessonactivity.PassageCard": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "bodyText": {
+                    "type": "string"
+                },
+                "cefrLevel": {
+                    "type": "string"
+                },
+                "genre": {
+                    "type": "string"
+                },
+                "glossary": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "segments": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "source": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "wordCount": {
+                    "type": "integer"
+                }
+            }
+        },
         "lessonactivity.PhonemeCard": {
             "type": "object",
             "properties": {
@@ -4381,6 +6477,66 @@ const docTemplate = `{
                 }
             }
         },
+        "lessonactivity.RewriteWritingRequest": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.ScenarioCard": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "maxTurns": {
+                    "type": "integer"
+                },
+                "passageId": {
+                    "type": "integer"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "targetPatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "task": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.SpeakingSummary": {
+            "type": "object",
+            "properties": {
+                "finishedAt": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "sessionId": {
+                    "type": "integer"
+                },
+                "taskCompleted": {
+                    "type": "boolean"
+                }
+            }
+        },
         "lessonactivity.SubmitAnswerRequest": {
             "type": "object",
             "properties": {
@@ -4389,6 +6545,17 @@ const docTemplate = `{
                 },
                 "exerciseId": {
                     "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.SubmitWritingRequest": {
+            "type": "object",
+            "properties": {
+                "activityId": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
                 }
             }
         },
@@ -4424,6 +6591,295 @@ const docTemplate = `{
                 },
                 "word": {
                     "type": "string"
+                }
+            }
+        },
+        "lessonactivity.WritingMistake": {
+            "type": "object",
+            "properties": {
+                "correct": {
+                    "type": "string"
+                },
+                "end": {
+                    "type": "integer"
+                },
+                "explanationVi": {
+                    "type": "string"
+                },
+                "skillTag": {
+                    "type": "string"
+                },
+                "start": {
+                    "type": "integer"
+                },
+                "wrong": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.WritingReport": {
+            "type": "object",
+            "properties": {
+                "correctedText": {
+                    "type": "string"
+                },
+                "feedbackVi": {
+                    "type": "string"
+                },
+                "mistakes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/lessonactivity.WritingMistake"
+                    }
+                },
+                "overall": {
+                    "type": "integer"
+                },
+                "rewriteRequired": {
+                    "type": "boolean"
+                },
+                "scores": {
+                    "$ref": "#/definitions/lessonactivity.WritingScores"
+                },
+                "usedTargets": {
+                    "$ref": "#/definitions/lessonactivity.WritingTargets"
+                }
+            }
+        },
+        "lessonactivity.WritingScores": {
+            "type": "object",
+            "properties": {
+                "coherence": {
+                    "type": "integer"
+                },
+                "grammar": {
+                    "type": "integer"
+                },
+                "taskAchievement": {
+                    "type": "integer"
+                },
+                "vocabulary": {
+                    "type": "integer"
+                }
+            }
+        },
+        "lessonactivity.WritingSubmissionResponse": {
+            "type": "object",
+            "properties": {
+                "activityId": {
+                    "type": "integer"
+                },
+                "completedAt": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "modelAnswer": {
+                    "type": "string"
+                },
+                "passScore": {
+                    "type": "integer"
+                },
+                "passed": {
+                    "type": "boolean"
+                },
+                "report": {
+                    "$ref": "#/definitions/lessonactivity.WritingReport"
+                },
+                "rewriteCount": {
+                    "type": "integer"
+                },
+                "rewriteReport": {
+                    "description": "RewriteReport lists the mistakes still found in the last rewrite.",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/lessonactivity.WritingReport"
+                        }
+                    ]
+                },
+                "rewriteText": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "lessonactivity.WritingTargets": {
+            "type": "object",
+            "properties": {
+                "grammar": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "vocabulary": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "mistakes.Group": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/mistakes.Item"
+                    }
+                },
+                "kind": {
+                    "type": "string"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "lastSeenAt": {
+                    "type": "string"
+                },
+                "occurrences": {
+                    "type": "integer"
+                },
+                "practiceable": {
+                    "description": "Practiceable: POST /practice/generate can build 10 exercises for it.",
+                    "type": "boolean"
+                },
+                "skillTag": {
+                    "type": "string"
+                }
+            }
+        },
+        "mistakes.Item": {
+            "type": "object",
+            "properties": {
+                "correctText": {
+                    "type": "string"
+                },
+                "explanationVi": {
+                    "type": "string"
+                },
+                "fixedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "lastSeenAt": {
+                    "type": "string"
+                },
+                "nextReviewAt": {
+                    "type": "string"
+                },
+                "occurrences": {
+                    "type": "integer"
+                },
+                "reviewStreak": {
+                    "type": "integer"
+                },
+                "skillTag": {
+                    "type": "string"
+                },
+                "source": {
+                    "$ref": "#/definitions/models.MistakeSource"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.MistakeStatus"
+                },
+                "wrongText": {
+                    "type": "string"
+                }
+            }
+        },
+        "mistakes.ListResponse": {
+            "type": "object",
+            "properties": {
+                "groups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/mistakes.Group"
+                    }
+                },
+                "summary": {
+                    "$ref": "#/definitions/mistakes.Summary"
+                }
+            }
+        },
+        "mistakes.ReviewQueueResponse": {
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/mistakes.Item"
+                    }
+                },
+                "count": {
+                    "type": "integer"
+                }
+            }
+        },
+        "mistakes.ReviewRequest": {
+            "type": "object",
+            "properties": {
+                "rating": {
+                    "$ref": "#/definitions/models.FlashcardRating"
+                }
+            }
+        },
+        "mistakes.ReviewResponse": {
+            "type": "object",
+            "properties": {
+                "fixed": {
+                    "description": "Fixed is true when this review completed the streak.",
+                    "type": "boolean"
+                },
+                "item": {
+                    "$ref": "#/definitions/mistakes.Item"
+                }
+            }
+        },
+        "mistakes.Summary": {
+            "type": "object",
+            "properties": {
+                "due": {
+                    "description": "Due is how many review cards are due now.",
+                    "type": "integer"
+                },
+                "fixed": {
+                    "type": "integer"
+                },
+                "open": {
+                    "type": "integer"
+                },
+                "reviewing": {
+                    "type": "integer"
+                }
+            }
+        },
+        "mistakes.UpdateRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "$ref": "#/definitions/models.MistakeStatus"
                 }
             }
         },
@@ -4543,6 +6999,34 @@ const docTemplate = `{
                 "LessonStatusUnlocked",
                 "LessonStatusInProgress",
                 "LessonStatusCompleted"
+            ]
+        },
+        "models.MistakeSource": {
+            "type": "string",
+            "enum": [
+                "EXERCISE",
+                "WRITING",
+                "SPEAKING",
+                "PRONUNCIATION"
+            ],
+            "x-enum-varnames": [
+                "MistakeFromExercise",
+                "MistakeFromWriting",
+                "MistakeFromSpeaking",
+                "MistakeFromPronunciation"
+            ]
+        },
+        "models.MistakeStatus": {
+            "type": "string",
+            "enum": [
+                "OPEN",
+                "REVIEWING",
+                "FIXED"
+            ],
+            "x-enum-varnames": [
+                "MistakeOpen",
+                "MistakeReviewing",
+                "MistakeFixed"
             ]
         },
         "models.NotificationType": {
@@ -4666,6 +7150,71 @@ const docTemplate = `{
                 },
                 "type": {
                     "$ref": "#/definitions/models.NotificationType"
+                }
+            }
+        },
+        "passage.AddFlashcardResponse": {
+            "type": "object",
+            "properties": {
+                "added": {
+                    "type": "boolean"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "vocabularyId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "passage.WordLookupResponse": {
+            "type": "object",
+            "properties": {
+                "found": {
+                    "type": "boolean"
+                },
+                "ipa": {
+                    "type": "string"
+                },
+                "note": {
+                    "description": "Note is the passage glossary's meaning for this word, when given.",
+                    "type": "string"
+                },
+                "vocabulary": {
+                    "$ref": "#/definitions/passage.WordResult"
+                },
+                "word": {
+                    "type": "string"
+                }
+            }
+        },
+        "passage.WordResult": {
+            "type": "object",
+            "properties": {
+                "audioUrl": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "inFlashcards": {
+                    "description": "InFlashcards is true when the word is already in the learner's reviews.",
+                    "type": "boolean"
+                },
+                "ipa": {
+                    "type": "string"
+                },
+                "meaningVi": {
+                    "type": "string"
+                },
+                "partOfSpeech": {
+                    "type": "string"
+                },
+                "slug": {
+                    "type": "string"
+                },
+                "word": {
+                    "type": "string"
                 }
             }
         },
@@ -4809,6 +7358,108 @@ const docTemplate = `{
                 },
                 "practised": {
                     "type": "boolean"
+                }
+            }
+        },
+        "practice.AnswerRequest": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "object"
+                },
+                "exerciseId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "practice.AnswerResult": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "object"
+                },
+                "answeredAt": {
+                    "type": "string"
+                },
+                "attempt": {
+                    "type": "integer"
+                },
+                "correctAnswer": {},
+                "exerciseId": {
+                    "type": "integer"
+                },
+                "explanationVi": {
+                    "type": "string"
+                },
+                "isCorrect": {
+                    "type": "boolean"
+                },
+                "scoreRatio": {
+                    "type": "number"
+                }
+            }
+        },
+        "practice.Exercise": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "orderIndex": {
+                    "type": "integer"
+                },
+                "payload": {
+                    "type": "object"
+                },
+                "points": {
+                    "type": "integer"
+                },
+                "prompt": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/models.ExerciseType"
+                }
+            }
+        },
+        "practice.GenerateRequest": {
+            "type": "object",
+            "properties": {
+                "skillTag": {
+                    "type": "string"
+                }
+            }
+        },
+        "practice.SetResponse": {
+            "type": "object",
+            "properties": {
+                "answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/practice.AnswerResult"
+                    }
+                },
+                "day": {
+                    "type": "string"
+                },
+                "exercises": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/practice.Exercise"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                },
+                "skillTag": {
+                    "type": "string"
+                },
+                "source": {
+                    "description": "Source is AI (generated) or BANK (picked from lessons).",
+                    "type": "string"
                 }
             }
         },
@@ -5071,6 +7722,106 @@ const docTemplate = `{
                 },
                 "xpUntilNextLevel": {
                     "type": "integer"
+                }
+            }
+        },
+        "pronunciation.AssessResponse": {
+            "type": "object",
+            "properties": {
+                "accuracy": {
+                    "type": "integer"
+                },
+                "attemptId": {
+                    "type": "integer"
+                },
+                "completeness": {
+                    "type": "integer"
+                },
+                "fluency": {
+                    "type": "integer"
+                },
+                "minAccuracy": {
+                    "description": "MinAccuracy and Passed are set for a SPEAK exercise.",
+                    "type": "integer"
+                },
+                "passed": {
+                    "type": "boolean"
+                },
+                "pronunciation": {
+                    "type": "integer"
+                },
+                "recognizedText": {
+                    "type": "string"
+                },
+                "referenceText": {
+                    "type": "string"
+                },
+                "words": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pronunciation.WordResult"
+                    }
+                }
+            }
+        },
+        "pronunciation.PhonemeResult": {
+            "type": "object",
+            "properties": {
+                "accuracy": {
+                    "type": "integer"
+                },
+                "azure": {
+                    "type": "string"
+                },
+                "display": {
+                    "type": "string"
+                },
+                "symbols": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "pronunciation.StatusResponse": {
+            "type": "object",
+            "properties": {
+                "dailyLimit": {
+                    "type": "integer"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "maxSeconds": {
+                    "type": "integer"
+                },
+                "phonemes": {
+                    "type": "boolean"
+                },
+                "provider": {
+                    "description": "Provider is AZURE or OPENAI (empty when disabled). Phonemes is false\nfor OPENAI, which scores whole words only.",
+                    "type": "string"
+                }
+            }
+        },
+        "pronunciation.WordResult": {
+            "type": "object",
+            "properties": {
+                "accuracy": {
+                    "type": "integer"
+                },
+                "errorType": {
+                    "type": "string"
+                },
+                "phonemes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/pronunciation.PhonemeResult"
+                    }
+                },
+                "word": {
+                    "type": "string"
                 }
             }
         },
