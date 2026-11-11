@@ -14,6 +14,7 @@ import {
   AudioLines,
   FileAudio,
   FileSearch,
+  NotebookPen,
 } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 
@@ -70,6 +71,12 @@ const navigationItems = [
   //   match: (pathname: string) => pathname.endsWith('/quiz'),
   // },
   {
+    label: "Mistakes",
+    to: "/mistakes",
+    icon: NotebookPen,
+    match: (pathname: string) => pathname.startsWith("/mistakes") || pathname.startsWith("/practice/"),
+  },
+  {
     label: "Profile",
     to: "/profile",
     icon: Trophy,
@@ -80,7 +87,7 @@ const navigationItems = [
     to: "/ai-conversation",
     icon: MessageSquare,
     badge: "New",
-    match: (pathname: string) => pathname === "/ai-conversation",
+    match: (pathname: string) => pathname.startsWith("/ai-conversation"),
   },
 ];
 

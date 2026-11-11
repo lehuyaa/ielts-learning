@@ -13,6 +13,7 @@ import (
 	"ielts-learning/backend/internal/models"
 	"ielts-learning/backend/internal/modules/grammarprogress"
 	"ielts-learning/backend/internal/modules/lessonactivity"
+	"ielts-learning/backend/internal/modules/mistakes"
 )
 
 var ErrExerciseNotAvailable = errors.New("exercise not available for practice")
@@ -160,7 +161,13 @@ func (s Service) Answer(ctx context.Context, userID uint, slug string, req Pract
 		}); err != nil {
 			return err
 		}
-		return grammarprogress.Record(tx, userID, exercise.SkillTag, graded.ScoreRatio, graded.IsCorrect, now)
+		if err := grammarprogress.Record(tx, userID, exercise.SkillTag, graded.ScoreRatio, graded.IsCorrect, now); err != nil {
+			return err
+		}
+		if mistake, ok := lessonactivity.ExerciseMistake(userID, exercise, string(models.ActivityGrammar), req.Answer, graded, now); ok {
+			return mistakes.Upsert(tx, mistake)
+		}
+		return nil
 	})
 	if err != nil {
 		return PracticeAnswerResponse{}, err

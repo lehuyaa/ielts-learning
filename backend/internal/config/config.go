@@ -35,6 +35,8 @@ type Config struct {
 	AzureSpeechEndpoint string
 	// PronunciationDailyLimit caps scored recordings per user per day.
 	PronunciationDailyLimit int
+	// AIPracticeDailyLimit caps AI-generated practice sets per user per day (Task 74).
+	AIPracticeDailyLimit int
 }
 
 func Load() Config {
@@ -61,6 +63,7 @@ func Load() Config {
 		AzureSpeechRegion:       getEnv("AZURE_SPEECH_REGION", ""),
 		AzureSpeechEndpoint:     getEnv("AZURE_SPEECH_ENDPOINT", ""),
 		PronunciationDailyLimit: getEnvInt("PRONUNCIATION_DAILY_LIMIT", 300),
+		AIPracticeDailyLimit:    getEnvInt("AI_PRACTICE_DAILY_LIMIT", 10),
 	}
 }
 

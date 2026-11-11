@@ -12,6 +12,8 @@ const (
 	AIUsageWriting     = "WRITING"
 	// AIUsagePronunciation counts Azure pronunciation assessments (Task 71).
 	AIUsagePronunciation = "PRONUNCIATION"
+	// AIUsagePractice counts AI-generated practice sets (Task 74).
+	AIUsagePractice = "PRACTICE"
 )
 
 // AIUsageDaily counts AI calls per user, day (YYYY-MM-DD, server time) and kind.

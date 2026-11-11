@@ -262,6 +262,11 @@ func (s Service) SubmitAnswer(ctx context.Context, userID uint, activityID uint,
 		if err := tx.RecordGrammarAnswer(userID, exercise.SkillTag, result.ScoreRatio, result.IsCorrect, now); err != nil {
 			return err
 		}
+		if mistake, ok := ExerciseMistake(userID, exercise, string(activity.Type), req.Answer, result, now); ok {
+			if err := tx.UpsertMistake(mistake); err != nil {
+				return err
+			}
+		}
 		return markLessonStarted(tx, userID, activity.LessonID, now)
 	})
 	if err != nil {

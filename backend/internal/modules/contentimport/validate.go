@@ -136,6 +136,12 @@ type exerciseAnswer struct {
 
 var blankPattern = regexp.MustCompile(`\{\{(\w+)\}\}`)
 
+// ValidateExercise checks one exercise like the importer does (also used
+// for AI-generated practice, Task 74).
+func ValidateExercise(exercise ExerciseInput) []string {
+	return validateExercise(exercise)
+}
+
 // validateExercise checks an exercise's payload and answer for its type, then
 // grades the expected correct answer to prove the item is answerable.
 func validateExercise(exercise ExerciseInput) []string {

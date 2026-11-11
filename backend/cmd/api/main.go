@@ -23,9 +23,11 @@ import (
 	grammarmodule "ielts-learning/backend/internal/modules/grammar"
 	lessonmodule "ielts-learning/backend/internal/modules/lesson"
 	lessonactivitymodule "ielts-learning/backend/internal/modules/lessonactivity"
+	mistakesmodule "ielts-learning/backend/internal/modules/mistakes"
 	notificationmodule "ielts-learning/backend/internal/modules/notification"
 	passagemodule "ielts-learning/backend/internal/modules/passage"
 	phonememodule "ielts-learning/backend/internal/modules/phoneme"
+	practicemodule "ielts-learning/backend/internal/modules/practice"
 	profilemodule "ielts-learning/backend/internal/modules/profile"
 	pronunciationmodule "ielts-learning/backend/internal/modules/pronunciation"
 	quizmodule "ielts-learning/backend/internal/modules/quiz"
@@ -108,6 +110,8 @@ func main() {
 	contentimportmodule.RegisterRoutes(api, db, jwtManager, contentAIClient, contentimportmodule.MediaStore{Dir: cfg.MediaDir})
 	flashcardmodule.RegisterRoutes(api, db, jwtManager)
 	quizmodule.RegisterRoutes(api, db, jwtManager)
+	mistakesmodule.RegisterRoutes(api, db, jwtManager)
+	practicemodule.RegisterRoutes(api, db, jwtManager, aiClient, cfg.AIPracticeDailyLimit)
 	aiconversationmodule.RegisterRoutes(api, db, jwtManager, aiClient, cfg.AIChatDailyLimit)
 
 	if err := router.Run(":" + cfg.AppPort); err != nil {

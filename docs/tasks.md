@@ -2181,11 +2181,15 @@ Requirements:
 - Model `learner_mistakes` (if not created in Task 66); written by exercises, writing, speaking, pronunciation.
 - `/mistakes` page grouped by skill tag with counts; "Add to review" creates a flashcard-style card (wrong → right) in the SRS queue; repeated correct reviews mark the mistake `FIXED`.
 
+Status: done. Wrong lesson / grammar-practice / AI-practice answers are now logged too (`mistakes.DescribeExercise` turns each exercise type into a wrong → right pair; AI feedback wins when present). Module `backend/internal/modules/mistakes`: `GET /mistakes?status=open|fixed|all` (grouped by skill tag with Vietnamese labels, counts, `practiceable`), `PATCH /mistakes/:id` (`REVIEWING` = add to review, `FIXED`, `OPEN`), `GET /mistakes/review` (due cards), `POST /mistakes/:id/review` (AGAIN/HARD/GOOD/EASY; 3 GOOD/EASY in a row → FIXED). Review fields on `learner_mistakes`: `review_streak`, `interval_days`, `next_review_at`, `fixed_at`; a repeated mistake reopens (or, while reviewing, restarts its streak). UI: `/mistakes` (sidebar "Mistakes") and `/mistakes/review` (type the correction, reveal, rate; sound mistakes show the word to say again and link to the sound card). The queue is separate from the vocabulary flashcards.
+
 ### Task 74 - Personalised Practice
 
 Requirements:
 
 - `POST /practice/generate { skillTag }` → AI generates 10 exercises (spec §6.6, validated) for that weakness; cached per user per skill tag per day; played in the Lesson Player as a temporary activity.
+
+Status: done. Module `backend/internal/modules/practice`: `POST /practice/generate { skillTag }`, `GET /practice/sets/:id`, `POST /practice/sets/:id/answers`; table `practice_sets` (unique user + skill tag + day, items and results as JSON). Grammar / vocabulary tags: one AI call (strict schema) for 12 items of MULTIPLE_CHOICE / FILL_BLANK / REORDER / ERROR_CORRECTION using the grammar card and the learner's own mistakes; each item must pass the importer validation (`contentimport.ValidateExercise`), the A1 ≤ 12-word limit and type checks (shuffled tokens = answer words, one wrong token…), 10 kept, at least 5 required. The second AI validation call of spec §6.6 is replaced by these deterministic checks. Sound / stress / dictation / number tags reuse published lesson exercises (they carry audio), last answered wrong first; reading / listening comprehension and speaking are practised in lessons. Quota `AI_PRACTICE_DAILY_LIMIT` (10). Answers update grammar mastery and the mistake log. UI: `/practice/:setId` (played like an activity), started from "Luyện 10 câu" on `/mistakes` and "Bài luyện AI" on a grammar card. MULTIPLE_CHOICE now shows `payload.sentence`.
 
 ## 22. Milestone 21 - Progress and Completion
 

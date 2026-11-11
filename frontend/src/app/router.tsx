@@ -11,6 +11,9 @@ import { AIConversationCreatePage } from '@/pages/AIConversationCreatePage'
 import { AIConversationPage } from '@/pages/AIConversationPage'
 import { AIConversationSessionPage } from '@/pages/AIConversationSessionPage'
 import { SpeakingSessionPage } from '@/pages/SpeakingSessionPage'
+import { MistakesPage } from '@/pages/MistakesPage'
+import { MistakeReviewPage } from '@/pages/MistakeReviewPage'
+import { PracticePage } from '@/pages/PracticePage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { FlashcardPage } from '@/pages/FlashcardPage'
 import { LandingPage } from '@/pages/LandingPage'
@@ -128,6 +131,18 @@ export const router = createBrowserRouter([
           {
             path: '/ai-conversation/create',
             element: <AIConversationCreatePage />,
+          },
+          {
+            path: '/mistakes',
+            element: <MistakesPage />,
+          },
+          {
+            path: '/mistakes/review',
+            element: <MistakeReviewPage />,
+          },
+          {
+            path: '/practice/:setId',
+            element: <PracticePage />,
           },
           {
             path: '/ai-conversation/sessions/:sessionId',

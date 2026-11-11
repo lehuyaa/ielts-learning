@@ -63,7 +63,13 @@ type LearnerMistake struct {
 	Occurrences   int           `gorm:"not null;default:1" json:"occurrences"`
 	Status        MistakeStatus `gorm:"type:varchar(20);not null;default:'OPEN'" json:"status"`
 	VocabularyID  *uint         `json:"vocabularyId"`
-	LastSeenAt    time.Time     `json:"lastSeenAt"`
-	CreatedAt     time.Time     `json:"createdAt"`
-	UpdatedAt     time.Time     `json:"updatedAt"`
+	// Review queue (Task 73): REVIEWING mistakes are shown as cards; three
+	// correct reviews in a row mark them FIXED.
+	ReviewStreak int        `gorm:"not null;default:0" json:"reviewStreak"`
+	IntervalDays int        `gorm:"not null;default:0" json:"intervalDays"`
+	NextReviewAt *time.Time `gorm:"index" json:"nextReviewAt"`
+	FixedAt      *time.Time `json:"fixedAt"`
+	LastSeenAt   time.Time  `json:"lastSeenAt"`
+	CreatedAt    time.Time  `json:"createdAt"`
+	UpdatedAt    time.Time  `json:"updatedAt"`
 }

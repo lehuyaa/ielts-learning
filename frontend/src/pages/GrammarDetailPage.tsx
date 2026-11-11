@@ -1,8 +1,8 @@
-import { ArrowLeft, Dumbbell } from "lucide-react";
+import { ArrowLeft, Dumbbell, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { APIError } from "@/api/api";
+import { APIError, getApiErrorMessage } from "@/api/api";
 import { ErrorState } from "@/components/state/ErrorState";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,12 +10,14 @@ import { GrammarPractice } from "@/features/grammar/GrammarPractice";
 import { GrammarTheoryCard } from "@/features/grammar/GrammarTheoryCard";
 import { MasteryBar } from "@/features/grammar/MasteryBar";
 import { useGrammarPoint, useStartGrammarPractice } from "@/features/grammar/hooks/useGrammar";
+import { useStartPractice } from "@/features/mistakes/hooks";
 import type { PracticeExercise } from "@/types/grammar";
 
 export function GrammarDetailPage() {
   const { slug = "" } = useParams();
   const query = useGrammarPoint(slug);
   const startPractice = useStartGrammarPractice(slug);
+  const aiPractice = useStartPractice();
   const [practice, setPractice] = useState<{ round: number; exercises: PracticeExercise[] } | null>(null);
 
   function start() {
@@ -55,6 +57,18 @@ export function GrammarDetailPage() {
               <Button disabled={query.data.exerciseCount === 0 || startPractice.isPending} onClick={start}>
                 <Dumbbell /> Luyện tập ({Math.min(query.data.exerciseCount, 10)} câu)
               </Button>
+            ) : null}
+            {!practice ? (
+              <Button
+                disabled={aiPractice.isPending}
+                onClick={() => aiPractice.mutate({ skillTag: `grammar:${slug}`, returnTo: `/grammar/${slug}` })}
+                variant="outline"
+              >
+                <Sparkles /> {aiPractice.isPending ? "AI đang tạo bài…" : "Bài luyện AI"}
+              </Button>
+            ) : null}
+            {aiPractice.error ? (
+              <p className="w-full text-xs text-red-600">{getApiErrorMessage(aiPractice.error, "Không tạo được bài luyện AI.")}</p>
             ) : null}
             {query.data.exerciseCount === 0 ? (
               <p className="w-full text-xs text-muted-foreground">

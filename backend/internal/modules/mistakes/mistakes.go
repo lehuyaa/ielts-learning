@@ -30,7 +30,12 @@ func Upsert(db *gorm.DB, mistake models.LearnerMistake) error {
 			"wrong_text":     mistake.WrongText,
 			"explanation_vi": mistake.ExplanationVI,
 			"source":         mistake.Source,
-			"status":         models.MistakeOpen,
+			// A repeated mistake reopens; one being reviewed stays in the
+			// queue but starts its streak again and is due now.
+			"status":         gorm.Expr("CASE WHEN status = ? THEN status ELSE ? END", models.MistakeReviewing, models.MistakeOpen),
+			"review_streak":  0,
+			"fixed_at":       nil,
+			"next_review_at": gorm.Expr("CASE WHEN status = ? THEN ? ELSE next_review_at END", models.MistakeReviewing, mistake.LastSeenAt),
 			"last_seen_at":   mistake.LastSeenAt,
 			"updated_at":     mistake.LastSeenAt,
 		}),

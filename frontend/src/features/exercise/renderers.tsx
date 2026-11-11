@@ -91,6 +91,7 @@ function ChoiceExercise({ exercise, result, onChange }: ExerciseRendererProps) {
   const chosen = answered?.optionId ?? selected;
   const ipa = str(exercise.payload, "ipa");
   const word = str(exercise.payload, "word");
+  const sentence = str(exercise.payload, "sentence");
   const hasImages = options.some((option) => option.imageUrl);
 
   return (
@@ -102,6 +103,7 @@ function ChoiceExercise({ exercise, result, onChange }: ExerciseRendererProps) {
           {ipa ? <span className="font-mono text-primary">{ipa}</span> : null}
         </p>
       ) : null}
+      {sentence ? <p className="mb-5 text-center text-xl font-semibold tracking-normal">{sentence}</p> : null}
       <div className={cn("grid gap-3", hasImages ? "grid-cols-2" : "sm:grid-cols-2")}>
         {options.map((option) => {
           const isChosen = chosen === option.id;
