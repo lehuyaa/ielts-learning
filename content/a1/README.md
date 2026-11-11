@@ -17,6 +17,7 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 | `week-3.json` | Generated bundle: 18 passages, 1 topic, 9 situation lessons + review, 69 activities, 307 exercises |
 | `week-4.json` | Generated bundle: 18 passages, 1 topic, 9 situation lessons + review, 69 activities, 301 exercises |
 | `audio_manifest_week-N.tsv` | Sentences/words to synthesise (`path<TAB>text[<TAB>voice]`) |
+| `check_import.py` | Checks that every bundle is imported (import preview: nothing left to create, no warnings) and every audio file exists |
 | `generate_lesson_audio.sh` | Creates the `.m4a` files with macOS text-to-speech |
 
 ## Workflow
