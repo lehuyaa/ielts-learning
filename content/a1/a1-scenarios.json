@@ -420,7 +420,8 @@
       "openingLine": "Hi! You look lost. Can I help you?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 21
+      "orderIndex": 21,
+      "passageSlug": "a1-w3-l1-dialogue"
     },
     {
       "slug": "a1-w3-taking-a-taxi",
@@ -439,7 +440,8 @@
       "openingLine": "Good evening! Where to?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 22
+      "orderIndex": 22,
+      "passageSlug": "a1-w3-l2-dialogue"
     },
     {
       "slug": "a1-w3-buying-tickets",
@@ -458,7 +460,8 @@
       "openingLine": "Next, please! Where are you going?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 23
+      "orderIndex": 23,
+      "passageSlug": "a1-w3-l3-dialogue"
     },
     {
       "slug": "a1-w3-airport-check-in",
@@ -477,7 +480,8 @@
       "openingLine": "Good morning. Can I see your passport, please?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 24
+      "orderIndex": 24,
+      "passageSlug": "a1-w3-l4-dialogue"
     },
     {
       "slug": "a1-w3-hotel-check-in",
@@ -496,7 +500,8 @@
       "openingLine": "Good evening and welcome! Do you have a booking?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 25
+      "orderIndex": 25,
+      "passageSlug": "a1-w3-l5-dialogue"
     },
     {
       "slug": "a1-w3-train-bus-times",
@@ -515,7 +520,8 @@
       "openingLine": "Hello, how can I help?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 26
+      "orderIndex": 26,
+      "passageSlug": "a1-w3-l6-dialogue"
     },
     {
       "slug": "a1-w3-describing-symptoms",
@@ -534,7 +540,8 @@
       "openingLine": "Hello, please sit down. What's the problem?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 27
+      "orderIndex": 27,
+      "passageSlug": "a1-w3-l7-dialogue"
     },
     {
       "slug": "a1-w3-buying-medicine",
@@ -553,7 +560,8 @@
       "openingLine": "Hi! How can I help you today?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 28
+      "orderIndex": 28,
+      "passageSlug": "a1-w3-l8-dialogue"
     },
     {
       "slug": "a1-w3-at-the-bank",
@@ -572,7 +580,8 @@
       "openingLine": "Good morning. What can I do for you?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 29
+      "orderIndex": 29,
+      "passageSlug": "a1-w3-l9-dialogue"
     },
     {
       "slug": "a1-w3-checkpoint",

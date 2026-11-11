@@ -128,6 +128,7 @@ PROMPTS = {
 
     # Week 3 · Travel and health (G6 adjectives / comparatives, G7 can / must / should)
     "w3-directions-home": {
+        "lesson": "a1-w3-l1-asking-directions",
         "week": 3, "situation": "asking for directions",
         "title": "Viết: Đường đến nhà tôi",
         "promptVi": "Viết tin nhắn chỉ đường cho bạn từ một nơi quen thuộc đến nhà bạn.",
@@ -139,6 +140,7 @@ PROMPTS = {
         "modelAnswer": "From the bus stop, go straight along Le Loi Street. Turn left at the bank. My house is opposite a small park. It is the blue house with a big door. Call me when you arrive!",
     },
     "w3-hometown": {
+        "lesson": "a1-w3-l2-taking-a-taxi",
         "week": 3, "situation": "describing places",
         "title": "Viết: So sánh quê tôi và thành phố",
         "promptVi": "So sánh quê bạn với thành phố bạn đang sống: nơi nào lớn hơn, yên tĩnh hơn, đắt hơn.",
@@ -150,6 +152,7 @@ PROMPTS = {
         "modelAnswer": "My hometown is Hue. Hanoi is bigger and busier than Hue. Hue is quieter and cheaper than Hanoi. The food in Hue is the best. But I can find a better job in Hanoi.",
     },
     "w3-hotel-booking": {
+        "lesson": "a1-w3-l5-hotel-check-in",
         "week": 3, "situation": "hotel check-in",
         "title": "Viết: Email đặt phòng khách sạn",
         "promptVi": "Viết email đặt phòng khách sạn: ngày đến, số đêm, loại phòng và một câu hỏi.",
@@ -161,6 +164,7 @@ PROMPTS = {
         "modelAnswer": "Dear Sir or Madam, I would like to book a double room for two nights. I arrive on Friday, 12 May. Can I check in early in the morning? Is there a parking place? Thank you, Huy Nguyen",
     },
     "w3-sick-message": {
+        "lesson": "a1-w3-l7-describing-symptoms",
         "week": 3, "situation": "describing symptoms",
         "title": "Viết: Báo ốm với quản lý",
         "promptVi": "Nhắn tin cho quản lý: bạn bị ốm thế nào, hôm nay không đi làm được, và bạn sẽ làm gì.",
@@ -172,6 +176,7 @@ PROMPTS = {
         "modelAnswer": "Hi Ms Hoa, I am sorry, but I can't come to work today. I have a bad cold and a headache. The doctor says I should stay at home and rest. I can check my emails this afternoon.",
     },
     "w3-travel-advice": {
+        "lesson": "a1-w3-l3-buying-tickets",
         "week": 3, "situation": "buying tickets",
         "title": "Viết: Lời khuyên cho khách du lịch",
         "promptVi": "Một người bạn nước ngoài sắp đến thành phố của bạn. Viết lời khuyên: nên đi đâu, nên ăn gì, phải cẩn thận điều gì.",

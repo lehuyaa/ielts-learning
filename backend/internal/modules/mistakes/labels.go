@@ -50,6 +50,8 @@ func SkillLabel(tag string, grammarTitles map[string]string) string {
 			return "Phát âm đuôi -s / -es"
 		case "ending-ed":
 			return "Phát âm đuôi -ed"
+		case "clusters":
+			return "Cụm phụ âm cuối"
 		}
 		if a, b, pair := strings.Cut(rest, "-"); pair && a != "" && b != "" {
 			return "Phân biệt /" + a + "/ và /" + b + "/"

@@ -210,7 +210,7 @@ Role-play scenarios:
   (36 lessons + 4 weekly checkpoints)
   (upserted by slug), listed for every learner at `/ai-conversation`. A scenario's
   `passageSlug` must already exist (Week 1 dialogues come with `week-1.json`), so
-  import `a1-scenarios.json` again after the week bundles (`week-1.json`, `week-2.json`…) to attach them.
+  import `a1-scenarios.json` again after the week bundles (`week-1.json`, `week-2.json`, `week-3.json`…) to attach them.
 - Weekly checkpoints: a CHECKPOINT activity with `content.itemCount` draws that many
   items per attempt from its exercises, and with `scenarioSlug` ends with a role-play
   without hints. Passing the week's last lesson unlocks the next week's first lesson.

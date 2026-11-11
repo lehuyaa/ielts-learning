@@ -39,6 +39,7 @@ func TestSkillLabelAndPractice(t *testing.T) {
 		"sound:θ-s":           "Phân biệt /θ/ và /s/",
 		"sound:θ":             "Âm /θ/",
 		"sound:ending-ed":     "Phát âm đuôi -ed",
+		"sound:clusters":      "Cụm phụ âm cuối",
 		"listening:dictation": "Nghe chép chính tả",
 		"reading":             "Đọc hiểu",
 	}

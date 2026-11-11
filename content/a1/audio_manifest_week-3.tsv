@@ -1,0 +1,107 @@
+w3/l1-s1	Excuse me, can you tell me the way to the train station?	female
+w3/l1-s2	Sure. Go straight on this street for two hundred metres.	male
+w3/l1-s3	OK, straight on.	female
+w3/l1-s4	Then turn left at the bank. The station is on your right.	male
+w3/l1-s5	Is it far?	female
+w3/l1-s6	No, it's about five minutes on foot.	male
+w3/l11-mp	think
+w3/l11-num	No, it's about five minutes on foot.
+w3/l12-mp	three
+w3/l13-mp	they
+w3/l2-s1	Hello. Where to?	male
+w3/l2-s2	The airport, please. How long does it take?	female
+w3/l2-s3	About forty minutes. The traffic is very bad now.	male
+w3/l2-s4	OK. Can you take the fastest road? My flight is at six.	female
+w3/l2-s5	Sure. Please put on your seat belt.	male
+w3/l2-s6	Thanks. How much is it to the airport?	female
+w3/l2-s7	About three hundred thousand dong.	male
+w3/l21-mp	zip
+w3/l21-num	About forty minutes.
+w3/l22-mp	bus
+w3/l22-num	About three hundred thousand dong.
+w3/l23-mp	prize
+w3/l3-s1	Hello. Two tickets to Hue, please.	female
+w3/l3-s2	One-way or return?	male
+w3/l3-s3	Return, please. Is the night train cheaper than the day train?	female
+w3/l3-s4	Yes, it's cheaper, but it's slower. It arrives at eight in the morning.	male
+w3/l3-s5	OK, the night train, please. How much is it?	female
+w3/l3-s6	It's one million five hundred thousand dong for two return tickets.	male
+w3/l31-mp	she
+w3/l31-num	It arrives at eight in the morning.
+w3/l31-w2i	usually
+w3/l32-mp	ship
+w3/l4-s1	Good morning. Can I see your passport, please?	female
+w3/l4-s2	Here you are.	male
+w3/l4-s3	Thank you. Do you have any bags to check in?	female
+w3/l4-s4	Yes, one suitcase.	male
+w3/l4-s5	Please put it here. Window or aisle seat?	female
+w3/l4-s6	Window, please.	male
+w3/l4-s7	Here's your boarding pass. Gate twelve. You must be at the gate at nine fifteen.	female
+w3/l41-mp	cheap
+w3/l41-num	Your gate is gate twelve.
+w3/l42-mp	gin
+w3/l42-num	You must be at the gate at nine fifteen.
+w3/l43-mp	ridge
+w3/l5-s1	Good afternoon. Welcome to the Sea View Hotel.	female
+w3/l5-s2	Hi. I have a booking. My name is Minh Tran.	male
+w3/l5-s3	Yes, a double room for three nights. Can I see your passport?	female
+w3/l5-s4	Here you are. Is breakfast included?	male
+w3/l5-s5	Yes. Breakfast is from six to ten on the first floor.	female
+w3/l5-s6	Great. Can I check out late on Sunday?	male
+w3/l5-s7	Sure, you can check out at one o'clock.	female
+w3/l51-mp	van
+w3/l51-num	Sure, you can check out at one o'clock.
+w3/l51-w2i	five
+w3/l52-mp	fine
+w3/l53-mp	leave
+w3/l6-s1	Excuse me, which bus goes to the Old Quarter?	male
+w3/l6-s2	Number nine. It's the fastest bus.	female
+w3/l6-s3	When is the next one?	male
+w3/l6-s4	At ten fifteen. They come every twenty minutes.	female
+w3/l6-s5	Where do I get off?	male
+w3/l6-s6	Get off at the third stop, near the lake.	female
+w3/l61-mp	right
+w3/l61-num	Take bus number nine.
+w3/l62-mp	late
+w3/l62-num	The next one is at ten fifteen.
+w3/l63-mp	wrong
+w3/l7-s1	City Clinic. How can I help you?	female
+w3/l7-s2	Hi. I feel sick. I have a fever and a bad cough.	male
+w3/l7-s3	Do you have a headache too?	female
+w3/l7-s4	Yes, and my throat hurts.	male
+w3/l7-s5	You should see the doctor. Can you come at four o'clock today?	female
+w3/l7-s6	Yes, four o'clock is fine.	male
+w3/l7-s7	OK. You should drink a lot of water and rest.	female
+w3/l71-mp	cold
+w3/l71-num	Can you come at four o'clock today?
+w3/l71-w2i	next
+w3/l72-mp	hands
+w3/l73-mp	asked
+w3/l8-s1	Hello. Can I help you?	female
+w3/l8-s2	Yes. My throat hurts. Can I have something for it?	male
+w3/l8-s3	Try these. Take one tablet three times a day after meals.	female
+w3/l8-s4	Can I take them with coffee?	male
+w3/l8-s5	No, you shouldn't. Take them with water.	female
+w3/l8-s6	OK. How much are they?	male
+w3/l8-s7	Forty-five thousand dong.	female
+w3/l81-mp	she
+w3/l81-num	Take one tablet three times a day after meals.
+w3/l82-mp	save
+w3/l82-num	Forty-five thousand dong.
+w3/l83-mp	short
+w3/l9-s1	Good morning. Can I change dollars here?	male
+w3/l9-s2	Yes. How much do you want to change?	female
+w3/l9-s3	Two hundred dollars, please. What's the rate today?	male
+w3/l9-s4	Twenty-five thousand dong for one dollar.	female
+w3/l9-s5	Is it better than at the airport?	male
+w3/l9-s6	Yes, banks are usually cheaper than the airport. Please sign here.	female
+w3/l91-mp	three
+w3/l91-num	Two hundred dollars, please.
+w3/l91-w2i	change
+w3/l92-mp	very
+w3/l92-num	Twenty-five thousand dong for one dollar.
+w3/l93-mp	correct
+w3/rv1-dict	Can I see your passport, please?
+w3/rv1-mp	think
+w3/rv2-mp	right
+w3/rv2-num	The bus leaves at twenty past seven.
