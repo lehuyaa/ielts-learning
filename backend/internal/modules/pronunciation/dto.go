@@ -5,6 +5,10 @@ type StatusResponse struct {
 	Enabled    bool `json:"enabled"`
 	MaxSeconds int  `json:"maxSeconds"`
 	DailyLimit int  `json:"dailyLimit"`
+	// Provider is AZURE or OPENAI (empty when disabled). Phonemes is false
+	// for OPENAI, which scores whole words only.
+	Provider string `json:"provider,omitempty"`
+	Phonemes bool   `json:"phonemes"`
 }
 
 // AssessResponse is the score of one recording (spec §7).

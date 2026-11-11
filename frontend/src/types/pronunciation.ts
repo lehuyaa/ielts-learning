@@ -4,6 +4,9 @@ export type PronunciationStatus = {
   enabled: boolean
   maxSeconds: number
   dailyLimit: number
+  /** AZURE scores each sound; OPENAI only checks each word was heard right. */
+  provider?: 'AZURE' | 'OPENAI'
+  phonemes: boolean
 }
 
 export type PhonemeScore = {

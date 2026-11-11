@@ -45,7 +45,7 @@ var (
 	ErrScoringFailed    = errors.New("pronunciation scoring failed")
 )
 
-// assessor is the part of AzureClient the service needs (fake in tests).
+// assessor scores one recording: AzureClient or OpenAIScorer (fake in tests).
 type assessor interface {
 	Configured() bool
 	Assess(ctx context.Context, wav []byte, referenceText string) (Assessment, error)
@@ -54,16 +54,13 @@ type assessor interface {
 type Service struct {
 	db         *gorm.DB
 	client     assessor
+	provider   string
 	dailyLimit int
 	now        func() time.Time
 }
 
-func NewService(db *gorm.DB, client *AzureClient, dailyLimit int) Service {
-	service := Service{db: db, dailyLimit: dailyLimit, now: time.Now}
-	if client != nil {
-		service.client = client
-	}
-	return service
+func NewService(db *gorm.DB, scorer Scorer, dailyLimit int) Service {
+	return Service{db: db, client: scorer.client, provider: scorer.Provider, dailyLimit: dailyLimit, now: time.Now}
 }
 
 func (s Service) enabled() bool {
@@ -71,7 +68,12 @@ func (s Service) enabled() bool {
 }
 
 func (s Service) Status() StatusResponse {
-	return StatusResponse{Enabled: s.enabled(), MaxSeconds: MaxSeconds, DailyLimit: s.dailyLimit}
+	status := StatusResponse{Enabled: s.enabled(), MaxSeconds: MaxSeconds, DailyLimit: s.dailyLimit}
+	if status.Enabled {
+		status.Provider = s.provider
+		status.Phonemes = s.provider == ProviderAzure
+	}
+	return status
 }
 
 // AssessInput is one recording to score.

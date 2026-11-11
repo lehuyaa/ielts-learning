@@ -107,7 +107,9 @@ export function PronunciationDetailPage() {
           {pronunciation.data?.enabled && phoneme.exampleWords.length > 0 ? (
             <Section icon={<Mic className="size-4" />} title="Luyện nói">
               <p className="mb-3 text-sm text-muted-foreground">
-                {data.progress.practised ? (
+                {!pronunciation.data.phonemes ? (
+                  <>Nói từng từ, AI kiểm tra bạn nói có ra đúng từ không (chế độ này chưa chấm riêng âm /{phoneme.symbol}/).</>
+                ) : data.progress.practised ? (
                   <>
                     Độ chính xác âm /{phoneme.symbol}/ của bạn:{" "}
                     <span className={cn("font-bold", scoreTone(data.progress.accuracy))}>{data.progress.accuracy}/100</span> ({data.progress.attempts} lần).

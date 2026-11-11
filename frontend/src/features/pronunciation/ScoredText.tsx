@@ -43,6 +43,21 @@ function WordDetail({ word }: { word: WordScore }) {
   if (word.errorType === "Omission") {
     return <p className="mt-2 text-sm text-muted-foreground">Bạn bỏ sót từ “{word.word}”.</p>;
   }
+  if (word.phonemes.length === 0) {
+    return (
+      <div className="mt-2 rounded-2xl border bg-white p-3 text-sm">
+        <div className="flex items-baseline gap-2">
+          <span className="font-semibold">{word.word}</span>
+          <span className={cn("ml-auto font-bold", scoreTone(word.accuracy))}>{word.accuracy}/100</span>
+        </div>
+        <p className="mt-1 text-muted-foreground">
+          {word.errorType === "Mispronunciation"
+            ? "AI nghe thành một từ khác. Nghe lại mẫu rồi nói chậm, rõ từng âm."
+            : "AI nghe đúng từ này."}
+        </p>
+      </div>
+    );
+  }
   const weak = word.phonemes.filter((phoneme) => phoneme.accuracy < 60 && phoneme.symbols.length > 0);
   return (
     <div className="mt-2 rounded-2xl border bg-white p-3">
@@ -97,6 +112,11 @@ export function PronunciationScore({ result, compact = false }: { result: Pronun
         ) : null}
       </div>
       <ScoredText key={result.attemptId} words={result.words} />
+      {result.words.length > 0 && result.words.every((word) => word.phonemes.length === 0) ? (
+        <p className="text-xs text-muted-foreground">
+          Chấm theo từ: AI nghe được “{result.recognizedText}”. Chế độ này chưa chấm từng âm.
+        </p>
+      ) : null}
     </div>
   );
 }

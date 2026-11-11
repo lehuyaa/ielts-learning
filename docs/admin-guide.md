@@ -194,11 +194,20 @@ Grammar points:
 - Learners see theory and mastery at `/grammar` and `/grammar/:slug`
   (API `GET /api/v1/grammar-points`, module `backend/internal/modules/grammar/`).
 
-Pronunciation scoring (Azure Speech):
+Pronunciation scoring (Azure Speech or OpenAI):
 
-- Set `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in `backend/.env` (Azure portal →
-  Speech service → Keys and Endpoint) and restart the API. `GET /api/v1/pronunciation/status`
-  then returns `enabled: true`; without a key SPEAK exercises stay a self-check.
+- `PRONUNCIATION_PROVIDER` picks the scorer: `auto` (default: Azure when
+  `AZURE_SPEECH_KEY` is set, otherwise OpenAI), `azure` or `openai`.
+  `GET /api/v1/pronunciation/status` returns `enabled`, `provider` and `phonemes`;
+  with neither key SPEAK exercises stay a self-check.
+- Azure: set `AZURE_SPEECH_KEY` and `AZURE_SPEECH_REGION` in `backend/.env` (Azure portal →
+  Speech service → Keys and Endpoint) and restart the API. Scores every sound and
+  updates the learner's sound progress.
+- OpenAI: uses `OPENAI_API_KEY` and `OPENAI_TRANSCRIBE_MODEL` (Whisper). The recording is
+  transcribed and compared word by word with the text (numbers like 8:30 count as
+  "eight thirty"): a word heard as written scores 100, heard as another word up to 60,
+  missing 0. It cannot score single sounds, so sound progress is not updated and Whisper
+  may forgive an accent it can still understand. Cost about $0.006 per minute of audio.
 - `PRONUNCIATION_DAILY_LIMIT` (default 300 recordings per learner per day) protects the
   free tier (F0: 5 audio hours per month).
 - SPEAK exercises can set `answer.minAccuracy` (1-100, default 70).

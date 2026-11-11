@@ -33,6 +33,8 @@ type Config struct {
 	AzureSpeechKey      string
 	AzureSpeechRegion   string
 	AzureSpeechEndpoint string
+	// PronunciationProvider: azure | openai | auto (Azure if configured, else OpenAI).
+	PronunciationProvider string
 	// PronunciationDailyLimit caps scored recordings per user per day.
 	PronunciationDailyLimit int
 	// AIPracticeDailyLimit caps AI-generated practice sets per user per day (Task 74).
@@ -62,6 +64,7 @@ func Load() Config {
 		AzureSpeechKey:          getEnv("AZURE_SPEECH_KEY", ""),
 		AzureSpeechRegion:       getEnv("AZURE_SPEECH_REGION", ""),
 		AzureSpeechEndpoint:     getEnv("AZURE_SPEECH_ENDPOINT", ""),
+		PronunciationProvider:   getEnv("PRONUNCIATION_PROVIDER", "auto"),
 		PronunciationDailyLimit: getEnvInt("PRONUNCIATION_DAILY_LIMIT", 300),
 		AIPracticeDailyLimit:    getEnvInt("AI_PRACTICE_DAILY_LIMIT", 10),
 	}

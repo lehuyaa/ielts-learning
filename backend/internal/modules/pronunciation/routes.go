@@ -8,8 +8,8 @@ import (
 	sharedjwt "ielts-learning/backend/internal/shared/jwt"
 )
 
-func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.Manager, client *AzureClient, dailyLimit int) {
-	handler := NewHandler(NewService(db, client, dailyLimit))
+func RegisterRoutes(router *gin.RouterGroup, db *gorm.DB, jwtManager sharedjwt.Manager, scorer Scorer, dailyLimit int) {
+	handler := NewHandler(NewService(db, scorer, dailyLimit))
 
 	group := router.Group("/pronunciation", middleware.Auth(jwtManager))
 	group.GET("/status", handler.Status)

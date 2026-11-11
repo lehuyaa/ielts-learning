@@ -2163,6 +2163,8 @@ Requirements:
 
 Status: done. Module `backend/internal/modules/pronunciation`: `GET /pronunciation/status`, `POST /pronunciation/assess` (multipart `audio` 16 kHz mono WAV ≤ 15 s, `referenceText`, optional `exerciseId`, `source`). Azure REST short-audio API (en-US, scripted, phoneme granularity, IPA; Azure phonemes mapped to our Oxford NAmE symbols, SAPI accepted too). Config `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` (`AZURE_SPEECH_ENDPOINT` for tests), `PRONUNCIATION_DAILY_LIMIT` (300). `pronunciation_attempts` stores scores + words; audio is discarded. The browser records with MediaRecorder (level meter, 15 s cap) and converts to WAV before upload (`features/pronunciation/`). SPEAK answers are `{attemptId}`: correct at accuracy ≥ `answer.minAccuracy` (default 70), half credit within 15 points; self-check stays as the fallback when Azure is off or there is no microphone.
 
+Update: OpenAI fallback (no Azure account). `PRONUNCIATION_PROVIDER` = auto | azure | openai (`provider.go`). `OpenAIScorer` (`openai.go`) transcribes with Whisper and aligns words (word-level edit distance; numbers and times spelled out): heard 100, other word ≤ 60 by spelling, missing 0; accuracy = mean, completeness = words said, fluency = speaking rate on 4+ words. No phonemes, so phoneme progress is Azure-only. Status adds `provider`, `phonemes`; the UI shows "Chấm theo từ" with the transcript.
+
 ### Task 72 - Shadowing and Phoneme Progress
 
 Requirements:

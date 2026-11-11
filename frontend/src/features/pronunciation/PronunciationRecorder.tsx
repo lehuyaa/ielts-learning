@@ -24,7 +24,7 @@ type PronunciationRecorderProps = {
 type Phase = "idle" | "recording" | "scoring";
 
 /**
- * Record → Azure score → coloured result (Tasks 71-72). Max length comes
+ * Record → score (Azure or OpenAI) → coloured result (Tasks 71-72). Max length comes
  * from /pronunciation/status (15 s).
  */
 export function PronunciationRecorder({ referenceText, source, exerciseId, onScored, disabled, compact, hideResult }: PronunciationRecorderProps) {

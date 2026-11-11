@@ -102,7 +102,9 @@ func main() {
 	grammarmodule.RegisterRoutes(api, db, jwtManager, aiGrader)
 	phonememodule.RegisterRoutes(api, db, jwtManager)
 	pronunciationmodule.RegisterRoutes(api, db, jwtManager,
-		pronunciationmodule.NewAzureClient(cfg.AzureSpeechKey, cfg.AzureSpeechRegion, cfg.AzureSpeechEndpoint),
+		pronunciationmodule.ChooseScorer(cfg.PronunciationProvider,
+			pronunciationmodule.NewAzureClient(cfg.AzureSpeechKey, cfg.AzureSpeechRegion, cfg.AzureSpeechEndpoint),
+			aiClient),
 		cfg.PronunciationDailyLimit)
 	passagemodule.RegisterRoutes(api, db, jwtManager)
 	profilemodule.RegisterRoutes(api, db, jwtManager)
