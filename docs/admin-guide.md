@@ -206,10 +206,14 @@ Pronunciation scoring (Azure Speech):
 Role-play scenarios:
 
 - Import `content/a1/a1-scenarios.json` (built by `content/a1/build_scenarios.py`)
-  **after** `a1-grammar.json` and **before** the week bundles: 36 system scenarios
+  **after** `a1-grammar.json` and **before** the week bundles: 40 system scenarios
+  (36 lessons + 4 weekly checkpoints)
   (upserted by slug), listed for every learner at `/ai-conversation`. A scenario's
   `passageSlug` must already exist (Week 1 dialogues come with `week-1.json`), so
   import `a1-scenarios.json` again after `week-1.json` the first time to attach them.
+- Weekly checkpoints: a CHECKPOINT activity with `content.itemCount` draws that many
+  items per attempt from its exercises, and with `scenarioSlug` ends with a role-play
+  without hints. Passing the week's last lesson unlocks the next week's first lesson.
 - A SPEAKING activity links to a scenario with `scenarioSlug`; it completes with the
   learner's latest finished session (passes only when the task was completed).
 - AI chat quota per learner per day: `AI_CHAT_DAILY_LIMIT` (default 200).

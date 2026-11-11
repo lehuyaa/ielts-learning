@@ -5525,7 +5525,17 @@
               "slug": "checkpoint",
               "type": "CHECKPOINT",
               "title": "Kiểm tra cuối tuần 1",
-              "instructionsVi": "Làm bài kiểm tra tổng hợp. Cần 70 điểm để qua tuần.",
+              "instructionsVi": "15 câu ngẫu nhiên từ các bài trong tuần, rồi một cuộc hội thoại với AI (không có gợi ý). Cần 70 điểm và hoàn thành nhiệm vụ nói để mở tuần 2.",
+              "scenarioSlug": "a1-w1-checkpoint",
+              "content": {
+                "fromActivityTypes": [
+                  "GRAMMAR",
+                  "LISTENING",
+                  "READING"
+                ],
+                "itemCount": 15,
+                "speaking": true
+              },
               "exercises": [
                 {
                   "type": "FILL_BLANK",
@@ -5768,6 +5778,1234 @@
                   },
                   "explanationVi": "Sau 'ch' → /ɪz/.",
                   "skillTag": "sound:ending-s"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "I ___ (be) Huy."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "am"
+                    ]
+                  },
+                  "explanationVi": "Chủ ngữ 'I' luôn đi với 'am'.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "She ___ (be) my teacher."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "He / She / It đi với 'is'.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "We ___ (be) colleagues."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "We / You / They đi với 'are'.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "How",
+                      "are",
+                      "?",
+                      "you"
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "How are you?"
+                    ]
+                  },
+                  "explanationVi": "Câu hỏi thăm sức khỏe: How are you?",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "ERROR_CORRECTION",
+                  "prompt": "Chạm vào từ sai và sửa lại",
+                  "payload": {
+                    "tokens": [
+                      "He",
+                      "are",
+                      "fine",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "wrongIndex": 1,
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "'He' đi với 'is'.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l11-dict.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I'm fine, thank you."
+                    ]
+                  },
+                  "explanationVi": "I'm fine = tôi khỏe.",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l1-s1.m4a",
+                    "wordCount": 3
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Good morning, Lan."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l1-s2.m4a",
+                    "wordCount": 6
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Good morning, Minh. How are you?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "My name ___ Huy."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "'My name' là ngôi thứ ba số ít → is.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "I ___ (be) from Vietnam."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "am",
+                      "'m"
+                    ]
+                  },
+                  "explanationVi": "I am from + quốc gia.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "developer",
+                      "am",
+                      "I",
+                      ".",
+                      "a"
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I am a developer."
+                    ]
+                  },
+                  "explanationVi": "Nghề nghiệp: I am + a/an + nghề.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "TRANSLATE_VI_EN",
+                  "prompt": "Dịch sang tiếng Anh",
+                  "payload": {
+                    "sourceVi": "Tôi sống ở Hà Nội."
+                  },
+                  "answer": {
+                    "reference": [
+                      "I live in Hanoi.",
+                      "I live in Ha Noi."
+                    ],
+                    "aiGraded": true
+                  },
+                  "explanationVi": "live in + thành phố.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "TRANSLATE_VI_EN",
+                  "prompt": "Dịch sang tiếng Anh",
+                  "payload": {
+                    "sourceVi": "Tôi là kỹ sư."
+                  },
+                  "answer": {
+                    "reference": [
+                      "I am an engineer.",
+                      "I'm an engineer."
+                    ],
+                    "aiGraded": true
+                  },
+                  "explanationVi": "engineer bắt đầu bằng nguyên âm → dùng 'an'.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l21-dict.m4a",
+                    "wordCount": 5
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Nice to meet you, Minh."
+                    ]
+                  },
+                  "explanationVi": "Câu chào khi lần đầu gặp.",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l2-s1.m4a",
+                    "wordCount": 7
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Hi, I'm Minh. I'm the new designer."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l2-s2.m4a",
+                    "wordCount": 7
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Nice to meet you, Minh. I'm Lan."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "This ___ my friend, Nam."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "This is + tên người.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "They ___ (be) my colleagues."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "They đi với are.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "She",
+                      "manager",
+                      "is",
+                      "our",
+                      ".",
+                      "new"
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "She is our new manager."
+                    ]
+                  },
+                  "explanationVi": "Cấu trúc: She is + a/our + chức danh.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "ERROR_CORRECTION",
+                  "prompt": "Chạm vào từ sai và sửa lại",
+                  "payload": {
+                    "tokens": [
+                      "Lan",
+                      "and",
+                      "Minh",
+                      "is",
+                      "designers",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "wrongIndex": 3,
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "Hai người (Lan and Minh) → are.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "TRANSFORM",
+                  "prompt": "Biến đổi câu",
+                  "payload": {
+                    "sentence": "He is a teacher.",
+                    "instruction": "THIRD_PERSON"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "She is a teacher.",
+                      "She's a teacher."
+                    ],
+                    "aiFallback": true
+                  },
+                  "explanationVi": "Đổi He thành She, động từ vẫn là is.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l31-dict.m4a",
+                    "wordCount": 3
+                  },
+                  "answer": {
+                    "accepted": [
+                      "This is Peter."
+                    ]
+                  },
+                  "explanationVi": "This is + tên: giới thiệu ai đó.",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l3-s1.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Lan, this is Peter. He is our new developer."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l3-s2.m4a",
+                    "wordCount": 6
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Hi, Peter. Nice to meet you."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "___ you married?"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "Câu hỏi Yes/No: Are + you + …?",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "What ___ your phone number?"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "What is your + danh từ số ít?",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "TRANSFORM",
+                  "prompt": "Biến đổi câu",
+                  "payload": {
+                    "sentence": "She is single.",
+                    "instruction": "QUESTION"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Is she single?"
+                    ],
+                    "aiFallback": true
+                  },
+                  "explanationVi": "Đưa 'is' lên trước chủ ngữ.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "TRANSFORM",
+                  "prompt": "Biến đổi câu",
+                  "payload": {
+                    "sentence": "You are 30 years old.",
+                    "instruction": "NEGATIVE"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "You are not 30 years old.",
+                      "You aren't 30 years old.",
+                      "You're not 30 years old."
+                    ],
+                    "aiFallback": true
+                  },
+                  "explanationVi": "Phủ định: are + not.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "is",
+                      "?",
+                      "your",
+                      "What",
+                      "address",
+                      "email"
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What is your email address?"
+                    ]
+                  },
+                  "explanationVi": "What is your + thông tin?",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "LISTEN_NUMBERS",
+                  "prompt": "Số điện thoại của Huy là gì?",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l41-num.m4a",
+                    "format": "PHONE"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "0912 345 678"
+                    ]
+                  },
+                  "explanationVi": "Đọc từng số một.",
+                  "skillTag": "listening:numbers"
+                },
+                {
+                  "type": "LISTEN_NUMBERS",
+                  "prompt": "Huy bao nhiêu tuổi?",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l42-num.m4a",
+                    "format": "NUMBER"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "32"
+                    ]
+                  },
+                  "explanationVi": "thirty-two = 32.",
+                  "skillTag": "listening:numbers"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l4-s1.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What's your name, please?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l4-s2.m4a",
+                    "wordCount": 5
+                  },
+                  "answer": {
+                    "accepted": [
+                      "My name is Huy. H-U-Y."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "I have two ___ (sister)."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "sisters"
+                    ]
+                  },
+                  "explanationVi": "two + danh từ số nhiều: sister → sisters.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "They have three ___ (child)."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "children"
+                    ]
+                  },
+                  "explanationVi": "child → children (bất quy tắc).",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Chọn mạo từ đúng: ___ engineer",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "an"
+                      },
+                      {
+                        "id": "b",
+                        "text": "a"
+                      },
+                      {
+                        "id": "c",
+                        "text": "the"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "engineer bắt đầu bằng nguyên âm /e/ → an.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "ERROR_CORRECTION",
+                  "prompt": "Chạm vào từ sai và sửa lại",
+                  "payload": {
+                    "tokens": [
+                      "My",
+                      "brother",
+                      "has",
+                      "two",
+                      "son",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "wrongIndex": 4,
+                    "accepted": [
+                      "sons"
+                    ]
+                  },
+                  "explanationVi": "two → danh từ số nhiều: sons.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "TRANSLATE_VI_EN",
+                  "prompt": "Dịch sang tiếng Anh",
+                  "payload": {
+                    "sourceVi": "Tôi có một anh trai và hai em gái."
+                  },
+                  "answer": {
+                    "reference": [
+                      "I have a brother and two sisters.",
+                      "I have one brother and two sisters.",
+                      "I have an older brother and two younger sisters."
+                    ],
+                    "aiGraded": true
+                  },
+                  "explanationVi": "have + a/one + danh từ; two + danh từ số nhiều.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "LISTEN_NUMBERS",
+                  "prompt": "Hoa có mấy con?",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l51-num.m4a",
+                    "format": "NUMBER"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "2"
+                    ]
+                  },
+                  "explanationVi": "two children = 2 đứa con.",
+                  "skillTag": "listening:numbers"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l51-dict.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "This is my father."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l5-s1.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Is this your family?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l5-s3.m4a",
+                    "wordCount": 3
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Who is this?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "My hobby ___ reading."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "My hobby (số ít) → is.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "What ___ your hobbies?"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "your hobbies (số nhiều) → are.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Chọn từ đúng: This is Lan. ___ hobby is painting.",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "Her"
+                      },
+                      {
+                        "id": "b",
+                        "text": "His"
+                      },
+                      {
+                        "id": "c",
+                        "text": "Its"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "Lan là nữ → her.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "favorite",
+                      "is",
+                      "music",
+                      ".",
+                      "hobby",
+                      "My"
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "My favorite hobby is music."
+                    ]
+                  },
+                  "explanationVi": "favorite = yêu thích nhất.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "ERROR_CORRECTION",
+                  "prompt": "Chạm vào từ sai và sửa lại",
+                  "payload": {
+                    "tokens": [
+                      "His",
+                      "hobbies",
+                      "is",
+                      "football",
+                      "and",
+                      "music",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "wrongIndex": 2,
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "Hobbies (số nhiều) → are.",
+                  "skillTag": "grammar:g1-to-be"
+                },
+                {
+                  "type": "LISTEN_GAP_FILL",
+                  "prompt": "Nghe và điền từ còn thiếu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l61-gap.m4a",
+                    "text": "I go {{1}} with my father on {{2}}."
+                  },
+                  "answer": {
+                    "blanks": {
+                      "1": [
+                        "fishing"
+                      ],
+                      "2": [
+                        "Sunday"
+                      ]
+                    }
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:gap-fill"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l6-s1.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What do you do in your free time, Lan?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l6-s2.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I like music. I sing and play the guitar."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "She is ___ nurse."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "a"
+                    ]
+                  },
+                  "explanationVi": "nurse bắt đầu bằng phụ âm → a.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "He is ___ engineer."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "an"
+                    ]
+                  },
+                  "explanationVi": "engineer bắt đầu bằng nguyên âm → an.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "ERROR_CORRECTION",
+                  "prompt": "Chạm vào từ sai và sửa lại",
+                  "payload": {
+                    "tokens": [
+                      "They",
+                      "are",
+                      "a",
+                      "doctors",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "wrongIndex": 2,
+                    "accepted": [
+                      "doctors"
+                    ]
+                  },
+                  "explanationVi": "Số nhiều không dùng 'a'. Sửa thành 'They are doctors.'",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "TRANSLATE_VI_EN",
+                  "prompt": "Dịch sang tiếng Anh",
+                  "payload": {
+                    "sourceVi": "Tôi là lập trình viên ở một công ty công nghệ."
+                  },
+                  "answer": {
+                    "reference": [
+                      "I am a developer at a tech company.",
+                      "I'm a developer at a tech company.",
+                      "I am a developer in a tech company.",
+                      "I'm a developer in a technology company.",
+                      "I am a developer at a technology company."
+                    ],
+                    "aiGraded": true
+                  },
+                  "explanationVi": "a developer at a + công ty.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "work",
+                      "I",
+                      "a",
+                      "company",
+                      "big",
+                      "for",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I work for a big company."
+                    ]
+                  },
+                  "explanationVi": "work for + công ty.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "LISTEN_NUMBERS",
+                  "prompt": "Văn phòng của Hoa có bao nhiêu người?",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l71-num.m4a",
+                    "format": "NUMBER"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "200"
+                    ]
+                  },
+                  "explanationVi": "two hundred = 200.",
+                  "skillTag": "listening:numbers"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l71-dict.m4a",
+                    "wordCount": 3
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I'm an accountant."
+                    ]
+                  },
+                  "explanationVi": "an + accountant.",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l7-s1.m4a",
+                    "wordCount": 5
+                  },
+                  "answer": {
+                    "accepted": [
+                      "What do you do, Hoa?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l7-s2.m4a",
+                    "wordCount": 8
+                  },
+                  "answer": {
+                    "accepted": [
+                      "I'm an accountant. I work for a bank."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "There ___ a toilet on this floor."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "is"
+                    ]
+                  },
+                  "explanationVi": "a toilet (số ít) → there is.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "FILL_BLANK",
+                  "prompt": "Điền vào chỗ trống",
+                  "payload": {
+                    "sentence": "There ___ two meeting rooms next to the kitchen."
+                  },
+                  "answer": {
+                    "accepted": [
+                      "are"
+                    ]
+                  },
+                  "explanationVi": "two meeting rooms (số nhiều) → there are.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Chọn giới từ đúng: My office is ___ the third floor.",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "on"
+                      },
+                      {
+                        "id": "b",
+                        "text": "in"
+                      },
+                      {
+                        "id": "c",
+                        "text": "at"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "on + the … floor.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "TRANSFORM",
+                  "prompt": "Biến đổi câu",
+                  "payload": {
+                    "sentence": "There is a printer here.",
+                    "instruction": "QUESTION"
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Is there a printer here?"
+                    ],
+                    "aiFallback": true
+                  },
+                  "explanationVi": "Câu hỏi: Is there + a + danh từ?",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "LISTEN_GAP_FILL",
+                  "prompt": "Nghe và điền từ còn thiếu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l81-gap.m4a",
+                    "text": "It's on the {{1}} floor, next to the {{2}}."
+                  },
+                  "answer": {
+                    "blanks": {
+                      "1": [
+                        "thirteenth",
+                        "13th"
+                      ],
+                      "2": [
+                        "kitchen"
+                      ]
+                    }
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:gap-fill"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l8-s1.m4a",
+                    "wordCount": 7
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Excuse me, where is the meeting room?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l8-s2.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "It's on the thirteenth floor, next to the kitchen."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "MULTIPLE_CHOICE",
+                  "prompt": "Is ___ your laptop over there?",
+                  "payload": {
+                    "options": [
+                      {
+                        "id": "a",
+                        "text": "that"
+                      },
+                      {
+                        "id": "b",
+                        "text": "these"
+                      },
+                      {
+                        "id": "c",
+                        "text": "this"
+                      }
+                    ]
+                  },
+                  "answer": {
+                    "correct": "a"
+                  },
+                  "explanationVi": "over there (ở xa, số ít) → that.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "ERROR_CORRECTION",
+                  "prompt": "Chạm vào từ sai và sửa lại",
+                  "payload": {
+                    "tokens": [
+                      "This",
+                      "books",
+                      "are",
+                      "new",
+                      "."
+                    ]
+                  },
+                  "answer": {
+                    "wrongIndex": 0,
+                    "accepted": [
+                      "These"
+                    ]
+                  },
+                  "explanationVi": "books là số nhiều → These.",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "REORDER",
+                  "prompt": "Sắp xếp thành câu đúng",
+                  "payload": {
+                    "tokens": [
+                      "?",
+                      ",",
+                      "your",
+                      "Can",
+                      "I",
+                      "use",
+                      "pen",
+                      "please"
+                    ]
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Can I use your pen, please?"
+                    ]
+                  },
+                  "explanationVi": "Can I + động từ + …, please?",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "TRANSLATE_VI_EN",
+                  "prompt": "Dịch sang tiếng Anh",
+                  "payload": {
+                    "sourceVi": "Bạn có thể giúp tôi không?"
+                  },
+                  "answer": {
+                    "reference": [
+                      "Can you help me?",
+                      "Could you help me?",
+                      "Can you help me, please?"
+                    ],
+                    "aiGraded": true
+                  },
+                  "explanationVi": "Can you + động từ?",
+                  "skillTag": "grammar:g2-nouns-articles"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l91-dict.m4a",
+                    "wordCount": 6
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Can I use your pen, please?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l9-s1.m4a",
+                    "wordCount": 9
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Excuse me, Nam. Can I use your pen, please?"
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
+                },
+                {
+                  "type": "DICTATION",
+                  "prompt": "Nghe và chép lại câu",
+                  "payload": {
+                    "audioUrl": "/audio/a1/w1/l9-s2.m4a",
+                    "wordCount": 4
+                  },
+                  "answer": {
+                    "accepted": [
+                      "Sure. Here you are."
+                    ]
+                  },
+                  "explanationVi": "",
+                  "skillTag": "listening:dictation"
                 }
               ]
             }

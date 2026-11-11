@@ -28,13 +28,12 @@ func (s Service) CompleteActivity(userID uint, activityID uint) (CompleteActivit
 		return CompleteActivityResponse{}, err
 	}
 
-	exercises, err := s.repository.FindExercises(activity.ID)
+	progress, hasProgress := ctx.progress[activity.ID]
+	attempt := currentAttempt(progress, hasProgress)
+	exercises, err := s.attemptExercises(userID, activity, drawAttempt(progress, hasProgress))
 	if err != nil {
 		return CompleteActivityResponse{}, err
 	}
-
-	progress, hasProgress := ctx.progress[activity.ID]
-	attempt := currentAttempt(progress, hasProgress)
 	var tally attemptTally
 	speakingDone := true
 	if activity.Type == models.ActivitySpeaking && activity.ScenarioID != nil {
@@ -70,6 +69,17 @@ func (s Service) CompleteActivity(userID uint, activityID uint) (CompleteActivit
 			return CompleteActivityResponse{}, err
 		}
 		tally = scoreAttempt(exercises, answers)
+		if activity.Type == models.ActivityCheckpoint && activity.ScenarioID != nil {
+			// A checkpoint also needs its role-play, done without hints (spec §4).
+			session, found, err := s.repository.LatestFinishedSession(userID, activity.ID)
+			if err != nil {
+				return CompleteActivityResponse{}, err
+			}
+			if !found {
+				return CompleteActivityResponse{}, ErrSpeakingNotCompleted
+			}
+			speakingDone = session.TaskDone && session.HintCount == 0
+		}
 	}
 	passed := tally.Score >= activity.PassScore && speakingDone
 

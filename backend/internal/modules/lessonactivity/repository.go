@@ -14,6 +14,7 @@ import (
 	"ielts-learning/backend/internal/modules/grammarprogress"
 	"ielts-learning/backend/internal/modules/mistakes"
 	notificationmodule "ielts-learning/backend/internal/modules/notification"
+	"ielts-learning/backend/internal/modules/weekgate"
 	xpmodule "ielts-learning/backend/internal/modules/xp"
 )
 
@@ -272,9 +273,14 @@ func (r Repository) UnlockNextLesson(userID uint, lesson models.Lesson, now time
 		Order("order_index ASC, id ASC").
 		First(&nextLesson).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil
+		// The last lesson (the week's checkpoint) opens the next week (Task 75).
+		var found bool
+		nextLesson, found, err = weekgate.NextWeekFirstLesson(r.db, lesson.TopicID)
+		if err != nil || !found {
+			return err
+		}
 	}
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return fmt.Errorf("find next lesson: %w", err)
 	}
 
@@ -452,4 +458,9 @@ func (r Repository) FindPronunciationAttempt(userID, attemptID uint) (models.Pro
 		return attempt, false, fmt.Errorf("find pronunciation attempt: %w", err)
 	}
 	return attempt, true, nil
+}
+
+// PreviousWeekDone reports whether the previous topic of the track is finished.
+func (r Repository) PreviousWeekDone(userID uint, topic models.Topic) (bool, error) {
+	return weekgate.PreviousWeekDone(r.db, userID, topic)
 }

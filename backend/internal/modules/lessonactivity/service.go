@@ -57,7 +57,11 @@ func (s Service) ListActivities(userID uint, lessonID uint) (LessonActivitiesRes
 	summary := ActivitiesProgress{}
 	for _, activity := range ctx.activities {
 		progress, hasProgress := ctx.progress[activity.ID]
-		item := toActivityItem(activity, progress, hasProgress, counts[activity.ID], locks[activity.ID])
+		count := counts[activity.ID]
+		if drawn := checkpointItemCount(activity); drawn > 0 && drawn < count {
+			count = drawn
+		}
+		item := toActivityItem(activity, progress, hasProgress, count, locks[activity.ID])
 		items = append(items, item)
 
 		passed := hasProgress && hasPassed(progress)
@@ -91,13 +95,12 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 		return ActivityDetailResponse{}, err
 	}
 
-	exercises, err := s.repository.FindExercises(activity.ID)
+	progress, hasProgress := ctx.progress[activity.ID]
+	attempt := currentAttempt(progress, hasProgress)
+	exercises, err := s.attemptExercises(userID, activity, drawAttempt(progress, hasProgress))
 	if err != nil {
 		return ActivityDetailResponse{}, err
 	}
-
-	progress, hasProgress := ctx.progress[activity.ID]
-	attempt := currentAttempt(progress, hasProgress)
 
 	exerciseIDs := make([]uint, 0, len(exercises))
 	exerciseResponses := make([]ExerciseResponse, 0, len(exercises))
@@ -191,12 +194,13 @@ func (s Service) GetActivity(userID uint, activityID uint) (ActivityDetailRespon
 }
 
 func (s Service) SubmitAnswer(ctx context.Context, userID uint, activityID uint, req SubmitAnswerRequest) (AnswerResult, error) {
-	activity, _, err := s.loadAccessibleActivity(userID, activityID)
+	activity, lessonCtx, err := s.loadAccessibleActivity(userID, activityID)
 	if err != nil {
 		return AnswerResult{}, err
 	}
 
-	exercises, err := s.repository.FindExercises(activity.ID)
+	progress, hasProgress := lessonCtx.progress[activity.ID]
+	exercises, err := s.attemptExercises(userID, activity, drawAttempt(progress, hasProgress))
 	if err != nil {
 		return AnswerResult{}, err
 	}
@@ -307,7 +311,19 @@ func (s Service) loadLessonContext(userID uint, lessonID uint) (lessonContext, e
 		return lessonContext{}, err
 	}
 
-	status := lessonStatus(lesson.ID, topicLessons, mapLessonProgress(lessonProgress), lesson.Topic.IsAlwaysUnlocked())
+	progressByLesson := mapLessonProgress(lessonProgress)
+	status := lessonStatus(lesson.ID, topicLessons, progressByLesson, lesson.Topic.IsAlwaysUnlocked())
+	if _, started := progressByLesson[lesson.ID]; status == models.LessonStatusUnlocked && !started &&
+		len(topicLessons) > 0 && topicLessons[0].ID == lesson.ID {
+		// A week's first lesson waits for the previous week's checkpoint (Task 75).
+		done, err := s.repository.PreviousWeekDone(userID, lesson.Topic)
+		if err != nil {
+			return lessonContext{}, err
+		}
+		if !done {
+			status = models.LessonStatusLocked
+		}
+	}
 	if status == models.LessonStatusLocked {
 		return lessonContext{}, ErrLessonLocked
 	}

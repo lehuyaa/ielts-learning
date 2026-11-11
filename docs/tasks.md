@@ -2199,6 +2199,8 @@ Requirements:
 
 - `CHECKPOINT` activity (spec §4): random items from the week's exercises + one speaking session without hints; pass to unlock the next week's first lesson.
 
+Status: done. A CHECKPOINT activity with `content.itemCount` draws that many items per attempt from its own exercises (same draw for the same user + attempt, spread round-robin over skills: grammar, listening, sounds, vocabulary). The week builder copies the week's self-contained GRAMMAR / LISTENING / READING items into the checkpoint pool (Week 1: 86 items, 15 per attempt); reading / listening comprehension questions are left out because they need their passage. With `scenarioSlug` the checkpoint ends with a role-play (hints are refused); it passes only when the exercise score ≥ pass_score and the latest finished session completed the task with 0 hints. 4 checkpoint scenarios `a1-w{n}-checkpoint` added (40 in `a1-scenarios.json`). Week gate (`modules/weekgate`): a CORE topic's first lesson stays locked until the previous topic of the same course and track has its last lesson completed; completing that lesson unlocks the next week's first lesson. Applied in the lesson player, topic page and lesson detail (the roadmap already chained lessons across topics).
+
 ### Task 76 - Foundation Dashboard
 
 Requirements:

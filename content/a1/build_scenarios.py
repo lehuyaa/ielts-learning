@@ -1,4 +1,5 @@
-"""A1 role-play scenarios (Task D10): one per situation lesson, 36 in all.
+"""A1 role-play scenarios (Task D10): one per situation lesson, 36 in all,
+plus one longer role-play per week for the week's checkpoint (Task 75).
 
 Builds a1-scenarios.json (a bundle with only "scenarios"), imported at
 /admin/content/import before the week bundles. Each SPEAKING activity links
@@ -238,6 +239,40 @@ WEEKS = {
 }
 
 
+# Checkpoint role-plays (Task 75): one per week, mixing the week's situations;
+# played without hints in the CHECKPOINT activity.
+CHECKPOINTS = {
+    1: ("Kiểm tra tuần 1: Gặp đồng nghiệp mới",
+        "Your first week at a new company. A colleague from another team sits next to you at lunch.",
+        "a friendly colleague called Linh from the sales team",
+        "greet Linh, introduce yourself (name, job, where you are from), talk about your family "
+        "and one hobby, and ask Linh one question about her",
+        ["Nice to meet you.", "I'm a/an ...", "I have ...", "I like ...", "What about you?"],
+        "Hi! I don't think we've met. I'm Linh. Are you new here?", 8),
+    2: ("Kiểm tra tuần 2: Một ngày làm việc",
+        "Friday at work. Your manager wants to plan next week and lunch.",
+        "the learner's manager, Mr Tuan",
+        "say what time you start and finish work, agree a time for a meeting, "
+        "and choose and order food for a team lunch with a price",
+        ["I start work at ...", "Can we meet on ...?", "I'd like ...", "How much is it?", "That's fine."],
+        "Good morning! Do you have a minute to plan next week?", 8),
+    3: ("Kiểm tra tuần 3: Chuyến công tác",
+        "You arrive in Da Nang for a business trip. You call the hotel from the airport.",
+        "a hotel receptionist",
+        "say you have a booking, ask how to get to the hotel and how long it takes, "
+        "and say you feel unwell and ask where a pharmacy is",
+        ["I have a booking for ...", "How can I get to ...?", "How long does it take?", "I have a headache.", "Where is the nearest pharmacy?"],
+        "Good afternoon, Sea View Hotel. How can I help you?", 8),
+    4: ("Kiểm tra tuần 4: Đổi kế hoạch",
+        "A friend calls to invite you out this weekend, but you have a problem.",
+        "a friend called Mai",
+        "accept or refuse the invitation politely, explain your problem, "
+        "suggest another day and time, and agree a place to meet",
+        ["I'd love to, but ...", "I'm sorry, I can't ...", "How about ...?", "Let's meet at ...", "See you then!"],
+        "Hi! Are you free on Saturday evening? Let's go to the cinema!", 8),
+}
+
+
 def build():
     scenarios = []
     order = 0
@@ -253,6 +288,14 @@ def build():
             if week == 1:
                 scenario["passageSlug"] = f"a1-w1-l{lesson_number}-dialogue"
             scenarios.append(scenario)
+        title, situation, role, task, patterns, opening, turns = CHECKPOINTS[week]
+        order += 1
+        scenarios.append({
+            "slug": f"a1-w{week}-checkpoint", "title": title, "description": situation,
+            "cefrLevel": "A1", "role": role, "task": task, "targetPatterns": patterns,
+            "maxTurns": turns, "openingLine": opening, "group": group,
+            "duration": "7 min", "orderIndex": order,
+        })
     return {"version": 1, "courseSlug": "foundation-english", "cefrLevel": "A1", "scenarios": scenarios}
 
 

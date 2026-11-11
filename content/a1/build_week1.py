@@ -7,6 +7,7 @@ Usage (from content/a1):
     python3 build_week1.py [--vocab ../a1-vocabulary/out/a1_rows.json]
 Outputs: week-1.json, audio_manifest_week-1.tsv
 """
+import copy
 import json
 import random
 import re
@@ -628,7 +629,10 @@ lessons.append({
     "description": "Ôn tập tuần 1: to be, a/an, số nhiều, this/these, chào hỏi và giới thiệu.",
     "activities": [{
         "slug": "checkpoint", "type": "CHECKPOINT", "title": "Kiểm tra cuối tuần 1",
-        "instructionsVi": "Làm bài kiểm tra tổng hợp. Cần 70 điểm để qua tuần.",
+        "instructionsVi": "15 câu ngẫu nhiên từ các bài trong tuần, rồi một cuộc hội thoại với AI (không có gợi ý). "
+                          "Cần 70 điểm và hoàn thành nhiệm vụ nói để mở tuần 2.",
+        "scenarioSlug": "a1-w1-checkpoint",
+        "content": {"fromActivityTypes": ["GRAMMAR", "LISTENING", "READING"], "itemCount": 15, "speaking": True},
         "exercises": [
             fill("We ___ (be) from Vietnam.", ["are"], "We → are.", G1),
             fill("___ she your sister?", ["is"], "Câu hỏi với she → Is.", G1),
@@ -683,6 +687,26 @@ for key, prompt in PROMPTS.items():
             activities = lesson["activities"]
             position = next((i for i, a in enumerate(activities) if a["type"] == "SPEAKING"), len(activities))
             activities.insert(position, writing_activity(key))
+
+# Checkpoint pool (Task 75): each attempt draws content.itemCount items from
+# the checkpoint's own exercises, so copy in the week's self-contained items
+# (grammar, dictation, numbers, sounds…). Reading / listening comprehension
+# questions need their passage on screen, so they stay in their lessons.
+checkpoint = next(a for lesson in lessons for a in lesson["activities"] if a["type"] == "CHECKPOINT")
+pool_types = set(checkpoint["content"]["fromActivityTypes"])
+seen_items = {json.dumps([e["type"], e["payload"]], sort_keys=True, ensure_ascii=False) for e in checkpoint["exercises"]}
+for lesson in lessons:
+    for activity in lesson["activities"]:
+        if activity is checkpoint or activity["type"] not in pool_types:
+            continue
+        for exercise in activity.get("exercises", []):
+            if exercise.get("skillTag", "") in ("reading", "listening", ""):
+                continue
+            key = json.dumps([exercise["type"], exercise["payload"]], sort_keys=True, ensure_ascii=False)
+            if key in seen_items:
+                continue
+            seen_items.add(key)
+            checkpoint["exercises"].append(copy.deepcopy(exercise))
 
 bundle = {
     "version": 1,

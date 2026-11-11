@@ -9,7 +9,7 @@ Skill lessons for the A1 level, imported at `/admin/content/import`
 | `build_sounds.py` → `a1-sounds.json` | The 40 sound cards (IPA chart) + the always-open "Sound Lab" topic: 178 minimal pairs, ending -s / -ed, 2-syllable stress. **Import first** |
 | `audio_manifest_sounds.tsv` | Words and minimal-pair audio for the sound cards and Sound Lab |
 | `build_week1.py` | Authoring source for Week 1 (edit this, not the JSON) |
-| `build_scenarios.py` → `a1-scenarios.json` | The 36 AI role-play scenarios (Task D10), 9 per week: role, task, target patterns, max turns, opening line. **Import before the week bundles** |
+| `build_scenarios.py` → `a1-scenarios.json` | The 40 AI role-play scenarios: 9 per week (Task D10) + one per weekly checkpoint (Task 75): role, task, target patterns, max turns, opening line. **Import before the week bundles** |
 | `writing_prompts.py` | The 20 A1 writing prompts with frames and model answers (Task D9); weeks add them with `writing_activity(key)` |
 | `week-1.json` | Generated bundle: 18 passages (9 dialogues, 9 reading texts), 1 topic, 9 situation lessons + review, 69 activities (5 optional writing tasks, 9 optional AI role-plays), 229 exercises |
 | `audio_manifest_week-1.tsv` | Sentences/words to synthesise (`path<TAB>text[<TAB>voice]`) |
@@ -56,7 +56,7 @@ Prerequisites: `go run ./cmd/seed -only-foundation` and the A1 vocabulary import
 | 7 | Describing your job | Word stress (jobs) | a / an with jobs |
 | 8 | Finding places in the building | thirteen vs thirty | There is / there are + prepositions |
 | 9 | Borrowing things at work | Review | this / that / these / those, Can I…? |
-| R | Week 1 review | | Checkpoint (70 to pass) |
+| R | Week 1 review | | Checkpoint: 15 random items from an 86-item pool + a role-play without hints (70 to pass; unlocks Week 2) |
 
 Reading and speaking activities are optional. Each lesson has a read-aloud
 activity (slug `read-aloud`, SPEAK items scored by Azure when configured, otherwise a self-check) and an AI role-play "Nói chuyện với AI" (slug

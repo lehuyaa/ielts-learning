@@ -92,7 +92,7 @@ export function ActivityRunner({ activityId, lessonId, onNextActivity }: Activit
   );
 }
 
-type Phase = "theory" | "cards" | "exercises";
+type Phase = "theory" | "cards" | "exercises" | "speaking";
 
 function ActivitySession({
   data,
@@ -105,6 +105,8 @@ function ActivitySession({
 }) {
   const { activity, exercises, vocabularies, grammarPoint, phonemes, passage } = data;
   const roleplay = activity.type === "SPEAKING" && Boolean(data.scenario);
+  // A checkpoint ends with a role-play without hints (Task 75).
+  const checkpointSpeaking = activity.type === "CHECKPOINT" && Boolean(data.scenario);
   const showTheory = Boolean(grammarPoint) && activity.content?.showTheory !== false;
   const answersById = useMemo(
     () => new Map(data.answers.map((answer) => [answer.exerciseId, answer])),
@@ -115,6 +117,7 @@ function ActivitySession({
   const firstUnanswered = exercises.findIndex((exercise) => !answersById.has(exercise.id));
   const resuming = data.answers.length > 0;
   const [phase, setPhase] = useState<Phase>(() => {
+    if (checkpointSpeaking && exercises.length > 0 && data.answers.length >= exercises.length) return "speaking";
     if (resuming) return "exercises";
     // Theory is shown before the first attempt; later it is one click away.
     if (showTheory && activity.attempts === 0) return "theory";
@@ -150,6 +153,10 @@ function ActivitySession({
     setDraft(null);
     if (!isLast) {
       setIndex(index + 1);
+      return;
+    }
+    if (checkpointSpeaking) {
+      setPhase("speaking");
       return;
     }
     finish();
@@ -206,6 +213,21 @@ function ActivitySession({
           onFinish={finish}
         />
       ) : null}
+      {phase === "speaking" && data.scenario ? (
+        <div>
+          <p className="mb-4 rounded-2xl bg-amber-50 p-3 text-sm text-amber-800">
+            Phần 2 · Nói: hoàn thành nhiệm vụ trong cuộc hội thoại. Bài kiểm tra không có gợi ý.
+          </p>
+          <SpeakingTask
+            activityId={activity.id}
+            finishing={complete.isPending}
+            latest={data.speaking ?? null}
+            lessonId={lessonId}
+            onFinish={finish}
+            scenario={data.scenario}
+          />
+        </div>
+      ) : null}
       {phase === "exercises" && roleplay && data.scenario ? (
         <SpeakingTask
           activityId={activity.id}
@@ -216,7 +238,7 @@ function ActivitySession({
           scenario={data.scenario}
         />
       ) : null}
-      {(activity.type === "WRITING" || roleplay) && complete.error ? (
+      {(activity.type === "WRITING" || roleplay || phase === "speaking") && complete.error ? (
         <p className="mt-3 text-center text-sm text-red-600">
           {complete.error instanceof APIError ? complete.error.message : "Không hoàn thành được hoạt động."}
         </p>
@@ -333,6 +355,9 @@ function ActivityResult({
       <div className="rounded-3xl border bg-white p-8 text-center shadow-sm">
         <PartyPopper className="mx-auto mb-3 size-12 text-amber-500" />
         <h2 className="text-2xl font-bold tracking-normal">Hoàn thành bài học!</h2>
+        {completion.activity.type === "CHECKPOINT" ? (
+          <p className="mt-1 font-semibold text-emerald-700">Bạn đã qua kiểm tra cuối tuần — tuần tiếp theo đã mở.</p>
+        ) : null}
         <p className="mt-2 text-muted-foreground">
           Điểm bài học: <span className="font-semibold text-foreground">{lesson.score ?? completion.score}</span>
           {" · "}+{completion.xpAwarded + lesson.xpAwarded} XP
@@ -369,6 +394,9 @@ function ActivityResult({
       <h2 className="mt-4 text-xl font-bold tracking-normal">
         {completion.passed ? "Đạt rồi!" : "Chưa đạt, thử lại nhé"}
       </h2>
+      {!completion.passed && completion.activity.type === "CHECKPOINT" && completion.score >= completion.activity.passScore ? (
+        <p className="mt-1 text-sm text-amber-700">Phần câu hỏi đã đạt; phần nói cần hoàn thành nhiệm vụ mà không dùng gợi ý.</p>
+      ) : null}
       {completion.xpAwarded > 0 ? <p className="mt-1 font-semibold text-primary">+{completion.xpAwarded} XP</p> : null}
       <p className="mt-1 text-sm text-muted-foreground">
         Bài học: {lesson.passedRequired}/{lesson.totalRequired} hoạt động bắt buộc đã đạt

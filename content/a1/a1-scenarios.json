@@ -184,6 +184,26 @@
       "passageSlug": "a1-w1-l9-dialogue"
     },
     {
+      "slug": "a1-w1-checkpoint",
+      "title": "Kiểm tra tuần 1: Gặp đồng nghiệp mới",
+      "description": "Your first week at a new company. A colleague from another team sits next to you at lunch.",
+      "cefrLevel": "A1",
+      "role": "a friendly colleague called Linh from the sales team",
+      "task": "greet Linh, introduce yourself (name, job, where you are from), talk about your family and one hobby, and ask Linh one question about her",
+      "targetPatterns": [
+        "Nice to meet you.",
+        "I'm a/an ...",
+        "I have ...",
+        "I like ...",
+        "What about you?"
+      ],
+      "maxTurns": 8,
+      "openingLine": "Hi! I don't think we've met. I'm Linh. Are you new here?",
+      "group": "Week 1 · Meeting People",
+      "duration": "7 min",
+      "orderIndex": 10
+    },
+    {
       "slug": "a1-w2-daily-schedule",
       "title": "Lịch làm việc hằng ngày",
       "description": "A new colleague asks about a normal working day in the company.",
@@ -200,7 +220,7 @@
       "openingLine": "Hi! I'm new here. What time do you start work?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 10
+      "orderIndex": 11
     },
     {
       "slug": "a1-w2-asking-for-leave",
@@ -219,7 +239,7 @@
       "openingLine": "Come in! What can I do for you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 11
+      "orderIndex": 12
     },
     {
       "slug": "a1-w2-scheduling-a-meeting",
@@ -238,7 +258,7 @@
       "openingLine": "Hello, this is Jane Smith. You wanted to meet?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 12
+      "orderIndex": 13
     },
     {
       "slug": "a1-w2-booking-a-table",
@@ -257,7 +277,7 @@
       "openingLine": "Good afternoon, Saigon Garden restaurant. How can I help you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 13
+      "orderIndex": 14
     },
     {
       "slug": "a1-w2-ordering-food",
@@ -276,7 +296,7 @@
       "openingLine": "Hello! Are you ready to order?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 14
+      "orderIndex": 15
     },
     {
       "slug": "a1-w2-paying-the-bill",
@@ -295,7 +315,7 @@
       "openingLine": "Did you enjoy your meal?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 15
+      "orderIndex": 16
     },
     {
       "slug": "a1-w2-asking-prices",
@@ -314,7 +334,7 @@
       "openingLine": "Hello! Fresh mangoes and nice T-shirts! What do you need?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 16
+      "orderIndex": 17
     },
     {
       "slug": "a1-w2-choosing-a-size",
@@ -333,7 +353,7 @@
       "openingLine": "Hi there! Can I help you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 17
+      "orderIndex": 18
     },
     {
       "slug": "a1-w2-returning-items",
@@ -352,7 +372,27 @@
       "openingLine": "Good morning. How can I help you?",
       "group": "Week 2 · Work and Money",
       "duration": "5 min",
-      "orderIndex": 18
+      "orderIndex": 19
+    },
+    {
+      "slug": "a1-w2-checkpoint",
+      "title": "Kiểm tra tuần 2: Một ngày làm việc",
+      "description": "Friday at work. Your manager wants to plan next week and lunch.",
+      "cefrLevel": "A1",
+      "role": "the learner's manager, Mr Tuan",
+      "task": "say what time you start and finish work, agree a time for a meeting, and choose and order food for a team lunch with a price",
+      "targetPatterns": [
+        "I start work at ...",
+        "Can we meet on ...?",
+        "I'd like ...",
+        "How much is it?",
+        "That's fine."
+      ],
+      "maxTurns": 8,
+      "openingLine": "Good morning! Do you have a minute to plan next week?",
+      "group": "Week 2 · Work and Money",
+      "duration": "7 min",
+      "orderIndex": 20
     },
     {
       "slug": "a1-w3-asking-directions",
@@ -371,7 +411,7 @@
       "openingLine": "Hi! You look lost. Can I help you?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 19
+      "orderIndex": 21
     },
     {
       "slug": "a1-w3-taking-a-taxi",
@@ -390,7 +430,7 @@
       "openingLine": "Good evening! Where to?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 20
+      "orderIndex": 22
     },
     {
       "slug": "a1-w3-buying-tickets",
@@ -409,7 +449,7 @@
       "openingLine": "Next, please! Where are you going?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 21
+      "orderIndex": 23
     },
     {
       "slug": "a1-w3-airport-check-in",
@@ -428,7 +468,7 @@
       "openingLine": "Good morning. Can I see your passport, please?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 22
+      "orderIndex": 24
     },
     {
       "slug": "a1-w3-hotel-check-in",
@@ -447,7 +487,7 @@
       "openingLine": "Good evening and welcome! Do you have a booking?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 23
+      "orderIndex": 25
     },
     {
       "slug": "a1-w3-train-bus-times",
@@ -466,7 +506,7 @@
       "openingLine": "Hello, how can I help?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 24
+      "orderIndex": 26
     },
     {
       "slug": "a1-w3-describing-symptoms",
@@ -485,7 +525,7 @@
       "openingLine": "Hello, please sit down. What's the problem?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 25
+      "orderIndex": 27
     },
     {
       "slug": "a1-w3-buying-medicine",
@@ -504,7 +544,7 @@
       "openingLine": "Hi! How can I help you today?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 26
+      "orderIndex": 28
     },
     {
       "slug": "a1-w3-at-the-bank",
@@ -523,7 +563,27 @@
       "openingLine": "Good morning. What can I do for you?",
       "group": "Week 3 · Travel and Health",
       "duration": "5 min",
-      "orderIndex": 27
+      "orderIndex": 29
+    },
+    {
+      "slug": "a1-w3-checkpoint",
+      "title": "Kiểm tra tuần 3: Chuyến công tác",
+      "description": "You arrive in Da Nang for a business trip. You call the hotel from the airport.",
+      "cefrLevel": "A1",
+      "role": "a hotel receptionist",
+      "task": "say you have a booking, ask how to get to the hotel and how long it takes, and say you feel unwell and ask where a pharmacy is",
+      "targetPatterns": [
+        "I have a booking for ...",
+        "How can I get to ...?",
+        "How long does it take?",
+        "I have a headache.",
+        "Where is the nearest pharmacy?"
+      ],
+      "maxTurns": 8,
+      "openingLine": "Good afternoon, Sea View Hotel. How can I help you?",
+      "group": "Week 3 · Travel and Health",
+      "duration": "7 min",
+      "orderIndex": 30
     },
     {
       "slug": "a1-w4-phone-messages",
@@ -542,7 +602,7 @@
       "openingLine": "Good morning, Green Tech, Mai speaking.",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 28
+      "orderIndex": 31
     },
     {
       "slug": "a1-w4-invitations",
@@ -561,7 +621,7 @@
       "openingLine": "Hi! Are you free on Saturday evening? It's my birthday!",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 29
+      "orderIndex": 32
     },
     {
       "slug": "a1-w4-arranging-to-meet",
@@ -580,7 +640,7 @@
       "openingLine": "Hey! We haven't met for ages. Let's meet this weekend!",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 30
+      "orderIndex": 33
     },
     {
       "slug": "a1-w4-changing-plans",
@@ -599,7 +659,7 @@
       "openingLine": "Hi! See you tomorrow at the cinema, right?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 31
+      "orderIndex": 34
     },
     {
       "slug": "a1-w4-weather-small-talk",
@@ -618,7 +678,7 @@
       "openingLine": "Phew, it's so hot today, isn't it?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 32
+      "orderIndex": 35
     },
     {
       "slug": "a1-w4-your-weekend",
@@ -637,7 +697,7 @@
       "openingLine": "Good morning! How was your weekend?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 33
+      "orderIndex": 36
     },
     {
       "slug": "a1-w4-sending-a-parcel",
@@ -656,7 +716,7 @@
       "openingLine": "Hello! What can I do for you?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 34
+      "orderIndex": 37
     },
     {
       "slug": "a1-w4-reporting-a-problem",
@@ -675,7 +735,7 @@
       "openingLine": "IT help desk, this is Kevin. What's the problem?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 35
+      "orderIndex": 38
     },
     {
       "slug": "a1-w4-emergency-help",
@@ -694,7 +754,27 @@
       "openingLine": "Emergency services. What's happening?",
       "group": "Week 4 · Plans and Problems",
       "duration": "5 min",
-      "orderIndex": 36
+      "orderIndex": 39
+    },
+    {
+      "slug": "a1-w4-checkpoint",
+      "title": "Kiểm tra tuần 4: Đổi kế hoạch",
+      "description": "A friend calls to invite you out this weekend, but you have a problem.",
+      "cefrLevel": "A1",
+      "role": "a friend called Mai",
+      "task": "accept or refuse the invitation politely, explain your problem, suggest another day and time, and agree a place to meet",
+      "targetPatterns": [
+        "I'd love to, but ...",
+        "I'm sorry, I can't ...",
+        "How about ...?",
+        "Let's meet at ...",
+        "See you then!"
+      ],
+      "maxTurns": 8,
+      "openingLine": "Hi! Are you free on Saturday evening? Let's go to the cinema!",
+      "group": "Week 4 · Plans and Problems",
+      "duration": "7 min",
+      "orderIndex": 40
     }
   ]
 }
